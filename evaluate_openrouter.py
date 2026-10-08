@@ -19,7 +19,7 @@ if not OPENROUTER_API_KEY:
 
 
 MODEL_NAME = "qwen/qwen3.8-27b"
-LIMIT = 10
+LIMIT = int(os.environ.get("LIMIT", "10"))  # 0 oznacza wszystkie zapytania
 
 # Klient OpenAI utworzony jednorazowo z włączonym Keep-Alive
 client = OpenAI(
@@ -205,7 +205,8 @@ def main():
     print("=" * 95)
 
     with open(BENCHMARK_CSV, "r", encoding="utf-8") as f:
-        queries = list(csv.DictReader(f))[:LIMIT]
+        all_queries = list(csv.DictReader(f))
+    queries = all_queries[:LIMIT] if LIMIT > 0 else all_queries
 
     step1_times = []
     step2_times = []
@@ -250,7 +251,7 @@ def main():
 
         status_cat = "✅" if cat_ok else "❌"
         status_attr = "✅" if (fp == 0 and fn == 0) else "⚠️"
-        print(f"\n[{idx:02d}/10] Q: \"{q}\"")
+        print(f"\n[{idx:02d}/{len(queries)}] Q: \"{q}\"")
         print(f"  {status_cat} Kategoria: '{pred_cat}' (Oczekiwana: '{exp_cat}') | Czas S1: {s1_time:.0f} ms")
         print(f"  {status_attr} Atrybuty:  Czas S2: {s2_time:.0f} ms | RAZEM: {tot_time:.0f} ms ({tot_time/1000:.2f} s) [TP={tp}, FP={fp}, FN={fn}]")
         print(f"      Wyciągnięte: {json.dumps(pred_attrs, ensure_ascii=False)}")
@@ -261,14 +262,14 @@ def main():
     recall = (total_tp / (total_tp + total_fn) * 100.0) if (total_tp + total_fn) > 0 else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
-    avg_s1 = sum(step1_times) / len(step1_times)
+    avg_s1 = sum(step1_times) / len(step1_times) if step1_times else 0.0
     avg_s2 = sum(step2_times) / len(step2_times) if step2_times else 0.0
-    avg_tot = sum(total_times) / len(total_times)
+    avg_tot = sum(total_times) / len(total_times) if total_times else 0.0
 
     print("\n" + "=" * 95)
-    print("PODSUMOWANIE DLA 10 WIERSZY (ŚCISŁY CEREBRAS ONLY):")
+    print(f"PODSUMOWANIE DLA {len(queries)} ZAPYTAŃ (ŚCISŁY CEREBRAS ONLY):")
     print("=" * 95)
-    print(f"Dokładność kategorii (Krok 1) : {correct_cats}/10 ({correct_cats*10:.1f}%)")
+    print(f"Dokładność kategorii (Krok 1) : {correct_cats}/{len(queries)} ({correct_cats/len(queries)*100.0:.1f}%)")
     print(f"Atrybuty True Positives (TP)  : {total_tp}")
     print(f"Atrybuty False Positives (FP) : {total_fp}")
     print(f"Atrybuty False Negatives (FN) : {total_fn}")
