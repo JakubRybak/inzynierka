@@ -1,0 +1,253 @@
+[
+  {
+    "idx": 1,
+    "query": "czarne timberlandy",
+    "lang": "PL",
+    "group": "Eponim PL",
+    "note": "Potoczna nazwa butów traperów (Timberland)",
+    "category": "Footwear",
+    "brand": "Timberland",
+    "attributes": {
+      "primary_color": "Black",
+      "brand": "Timberland"
+    },
+    "residual_text": "",
+    "s1_ms": 2118.7310218811035,
+    "s2_ms": 1131.911039352417,
+    "total_ms": 3250.6420612335205
+  },
+  {
+    "idx": 2,
+    "query": "biale adidasy damskie",
+    "lang": "PL",
+    "group": "Eponim PL",
+    "note": "W polskim 'adidasy' = buty sportowe",
+    "category": "Footwear",
+    "brand": "Adidas",
+    "attributes": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "brand": "Adidas"
+    },
+    "residual_text": "",
+    "s1_ms": 1102.4119853973389,
+    "s2_ms": 1031.8210124969482,
+    "total_ms": 2134.232997894287
+  },
+  {
+    "idx": 3,
+    "query": "conversy za kostke",
+    "lang": "PL",
+    "group": "Eponim PL",
+    "note": "Conversy = trampki Converse wysokie",
+    "category": "Footwear",
+    "brand": "Converse",
+    "attributes": {
+      "brand": "Converse",
+      "shaft_height": "Mid (ankle boot)"
+    },
+    "residual_text": "za kostke",
+    "s1_ms": 769.8721885681152,
+    "s2_ms": 1168.5001850128174,
+    "total_ms": 1938.3723735809326
+  },
+  {
+    "idx": 4,
+    "query": "adidasy nike do biegania",
+    "lang": "PL",
+    "group": "Sprzeczność PL",
+    "note": "Pospolicenie 'adidasy' połączone z marką konkurencji Nike",
+    "category": "Footwear",
+    "brand": "Nike",
+    "attributes": {
+      "brand": "Nike"
+    },
+    "residual_text": "adidasy do biegania",
+    "s1_ms": 920.619010925293,
+    "s2_ms": 1127.2578239440918,
+    "total_ms": 2047.8768348693848
+  },
+  {
+    "idx": 5,
+    "query": "ciepla zimowa kurtka north face damska",
+    "lang": "PL",
+    "group": "Cross-lingual PL",
+    "note": "Puchowa/zimowa kurtka The North Face",
+    "category": "Jackets & Coats",
+    "brand": "The North Face",
+    "attributes": {
+      "department_gender": "Women",
+      "brand": "The North Face",
+      "insulation": "Insulated / Winter"
+    },
+    "residual_text": "ciepla zimowa kurtka",
+    "s1_ms": 734.5290184020996,
+    "s2_ms": 1008.4328651428223,
+    "total_ms": 1742.9618835449219
+  },
+  {
+    "idx": 6,
+    "query": "czerwona meska bluza z kapturem champion",
+    "lang": "PL",
+    "group": "Cross-lingual PL",
+    "note": "Bluza z kapturem Champion + cechy",
+    "category": "Hoodies & Sweatshirts",
+    "brand": "Champion",
+    "attributes": {
+      "department_gender": "Men",
+      "primary_color": "Red",
+      "brand": "Champion",
+      "hood": "Yes"
+    },
+    "residual_text": "bluza",
+    "s1_ms": 776.8518924713135,
+    "s2_ms": 1075.2379894256592,
+    "total_ms": 1852.0898818969727
+  },
+  {
+    "idx": 7,
+    "query": "czarny golf z welny",
+    "lang": "PL",
+    "group": "Cross-lingual PL",
+    "note": "Pułapka słowna: 'golf' jako dekolt Turtleneck z wełny",
+    "category": "Sweaters & Cardigans",
+    "brand": null,
+    "attributes": {
+      "primary_color": "Black",
+      "primary_material": "Wool",
+      "neckline": "Turtleneck / High Neck"
+    },
+    "residual_text": "czarny golf z welny",
+    "s1_ms": 1629.5502185821533,
+    "s2_ms": 1157.5489044189453,
+    "total_ms": 2787.0991230010986
+  },
+  {
+    "idx": 8,
+    "query": "elegancka czarna sukienka na wesele",
+    "lang": "PL",
+    "group": "Cross-lingual PL",
+    "note": "Sukienka + okazja na wesele (wedding)",
+    "category": "Dresses",
+    "brand": null,
+    "attributes": {
+      "primary_color": "Black"
+    },
+    "residual_text": "elegancka sukienka na wesele",
+    "s1_ms": 741.1589622497559,
+    "s2_ms": 1065.1018619537354,
+    "total_ms": 1806.2608242034912
+  },
+  {
+    "idx": 9,
+    "query": "wheat timbs",
+    "lang": "EN",
+    "group": "Eponim EN Obuwie",
+    "note": "Amerykański slang miejski na żółte trapery Timberland",
+    "category": "Footwear",
+    "brand": "Timberland",
+    "attributes": {
+      "brand": "Timberland"
+    },
+    "residual_text": "",
+    "s1_ms": 851.4690399169922,
+    "s2_ms": 890.3496265411377,
+    "total_ms": 1741.8186664581299
+  },
+  {
+    "idx": 10,
+    "query": "high top chucks",
+    "lang": "EN",
+    "group": "Eponim EN Obuwie",
+    "note": "Slang na trampki Converse Chuck Taylor wysokie",
+    "category": "Footwear",
+    "brand": "Converse",
+    "attributes": {
+      "brand": "Converse"
+    },
+    "residual_text": "high top",
+    "s1_ms": 816.9221878051758,
+    "s2_ms": 1127.366065979004,
+    "total_ms": 1944.2882537841797
+  },
+  {
+    "idx": 11,
+    "query": "leather docs",
+    "lang": "EN",
+    "group": "Eponim EN Obuwie",
+    "note": "Docs = glany/botki Dr. Martens",
+    "category": "Footwear",
+    "brand": "Dr. Martens",
+    "attributes": {
+      "primary_material": "Leather / Faux Leather",
+      "brand": "Dr. Martens"
+    },
+    "residual_text": "",
+    "s1_ms": 712.3279571533203,
+    "s2_ms": 920.5329418182373,
+    "total_ms": 1632.8608989715576
+  },
+  {
+    "idx": 12,
+    "query": "womens classic uggs",
+    "lang": "EN",
+    "group": "Eponim EN Obuwie",
+    "note": "Uggs = buty zimowe wsuwane UGG",
+    "category": "Footwear",
+    "brand": "UGG",
+    "attributes": {
+      "department_gender": "Women",
+      "brand": "UGG"
+    },
+    "residual_text": "classic",
+    "s1_ms": 832.4532508850098,
+    "s2_ms": 914.0181541442871,
+    "total_ms": 1746.4714050292969
+  },
+  {
+    "idx": 13,
+    "query": "summer birks",
+    "lang": "EN",
+    "group": "Eponim EN Obuwie",
+    "note": "Birks = sandały/klapki Birkenstock",
+    "category": "Footwear",
+    "brand": "Birkenstock",
+    "attributes": {
+      "brand": "Birkenstock"
+    },
+    "residual_text": "summer",
+    "s1_ms": 1024.7480869293213,
+    "s2_ms": 1126.960277557373,
+    "total_ms": 2151.7083644866943
+  },
+  {
+    "idx": 14,
+    "query": "vintage levis",
+    "lang": "EN",
+    "group": "Eponim EN Odzież",
+    "note": "Levis = dżinsy Levi's bez słowa 'jeans'",
+    "category": "None",
+    "brand": null,
+    "attributes": {},
+    "residual_text": "",
+    "s1_ms": 917.8240299224854,
+    "s2_ms": 0,
+    "total_ms": 917.8240299224854
+  },
+  {
+    "idx": 15,
+    "query": "carhartt double knee",
+    "lang": "EN",
+    "group": "Eponim EN Odzież",
+    "note": "Popularne spodnie robocze Carhartt bez słowa 'pants'",
+    "category": "Pants & Trousers",
+    "brand": "Carhartt",
+    "attributes": {
+      "brand": "Carhartt"
+    },
+    "residual_text": "double knee",
+    "s1_ms": 649.9300003051758,
+    "s2_ms": 1096.5156555175781,
+    "total_ms": 1746.445655822754
+  }
+]

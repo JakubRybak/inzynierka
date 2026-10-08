@@ -1,0 +1,1900 @@
+[
+  {
+    "idx": 1,
+    "query": "north face jacket womens",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "brand": "The North Face"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "brand": "The North Face"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1693.709135055542,
+    "s2_ms": 964.4460678100586,
+    "total_ms": 2658.1552028656006,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 2,
+    "query": "womens lightweight jacket without hood",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "No",
+      "insulation": "Lightweight / Transitional"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "hood": "No",
+      "insulation": "Lightweight / Transitional"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 816.0927295684814,
+    "s2_ms": 1027.947187423706,
+    "total_ms": 1844.0399169921875,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 3,
+    "query": "rain jacket mens waterproof with hood",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "hood": "Yes"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "hood": "Yes"
+    },
+    "pred_residual": "rain waterproof",
+    "expected_residual": "rain waterproof",
+    "s1_ms": 1021.090030670166,
+    "s2_ms": 802.300214767456,
+    "total_ms": 1823.390245437622,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 4,
+    "query": "ski coat women",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "insulation": "Insulated / Winter"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "ski coat",
+    "expected_residual": "ski",
+    "s1_ms": 932.3289394378662,
+    "s2_ms": 1136.4760398864746,
+    "total_ms": 2068.804979324341,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 5,
+    "query": "ladies pink motorcycle jacket",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Pink"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Pink"
+    },
+    "pred_residual": "motorcycle",
+    "expected_residual": "motorcycle",
+    "s1_ms": 961.7030620574951,
+    "s2_ms": 1121.8578815460205,
+    "total_ms": 2083.5609436035156,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 6,
+    "query": "womens windbreaker jacket without hood",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "No",
+      "insulation": "Lightweight / Transitional"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "hood": "No"
+    },
+    "pred_residual": "windbreaker",
+    "expected_residual": "windbreaker",
+    "s1_ms": 730.1480770111084,
+    "s2_ms": 1105.668067932129,
+    "total_ms": 1835.8161449432373,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 7,
+    "query": "fleece jacket women",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Fleece"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Fleece"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 789.7000312805176,
+    "s2_ms": 961.8487358093262,
+    "total_ms": 1751.5487670898438,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 8,
+    "query": "sport coats for men big and tall",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_residual": "sport big and tall",
+    "expected_residual": "sport big and tall",
+    "s1_ms": 775.3820419311523,
+    "s2_ms": 1057.2218894958496,
+    "total_ms": 1832.603931427002,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 9,
+    "query": "32 degrees jackets for women",
+    "expected_cat": "Jackets & Coats",
+    "pred_cat": "Jackets & Coats",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "brand": "32 Degrees"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "brand": "32 Degrees"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 926.4938831329346,
+    "s2_ms": 1191.1780834197998,
+    "total_ms": 2117.6719665527344,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 10,
+    "query": "hoodies for women",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "Yes"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 737.5521659851074,
+    "s2_ms": 847.480058670044,
+    "total_ms": 1585.0322246551514,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 11,
+    "query": "hoodies for men",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "hood": "Yes"
+    },
+    "pred_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 650.8316993713379,
+    "s2_ms": 781.2931537628174,
+    "total_ms": 1432.1248531341553,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 12,
+    "query": "oversized sweatshirt for women",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "No"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "oversized sweatshirt",
+    "expected_residual": "oversized",
+    "s1_ms": 956.9647312164307,
+    "s2_ms": 891.0720348358154,
+    "total_ms": 1848.036766052246,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 13,
+    "query": "california sweatshirt for women",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "No"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "california",
+    "expected_residual": "california",
+    "s1_ms": 812.7758502960205,
+    "s2_ms": 993.2620525360107,
+    "total_ms": 1806.0379028320312,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 14,
+    "query": "yellow champion hoodie",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "primary_color": "Yellow",
+      "hood": "Yes",
+      "brand": "Champion"
+    },
+    "pred_attrs": {
+      "primary_color": "Yellow",
+      "brand": "Champion",
+      "hood": "Yes"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 726.564884185791,
+    "s2_ms": 880.4030418395996,
+    "total_ms": 1606.9679260253906,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 15,
+    "query": "track jacket men venum",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "closure_type": "Zip-up",
+      "brand": "Venum"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "Venum"
+    },
+    "pred_residual": "track jacket",
+    "expected_residual": "track",
+    "s1_ms": 942.7518844604492,
+    "s2_ms": 1022.996187210083,
+    "total_ms": 1965.7480716705322,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 16,
+    "query": "womens red zip up hoodie",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Red",
+      "hood": "Yes",
+      "closure_type": "Zip-up"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Red",
+      "hood": "Yes",
+      "closure_type": "Zip-up"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 770.3180313110352,
+    "s2_ms": 894.028902053833,
+    "total_ms": 1664.3469333648682,
+    "tp": 4,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 17,
+    "query": "zipper sweaters for women without hoodie",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": false,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "hood": "No",
+      "closure_type": "Zip-up"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "zipper without hoodie",
+    "expected_residual": "",
+    "s1_ms": 980.2370071411133,
+    "s2_ms": 1039.7827625274658,
+    "total_ms": 2020.019769668579,
+    "tp": 1,
+    "fp": 0,
+    "fn": 2
+  },
+  {
+    "idx": 18,
+    "query": "g star hoodies for men",
+    "expected_cat": "Hoodies & Sweatshirts",
+    "pred_cat": "Hoodies & Sweatshirts",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "hood": "Yes",
+      "brand": "G-Star"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "G-Star"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1127.4738311767578,
+    "s2_ms": 1228.2629013061523,
+    "total_ms": 2355.73673248291,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 19,
+    "query": "womens sweaters",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 754.0669441223145,
+    "s2_ms": 24846.8279838562,
+    "total_ms": 25600.894927978516,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 20,
+    "query": "sweaters for women",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "sweaters",
+    "expected_residual": "",
+    "s1_ms": 1022.3360061645508,
+    "s2_ms": 912.7388000488281,
+    "total_ms": 1935.074806213379,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 21,
+    "query": "cute fall sweaters",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "cute fall",
+    "expected_residual": "cute fall",
+    "s1_ms": 798.7411022186279,
+    "s2_ms": 1154.8690795898438,
+    "total_ms": 1953.6101818084717,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 22,
+    "query": "pink argyle sweater",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "primary_color": "Pink",
+      "pattern": "Plaid / Checked"
+    },
+    "pred_attrs": {
+      "primary_color": "Pink"
+    },
+    "pred_residual": "argyle",
+    "expected_residual": "argyle",
+    "s1_ms": 817.0778751373291,
+    "s2_ms": 1023.1900215148926,
+    "total_ms": 1840.2678966522217,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 23,
+    "query": "women elegant sweater",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "elegant",
+    "expected_residual": "elegant",
+    "s1_ms": 716.8519496917725,
+    "s2_ms": 921.9241142272949,
+    "total_ms": 1638.7760639190674,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 24,
+    "query": "3/4 sleeve cardigan for women",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "closure_type": "Button-up (Cardigan)"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "closure_type": "Button-up (Cardigan)"
+    },
+    "pred_residual": "3/4 sleeve",
+    "expected_residual": "3/4 sleeve",
+    "s1_ms": 826.8101215362549,
+    "s2_ms": 1075.2758979797363,
+    "total_ms": 1902.0860195159912,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 25,
+    "query": "crop cardigan",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "closure_type": "Button-up (Cardigan)"
+    },
+    "pred_attrs": {
+      "closure_type": "Button-up (Cardigan)"
+    },
+    "pred_residual": "crop",
+    "expected_residual": "crop",
+    "s1_ms": 972.7637767791748,
+    "s2_ms": 891.110897064209,
+    "total_ms": 1863.8746738433838,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 26,
+    "query": "white cardigan chunky",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "primary_color": "White",
+      "closure_type": "Button-up (Cardigan)",
+      "knit_style": "Chunky / Cable Knit"
+    },
+    "pred_attrs": {
+      "primary_color": "White",
+      "closure_type": "Button-up (Cardigan)",
+      "knit_style": "Chunky / Cable Knit"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 943.2427883148193,
+    "s2_ms": 788.6440753936768,
+    "total_ms": 1731.886863708496,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 27,
+    "query": "port authority cardigan",
+    "expected_cat": "Sweaters & Cardigans",
+    "pred_cat": "Sweaters & Cardigans",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "closure_type": "Button-up (Cardigan)",
+      "brand": "Port Authority"
+    },
+    "pred_attrs": {
+      "brand": "Port Authority",
+      "closure_type": "Button-up (Cardigan)"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 862.8489971160889,
+    "s2_ms": 1117.7749633789062,
+    "total_ms": 1980.6239604949951,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 28,
+    "query": "womens white button up blouse",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "closure_type": "Full Button Front"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "pattern": "Solid",
+      "collar": "Classic Collar",
+      "closure_type": "Full Button Front"
+    },
+    "pred_residual": "blouse",
+    "expected_residual": "",
+    "s1_ms": 716.5863513946533,
+    "s2_ms": 968.8308238983154,
+    "total_ms": 1685.4171752929688,
+    "tp": 3,
+    "fp": 2,
+    "fn": 0
+  },
+  {
+    "idx": 29,
+    "query": "black mens dress shirt slim fit",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Black",
+      "collar": "Classic Collar",
+      "fit": "Slim Fit"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Black",
+      "pattern": "Solid",
+      "fit": "Slim Fit"
+    },
+    "pred_residual": "dress shirt",
+    "expected_residual": "dress",
+    "s1_ms": 872.3850250244141,
+    "s2_ms": 1028.1050205230713,
+    "total_ms": 1900.4900455474854,
+    "tp": 3,
+    "fp": 1,
+    "fn": 1
+  },
+  {
+    "idx": 30,
+    "query": "lemon yellow blouse",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "primary_color": "Yellow"
+    },
+    "pred_attrs": {
+      "primary_color": "Yellow",
+      "pattern": "Solid"
+    },
+    "pred_residual": "lemon",
+    "expected_residual": "lemon",
+    "s1_ms": 814.7220611572266,
+    "s2_ms": 925.7307052612305,
+    "total_ms": 1740.452766418457,
+    "tp": 1,
+    "fp": 1,
+    "fn": 0
+  },
+  {
+    "idx": 31,
+    "query": "mens linen shirt",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "primary_material": "Linen"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "primary_material": "Linen"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 741.549015045166,
+    "s2_ms": 1173.4600067138672,
+    "total_ms": 1915.0090217590332,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 32,
+    "query": "white button down blouse women",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "collar": "Classic Collar",
+      "closure_type": "Full Button Front"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "pattern": "Solid",
+      "collar": "Classic Collar",
+      "closure_type": "Full Button Front"
+    },
+    "pred_residual": "blouse",
+    "expected_residual": "",
+    "s1_ms": 757.1718692779541,
+    "s2_ms": 982.6128482818604,
+    "total_ms": 1739.7847175598145,
+    "tp": 4,
+    "fp": 1,
+    "fn": 0
+  },
+  {
+    "idx": 33,
+    "query": "fleece lined flannel shirt women",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "collar": "Classic Collar",
+      "pattern": "Plaid / Checked"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Fleece"
+    },
+    "pred_residual": "flannel",
+    "expected_residual": "fleece lined flannel",
+    "s1_ms": 865.5617237091064,
+    "s2_ms": 981.0702800750732,
+    "total_ms": 1846.6320037841797,
+    "tp": 1,
+    "fp": 1,
+    "fn": 2
+  },
+  {
+    "idx": 34,
+    "query": "wide sleeve flannel shirt women",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "collar": "Classic Collar",
+      "pattern": "Plaid / Checked"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Fleece"
+    },
+    "pred_residual": "wide sleeve",
+    "expected_residual": "wide sleeve flannel",
+    "s1_ms": 675.8370399475098,
+    "s2_ms": 1089.9062156677246,
+    "total_ms": 1765.7432556152344,
+    "tp": 1,
+    "fp": 1,
+    "fn": 2
+  },
+  {
+    "idx": 35,
+    "query": "mens navy and gray oxford shirt",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Navy",
+      "collar": "Classic Collar"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Navy",
+      "pattern": "Solid",
+      "primary_material": "Cotton",
+      "collar": "Classic Collar",
+      "closure_type": "Full Button Front"
+    },
+    "pred_residual": "gray oxford",
+    "expected_residual": "gray oxford",
+    "s1_ms": 893.2788372039795,
+    "s2_ms": 1867.9101467132568,
+    "total_ms": 2761.1889839172363,
+    "tp": 3,
+    "fp": 3,
+    "fn": 0
+  },
+  {
+    "idx": 36,
+    "query": "4xlt dress shirts for men big and tall",
+    "expected_cat": "Shirts & Blouses",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "collar": "Classic Collar"
+    },
+    "pred_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_residual": "4xlt dress shirts big and tall",
+    "expected_residual": "4xlt dress big and tall",
+    "s1_ms": 926.7609119415283,
+    "s2_ms": 1125.0648498535156,
+    "total_ms": 2051.825761795044,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 37,
+    "query": "jerzees long sleeve t shirt",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "sleeve_length": "Long Sleeve",
+      "closure_type": "Pull-over / No Buttons",
+      "brand": "Jerzees"
+    },
+    "pred_attrs": {
+      "brand": "Jerzees",
+      "sleeve_length": "Long Sleeve"
+    },
+    "pred_residual": "t shirt",
+    "expected_residual": "",
+    "s1_ms": 778.7749767303467,
+    "s2_ms": 1064.5718574523926,
+    "total_ms": 1843.3468341827393,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 38,
+    "query": "v neck white t shirt women",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "neckline": "V-Neck",
+      "closure_type": "Pull-over / No Buttons"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White",
+      "neckline": "V-Neck",
+      "sleeve_length": "Short Sleeve",
+      "closure_type": "Pull-over / No Buttons",
+      "length": "Regular Length"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1024.0859985351562,
+    "s2_ms": 1126.2147426605225,
+    "total_ms": 2150.3007411956787,
+    "tp": 4,
+    "fp": 2,
+    "fn": 0
+  },
+  {
+    "idx": 39,
+    "query": "brown tank top womens",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Brown",
+      "sleeve_length": "Sleeveless / Tank Top",
+      "closure_type": "Pull-over / No Buttons"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Brown",
+      "sleeve_length": "Sleeveless / Tank Top"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 813.1551742553711,
+    "s2_ms": 1026.5278816223145,
+    "total_ms": 1839.6830558776855,
+    "tp": 3,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 40,
+    "query": "cut out tank tops for women",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "sleeve_length": "Sleeveless / Tank Top",
+      "closure_type": "Pull-over / No Buttons"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "sleeve_length": "Sleeveless / Tank Top"
+    },
+    "pred_residual": "cut out",
+    "expected_residual": "cut out",
+    "s1_ms": 744.2951202392578,
+    "s2_ms": 1102.7839183807373,
+    "total_ms": 1847.0790386199951,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 41,
+    "query": "tank top plus size women",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "sleeve_length": "Sleeveless / Tank Top",
+      "closure_type": "Pull-over / No Buttons"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "sleeve_length": "Sleeveless / Tank Top"
+    },
+    "pred_residual": "plus size",
+    "expected_residual": "plus size",
+    "s1_ms": 811.870813369751,
+    "s2_ms": 1026.3371467590332,
+    "total_ms": 1838.2079601287842,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 42,
+    "query": "golf polo slim fit",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "closure_type": "Partial Button (Polo)"
+    },
+    "pred_attrs": {
+      "closure_type": "Partial Button (Polo)"
+    },
+    "pred_residual": "golf slim fit",
+    "expected_residual": "golf slim fit",
+    "s1_ms": 797.7380752563477,
+    "s2_ms": 878.7961006164551,
+    "total_ms": 1676.5341758728027,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 43,
+    "query": "nautica polo shirts for men",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "closure_type": "Partial Button (Polo)",
+      "brand": "Nautica"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "Nautica",
+      "closure_type": "Partial Button (Polo)"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 756.2062740325928,
+    "s2_ms": 1036.5970134735107,
+    "total_ms": 1792.8032875061035,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 44,
+    "query": "mens cotton polo shirts with pockets and short sleeves",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "T-Shirts & Tops",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "primary_material": "Cotton",
+      "sleeve_length": "Short Sleeve",
+      "closure_type": "Partial Button (Polo)"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "primary_material": "Cotton",
+      "sleeve_length": "Short Sleeve",
+      "closure_type": "Partial Button (Polo)",
+      "length": "Regular Length"
+    },
+    "pred_residual": "shirts with pockets",
+    "expected_residual": "pockets",
+    "s1_ms": 980.067253112793,
+    "s2_ms": 1083.054780960083,
+    "total_ms": 2063.122034072876,
+    "tp": 4,
+    "fp": 1,
+    "fn": 0
+  },
+  {
+    "idx": 45,
+    "query": "dewalt shirt for men",
+    "expected_cat": "T-Shirts & Tops",
+    "pred_cat": "Shirts & Blouses",
+    "cat_ok": false,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "brand": "DeWalt"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "DeWalt"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 925.7950782775879,
+    "s2_ms": 875.9007453918457,
+    "total_ms": 1801.6958236694336,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 46,
+    "query": "womens skinny jeans",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Jeans",
+      "leg_fit": "Skinny",
+      "primary_material": "Denim"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Denim",
+      "pant_type": "Jeans",
+      "leg_fit": "Skinny"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 960.026741027832,
+    "s2_ms": 845.8352088928223,
+    "total_ms": 1805.8619499206543,
+    "tp": 4,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 47,
+    "query": "trousers women",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Chinos / Trousers"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Chinos / Trousers"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 893.5987949371338,
+    "s2_ms": 981.03928565979,
+    "total_ms": 1874.6380805969238,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 48,
+    "query": "plaid trousers for women",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pattern": "Plaid / Checked",
+      "pant_type": "Chinos / Trousers"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "pattern": "Plaid / Checked",
+      "pant_type": "Chinos / Trousers"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 823.6649036407471,
+    "s2_ms": 963.6738300323486,
+    "total_ms": 1787.3387336730957,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 49,
+    "query": "mens blue jeans regular fit",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Blue",
+      "pant_type": "Jeans",
+      "primary_material": "Denim",
+      "leg_fit": "Straight"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "primary_color": "Blue",
+      "primary_material": "Denim",
+      "pant_type": "Jeans",
+      "leg_fit": "Straight"
+    },
+    "pred_residual": "regular fit",
+    "expected_residual": "regular fit",
+    "s1_ms": 734.5798015594482,
+    "s2_ms": 1212.7389907836914,
+    "total_ms": 1947.3187923431396,
+    "tp": 5,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 50,
+    "query": "black cargo pants women",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Black",
+      "pant_type": "Cargo"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Black",
+      "pant_type": "Cargo"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 817.551851272583,
+    "s2_ms": 1132.4009895324707,
+    "total_ms": 1949.9528408050537,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 51,
+    "query": "womens sweatpants without pockets",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Sweatpants / Joggers"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Sweatpants / Joggers"
+    },
+    "pred_residual": "without pockets",
+    "expected_residual": "without pockets",
+    "s1_ms": 790.1759147644043,
+    "s2_ms": 944.6508884429932,
+    "total_ms": 1734.8268032073975,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 52,
+    "query": "mens shorts",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "pant_type": "Shorts",
+      "length": "Shorts"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "pant_type": "Shorts",
+      "length": "Shorts"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 719.7346687316895,
+    "s2_ms": 913.3450984954834,
+    "total_ms": 1633.0797672271729,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 53,
+    "query": "women fleece sweatpants",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pant_type": "Sweatpants / Joggers",
+      "primary_material": "Fleece"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_material": "Fleece",
+      "pant_type": "Sweatpants / Joggers"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1026.6931056976318,
+    "s2_ms": 1090.3618335723877,
+    "total_ms": 2117.0549392700195,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 54,
+    "query": "carhartt double front pants for men",
+    "expected_cat": "Pants & Trousers",
+    "pred_cat": "Pants & Trousers",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "pant_type": "Chinos / Trousers",
+      "brand": "Carhartt"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "Carhartt",
+      "pant_type": "Chinos / Trousers"
+    },
+    "pred_residual": "double front",
+    "expected_residual": "double front",
+    "s1_ms": 750.9851455688477,
+    "s2_ms": 1023.9877700805664,
+    "total_ms": 1774.972915649414,
+    "tp": 3,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 55,
+    "query": "womens dresses",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "dresses",
+    "expected_residual": "",
+    "s1_ms": 1024.9531269073486,
+    "s2_ms": 951.807975769043,
+    "total_ms": 1976.7611026763916,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 56,
+    "query": "dresses for women casual summer",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "casual summer",
+    "expected_residual": "casual summer",
+    "s1_ms": 792.2539710998535,
+    "s2_ms": 990.5281066894531,
+    "total_ms": 1782.7820777893066,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 57,
+    "query": "white dresses for women",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "White"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1053.8887977600098,
+    "s2_ms": 1027.4970531463623,
+    "total_ms": 2081.385850906372,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 58,
+    "query": "party dress for women sexy elegant",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "party sexy elegant",
+    "expected_residual": "party sexy elegant",
+    "s1_ms": 737.8940582275391,
+    "s2_ms": 1003.9718151092529,
+    "total_ms": 1741.865873336792,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 59,
+    "query": "black funeral dress",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "primary_color": "Black"
+    },
+    "pred_attrs": {
+      "primary_color": "Black"
+    },
+    "pred_residual": "funeral dress",
+    "expected_residual": "funeral",
+    "s1_ms": 918.3127880096436,
+    "s2_ms": 1027.104139328003,
+    "total_ms": 1945.4169273376465,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 60,
+    "query": "women's striped short sleeve loose swing t-shirt dress",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "pattern": "Striped",
+      "sleeve_length": "Short Sleeve",
+      "silhouette": "A-Line / Flared"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "pattern": "Striped",
+      "sleeve_length": "Short Sleeve"
+    },
+    "pred_residual": "loose swing t-shirt",
+    "expected_residual": "loose t-shirt dress",
+    "s1_ms": 818.6821937561035,
+    "s2_ms": 23340.120792388916,
+    "total_ms": 24158.80298614502,
+    "tp": 3,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 61,
+    "query": "tank maxi dress summer",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "length": "Maxi",
+      "sleeve_length": "Sleeveless / Straps"
+    },
+    "pred_attrs": {
+      "length": "Maxi"
+    },
+    "pred_residual": "tank summer",
+    "expected_residual": "summer",
+    "s1_ms": 1033.91695022583,
+    "s2_ms": 1023.8430500030518,
+    "total_ms": 2057.760000228882,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 62,
+    "query": "cami tiered dress",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "sleeve_length": "Sleeveless / Straps"
+    },
+    "pred_attrs": {},
+    "pred_residual": "cami tiered",
+    "expected_residual": "tiered",
+    "s1_ms": 1024.022102355957,
+    "s2_ms": 24760.162115097046,
+    "total_ms": 25784.184217453003,
+    "tp": 0,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 63,
+    "query": "dresses for women party wedding",
+    "expected_cat": "Dresses",
+    "pred_cat": "Dresses",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "party wedding",
+    "expected_residual": "party wedding",
+    "s1_ms": 833.8761329650879,
+    "s2_ms": 985.9628677368164,
+    "total_ms": 1819.8390007019043,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 64,
+    "query": "shoes for women",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "shoes",
+    "expected_residual": "shoes",
+    "s1_ms": 857.4342727661133,
+    "s2_ms": 874.8281002044678,
+    "total_ms": 1732.262372970581,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 65,
+    "query": "shoes for men",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_attrs": {
+      "department_gender": "Men"
+    },
+    "pred_residual": "",
+    "expected_residual": "shoes",
+    "s1_ms": 765.4860019683838,
+    "s2_ms": 984.8940372467041,
+    "total_ms": 1750.380039215088,
+    "tp": 1,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 66,
+    "query": "boots for women",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "shaft_height": "Mid (ankle boot)"
+    },
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 1162.4419689178467,
+    "s2_ms": 987.541913986206,
+    "total_ms": 2149.9838829040527,
+    "tp": 0,
+    "fp": 0,
+    "fn": 2
+  },
+  {
+    "idx": 67,
+    "query": "heel boots for women",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "shaft_height": "Mid (ankle boot)",
+      "heel_sole_type": "Heeled (Stiletto / Block)"
+    },
+    "pred_attrs": {
+      "heel_sole_type": "Heeled (Stiletto / Block)"
+    },
+    "pred_residual": "",
+    "expected_residual": "",
+    "s1_ms": 961.4472389221191,
+    "s2_ms": 928.9100170135498,
+    "total_ms": 1890.357255935669,
+    "tp": 1,
+    "fp": 0,
+    "fn": 2
+  },
+  {
+    "idx": 68,
+    "query": "black slip on sneakers for women",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Standard",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Black",
+      "shaft_height": "Low (sneakers / shoes)",
+      "fastening": "Slip-on"
+    },
+    "pred_attrs": {
+      "department_gender": "Women",
+      "primary_color": "Black",
+      "shaft_height": "Low (sneakers / shoes)",
+      "fastening": "Slip-on"
+    },
+    "pred_residual": "sneakers",
+    "expected_residual": "sneakers",
+    "s1_ms": 816.8680667877197,
+    "s2_ms": 1124.8650550842285,
+    "total_ms": 1941.7331218719482,
+    "tp": 4,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 69,
+    "query": "water shoes",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "shaft_height": "Low (sneakers / shoes)"
+    },
+    "pred_attrs": {},
+    "pred_residual": "water shoes",
+    "expected_residual": "water",
+    "s1_ms": 1220.1240062713623,
+    "s2_ms": 941.2610530853271,
+    "total_ms": 2161.3850593566895,
+    "tp": 0,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 70,
+    "query": "cap toe brown shoes",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "primary_color": "Brown",
+      "toe_style": "Closed Toe"
+    },
+    "pred_attrs": {
+      "primary_color": "Brown",
+      "toe_style": "Closed Toe"
+    },
+    "pred_residual": "cap toe",
+    "expected_residual": "cap toe",
+    "s1_ms": 907.9968929290771,
+    "s2_ms": 1127.7530193328857,
+    "total_ms": 2035.749912261963,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 71,
+    "query": "cowboy boots women",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Borderline",
+    "expected_attrs": {
+      "department_gender": "Women",
+      "shaft_height": "High (knee-high / tall boot)"
+    },
+    "pred_attrs": {
+      "department_gender": "Women"
+    },
+    "pred_residual": "cowboy boots",
+    "expected_residual": "cowboy",
+    "s1_ms": 922.7159023284912,
+    "s2_ms": 930.2000999450684,
+    "total_ms": 1852.9160022735596,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1
+  },
+  {
+    "idx": 72,
+    "query": "adidas shoes men",
+    "expected_cat": "Footwear",
+    "pred_cat": "Footwear",
+    "cat_ok": true,
+    "difficulty": "Brand_Specific",
+    "expected_attrs": {
+      "department_gender": "Men",
+      "brand": "Adidas"
+    },
+    "pred_attrs": {
+      "department_gender": "Men",
+      "brand": "Adidas"
+    },
+    "pred_residual": "",
+    "expected_residual": "shoes",
+    "s1_ms": 1014.9929523468018,
+    "s2_ms": 1135.044813156128,
+    "total_ms": 2150.0377655029297,
+    "tp": 2,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 73,
+    "query": "ratchet belts for men without buckle",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "ratchet belts for men without buckle",
+    "s1_ms": 818.5439109802246,
+    "s2_ms": 0.0,
+    "total_ms": 818.5439109802246,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 74,
+    "query": "mens belt without buckle leather",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "mens belt without buckle leather",
+    "s1_ms": 1017.4219608306885,
+    "s2_ms": 0.0,
+    "total_ms": 1017.4219608306885,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 75,
+    "query": "leather belts for men",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "leather belts for men",
+    "s1_ms": 715.1510715484619,
+    "s2_ms": 0.0,
+    "total_ms": 715.1510715484619,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 76,
+    "query": "compression socks women",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "compression socks women",
+    "s1_ms": 920.3979969024658,
+    "s2_ms": 0.0,
+    "total_ms": 920.3979969024658,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 77,
+    "query": "wool socks",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "wool socks",
+    "s1_ms": 798.7179756164551,
+    "s2_ms": 0.0,
+    "total_ms": 798.7179756164551,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 78,
+    "query": "curious george yellow hat",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "curious george yellow hat",
+    "s1_ms": 722.3761081695557,
+    "s2_ms": 0.0,
+    "total_ms": 722.3761081695557,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 79,
+    "query": "plain black fitted hats for men",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "plain black fitted hats for men",
+    "s1_ms": 933.7549209594727,
+    "s2_ms": 0.0,
+    "total_ms": 933.7549209594727,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  },
+  {
+    "idx": 80,
+    "query": "thick belts for women",
+    "expected_cat": "None",
+    "pred_cat": "None",
+    "cat_ok": true,
+    "difficulty": "Out_of_Scope",
+    "expected_attrs": {},
+    "pred_attrs": {},
+    "pred_residual": "",
+    "expected_residual": "thick belts for women",
+    "s1_ms": 784.555196762085,
+    "s2_ms": 0.0,
+    "total_ms": 784.555196762085,
+    "tp": 0,
+    "fp": 0,
+    "fn": 0
+  }
+]

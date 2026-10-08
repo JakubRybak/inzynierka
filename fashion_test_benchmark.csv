@@ -1,0 +1,81 @@
+query_id,query,category,difficulty,borderline_note,expected_attributes,expected_residual
+74348,north face jacket womens,Jackets & Coats,Standard,,"{""department_gender"": ""Women"", ""brand"": ""The North Face""}",
+113069,womens lightweight jacket without hood,Jackets & Coats,Standard,,"{""department_gender"": ""Women"", ""hood"": ""No"", ""insulation"": ""Lightweight / Transitional""}",
+85373,rain jacket mens waterproof with hood,Jackets & Coats,Standard,,"{""department_gender"": ""Men"", ""hood"": ""Yes""}",rain waterproof
+94049,ski coat women,Jackets & Coats,Standard,,"{""department_gender"": ""Women"", ""insulation"": ""Insulated / Winter""}",ski
+59576,ladies pink motorcycle jacket,Jackets & Coats,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""Pink""}",motorcycle
+113401,womens windbreaker jacket without hood,Jackets & Coats,Borderline,Borderline with Hoodies/Sports: windbreaker jacket,"{""department_gender"": ""Women"", ""hood"": ""No"", ""insulation"": ""Lightweight / Transitional""}",windbreaker
+41184,fleece jacket women,Jackets & Coats,Borderline,Borderline with Sweaters/Hoodies: fleece material as a jacket,"{""department_gender"": ""Women"", ""primary_material"": ""Fleece""}",
+96990,sport coats for men big and tall,Jackets & Coats,Borderline,Sport coat / blazer category classification,"{""department_gender"": ""Men""}",sport big and tall
+3665,32 degrees jackets for women,Jackets & Coats,Brand_Specific,Brand: 32 degrees,"{""department_gender"": ""Women"", ""brand"": ""32 Degrees""}",
+51223,hoodies for women,Hoodies & Sweatshirts,Standard,,"{""department_gender"": ""Women"", ""hood"": ""Yes""}",
+51219,hoodies for men,Hoodies & Sweatshirts,Standard,,"{""department_gender"": ""Men"", ""hood"": ""Yes""}",
+76907,oversized sweatshirt for women,Hoodies & Sweatshirts,Standard,,"{""department_gender"": ""Women"", ""hood"": ""No""}",oversized
+21601,california sweatshirt for women,Hoodies & Sweatshirts,Standard,,"{""department_gender"": ""Women"", ""hood"": ""No""}",california
+114836,yellow champion hoodie,Hoodies & Sweatshirts,Standard,,"{""primary_color"": ""Yellow"", ""hood"": ""Yes"", ""brand"": ""Champion""}",
+104690,track jacket men venum,Hoodies & Sweatshirts,Borderline,Borderline with Jackets: 'track jacket' is zip-up sportswear sweatshirt,"{""department_gender"": ""Men"", ""closure_type"": ""Zip-up"", ""brand"": ""Venum""}",track
+113187,womens red zip up hoodie,Hoodies & Sweatshirts,Borderline,Borderline with light jacket: zip-up hoodie,"{""department_gender"": ""Women"", ""primary_color"": ""Red"", ""hood"": ""Yes"", ""closure_type"": ""Zip-up""}",
+115780,zipper sweaters for women without hoodie,Hoodies & Sweatshirts,Borderline,Borderline with Sweaters: query says 'sweaters without hoodie' but means zip sweatshirt,"{""department_gender"": ""Women"", ""hood"": ""No"", ""closure_type"": ""Zip-up""}",
+43762,g star hoodies for men,Hoodies & Sweatshirts,Brand_Specific,Brand: G-Star,"{""department_gender"": ""Men"", ""hood"": ""Yes"", ""brand"": ""G-Star""}",
+113312,womens sweaters,Sweaters & Cardigans,Standard,,"{""department_gender"": ""Women""}",
+99702,sweaters for women,Sweaters & Cardigans,Standard,,"{""department_gender"": ""Women""}",
+31011,cute fall sweaters,Sweaters & Cardigans,Standard,,{},cute fall
+80151,pink argyle sweater,Sweaters & Cardigans,Standard,,"{""primary_color"": ""Pink"", ""pattern"": ""Plaid / Checked""}",argyle
+112524,women elegant sweater,Sweaters & Cardigans,Standard,,"{""department_gender"": ""Women""}",elegant
+3541,3/4 sleeve cardigan for women,Sweaters & Cardigans,Borderline,Borderline with Tops/Jackets: open-front cardigan,"{""department_gender"": ""Women"", ""closure_type"": ""Button-up (Cardigan)""}",3/4 sleeve
+30270,crop cardigan,Sweaters & Cardigans,Borderline,Borderline with Crop Tops: cropped cardigan sweater,"{""closure_type"": ""Button-up (Cardigan)""}",crop
+111004,white cardigan chunky,Sweaters & Cardigans,Borderline,Borderline with light outerwear: chunky knit cardigan,"{""primary_color"": ""White"", ""closure_type"": ""Button-up (Cardigan)"", ""knit_style"": ""Chunky / Cable Knit""}",
+82365,port authority cardigan,Sweaters & Cardigans,Brand_Specific,Brand: Port Authority,"{""closure_type"": ""Button-up (Cardigan)"", ""brand"": ""Port Authority""}",
+113388,womens white button up blouse,Shirts & Blouses,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""White"", ""closure_type"": ""Full Button Front""}",
+16662,black mens dress shirt slim fit,Shirts & Blouses,Standard,,"{""department_gender"": ""Men"", ""primary_color"": ""Black"", ""collar"": ""Classic Collar"", ""fit"": ""Slim Fit""}",dress
+61456,lemon yellow blouse,Shirts & Blouses,Standard,,"{""primary_color"": ""Yellow""}",lemon
+67719,mens linen shirt,Shirts & Blouses,Standard,,"{""department_gender"": ""Men"", ""primary_material"": ""Linen""}",
+110991,white button down blouse women,Shirts & Blouses,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""White"", ""collar"": ""Classic Collar"", ""closure_type"": ""Full Button Front""}",
+41187,fleece lined flannel shirt women,Shirts & Blouses,Borderline,Borderline with Jacket (shacket): fleece lined flannel shirt,"{""department_gender"": ""Women"", ""collar"": ""Classic Collar"", ""pattern"": ""Plaid / Checked""}",fleece lined flannel
+111532,wide sleeve flannel shirt women,Shirts & Blouses,Borderline,Borderline with casual tops: flannel shirt,"{""department_gender"": ""Women"", ""collar"": ""Classic Collar"", ""pattern"": ""Plaid / Checked""}",wide sleeve flannel
+67753,mens navy and gray oxford shirt,Shirts & Blouses,Borderline,Classic woven Oxford button-down shirt,"{""department_gender"": ""Men"", ""primary_color"": ""Navy"", ""collar"": ""Classic Collar""}",gray oxford
+4478,4xlt dress shirts for men big and tall,Shirts & Blouses,Brand_Specific,Sizing & Formal Wear: 4XLT dress shirt,"{""department_gender"": ""Men"", ""collar"": ""Classic Collar""}",4xlt dress big and tall
+55860,jerzees long sleeve t shirt,T-Shirts & Tops,Standard,,"{""sleeve_length"": ""Long Sleeve"", ""closure_type"": ""Pull-over / No Buttons"", ""brand"": ""Jerzees""}",
+107625,v neck white t shirt women,T-Shirts & Tops,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""White"", ""neckline"": ""V-Neck"", ""closure_type"": ""Pull-over / No Buttons""}",
+20110,brown tank top womens,T-Shirts & Tops,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""Brown"", ""sleeve_length"": ""Sleeveless / Tank Top"", ""closure_type"": ""Pull-over / No Buttons""}",
+30965,cut out tank tops for women,T-Shirts & Tops,Standard,,"{""department_gender"": ""Women"", ""sleeve_length"": ""Sleeveless / Tank Top"", ""closure_type"": ""Pull-over / No Buttons""}",cut out
+100618,tank top plus size women,T-Shirts & Tops,Standard,,"{""department_gender"": ""Women"", ""sleeve_length"": ""Sleeveless / Tank Top"", ""closure_type"": ""Pull-over / No Buttons""}",plus size
+46592,golf polo slim fit,T-Shirts & Tops,Borderline,Borderline with Shirts: Polo has collar and buttons but is jersey knit top,"{""closure_type"": ""Partial Button (Polo)""}",golf slim fit
+72441,nautica polo shirts for men,T-Shirts & Tops,Borderline,Borderline with Shirts: Polo shirt,"{""department_gender"": ""Men"", ""closure_type"": ""Partial Button (Polo)"", ""brand"": ""Nautica""}",
+67546,mens cotton polo shirts with pockets and short sleeves,T-Shirts & Tops,Borderline,Borderline with Shirts: Polo with pocket and collar,"{""department_gender"": ""Men"", ""primary_material"": ""Cotton"", ""sleeve_length"": ""Short Sleeve"", ""closure_type"": ""Partial Button (Polo)""}",pockets
+32857,dewalt shirt for men,T-Shirts & Tops,Brand_Specific,Brand: Dewalt graphic t-shirt,"{""department_gender"": ""Men"", ""brand"": ""DeWalt""}",
+113265,womens skinny jeans,Pants & Trousers,Standard,,"{""department_gender"": ""Women"", ""pant_type"": ""Jeans"", ""leg_fit"": ""Skinny"", ""primary_material"": ""Denim""}",
+105404,trousers women,Pants & Trousers,Standard,,"{""department_gender"": ""Women"", ""pant_type"": ""Chinos / Trousers""}",
+80787,plaid trousers for women,Pants & Trousers,Standard,,"{""department_gender"": ""Women"", ""pattern"": ""Plaid / Checked"", ""pant_type"": ""Chinos / Trousers""}",
+67474,mens blue jeans regular fit,Pants & Trousers,Standard,,"{""department_gender"": ""Men"", ""primary_color"": ""Blue"", ""pant_type"": ""Jeans"", ""primary_material"": ""Denim"", ""leg_fit"": ""Straight""}",regular fit
+16410,black cargo pants women,Pants & Trousers,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""Black"", ""pant_type"": ""Cargo""}",
+113317,womens sweatpants without pockets,Pants & Trousers,Borderline,Sweatpants / Loungewear vs casual trousers,"{""department_gender"": ""Women"", ""pant_type"": ""Sweatpants / Joggers""}",without pockets
+67866,mens shorts,Pants & Trousers,Borderline,Shorts as lower body category member,"{""department_gender"": ""Men"", ""pant_type"": ""Shorts"", ""length"": ""Shorts""}",
+112530,women fleece sweatpants,Pants & Trousers,Borderline,Fleece sweatpants,"{""department_gender"": ""Women"", ""pant_type"": ""Sweatpants / Joggers"", ""primary_material"": ""Fleece""}",
+23184,carhartt double front pants for men,Pants & Trousers,Brand_Specific,Brand: Carhartt workwear pants,"{""department_gender"": ""Men"", ""pant_type"": ""Chinos / Trousers"", ""brand"": ""Carhartt""}",double front
+112954,womens dresses,Dresses,Standard,,"{""department_gender"": ""Women""}",
+35468,dresses for women casual summer,Dresses,Standard,,"{""department_gender"": ""Women""}",casual summer
+111088,white dresses for women,Dresses,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""White""}",
+77916,party dress for women sexy elegant,Dresses,Standard,,"{""department_gender"": ""Women""}",party sexy elegant
+16542,black funeral dress,Dresses,Standard,,"{""primary_color"": ""Black""}",funeral
+112780,women's striped short sleeve loose swing t-shirt dress,Dresses,Borderline,Borderline with T-shirts: 't-shirt dress' has T-shirt in name but is a Dress,"{""department_gender"": ""Women"", ""pattern"": ""Striped"", ""sleeve_length"": ""Short Sleeve"", ""silhouette"": ""A-Line / Flared""}",loose t-shirt dress
+100613,tank maxi dress summer,Dresses,Borderline,Borderline with tank top: maxi tank dress,"{""length"": ""Maxi"", ""sleeve_length"": ""Sleeveless / Straps""}",summer
+21921,cami tiered dress,Dresses,Borderline,Cami straps tiered dress,"{""sleeve_length"": ""Sleeveless / Straps""}",tiered
+35471,dresses for women party wedding,Dresses,Brand_Specific,Occasion-rich query: party wedding,"{""department_gender"": ""Women""}",party wedding
+92746,shoes for women,Footwear,Standard,,"{""department_gender"": ""Women""}",shoes
+92738,shoes for men,Footwear,Standard,,"{""department_gender"": ""Men""}",shoes
+18534,boots for women,Footwear,Standard,,"{""department_gender"": ""Women"", ""shaft_height"": ""Mid (ankle boot)""}",
+50044,heel boots for women,Footwear,Standard,,"{""department_gender"": ""Women"", ""shaft_height"": ""Mid (ankle boot)"", ""heel_sole_type"": ""Heeled (Stiletto / Block)""}",
+16819,black slip on sneakers for women,Footwear,Standard,,"{""department_gender"": ""Women"", ""primary_color"": ""Black"", ""shaft_height"": ""Low (sneakers / shoes)"", ""fastening"": ""Slip-on""}",sneakers
+110005,water shoes,Footwear,Borderline,Borderline aquatic/sport shoes,"{""shaft_height"": ""Low (sneakers / shoes)""}",water
+22571,cap toe brown shoes,Footwear,Borderline,Formal oxford shoes with cap toe styling,"{""primary_color"": ""Brown"", ""toe_style"": ""Closed Toe""}",cap toe
+29700,cowboy boots women,Footwear,Borderline,Western boots with mid/high shaft,"{""department_gender"": ""Women"", ""shaft_height"": ""High (knee-high / tall boot)""}",cowboy
+6736,adidas shoes men,Footwear,Brand_Specific,Brand: Adidas sneakers,"{""department_gender"": ""Men"", ""brand"": ""Adidas""}",shoes
+85658,ratchet belts for men without buckle,None,Out_of_Scope,Accessories: belt,{},ratchet belts for men without buckle
+67447,mens belt without buckle leather,None,Out_of_Scope,Accessories: leather belt,{},mens belt without buckle leather
+60688,leather belts for men,None,Out_of_Scope,Accessories: leather belts,{},leather belts for men
+28304,compression socks women,None,Out_of_Scope,Hosiery / medical socks,{},compression socks women
+113758,wool socks,None,Out_of_Scope,Hosiery: socks,{},wool socks
+30780,curious george yellow hat,None,Out_of_Scope,Headwear / costume hat,{},curious george yellow hat
+80795,plain black fitted hats for men,None,Out_of_Scope,Headwear / baseball cap,{},plain black fitted hats for men
+102645,thick belts for women,None,Out_of_Scope,Accessories: belt,{},thick belts for women
