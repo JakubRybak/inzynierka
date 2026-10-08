@@ -32,73 +32,79 @@ class CategorySelection(BaseModel):
     category: str = Field(description="Selected fashion category from the allowed list, or 'None' if out of scope.")
     confidence: float = Field(default=1.0, description="Confidence score between 0.0 and 1.0.")
 
-# Bazowa klasa z 4 cechami globalnymi dla każdego ubrania
+# Bazowa klasa z cechami globalnymi dla każdego ubrania (wielowartościowe listy + operatory)
 class BaseFashionExtraction(BaseModel):
     department_gender: Optional[Literal["Women", "Men", "Kids", "Unisex"]] = Field(
         default=None, description="Gender / department"
     )
-    primary_color: Optional[Literal[
+    colors: Optional[List[Literal[
         "Black", "White", "Blue", "Navy", "Grey", "Beige / Cream", "Brown", "Red", "Pink", "Green", "Yellow", "Orange", "Purple", "Multicolor"
-    ]] = Field(default=None, description="Dominant primary color")
-    pattern: Optional[Literal[
+    ]]] = Field(default=None, description="List of colors mentioned in the query")
+    color_operator: Optional[Literal["AND", "OR"]] = Field(
+        default=None, description="'AND' if multi-color item (e.g. black and white). 'OR' if alternative (e.g. black or navy). Leave null if single color."
+    )
+    pattern: Optional[List[Literal[
         "Solid", "Striped", "Plaid / Checked", "Floral", "Graphic / Print", "Animal Print"
-    ]] = Field(default=None, description="Pattern or print")
-    primary_material: Optional[Literal[
+    ]]] = Field(default=None, description="Pattern or print")
+    materials: Optional[List[Literal[
         "Cotton", "Denim", "Leather / Faux Leather", "Linen", "Wool", "Fleece", "Silk / Satin", "Synthetic / Polyester", "Corduroy"
-    ]] = Field(default=None, description="Primary fabric / material")
-    brand: Optional[str] = Field(
-        default=None, description="Brand or manufacturer name if explicitly mentioned in query (e.g. Nike, Adidas, Carhartt, The North Face, Champion, G-Star). Leave null if no brand is mentioned."
+    ]]] = Field(default=None, description="List of fabrics / materials mentioned in query")
+    material_operator: Optional[Literal["AND", "OR"]] = Field(
+        default=None, description="'OR' if alternative (e.g. linen or cotton). 'AND' if blended fabric / lining. Leave null if single material."
+    )
+    brands: Optional[List[str]] = Field(
+        default=None, description="Brand or manufacturer names if explicitly mentioned in query. Leave null if no brand is mentioned."
     )
     residual_text: str = Field(
-        default="", description="Any leftover terms: occasions, subjective styles, or unmapped text (do not include brand if captured in brand field)"
+        default="", description="Any leftover terms: occasions, subjective styles, or unmapped text (do not include brand if captured in brands field)"
     )
 
 # 8 Dedykowanych klas z cechami specyficznymi dla danej kategorii
 class JacketsCoatsExtraction(BaseFashionExtraction):
-    closure_type: Optional[Literal["Zipper", "Buttons", "Belt / Tie", "Snap Buttons", "Pull-over / No Closure"]] = None
+    closure_type: Optional[List[Literal["Zipper", "Buttons", "Belt / Tie", "Snap Buttons", "Pull-over / No Closure"]]] = None
     hood: Optional[Literal["Yes", "No"]] = None
-    length: Optional[Literal["Short (crop / hip)", "Medium (thigh)", "Long (knee / trench)"]] = None
-    insulation: Optional[Literal["Lightweight / Transitional", "Insulated / Winter"]] = None
+    length: Optional[List[Literal["Short (crop / hip)", "Medium (thigh)", "Long (knee / trench)"]]] = None
+    insulation: Optional[List[Literal["Lightweight / Transitional", "Insulated / Winter"]]] = None
 
 class HoodiesSweatshirtsExtraction(BaseFashionExtraction):
     hood: Optional[Literal["Yes", "No"]] = None
-    closure_type: Optional[Literal["Pullover", "Zip-up"]] = None
+    closure_type: Optional[List[Literal["Pullover", "Zip-up"]]] = None
     front_pocket: Optional[Literal["Kangaroo Pocket", "No Pocket"]] = None
 
 class SweatersCardigansExtraction(BaseFashionExtraction):
-    neckline: Optional[Literal["Turtleneck / High Neck", "Crew Neck / Round", "V-Neck"]] = None
-    closure_type: Optional[Literal["Pullover", "Button-up (Cardigan)", "Open Front / No Closure"]] = None
-    knit_style: Optional[Literal["Fine Knit", "Chunky / Cable Knit"]] = None
+    neckline: Optional[List[Literal["Turtleneck / High Neck", "Crew Neck / Round", "V-Neck"]]] = None
+    closure_type: Optional[List[Literal["Pullover", "Button-up (Cardigan)", "Open Front / No Closure"]]] = None
+    knit_style: Optional[List[Literal["Fine Knit", "Chunky / Cable Knit"]]] = None
 
 class ShirtsBlousesExtraction(BaseFashionExtraction):
-    collar: Optional[Literal["Classic Collar", "Stand Collar / Mandarin", "Collarless"]] = None
-    sleeve_length: Optional[Literal["Short Sleeve", "Long Sleeve", "Sleeveless"]] = None
-    closure_type: Optional[Literal["Full Button Front", "Partial Button", "Pull-over / No Buttons"]] = None
-    fit: Optional[Literal["Slim Fit", "Regular Fit", "Relaxed / Oversized"]] = None
+    collar: Optional[List[Literal["Classic Collar", "Stand Collar / Mandarin", "Collarless"]]] = None
+    sleeve_length: Optional[List[Literal["Short Sleeve", "Long Sleeve", "Sleeveless"]]] = None
+    closure_type: Optional[List[Literal["Full Button Front", "Partial Button", "Pull-over / No Buttons"]]] = None
+    fit: Optional[List[Literal["Slim Fit", "Regular Fit", "Relaxed / Oversized"]]] = None
 
 class TShirtsTopsExtraction(BaseFashionExtraction):
-    neckline: Optional[Literal["Crew Neck / Round", "V-Neck", "Square Neck"]] = None
-    sleeve_length: Optional[Literal["Short Sleeve", "Long Sleeve", "Sleeveless / Tank Top"]] = None
-    closure_type: Optional[Literal["Pull-over / No Buttons", "Partial Button (Polo)"]] = None
-    length: Optional[Literal["Regular Length", "Crop Top"]] = None
+    neckline: Optional[List[Literal["Crew Neck / Round", "V-Neck", "Square Neck"]]] = None
+    sleeve_length: Optional[List[Literal["Short Sleeve", "Long Sleeve", "Sleeveless / Tank Top"]]] = None
+    closure_type: Optional[List[Literal["Pull-over / No Buttons", "Partial Button (Polo)"]]] = None
+    length: Optional[List[Literal["Regular Length", "Crop Top"]]] = None
 
 class PantsTrousersExtraction(BaseFashionExtraction):
-    pant_type: Optional[Literal["Jeans", "Cargo", "Chinos / Trousers", "Sweatpants / Joggers", "Shorts", "Leggings"]] = None
-    leg_fit: Optional[Literal["Skinny", "Slim", "Straight", "Wide Leg", "Flare / Bootcut"]] = None
-    rise: Optional[Literal["High Rise", "Mid Rise", "Low Rise"]] = None
-    length: Optional[Literal["Full Length", "Cropped / Ankle", "Shorts"]] = None
+    pant_type: Optional[List[Literal["Jeans", "Cargo", "Chinos / Trousers", "Sweatpants / Joggers", "Shorts", "Leggings"]]] = None
+    leg_fit: Optional[List[Literal["Skinny", "Slim", "Straight", "Wide Leg", "Flare / Bootcut"]]] = None
+    rise: Optional[List[Literal["High Rise", "Mid Rise", "Low Rise"]]] = None
+    length: Optional[List[Literal["Full Length", "Cropped / Ankle", "Shorts"]]] = None
 
 class DressesExtraction(BaseFashionExtraction):
-    length: Optional[Literal["Mini", "Midi", "Maxi"]] = None
-    sleeve_length: Optional[Literal["Sleeveless / Straps", "Short Sleeve", "Long Sleeve", "Off-Shoulder"]] = None
-    neckline: Optional[Literal["V-Neck", "Round / Crew Neck", "Square Neck"]] = None
-    silhouette: Optional[Literal["A-Line / Flared", "Fitted / Bodycon", "Straight / Shift", "Wrap"]] = None
+    length: Optional[List[Literal["Mini", "Midi", "Maxi"]]] = None
+    sleeve_length: Optional[List[Literal["Sleeveless / Straps", "Short Sleeve", "Long Sleeve", "Off-Shoulder"]]] = None
+    neckline: Optional[List[Literal["V-Neck", "Round / Crew Neck", "Square Neck"]]] = None
+    silhouette: Optional[List[Literal["A-Line / Flared", "Fitted / Bodycon", "Straight / Shift", "Wrap"]]] = None
 
 class FootwearExtraction(BaseFashionExtraction):
-    shaft_height: Optional[Literal["Low (sneakers / shoes)", "Mid (ankle boot)", "High (knee-high / tall boot)"]] = None
-    fastening: Optional[Literal["Lace-up", "Slip-on", "Zipper", "Buckle / Straps"]] = None
-    heel_sole_type: Optional[Literal["Flat", "Heeled (Stiletto / Block)", "Platform / Chunky"]] = None
-    toe_style: Optional[Literal["Closed Toe", "Open Toe (Sandals)"]] = None
+    shaft_height: Optional[List[Literal["Low (sneakers / shoes)", "Mid (ankle boot)", "High (knee-high / tall boot)"]]] = None
+    fastening: Optional[List[Literal["Lace-up", "Slip-on", "Zipper", "Buckle / Straps"]]] = None
+    heel_sole_type: Optional[List[Literal["Flat", "Heeled (Stiletto / Block)", "Platform / Chunky"]]] = None
+    toe_style: Optional[List[Literal["Closed Toe", "Open Toe (Sandals)"]]] = None
 
 CATEGORY_MODELS = {
     "Jackets & Coats": JacketsCoatsExtraction,
@@ -120,13 +126,16 @@ FEW_SHOT_EXAMPLES = {
         "query": "men's vintage brown leather bomber jacket with zipper",
         "output": {
             "department_gender": "Men",
-            "primary_color": "Brown",
-            "primary_material": "Leather / Faux Leather",
-            "closure_type": "Zipper",
+            "colors": ["Brown"],
+            "color_operator": None,
+            "materials": ["Leather / Faux Leather"],
+            "material_operator": None,
+            "closure_type": ["Zipper"],
             "hood": None,
             "length": None,
             "insulation": None,
             "pattern": None,
+            "brands": None,
             "residual_text": "vintage bomber"
         }
     },
@@ -134,12 +143,15 @@ FEW_SHOT_EXAMPLES = {
         "query": "women's oversized grey fleece hoodie with kangaroo pocket",
         "output": {
             "department_gender": "Women",
-            "primary_color": "Grey",
-            "primary_material": "Fleece",
+            "colors": ["Grey"],
+            "color_operator": None,
+            "materials": ["Fleece"],
+            "material_operator": None,
             "hood": "Yes",
             "front_pocket": "Kangaroo Pocket",
             "closure_type": None,
             "pattern": None,
+            "brands": None,
             "residual_text": "oversized"
         }
     },
@@ -147,26 +159,32 @@ FEW_SHOT_EXAMPLES = {
         "query": "chunky cable knit turtleneck sweater for women in beige",
         "output": {
             "department_gender": "Women",
-            "primary_color": "Beige / Cream",
-            "neckline": "Turtleneck / High Neck",
-            "knit_style": "Chunky / Cable Knit",
+            "colors": ["Beige / Cream"],
+            "color_operator": None,
+            "neckline": ["Turtleneck / High Neck"],
+            "knit_style": ["Chunky / Cable Knit"],
             "closure_type": None,
-            "primary_material": None,
+            "materials": None,
+            "material_operator": None,
             "pattern": None,
+            "brands": None,
             "residual_text": ""
         }
     },
     "Shirts & Blouses": {
-        "query": "men's blue striped short sleeve slim fit button down shirt",
+        "query": "men's blue and white striped short sleeve slim fit button down shirt",
         "output": {
             "department_gender": "Men",
-            "primary_color": "Blue",
-            "pattern": "Striped",
-            "sleeve_length": "Short Sleeve",
-            "collar": "Classic Collar",
-            "closure_type": "Full Button Front",
-            "fit": "Slim Fit",
-            "primary_material": None,
+            "colors": ["Blue", "White"],
+            "color_operator": "AND",
+            "pattern": ["Striped"],
+            "sleeve_length": ["Short Sleeve"],
+            "collar": ["Classic Collar"],
+            "closure_type": ["Full Button Front"],
+            "fit": ["Slim Fit"],
+            "materials": None,
+            "material_operator": None,
+            "brands": None,
             "residual_text": ""
         }
     },
@@ -174,27 +192,33 @@ FEW_SHOT_EXAMPLES = {
         "query": "women's black ribbed crop tank top v neck",
         "output": {
             "department_gender": "Women",
-            "primary_color": "Black",
-            "neckline": "V-Neck",
-            "sleeve_length": "Sleeveless / Tank Top",
-            "length": "Crop Top",
-            "closure_type": "Pull-over / No Buttons",
+            "colors": ["Black"],
+            "color_operator": None,
+            "neckline": ["V-Neck"],
+            "sleeve_length": ["Sleeveless / Tank Top"],
+            "length": ["Crop Top"],
+            "closure_type": ["Pull-over / No Buttons"],
             "pattern": None,
-            "primary_material": None,
+            "materials": None,
+            "material_operator": None,
+            "brands": None,
             "residual_text": "ribbed"
         }
     },
     "Pants & Trousers": {
-        "query": "women's high rise black flare jeans",
+        "query": "women's high rise beige linen or cotton flare pants",
         "output": {
             "department_gender": "Women",
-            "primary_color": "Black",
-            "pant_type": "Jeans",
-            "primary_material": "Denim",
-            "leg_fit": "Flare / Bootcut",
-            "rise": "High Rise",
+            "colors": ["Beige / Cream"],
+            "color_operator": None,
+            "pant_type": ["Chinos / Trousers"],
+            "materials": ["Linen", "Cotton"],
+            "material_operator": "OR",
+            "leg_fit": ["Flare / Bootcut"],
+            "rise": ["High Rise"],
             "length": None,
             "pattern": None,
+            "brands": None,
             "residual_text": ""
         }
     },
@@ -202,28 +226,33 @@ FEW_SHOT_EXAMPLES = {
         "query": "women's red floral midi wrap dress short sleeve",
         "output": {
             "department_gender": "Women",
-            "primary_color": "Red",
-            "pattern": "Floral",
-            "length": "Midi",
-            "sleeve_length": "Short Sleeve",
-            "silhouette": "Wrap",
+            "colors": ["Red"],
+            "color_operator": None,
+            "pattern": ["Floral"],
+            "length": ["Midi"],
+            "sleeve_length": ["Short Sleeve"],
+            "silhouette": ["Wrap"],
             "neckline": None,
-            "primary_material": None,
+            "materials": None,
+            "material_operator": None,
+            "brands": None,
             "residual_text": ""
         }
     },
     "Footwear": {
         "query": "men's white adidas low top lace up running sneakers",
         "output": {
-            "brand": "Adidas",
+            "brands": ["Adidas"],
             "department_gender": "Men",
-            "primary_color": "White",
-            "shaft_height": "Low (sneakers / shoes)",
-            "fastening": "Lace-up",
+            "colors": ["White"],
+            "color_operator": None,
+            "shaft_height": ["Low (sneakers / shoes)"],
+            "fastening": ["Lace-up"],
             "heel_sole_type": None,
             "toe_style": None,
             "pattern": None,
-            "primary_material": None,
+            "materials": None,
+            "material_operator": None,
             "residual_text": "running sneakers"
         }
     }
@@ -286,8 +315,14 @@ Output:
 Important Rules:
 1. Extract attributes that are explicitly stated in the query.
 2. CRITICAL: DO NOT guess or infer unmentioned default traits (e.g. do not assume sneakers are flat, do not assume coats are wool or unhooded). If an attribute is not explicitly mentioned, LEAVE IT null.
-3. If a brand or company name is present in the query, extract its normalized official name into 'brand'. If no brand is present, leave 'brand' null.
-4. Put any leftover terms (occasions, subjective styles, or unmapped words) into residual_text. Do not put the brand name into residual_text if captured in 'brand'.
+3. Multi-value & Operator Rules:
+   - For styles, fits, cuts, lengths, fastenings, or heel types (e.g. 'midi or maxi', 'straight or wide leg', 'slip-on or lace-up'): return all requested options in the corresponding list.
+   - For colors and materials: return all mentioned options in the list.
+     * Set operator to 'OR' if the user is open to either alternative (e.g. 'linen or cotton', 'black or navy').
+     * Set operator to 'AND' if the single item combines multiple values (e.g. 'black and white', 'cotton polyester blend').
+     * If only one color or material is mentioned, leave the operator null.
+4. If a brand or company name is present in the query, extract its normalized official name into 'brands' list. If no brand is present, leave 'brands' null.
+5. Put any leftover terms (occasions, subjective styles, or unmapped words) into residual_text. Do not put the brand name into residual_text if captured in 'brands'.
 {few_shot_block}
 User Query: "{query}"
 Category: "{category}"
@@ -403,28 +438,61 @@ def main():
         total_ms = s1_ms + s2_ms
         latencies.append(total_ms)
 
+        KEY_ALIASES = {
+            "primary_color": "colors",
+            "primary_material": "materials",
+            "brand": "brands",
+        }
+        REVERSE_ALIASES = {v: k for k, v in KEY_ALIASES.items()}
+
+        def norm_val(k, v):
+            if v is None:
+                return ""
+            s = str(v).lower().strip()
+            if k in ("brand", "brands"):
+                if s.startswith("the "):
+                    s = s[4:]
+                return s.replace("-", " ").replace("'", "").replace("raw", "").strip()
+            return s
+
         def attr_matches(k, v_pred, v_exp):
-            if k == "brand":
-                def norm_b(b):
-                    s = str(b).lower().strip()
-                    if s.startswith("the "):
-                        s = s[4:]
-                    return s.replace("-", " ").replace("'", "").replace("raw", "").strip()
-                return norm_b(v_pred) == norm_b(v_exp)
-            return str(v_pred).lower().strip() == str(v_exp).lower().strip()
+            if isinstance(v_pred, list) and isinstance(v_exp, str):
+                return any(norm_val(k, item) == norm_val(k, v_exp) for item in v_pred)
+            if isinstance(v_exp, list) and isinstance(v_pred, str):
+                return any(norm_val(k, v_pred) == norm_val(k, item) for item in v_exp)
+            if isinstance(v_pred, list) and isinstance(v_exp, list):
+                return any(norm_val(k, x) in [norm_val(k, y) for y in v_exp] for x in v_pred)
+            return norm_val(k, v_pred) == norm_val(k, v_exp)
 
         tp = 0
         fp = 0
         fn = 0
 
-        for k, v in predicted_attrs.items():
-            if k in expected_attrs and attr_matches(k, v, expected_attrs[k]):
+        for k_pred, v_pred in predicted_attrs.items():
+            if k_pred in ("color_operator", "material_operator"):
+                if k_pred in expected_attrs:
+                    if str(v_pred).upper() == str(expected_attrs[k_pred]).upper():
+                        tp += 1
+                    else:
+                        fp += 1
+                else:
+                    fp += 1
+                continue
+            canonical_exp = k_pred if k_pred in expected_attrs else REVERSE_ALIASES.get(k_pred, k_pred)
+            if canonical_exp in expected_attrs and attr_matches(k_pred, v_pred, expected_attrs[canonical_exp]):
                 tp += 1
             else:
                 fp += 1
 
-        for k, v in expected_attrs.items():
-            if k not in predicted_attrs or not attr_matches(k, predicted_attrs.get(k), v):
+        for k_exp, v_exp in expected_attrs.items():
+            if k_exp in ("color_operator", "material_operator"):
+                pred_op = predicted_attrs.get(k_exp)
+                if not pred_op or str(pred_op).upper() != str(v_exp).upper():
+                    fn += 1
+                continue
+            canonical_pred = k_exp if k_exp in predicted_attrs else KEY_ALIASES.get(k_exp, k_exp)
+            pred_val = predicted_attrs.get(canonical_pred, predicted_attrs.get(k_exp))
+            if pred_val is None or not attr_matches(k_exp, pred_val, v_exp):
                 fn += 1
 
         total_tp += tp
@@ -437,6 +505,7 @@ def main():
 
         results.append({
             "idx": idx,
+            "query_id": test.get("query_id", ""),
             "query": query,
             "expected_cat": expected_cat,
             "pred_cat": predicted_cat,
@@ -475,7 +544,7 @@ def main():
     avg_total = sum(latencies) / len(latencies) if latencies else 0.0
 
     print("\n" + "=" * 110)
-    print(" PODSUMOWANIE STATYSTYCZNE EWALUACJI")
+    print(" PODSUMOWANIE STATYSTYCZNE EWALUACJI (CAŁOŚĆ: 92 ZAPYTANIA)")
     print("=" * 110)
     print(f"Model: {MODEL_NAME}")
     print(f"Liczba zapytań: {total_queries}")
@@ -497,6 +566,55 @@ def main():
     print(f"  - Precision (Precyzja)               : {precision:.1f}%")
     print(f"  - Recall (Czułość)                   : {recall:.1f}%")
     print(f"  - F1-Score                           : {f1:.1f}%")
+
+    # --------------------------------------------------------------------------
+    # Statystyki dedykowane dla 12 zapytań Complex_Logic (AND / OR)
+    # --------------------------------------------------------------------------
+    complex_ids = ["72705", "5631", "5676", "52479", "111109", "67459", "80142", "17315", "86257", "51216", "47180", "87316"]
+    complex_res = [r for r in results if r["query_id"] in complex_ids or r["difficulty"] == "Complex_Logic"]
+    if complex_res:
+        c_total = len(complex_res)
+        c_cat_ok = sum(1 for r in complex_res if r["cat_ok"])
+        c_tp = sum(r["tp"] for r in complex_res)
+        c_fp = sum(r["fp"] for r in complex_res)
+        c_fn = sum(r["fn"] for r in complex_res)
+        c_prec = (c_tp / (c_tp + c_fp) * 100.0) if (c_tp + c_fp) > 0 else 100.0
+        c_rec = (c_tp / (c_tp + c_fn) * 100.0) if (c_tp + c_fn) > 0 else 100.0
+        c_f1 = (2 * c_prec * c_rec / (c_prec + c_rec)) if (c_prec + c_rec) > 0 else 0.0
+
+        print("\n" + "=" * 110)
+        print(f" STATYSTYKI STRICTE DLA {c_total} NOWYCH ZAPYTAŃ Z LOGIKĄ AND / OR (Complex_Logic)")
+        print("=" * 110)
+        print(f"  - Dokładność kategorii (Krok 1)      : {c_cat_ok}/{c_total} ({c_cat_ok/c_total*100.0:.1f}%)")
+        print(f"  - True Positives (Poprawne cechy)    : {c_tp}")
+        print(f"  - False Positives (Cechy nadmiarowe) : {c_fp}")
+        print(f"  - False Negatives (Cechy pominięte)  : {c_fn}")
+        print(f"  - Precision (Precyzja)               : {c_prec:.1f}%")
+        print(f"  - Recall (Czułość)                   : {c_rec:.1f}%")
+        print(f"  - F1-Score                           : {c_f1:.1f}%")
+
+        # Sprawdzenie operatorów boolowskich
+        op_tests = 0
+        op_correct = 0
+        for r in complex_res:
+            for op_key in ("color_operator", "material_operator"):
+                if op_key in r["expected_attrs"]:
+                    op_tests += 1
+                    exp_val = str(r["expected_attrs"][op_key]).upper()
+                    pred_val = str(r["pred_attrs"].get(op_key, "")).upper()
+                    if exp_val == pred_val:
+                        op_correct += 1
+
+        if op_tests > 0:
+            print(f"  - Skuteczność operatorów (AND/OR)    : {op_correct}/{op_tests} ({op_correct/op_tests*100.0:.1f}%)")
+
+        print("\n  SZCZEGÓŁOWY WYKAZ TYCH 12 ZAPYTAŃ:")
+        for r in complex_res:
+            cat_flag = "✅" if r["cat_ok"] else "❌"
+            attr_flag = "✅" if (r["fp"] == 0 and r["fn"] == 0) else "⚠️"
+            print(f"    [{r['query_id']}] {cat_flag} Kat: {r['pred_cat']:18s} | {attr_flag} Q: \"{r['query']}\"")
+            print(f"         Oczekiwane: {json.dumps(r['expected_attrs'])}")
+            print(f"         Wyciągnięte: {json.dumps(r['pred_attrs'])}")
 
     print("\n" + "=" * 110)
     print(" PRZYKŁADY BŁĘDÓW LUB ROZBIEŻNOŚCI (JEŚLI WYSTĄPIŁY):")
