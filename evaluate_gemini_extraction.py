@@ -259,8 +259,44 @@ FEW_SHOT_EXAMPLES = {
 }
 
 # ==============================================================================
-# 3. FUNKCJE WYWOŁUJĄCE GEMINI (KROK 1 I KROK 2)
+# 3. FUNKCJE WYWOŁUJĄCE MODEL (KROK 1 I KROK 2)
 # ==============================================================================
+
+def call_with_retry(fn, max_retries=6, initial_backoff=2):
+    """Pomocniczy mechanizm ponawiania z wykładniczym czasem oczekiwania."""
+    for attempt in range(max_retries):
+        try:
+            return fn()
+        except Exception as e:
+            err_str = str(e)
+            if any(k in err_str for k in ("429", "RESOURCE_EXHAUSTED", "503", "overloaded", "quota")):
+                wait_time = initial_backoff * (2 ** attempt)
+                print(f"\n    [Rate limit / przeciążenie API: oczekiwanie {wait_time}s...] (Próba {attempt+1}/{max_retries})")
+                time.sleep(wait_time)
+            else:
+                raise e
+    return fn()
+
+
+def robust_json_loads(text: str) -> dict:
+    """Odporny parser JSON czyszczący znaczniki markdown i białe znaki."""
+    t = text.strip()
+    if t.startswith("```json"):
+        t = t[7:]
+    elif t.startswith("```"):
+        t = t[3:]
+    if t.endswith("```"):
+        t = t[:-3]
+    t = t.strip()
+    try:
+        return json.loads(t)
+    except json.JSONDecodeError:
+        start = t.find("{")
+        end = t.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            return json.loads(t[start:end+1])
+        raise
+
 
 def step_1_classify_category(client: genai.Client, query: str) -> str:
     """Prompt 1: Wybór jednej z 8 kategorii lub 'None'."""
@@ -282,7 +318,7 @@ Rules:
 
 User Query: "{query}"
 """
-    response = client.models.generate_content(
+    response = call_with_retry(lambda: client.models.generate_content(
         model=MODEL_NAME,
         contents=prompt,
         config=types.GenerateContentConfig(
@@ -290,8 +326,8 @@ User Query: "{query}"
             response_schema=CategorySelection,
             temperature=0.0
         )
-    )
-    result = json.loads(response.text)
+    ))
+    result = robust_json_loads(response.text)
     selected = result.get("category", "None")
     return selected if selected in ALLOWED_CATEGORIES else "None"
 
@@ -327,7 +363,7 @@ Important Rules:
 User Query: "{query}"
 Category: "{category}"
 """
-    response = client.models.generate_content(
+    response = call_with_retry(lambda: client.models.generate_content(
         model=MODEL_NAME,
         contents=prompt,
         config=types.GenerateContentConfig(
@@ -335,8 +371,8 @@ Category: "{category}"
             response_schema=model_class,
             temperature=0.0
         )
-    )
-    result = json.loads(response.text)
+    ))
+    result = robust_json_loads(response.text)
     residual = result.pop("residual_text", "")
     extracted_attributes = {k: v for k, v in result.items() if v is not None}
     return {
@@ -360,7 +396,10 @@ def main():
     location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us")
 
     try:
-        if project_id or not os.environ.get("GEMINI_API_KEY"):
+        if os.environ.get("GEMINI_API_KEY"):
+            print("Logowanie: Google AI Studio API (Klucz GEMINI_API_KEY wykryty)...\n")
+            client = genai.Client()
+        elif project_id:
             print(f"Logowanie: Google Cloud Vertex AI (Projekt: {project_id}, Region: {location})...\n")
             client = genai.Client(vertexai=True, project=project_id, location=location)
         else:
@@ -522,13 +561,16 @@ def main():
     # Zapis wyników do plików CSV i JSON
     if results:
         fieldnames = list(results[0].keys())
-        with open("gemini_extraction_results.csv", "w", newline="", encoding="utf-8") as f:
+        model_slug = MODEL_NAME.replace("-", "_").replace(".", "_")
+        csv_filename = f"gemini_extraction_results_{model_slug}.csv"
+        json_filename = f"gemini_extraction_results_{model_slug}.json"
+        with open(csv_filename, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(results)
-        with open("gemini_extraction_results.json", "w", encoding="utf-8") as f:
+        with open(json_filename, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
-        print("-> Zapisano pełne wyniki do: gemini_extraction_results.csv oraz gemini_extraction_results.json")
+        print(f"-> Zapisano pełne wyniki do: {csv_filename} oraz {json_filename}")
 
     # ==============================================================================
     # 5. RAPORT STATYSTYCZNY

@@ -1,0 +1,2 @@
+idx,query_id,query,expected_cat,pred_cat,cat_ok,difficulty,expected_attrs,pred_attrs,pred_residual,expected_residual,s1_ms,s2_ms,total_ms,tp,fp,fn
+1,74348,north face jacket womens,Jackets & Coats,Jackets & Coats,True,Standard,"{'department_gender': 'Women', 'brands': ['The North Face']}","{'department_gender': 'Women', 'brands': ['The North Face']}",jacket,,1622.2410202026367,2926.6340732574463,4548.875093460083,2,0,0
