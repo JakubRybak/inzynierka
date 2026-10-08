@@ -100,23 +100,34 @@ def compare_attributes(expected: dict, predicted: dict):
             fp += len(pred_val) if isinstance(pred_val, list) else 1
     return tp, fp, fn
 
-def step_1_classify(query: str):
-    prompt = f"""You are an expert e-commerce fashion taxonomy classifier.
+SYSTEM_PROMPT_STEP_1 = f"""You are an expert e-commerce fashion taxonomy classifier.
 Classify the user shopping query into EXACTLY ONE of the following fashion categories:
 {json.dumps(ALLOWED_CATEGORIES, indent=2)}
 
 Rules:
 1. If the query clearly matches one category, return its exact name.
 2. If the query is about accessories, undergarments, jewelry, bags, hats, socks, belts, or other non-apparel items, return 'None'.
-
-User Query: "{query}"
+3. Disambiguation Guide for Borderline Cases:
+   - "track jacket" / athletic zip-up -> "Hoodies & Sweatshirts"
+   - "polo shirt" / golf polo -> "T-Shirts & Tops"
+   - "cardigan" / knit sweater -> "Sweaters & Cardigans"
+   - "t-shirt dress" / "shirt dress" -> "Dresses"
+   - "windbreaker" / "fleece jacket" -> "Jackets & Coats"
+   - "shorts" (e.g. "mens shorts", "denim shorts") -> "Pants & Trousers"
+   - "belts", "hats", "socks", "wallets" -> "None"
 
 Return strictly valid JSON format: {{"category": "<one of allowed categories or None>"}}
 """
+
+def step_1_classify(query: str):
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT_STEP_1},
+        {"role": "user", "content": f'User Query: "{query}"'}
+    ]
     t0 = time.time()
     chat = call_cerebras_with_retry(lambda: client.chat.completions.create(
         model=MODEL_NAME,
-        messages=[{"role": "user", "content": prompt}],
+        messages=messages,
         temperature=0.0,
         max_tokens=100,
         extra_body=EXTRA_BODY
@@ -131,7 +142,7 @@ Return strictly valid JSON format: {{"category": "<one of allowed categories or 
         category = "None"
     return category, duration
 
-def step_2_extract(query: str, category: str):
+def get_step_2_system_prompt(category: str) -> str:
     model_class = CATEGORY_MODELS[category]
     few_shot = FEW_SHOT_EXAMPLES.get(category)
     schema_json = json.dumps(model_class.model_json_schema(), indent=2)
@@ -145,7 +156,8 @@ Output:
 {json.dumps(few_shot['output'], indent=2)}
 """
 
-    prompt = f"""Extract fashion product attributes from the user query into the following JSON schema:
+    return f"""You are an expert fashion attribute extractor.
+Extract fashion product attributes for category "{category}" into the following JSON schema:
 {schema_json}
 
 Important Rules:
@@ -160,15 +172,19 @@ Important Rules:
 4. If a brand name is present, extract normalized official name into 'brands' list.
 5. Put any leftover terms into residual_text.
 {few_shot_block}
-User Query: "{query}"
-Category: "{category}"
-
 Return strictly valid JSON matching the schema.
 """
+
+def step_2_extract(query: str, category: str):
+    system_prompt = get_step_2_system_prompt(category)
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": f'User Query: "{query}"'}
+    ]
     t0 = time.time()
     chat = call_cerebras_with_retry(lambda: client.chat.completions.create(
         model=MODEL_NAME,
-        messages=[{"role": "user", "content": prompt}],
+        messages=messages,
         temperature=0.0,
         max_tokens=600,
         extra_body=EXTRA_BODY
