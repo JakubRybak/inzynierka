@@ -10,6 +10,7 @@ from evaluate_gemini_extraction import (
     CATEGORY_MODELS,
     FEW_SHOT_EXAMPLES,
     BENCHMARK_CSV,
+    PROJECT_ROOT,
     robust_json_loads,
 )
 

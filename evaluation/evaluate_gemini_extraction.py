@@ -8,8 +8,9 @@ from typing import Optional, Dict, Any, List, Literal
 from google import genai
 from google.genai import types
 
-# Domyślny model do testów: Gemini 3.5 Flash Lite (lub przez GEMINI_MODEL)
-DEFAULT_BENCHMARK = "data/fashion_test_benchmark.csv" if os.path.exists("data/fashion_test_benchmark.csv") else "fashion_test_benchmark.csv"
+# Ścieżka bazowa do repozytorium
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..")) if os.path.basename(os.path.dirname(__file__)) in ("scripts", "evaluation") else os.path.abspath(os.path.dirname(__file__))
+DEFAULT_BENCHMARK = os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv") if os.path.exists(os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv")) else "fashion_test_benchmark.csv"
 BENCHMARK_CSV = os.environ.get("BENCHMARK_CSV", DEFAULT_BENCHMARK)
 LIMIT = int(os.environ.get("LIMIT", "0"))  # 0 oznacza wszystkie zapytania
 
@@ -562,9 +563,10 @@ def main():
     if results:
         fieldnames = list(results[0].keys())
         model_slug = MODEL_NAME.replace("-", "_").replace(".", "_")
-        os.makedirs("results", exist_ok=True)
-        csv_filename = os.path.join("results", f"gemini_extraction_results_{model_slug}.csv")
-        json_filename = os.path.join("results", f"gemini_extraction_results_{model_slug}.json")
+        results_dir = os.path.join(PROJECT_ROOT, "results")
+        os.makedirs(results_dir, exist_ok=True)
+        csv_filename = os.path.join(results_dir, f"gemini_extraction_results_{model_slug}.csv")
+        json_filename = os.path.join(results_dir, f"gemini_extraction_results_{model_slug}.json")
         with open(csv_filename, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()

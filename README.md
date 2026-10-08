@@ -17,6 +17,14 @@ Projekt badawczy w ramach pracy inżynierskiej poświęcony dwuetapowemu pipelin
 │   ├── clothing_queries.csv                   # Odfiltrowane zapytania odzieżowe ESCI
 │   └── shopping_queries_dataset_examples.parquet # Źródłowy zbiór Amazon ESCI
 │
+├── docs/                                      # Dokumentacja i raporty badawcze
+│   ├── MODEL_EVALUATION_SUMMARY.md            # Raport porównawczy modeli (Gemini vs Qwen)
+│   └── PIPELINE_ARCHITECTURE_GUIDE.md         # Opis taksonomii, cech, logiki AND/OR i promptów
+│
+├── evaluation/                                # Skrypty ewaluacji modeli (harness testowy)
+│   ├── evaluate_gemini_extraction.py          # Główny skrypt ewaluacji modeli Google Vertex AI
+│   └── evaluate_openrouter.py                 # Skrypt ewaluacji Qwen 3.8 27B na Cerebras
+│
 ├── results/                                   # Pełne wyniki ewaluacji benchmarku (CSV + JSON)
 │   ├── results_gemini_3_5_flash_lite.*        # Wyniki Gemini 3.5 Flash-Lite
 │   ├── gemini_extraction_results_gemini_3_1_flash_lite.* # Wyniki Gemini 3.1 Flash-Lite
@@ -29,9 +37,6 @@ Projekt badawczy w ramach pracy inżynierskiej poświęcony dwuetapowemu pipelin
 │   ├── verify_selection_bias.py
 │   └── test_slang_and_polish.py
 │
-├── evaluate_gemini_extraction.py              # Główny skrypt ewaluacji modeli Google Vertex AI
-├── evaluate_openrouter.py                     # Skrypt ewaluacji Qwen 3.8 27B na akceleratorach Cerebras
-├── MODEL_EVALUATION_SUMMARY.md                # Raport porównawczy modeli (Gemini vs Qwen)
 ├── pyproject.toml                             # Zależności i konfiguracja projektu
 └── uv.lock
 ```
@@ -47,4 +52,4 @@ Projekt badawczy w ramach pracy inżynierskiej poświęcony dwuetapowemu pipelin
 | **Gemini 3.5 Flash-Lite** (Google Vertex AI) | **~2.72 s** | **97.8%** | **91.4%** |
 | **Gemma 4 26B** (Google AI Studio) | **~4.50 s** | **98.9%** | **88.8%** |
 
-Szczegółowy opis w pliku [MODEL_EVALUATION_SUMMARY.md](MODEL_EVALUATION_SUMMARY.md).
+Szczegółowy opis w pliku [docs/MODEL_EVALUATION_SUMMARY.md](docs/MODEL_EVALUATION_SUMMARY.md).
