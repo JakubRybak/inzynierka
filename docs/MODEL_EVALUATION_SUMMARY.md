@@ -1,39 +1,52 @@
 # Podsumowanie Ewaluacji Modeli: Gemini Flash-Lite vs Qwen 3.8 27B
 
-## 1. Główne Wnioski
-Do docelowej architektury wyszukiwarki semantycznej zakwalifikowano dwa wiodące modele, które bezbłędnie poradziły sobie z zadaniem **Guided Decoding** (obsługa zamkniętej taksonomii, cech negatywnych, marek oraz logiki `AND`/`OR` z dokładnością **95–100%**):
-1. **Gemini 3.1 / 3.5 Flash-Lite** (Google Cloud Vertex AI)
+## 1. Główne Wnioski (Pełny Benchmark: 109 Zapytań)
+Do docelowej architektury wyszukiwarki semantycznej zakwalifikowano i zewaluowano wiodące modele na rozszerzonym zbiorze **109 zapytań** (Amazon ESCI + zapytania wielojęzyczne, eponimy i slang młodzieżowy):
+1. **Gemini 3.5 Flash-Lite** (Google Cloud Vertex AI, multi-region `eu`)
 2. **Qwen 3.8 27B** (Open-weights na akceleratorach Cerebras via OpenRouter)
+3. **Gemini 2.5 Flash-Lite** (Google Cloud Vertex AI, region `europe-central2` – Warszawa)
 
 ---
 
-## 2. Porównanie Modeli
+## 2. Zestawienie Porównawcze Modeli (109 Zapytań)
 
-| Cecha / Metryka | Gemini Flash-Lite (Google) | Qwen 3.8 27B (Cerebras) |
-| :--- | :---: | :---: |
-| **Typ modelu** | Komercyjny / Zamknięty (Google) | Otwarty (*Open-weights*) |
-| **Czas pojedynczego zapytania** | **~1.0 – 1.5 s** (stabilny) | **~0.2 – 0.5 s** (w szczytowej formie) |
-| **Czas pełnego pipeline'u (Krok 1 + 2)** | **~2.2 – 2.6 s** | **~0.6 – 1.3 s** (przy braku kolejki) |
-| **Stabilność / SLA** | **100% przewidywalny** (infrastruktura GCP) | **Zmienna** (podatny na kolejki publicznego brokera) |
-| **Koszty stałe (serwer)** | **0 PLN** (model Serverless pay-per-token) | **0 PLN** (na brokerze API) |
-| **Poprawność ekstrakcji (F1)** | **90.2% – 91.4%** | **95.0%** |
+| Cecha / Metryka | Gemini 3.5 Flash-Lite (Vertex AI EU) | Qwen 3.8 27B (Cerebras) | Gemini 2.5 Flash-Lite (Warszawa) |
+| :--- | :---: | :---: | :---: |
+| **Typ modelu** | Komercyjny API (Google) | Otwarty (*Open-weights*) | Komercyjny API (Google) |
+| **Lokalizacja / Infrastruktura** | Multi-region `eu` (Europa) | Akceleratory Cerebras (OpenRouter) | Centrum danych w Warszawie (`europe-central2`) |
+| **Dokładność Kategorii (K1)** | **98.2%** (107 / 109) | **95.4%** (104 / 109) | **98.2%** (107 / 109) |
+| **Precyzja Atrybutów (Precision)** | **95.9%** (Tylko 9 FP) | **95.4%** (11 FP) | **83.8%** (37 FP) |
+| **Czułość Atrybutów (Recall)** | **86.1%** | **88.0%** | **78.7%** |
+| **F1-Score Atrybutów (K2)** | **90.7%** | **91.5%** | **81.2%** |
+| **Grupa Polish_Slang (K1 / F1)** | **100.0% / 95.9%** | **82.4% / 90.1%** | **100.0% / 78.8%** |
+| **Logika AND / OR (Complex_Logic)** | **100.0%** (11 / 11) | **100.0%** (11 / 11) | **90.9%** (10 / 11) |
+| **Średni Czas Krok 1 (Klasyfikacja)** | **~841 ms** | **~1199 ms** | **~607 ms** |
+| **Średni Czas Krok 2 (Ekstrakcja)** | **~1079 ms** | **~1212 ms** | **~952 ms** |
+| **Średni Czas Łączny (K1 + K2)** | **~1.83 s** | **~2.29 s** *(z pacingiem)* | **~1.48 s** *(rekordowo niski ping)* |
 
 ---
 
 ## 3. Kluczowe Spostrzeżenia Inżynierskie
 
-* **Qwen 3.8 27B (Cerebras):**  
-  * **Zaleta:** Prawdziwa prędkość układu Wafer-Scale Engine jest bezkonkurencyjna – w warunkach płynnej pracy Krok 1 zajmuje **~200 ms**, a Krok 2 **~350–500 ms**.
-  * **Wada:** Korzystanie z publicznego brokera API (OpenRouter) w godzinach szczytu powoduje zjawisko *Rate Limiting (HTTP 429)* i zmusza do stosowania pacingu (odstępów między zapytaniami).
+* **Gemini 3.5 Flash-Lite (Zwycięzca Jakościowy):**
+  * **Bezbłędny w Języku Polskim i Slangu:** Uzyskał 100% trafności kategorii w sekcji `Polish_Slang` i F1=95.9% dla atrybutów. Bezbłędnie rozpoznał slangowe zapytania obuwnicze (*wheat timbs*, *leather docs*, *summer birks*, *adidasy nike*).
+  * **Wysoka Dyscyplina:** W przeciwieństwie do generacji 2.5, wersja 3.5 zredukowała False Positives z 37 do 9, osiągając precyzję 95.9%.
+  * **Czas:** Średni czas ~1.83 s w europejskim multi-regionie `eu`.
 
-* **Gemini Flash-Lite (Vertex AI):**  
-  * **Zaleta:** Niezrównana stabilność produkcyjna klasy Enterprise. Niezależnie od pory dnia i obciążenia sieci odpowiedź przychodzi w stałym, gwarantowanym oknie czasowym.
-  * **Wada:** Fizyczna granica ~2.2 s dla 2-etapowego pipeline'u wynikająca z narzutu sieciowego i bezpiecznego przetwarzania w chmurze.
+* **Qwen 3.8 27B (Zwycięzca w Kategorii Open-Weights):**
+  * **Równy, wysoki F1 (91.5%):** Doskonała dyscyplina w Guided Decoding na zapytaniach po angielsku i złożonych zapytaniach logicznych AND/OR (100% zgodności).
+  * **Wyzwanie Slangu:** Lekkie trudności przy slangu miejskim bez słów kluczowych (*timbs*, *docs* pomylone z Dockers).
+  * **Wydajność:** W warunkach płynnej pracy bez kolejki surowy czas wnioskowania to ~0.6 – 1.0 s, lecz współdzielony publiczny broker wymaga pacingu.
+
+* **Gemini 2.5 Flash-Lite w Warszawie (`europe-central2`):**
+  * **Zaleta:** Rekordowo niski czas odpowiedzi (**~1.48 s**) dzięki znikomemu opóźnieniu sieciowemu (ping krajowy ~10 ms) oraz 100% zgodność z RODO i suwerenność danych w Polsce.
+  * **Wada:** Zauważalna nadgorliwość w przypisywaniu cech domyślnych (wyższa liczba FP niż w 3.5).
 
 ---
 
-## 4. Rekomendacja Architektoniczna do Pracy
-1. **Dla wdrożeń produkcyjnych Serverless (MVP / małe i średnie e-commerce):**  
-   Rekomendowany jest **Gemini Flash-Lite** – zerowy koszt utrzymania infrastruktury i pełna niezawodność odpowiedzi.
-2. **Dla systemów High-Performance (duże e-commerce / wysoka skala):**  
-   Rekomendowany jest model **Qwen 3.8 27B** hostowany na dedykowanej infrastrukturze (np. vLLM / SGLang z Prefix Caching), co pozwala osiągnąć stabilną latencję na poziomie **~300 ms** przy zachowaniu pełnej kontroli nad danymi (On-Premise / RODO).
+## 4. Rekomendacja Architektoniczna do Pracy Inżynierskiej
+1. **Dla wdrożeń komercyjnych / Serverless SaaS:**
+   Zdecydowanym faworytem jest **Gemini 3.5 Flash-Lite (multi-region `eu`)** – łączy najwyższą inteligencję językową (100% dla slangu/PL), precyzję 95.9% i stabilny czas poniżej 2 sekund bez kosztów serwera.
+2. **Dla systemów On-Premise / Suwerennych / High-Scale:**
+   Rekomendowany jest model **Qwen 3.8 27B** uruchomiony na własnej instancji GPU (np. GCP L4 / A100 z vLLM i Prefix Caching), co daje pełną niezależność od dostawców chmurowych, brak limitów API i czasy rzędu ~300 ms.
+
