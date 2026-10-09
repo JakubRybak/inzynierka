@@ -13,6 +13,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..")) if
 DEFAULT_BENCHMARK = os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv") if os.path.exists(os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv")) else "fashion_test_benchmark.csv"
 BENCHMARK_CSV = os.environ.get("BENCHMARK_CSV", DEFAULT_BENCHMARK)
 LIMIT = int(os.environ.get("LIMIT", "0"))  # 0 oznacza wszystkie zapytania
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
 
 # ==============================================================================
 # 1. DEFINICJA 8 KATEGORII ORAZ DYSKRETNYCH SCHEMATÓW PYDANTIC
@@ -394,7 +395,7 @@ def main():
 
     # Inicjalizacja Vertex AI
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT") or "project-3a86f100-1aae-4780-84b"
-    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us")
+    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 
     try:
         if os.environ.get("GEMINI_API_KEY"):
@@ -589,7 +590,7 @@ def main():
     avg_total = sum(latencies) / len(latencies) if latencies else 0.0
 
     print("\n" + "=" * 110)
-    print(" PODSUMOWANIE STATYSTYCZNE EWALUACJI (CAŁOŚĆ: 92 ZAPYTANIA)")
+    print(f" PODSUMOWANIE STATYSTYCZNE EWALUACJI (CAŁOŚĆ: {total_queries} ZAPYTAŃ)")
     print("=" * 110)
     print(f"Model: {MODEL_NAME}")
     print(f"Liczba zapytań: {total_queries}")
@@ -660,6 +661,28 @@ def main():
             print(f"    [{r['query_id']}] {cat_flag} Kat: {r['pred_cat']:18s} | {attr_flag} Q: \"{r['query']}\"")
             print(f"         Oczekiwane: {json.dumps(r['expected_attrs'])}")
             print(f"         Wyciągnięte: {json.dumps(r['pred_attrs'])}")
+
+    pl_res = [r for r in results if r["difficulty"] == "Polish_Slang"]
+    if pl_res:
+        pl_total = len(pl_res)
+        pl_cat_ok = sum(1 for r in pl_res if r["cat_ok"])
+        pl_tp = sum(r["tp"] for r in pl_res)
+        pl_fp = sum(r["fp"] for r in pl_res)
+        pl_fn = sum(r["fn"] for r in pl_res)
+        pl_prec = (pl_tp / (pl_tp + pl_fp) * 100.0) if (pl_tp + pl_fp) > 0 else 100.0
+        pl_rec = (pl_tp / (pl_tp + pl_fn) * 100.0) if (pl_tp + pl_fn) > 0 else 100.0
+        pl_f1 = (2 * pl_prec * pl_rec / (pl_prec + pl_rec)) if (pl_prec + pl_rec) > 0 else 0.0
+
+        print("\n" + "=" * 110)
+        print(f" STATYSTYKI STRICTE DLA {pl_total} ZAPYTAŃ W JĘZYKU POLSKIM I ZE SLANGIEM (Polish_Slang)")
+        print("=" * 110)
+        print(f"  - Dokładność kategorii (Krok 1)      : {pl_cat_ok}/{pl_total} ({pl_cat_ok/pl_total*100.0:.1f}%)")
+        print(f"  - True Positives (Poprawne cechy)    : {pl_tp}")
+        print(f"  - False Positives (Cechy nadmiarowe) : {pl_fp}")
+        print(f"  - False Negatives (Cechy pominięte)  : {pl_fn}")
+        print(f"  - Precision (Precyzja)               : {pl_prec:.1f}%")
+        print(f"  - Recall (Czułość)                   : {pl_rec:.1f}%")
+        print(f"  - F1-Score                           : {pl_f1:.1f}%")
 
     print("\n" + "=" * 110)
     print(" PRZYKŁADY BŁĘDÓW LUB ROZBIEŻNOŚCI (JEŚLI WYSTĄPIŁY):")
