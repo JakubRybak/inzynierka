@@ -91,3 +91,21 @@ query_id,query,category,difficulty,borderline_note,expected_attributes,expected_
 51216,hoodies black and white,Hoodies & Sweatshirts,Complex_Logic,Dual-color AND with hoodie,"{""hood"": ""Yes"", ""colors"": [""Black"", ""White""], ""color_operator"": ""AND""}",
 47180,gray and white sweater for women,Sweaters & Cardigans,Complex_Logic,Dual-color AND with gender,"{""department_gender"": ""Women"", ""colors"": [""Grey"", ""White""], ""color_operator"": ""AND""}",
 87316,retro blue and red retro champion t shirt,T-Shirts & Tops,Complex_Logic,Dual-color AND with brand and vintage keyword,"{""brands"": [""Champion""], ""colors"": [""Blue"", ""Red""], ""color_operator"": ""AND""}",retro
+PL_01,czarne timberlandy,Footwear,Polish_Slang,Eponim PL: Timberlandy = trapery Timberland,"{""colors"": [""Black""], ""brands"": [""Timberland""]}",
+PL_02,biale adidasy damskie,Footwear,Polish_Slang,Eponim PL: adidasy = buty sportowe Adidas,"{""department_gender"": ""Women"", ""colors"": [""White""], ""brands"": [""Adidas""]}",
+PL_03,conversy za kostke,Footwear,Polish_Slang,Eponim PL: conversy = trampki Converse wysokie,"{""brands"": [""Converse""], ""shaft_height"": [""Mid (ankle boot)""]}",
+PL_04,adidasy nike do biegania,Footwear,Polish_Slang,Sprzecznosc / Eponim pospolity: adidasy marki Nike,"{""brands"": [""Nike""]}",do biegania
+PL_05,ciepla zimowa kurtka north face damska,Jackets & Coats,Polish_Slang,Cross-lingual PL: zimowa kurtka The North Face,"{""department_gender"": ""Women"", ""brands"": [""The North Face""], ""insulation"": [""Insulated / Winter""]}",ciepla
+PL_06,czerwona meska bluza z kapturem champion,Hoodies & Sweatshirts,Polish_Slang,Cross-lingual PL: bluza z kapturem hoodie Champion,"{""department_gender"": ""Men"", ""colors"": [""Red""], ""brands"": [""Champion""], ""hood"": ""Yes""}",
+PL_07,czarny golf z welny,Sweaters & Cardigans,Polish_Slang,"Cross-lingual PL: golf = turtleneck, welna = wool","{""colors"": [""Black""], ""materials"": [""Wool""], ""neckline"": [""Turtleneck / High Neck""]}",
+PL_08,elegancka czarna sukienka na wesele,Dresses,Polish_Slang,Cross-lingual PL: sukienka na wesele (wedding occasion),"{""colors"": [""Black""]}",elegancka na wesele
+PL_09,wheat timbs,Footwear,Polish_Slang,Slang miejski EN: wheat timbs = trapery Timberland,"{""colors"": [""Beige / Cream""], ""brands"": [""Timberland""]}",
+PL_10,high top chucks,Footwear,Polish_Slang,Slang miejski EN: chucks = trampki Converse Chuck Taylor wysokie,"{""brands"": [""Converse""], ""shaft_height"": [""Mid (ankle boot)""]}",
+PL_11,leather docs,Footwear,Polish_Slang,"Slang miejski EN: docs = glany Dr. Martens ze skory","{""materials"": [""Leather / Faux Leather""], ""brands"": [""Dr. Martens""]}",
+PL_12,womens classic uggs,Footwear,Polish_Slang,Slang / Eponim EN: uggs = buty zimowe UGG damskie,"{""department_gender"": ""Women"", ""brands"": [""UGG""]}",classic
+PL_13,summer birks,Footwear,Polish_Slang,Slang / Eponim EN: birks = sandaly/klapki Birkenstock,"{""brands"": [""Birkenstock""]}",summer
+PL_14,szerokie dresy meskie baggy,Pants & Trousers,Polish_Slang,Slang PL: dresy baggy = spodnie dresowe luzne,"{""department_gender"": ""Men"", ""pant_type"": [""Sweatpants / Joggers""], ""leg_fit"": [""Wide Leg""]}",
+PL_15,skorzany pasek meski,None,Polish_Slang,Out of scope PL: akcesorium poza moda odziezowa (pasek meski),{},skorzany pasek meski
+PL_16,letnia sukienka w kwiatki midi,Dresses,Polish_Slang,Cross-lingual PL: sukienka midi we wzor kwiatowy,"{""pattern"": [""Floral""], ""length"": [""Midi""]}",letnia
+PL_17,biala koszula meska slim fit,Shirts & Blouses,Polish_Slang,Cross-lingual PL: meska koszula biala taliowana,"{""department_gender"": ""Men"", ""colors"": [""White""], ""fit"": [""Slim Fit""]}",
+

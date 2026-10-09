@@ -5,6 +5,9 @@ import time
 import csv
 from openai import OpenAI
 
+# Upewnij się, że katalog skryptu jest w sys.path do importu evaluate_gemini_extraction
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from evaluate_gemini_extraction import (
     ALLOWED_CATEGORIES,
     CATEGORY_MODELS,
@@ -20,7 +23,7 @@ if not OPENROUTER_API_KEY:
 
 
 MODEL_NAME = "qwen/qwen3.8-27b"
-LIMIT = int(os.environ.get("LIMIT", "10"))  # 0 oznacza wszystkie zapytania
+LIMIT = int(os.environ.get("LIMIT", "0"))  # 0 oznacza wszystkie zapytania (pełny benchmark)
 
 # Klient OpenAI utworzony jednorazowo z włączonym Keep-Alive
 client = OpenAI(
@@ -201,8 +204,8 @@ def step_2_extract(query: str, category: str):
 
 def main():
     print("=" * 95)
-    print(f"EWALUACJA 10 WIERSZY: ŚCISŁY CEREBRAS ONLY (allow_fallbacks = False)")
-    print(f"Model: {MODEL_NAME} | Limit: {LIMIT} zapytań")
+    print(f"EWALUACJA BENCHMARKU: ŚCISŁY CEREBRAS ONLY (allow_fallbacks = False)")
+    print(f"Model: {MODEL_NAME} | Limit: {LIMIT if LIMIT > 0 else 'Wszystkie'} zapytań")
     print("=" * 95)
 
     with open(BENCHMARK_CSV, "r", encoding="utf-8") as f:
@@ -216,10 +219,15 @@ def main():
     total_tp = 0
     total_fp = 0
     total_fn = 0
+    results = []
+    cat_by_difficulty = {}
 
     for idx, row in enumerate(queries, 1):
         q = row["query"]
         exp_cat = row["category"]
+        difficulty = row.get("difficulty", "Standard")
+        query_id = row.get("query_id", str(idx))
+        exp_residual = row.get("expected_residual", "")
         exp_attrs = json.loads(row["expected_attributes"])
 
         # Odstęp między zapytaniami dla regeneracji token bucket
@@ -232,6 +240,12 @@ def main():
         cat_ok = (pred_cat.lower() == exp_cat.lower())
         if cat_ok:
             correct_cats += 1
+
+        if difficulty not in cat_by_difficulty:
+            cat_by_difficulty[difficulty] = {"correct": 0, "total": 0}
+        cat_by_difficulty[difficulty]["total"] += 1
+        if cat_ok:
+            cat_by_difficulty[difficulty]["correct"] += 1
 
         # Krok 2: Ekstrakcja
         s2_time = 0.0
@@ -252,13 +266,48 @@ def main():
 
         status_cat = "✅" if cat_ok else "❌"
         status_attr = "✅" if (fp == 0 and fn == 0) else "⚠️"
-        print(f"\n[{idx:02d}/{len(queries)}] Q: \"{q}\"")
+        print(f"\n[{idx:02d}/{len(queries)}] Q: \"{q}\" ({difficulty})")
         print(f"  {status_cat} Kategoria: '{pred_cat}' (Oczekiwana: '{exp_cat}') | Czas S1: {s1_time:.0f} ms")
         print(f"  {status_attr} Atrybuty:  Czas S2: {s2_time:.0f} ms | RAZEM: {tot_time:.0f} ms ({tot_time/1000:.2f} s) [TP={tp}, FP={fp}, FN={fn}]")
         print(f"      Wyciągnięte: {json.dumps(pred_attrs, ensure_ascii=False)}")
         print(f"      Oczekiwane:  {json.dumps(exp_attrs, ensure_ascii=False)}")
 
-    # Podsumowanie metryk
+        results.append({
+            "idx": idx,
+            "query_id": query_id,
+            "query": q,
+            "difficulty": difficulty,
+            "expected_cat": exp_cat,
+            "pred_cat": pred_cat,
+            "cat_ok": cat_ok,
+            "expected_attrs": exp_attrs,
+            "pred_attrs": pred_attrs,
+            "pred_residual": pred_residual,
+            "expected_residual": exp_residual,
+            "s1_ms": s1_time,
+            "s2_ms": s2_time,
+            "total_ms": tot_time,
+            "tp": tp,
+            "fp": fp,
+            "fn": fn
+        })
+
+    # Zapis wyników do plików CSV i JSON w results/
+    if results:
+        results_dir = os.path.join(PROJECT_ROOT, "results")
+        os.makedirs(results_dir, exist_ok=True)
+        csv_filename = os.path.join(results_dir, "openrouter_qwen_3_8_27b_results.csv")
+        json_filename = os.path.join(results_dir, "openrouter_qwen_3_8_27b_results.json")
+        fieldnames = list(results[0].keys())
+        with open(csv_filename, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(results)
+        with open(json_filename, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
+        print(f"\n-> Zapisano pełne wyniki do:\n   {csv_filename}\n   {json_filename}")
+
+    # Podsumowanie metryk ogólnych
     precision = (total_tp / (total_tp + total_fp) * 100.0) if (total_tp + total_fp) > 0 else 0.0
     recall = (total_tp / (total_tp + total_fn) * 100.0) if (total_tp + total_fn) > 0 else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
@@ -268,10 +317,15 @@ def main():
     avg_tot = sum(total_times) / len(total_times) if total_times else 0.0
 
     print("\n" + "=" * 95)
-    print(f"PODSUMOWANIE DLA {len(queries)} ZAPYTAŃ (ŚCISŁY CEREBRAS ONLY):")
+    print(f"PODSUMOWANIE DLA {len(queries)} ZAPYTAŃ (MODEL: {MODEL_NAME} | CEREBRAS ONLY):")
     print("=" * 95)
     print(f"Dokładność kategorii (Krok 1) : {correct_cats}/{len(queries)} ({correct_cats/len(queries)*100.0:.1f}%)")
-    print(f"Atrybuty True Positives (TP)  : {total_tp}")
+    print("  Rozbicie na poziom trudności:")
+    for diff, data in sorted(cat_by_difficulty.items()):
+        acc = (data['correct'] / data['total']) * 100.0 if data['total'] > 0 else 0.0
+        print(f"    - {diff:18s}: {data['correct']:2d}/{data['total']:2d} ({acc:.1f}%)")
+
+    print(f"\nAtrybuty True Positives (TP)  : {total_tp}")
     print(f"Atrybuty False Positives (FP) : {total_fp}")
     print(f"Atrybuty False Negatives (FN) : {total_fn}")
     print(f"Precyzja (Precision)          : {precision:.1f}%")
@@ -281,6 +335,31 @@ def main():
     print(f"Średni czas Krok 1 (Klasyfikacja) : {avg_s1:.1f} ms ({avg_s1/1000:.2f} s)")
     print(f"Średni czas Krok 2 (Ekstrakcja)   : {avg_s2:.1f} ms ({avg_s2/1000:.2f} s)")
     print(f"ŚREDNI CZAS CAŁKOWITY (K1 + K2)   : {avg_tot:.1f} ms ({avg_tot/1000:.2f} s)")
+
+    # Sekcja dla zapytań Complex_Logic
+    complex_res = [r for r in results if r["difficulty"] == "Complex_Logic"]
+    if complex_res:
+        c_tp = sum(r["tp"] for r in complex_res)
+        c_fp = sum(r["fp"] for r in complex_res)
+        c_fn = sum(r["fn"] for r in complex_res)
+        c_p = (c_tp / (c_tp + c_fp) * 100.0) if (c_tp + c_fp) > 0 else 0.0
+        c_r = (c_tp / (c_tp + c_fn) * 100.0) if (c_tp + c_fn) > 0 else 0.0
+        c_f1 = (2 * c_p * c_r / (c_p + c_r)) if (c_p + c_r) > 0 else 0.0
+        print("\n" + "-" * 95)
+        print(f"GRUPA Complex_Logic ({len(complex_res)} zapytań AND/OR): F1={c_f1:.1f}% (Prec={c_p:.1f}%, Rec={c_r:.1f}%)")
+
+    # Sekcja dla zapytań Polish_Slang
+    pl_res = [r for r in results if r["difficulty"] == "Polish_Slang"]
+    if pl_res:
+        pl_tp = sum(r["tp"] for r in pl_res)
+        pl_fp = sum(r["fp"] for r in pl_res)
+        pl_fn = sum(r["fn"] for r in pl_res)
+        pl_p = (pl_tp / (pl_tp + pl_fp) * 100.0) if (pl_tp + pl_fp) > 0 else 0.0
+        pl_r = (pl_tp / (pl_tp + pl_fn) * 100.0) if (pl_tp + pl_fn) > 0 else 0.0
+        pl_f1 = (2 * pl_p * pl_r / (pl_p + pl_r)) if (pl_p + pl_r) > 0 else 0.0
+        pl_cat_ok = sum(1 for r in pl_res if r["cat_ok"])
+        print(f"GRUPA Polish_Slang ({len(pl_res)} zapytań PL/Slang): Kategoria={pl_cat_ok}/{len(pl_res)} ({pl_cat_ok/len(pl_res)*100.0:.1f}%), F1={pl_f1:.1f}% (Prec={pl_p:.1f}%, Rec={pl_r:.1f}%)")
+
     print("=" * 95)
 
 if __name__ == "__main__":
