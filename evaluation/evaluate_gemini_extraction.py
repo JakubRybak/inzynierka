@@ -13,7 +13,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..")) if
 DEFAULT_BENCHMARK = os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv") if os.path.exists(os.path.join(PROJECT_ROOT, "data", "fashion_test_benchmark.csv")) else "fashion_test_benchmark.csv"
 BENCHMARK_CSV = os.environ.get("BENCHMARK_CSV", DEFAULT_BENCHMARK)
 LIMIT = int(os.environ.get("LIMIT", "0"))  # 0 oznacza wszystkie zapytania
-MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 # ==============================================================================
 # 1. DEFINICJA 8 KATEGORII ORAZ DYSKRETNYCH SCHEMATÓW PYDANTIC
@@ -395,7 +395,7 @@ def main():
 
     # Inicjalizacja Vertex AI
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT") or "project-3a86f100-1aae-4780-84b"
-    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "eu")
 
     try:
         if os.environ.get("GEMINI_API_KEY"):
