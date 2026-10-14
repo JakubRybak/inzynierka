@@ -16,17 +16,18 @@ Raport statystyczny po oczyszczeniu katalogu H&M ze zbędnego szumu, niszowych k
 
 ### B. Odrzucone niszowe mikro-kategorie odzieżowe i obuwnicze:
 * **Góra:** *Outdoor Waistcoat* (89 modeli), *Tailored Waistcoat* (34 modele)
-* **Dół:** *Outdoor trousers* (75 modeli)
 * **Całe ciało:** *Costumes* (47 modeli), *Outdoor overall* (32 modele), *Garment Set* (762 modele – niespójne zestawy mix)
 * **Obuwie:** *Pre-walkers* (1 model), *Moccasins* (2 modele), *Flat shoes* (6 modeli – duplikat tagu *Flat shoe*)
+
+*(Uwaga: Kategoria `Outdoor trousers` – 75 modeli / 130 wariantów – została zachowana w grupie Dół).*
 
 ---
 
 ## 2. Nowa Baza Referencyjna (Core)
 
-* **34 882** – unikalne modele produktów (`product_code`).
-* **79 282** – warianty kolorystyczne / artykuły magazynowe (`article_id`).
-* **33** – kategorie szczegółowe (`product_type_name`) w 4 głównych grupach makro.
+* **34 956** – unikalne modele produktów (`product_code`).
+* **79 412** – warianty kolorystyczne / artykuły magazynowe (`article_id`).
+* **34** – kategorie szczegółowe (`product_type_name`) w 4 głównych grupach makro.
 
 ---
 
@@ -34,11 +35,11 @@ Raport statystyczny po oczyszczeniu katalogu H&M ze zbędnego szumu, niszowych k
 
 | Grupa Makro | Modele (`product_count`) | **Udział w modelach (`product_pct`)** | Warianty (`article_count`) | **Udział w wariantach (`article_pct`)** | Liczba kategorii |
 | :--- | ---: | :---: | ---: | :---: | :---: |
-| **Góra (Upper body)** | **17 220** | **49.37%** | **42 514** | **53.62%** | 13 |
-| **Dół (Lower body)** | **8 477** | **24.30%** | **19 682** | **24.83%** | 4 |
-| **Całe ciało (Full body)** | **6 419** | **18.40%** | **11 818** | **14.91%** | 3 |
-| **Obuwie (Shoes)** | **2 776** | **7.96%** | **5 268** | **6.64%** | 13 |
-| **SUMA (Core Apparel & Footwear)** | **34 882** | **100.00%** | **79 282** | **100.00%** | **33** |
+| **Góra (Upper body)** | **17 220** | **49.26%** | **42 514** | **53.54%** | 13 |
+| **Dół (Lower body)** | **8 551** | **24.46%** | **19 812** | **24.95%** | 5 |
+| **Całe ciało (Full body)** | **6 419** | **18.36%** | **11 818** | **14.88%** | 3 |
+| **Obuwie (Shoes)** | **2 776** | **7.94%** | **5 268** | **6.63%** | 13 |
+| **SUMA (Core Apparel & Footwear)** | **34 956** | **100.00%** | **79 412** | **100.00%** | **34** |
 
 ---
 
@@ -47,19 +48,19 @@ Raport statystyczny po oczyszczeniu katalogu H&M ze zbędnego szumu, niszowych k
 ---
 
 ### 1. Góra (Upper body)
-* **Łącznie w grupie:** 17 220 modeli (**49.37%** bazy) | 42 514 wariantów (**53.62%** bazy)
+* **Łącznie w grupie:** 17 220 modeli (**49.26%** bazy) | 42 514 wariantów (**53.54%** bazy)
 
 | Kategoria (`product_type_name`) | Modele (`product_count`) | Udział w grupie (modele) | **Udział w całej bazie** | Warianty (`article_count`) | Udział w grupie (warianty) |
 | :--- | ---: | :---: | :---: | ---: | :---: |
-| **Sweater** | 3 618 | 21.0% | **10.37%** | 9 302 | 21.9% |
-| **Jacket** | 2 313 | 13.4% | **6.63%** | 3 940 | 9.3% |
-| **T-shirt** | 2 172 | 12.6% | **6.23%** | 7 904 | 18.6% |
-| **Blouse** | 2 063 | 12.0% | **5.91%** | 3 979 | 9.4% |
-| **Top** | 1 893 | 11.0% | **5.43%** | 4 155 | 9.8% |
-| **Shirt** | 1 344 | 7.8% | **3.85%** | 3 405 | 8.0% |
-| **Vest top** | 1 112 | 6.5% | **3.19%** | 2 991 | 7.0% |
-| **Hoodie** | 739 | 4.3% | **2.12%** | 2 356 | 5.5% |
-| **Cardigan** | 703 | 4.1% | **2.02%** | 1 550 | 3.6% |
+| **Sweater** | 3 618 | 21.0% | **10.35%** | 9 302 | 21.9% |
+| **Jacket** | 2 313 | 13.4% | **6.62%** | 3 940 | 9.3% |
+| **T-shirt** | 2 172 | 12.6% | **6.21%** | 7 904 | 18.6% |
+| **Blouse** | 2 063 | 12.0% | **5.90%** | 3 979 | 9.4% |
+| **Top** | 1 893 | 11.0% | **5.42%** | 4 155 | 9.8% |
+| **Shirt** | 1 344 | 7.8% | **3.84%** | 3 405 | 8.0% |
+| **Vest top** | 1 112 | 6.5% | **3.18%** | 2 991 | 7.0% |
+| **Hoodie** | 739 | 4.3% | **2.11%** | 2 356 | 5.5% |
+| **Cardigan** | 703 | 4.1% | **2.01%** | 1 550 | 3.6% |
 | **Blazer** | 614 | 3.6% | **1.76%** | 1 110 | 2.6% |
 | **Bodysuit** | 342 | 2.0% | **0.98%** | 913 | 2.1% |
 | **Coat** | 294 | 1.7% | **0.84%** | 460 | 1.1% |
@@ -68,30 +69,31 @@ Raport statystyczny po oczyszczeniu katalogu H&M ze zbędnego szumu, niszowych k
 ---
 
 ### 2. Dół (Lower body)
-* **Łącznie w grupie:** 8 477 modeli (**24.30%** bazy) | 19 682 warianty (**24.83%** bazy)
+* **Łącznie w grupie:** 8 551 modeli (**24.46%** bazy) | 19 812 wariantów (**24.95%** bazy)
 
 | Kategoria (`product_type_name`) | Modele (`product_count`) | Udział w grupie (modele) | **Udział w całej bazie** | Warianty (`article_count`) | Udział w grupie (warianty) |
 | :--- | ---: | :---: | :---: | ---: | :---: |
-| **Trousers** | 4 711 | 55.6% | **13.51%** | 11 169 | 56.7% |
-| **Skirt** | 1 580 | 18.6% | **4.53%** | 2 696 | 13.7% |
-| **Shorts** | 1 550 | 18.3% | **4.44%** | 3 939 | 20.0% |
+| **Trousers** | 4 711 | 55.1% | **13.48%** | 11 169 | 56.4% |
+| **Skirt** | 1 580 | 18.5% | **4.52%** | 2 696 | 13.6% |
+| **Shorts** | 1 550 | 18.1% | **4.43%** | 3 939 | 19.9% |
 | **Leggings/Tights** | 656 | 7.7% | **1.88%** | 1 878 | 9.5% |
+| **Outdoor trousers** | 75 | 0.9% | **0.21%** | 130 | 0.7% |
 
 ---
 
 ### 3. Całe ciało (Full body)
-* **Łącznie w grupie:** 6 419 modeli (**18.40%** bazy) | 11 818 wariantów (**14.91%** bazy)
+* **Łącznie w grupie:** 6 419 modeli (**18.36%** bazy) | 11 818 wariantów (**14.88%** bazy)
 
 | Kategoria (`product_type_name`) | Modele (`product_count`) | Udział w grupie (modele) | **Udział w całej bazie** | Warianty (`article_count`) | Udział w grupie (warianty) |
 | :--- | ---: | :---: | :---: | ---: | :---: |
-| **Dress** | 5 551 | 86.5% | **15.91%** | 10 362 | 87.7% |
+| **Dress** | 5 551 | 86.5% | **15.88%** | 10 362 | 87.7% |
 | **Jumpsuit/Playsuit** | 654 | 10.2% | **1.87%** | 1 147 | 9.7% |
-| **Dungarees** (ogrodniczki) | 225 | 3.5% | **0.65%** | 309 | 2.6% |
+| **Dungarees** (ogrodniczki) | 225 | 3.5% | **0.64%** | 309 | 2.6% |
 
 ---
 
 ### 4. Obuwie (Shoes)
-* **Łącznie w grupie:** 2 776 modeli (**7.96%** bazy) | 5 268 wariantów (**6.64%** bazy)
+* **Łącznie w grupie:** 2 776 modeli (**7.94%** bazy) | 5 268 wariantów (**6.63%** bazy)
 
 | Kategoria (`product_type_name`) | Modele (`product_count`) | Udział w grupie (modele) | **Udział w całej bazie** | Warianty (`article_count`) | Udział w grupie (warianty) |
 | :--- | ---: | :---: | :---: | ---: | :---: |
