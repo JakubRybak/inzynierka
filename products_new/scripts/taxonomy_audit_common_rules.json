@@ -1,0 +1,374 @@
+{
+  "features": {
+    "gender": {
+      "Men": {
+        "patterns": [
+          "\\b(?:men|man|male|menswear)\\b"
+        ],
+        "keywords": "men, man, male, menswear",
+        "source": "gender",
+        "note": "Granice słów zapobiegają dopasowaniu men/male wewnątrz women/female."
+      },
+      "Women": {
+        "patterns": [
+          "\\b(?:women|woman|female|womenswear)\\b"
+        ],
+        "keywords": "women, woman, female, womenswear",
+        "source": "gender"
+      }
+    },
+    "colors": {
+      "Black": {
+        "patterns": [
+          "\\b(?:black|ebony|onyx|coal)\\b"
+        ],
+        "keywords": "black, ebony, onyx, coal",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "White": {
+        "patterns": [
+          "\\b(?:white|ivory|cream|ecru|bone|alabaster|milk|pearl|chalk|eggshell|natural)\\b"
+        ],
+        "keywords": "white, ivory, cream, ecru, bone, alabaster, milk, pearl, chalk, eggshell, natural",
+        "source": "text",
+        "note": "Wzmianki o bieli oraz mapowanych odcieniach; off-white może być również nazwą marki, pearl detalem, natural opisem włókna."
+      },
+      "Grey": {
+        "patterns": [
+          "\\b(?:grey|gray|charcoal|slate|ash|silver|gunmetal|graphite|anthracite|pewter|stone|smoke|cement)\\b"
+        ],
+        "keywords": "grey, gray, charcoal, slate, ash, silver, gunmetal, graphite, anthracite, pewter, stone, smoke, cement",
+        "source": "text",
+        "note": "Silver/gunmetal/pewter mogą dotyczyć okuć; stone/slate także innych odcieni lub wykończenia. Szerokie dopasowanie bez analizy kontekstu."
+      },
+      "Navy": {
+        "patterns": [
+          "\\b(?:navy|midnight[\\s-]+blue|marine|ink|deep[\\s-]+indigo|dark[\\s-]+indigo)\\b"
+        ],
+        "keywords": "navy, midnight blue, marine, ink, deep indigo, dark indigo",
+        "source": "text",
+        "note": "Ink/marine także niekolorystyczne; navy blue oraz dark indigo celowo mogą trafiać również do Blue."
+      },
+      "Blue": {
+        "patterns": [
+          "\\b(?:blue|cobalt|indigo|teal|turquoise|aqua|cyan|cerulean|periwinkle|cornflower|petrol)\\b"
+        ],
+        "keywords": "blue, cobalt, indigo, teal, turquoise, aqua, cyan, cerulean, periwinkle, cornflower, petrol",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "Red": {
+        "patterns": [
+          "\\b(?:red|burgundy|maroon|wine|bordeaux|crimson|scarlet|cherry|ruby|oxblood|garnet|vermilion|cardinal|claret|berry)\\b"
+        ],
+        "keywords": "red, burgundy, maroon, wine, bordeaux, crimson, scarlet, cherry, ruby, oxblood, garnet, vermilion, cardinal, claret, berry",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "Green": {
+        "patterns": [
+          "\\b(?:green|olive|khaki|emerald|mint|sage|lime|jade|moss|pine|chartreuse|pistachio|seafoam)\\b"
+        ],
+        "keywords": "green, olive, khaki, emerald, mint, sage, lime, jade, moss, pine, chartreuse, pistachio, seafoam",
+        "source": "text",
+        "note": "Khaki liczymy równolegle jako Green i Beige; bez rozstrzygania odcienia."
+      },
+      "Pink": {
+        "patterns": [
+          "\\b(?:pink|blush|rose|magenta|fuchsia|salmon|bubblegum|peony|flamingo|mauve|raspberry|carnation)\\b"
+        ],
+        "keywords": "pink, blush, rose, magenta, fuchsia, salmon, bubblegum, peony, flamingo, mauve, raspberry, carnation",
+        "source": "text",
+        "note": "Rose może oznaczać także motyw kwiatu. Szerokie dopasowanie bez analizy kontekstu."
+      },
+      "Beige": {
+        "patterns": [
+          "\\b(?:beige|tan|camel|sand|taupe|oatmeal|champagne|fawn|buff|nude|wheat|biscuit|khaki|latte|putty|parchment|sahara)\\b"
+        ],
+        "keywords": "beige, tan, camel, sand, taupe, oatmeal, champagne, fawn, buff, nude, wheat, biscuit, khaki, latte, putty, parchment, sahara",
+        "source": "text",
+        "note": "Khaki liczymy równolegle jako Green i Beige; camel może oznaczać także włókno."
+      },
+      "Brown": {
+        "patterns": [
+          "\\b(?:brown|chocolate|cognac|espresso|chestnut|mahogany|rust|terracotta|bronze|copper|cinnamon|caramel|toffee|mocha|umber|sienna|walnut|sepia|tobacco|hazel|cocoa|tortoiseshell)\\b"
+        ],
+        "keywords": "brown, chocolate, cognac, espresso, chestnut, mahogany, rust, terracotta, bronze, copper, cinnamon, caramel, toffee, mocha, umber, sienna, walnut, sepia, tobacco, hazel, cocoa, tortoiseshell",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "Yellow": {
+        "patterns": [
+          "\\b(?:yellow|mustard|gold|golden|brass|lemon|canary|ochre|saffron|amber|honey|butter|marigold|citrine|daffodil|sunflower|banana|banan)\\b"
+        ],
+        "keywords": "yellow, mustard, gold, golden, brass, lemon, canary, ochre, saffron, amber, honey, butter, marigold, citrine, daffodil, sunflower, banana, banan",
+        "source": "text",
+        "note": "Gold/brass mogą oznaczać kolor okuć, a nazwy kwiatów motyw nadruku."
+      },
+      "Orange": {
+        "patterns": [
+          "\\b(?:orange|coral|peach|tangerine|apricot|papaya|mandarin|pumpkin|mango|persimmon|clementine)\\b"
+        ],
+        "keywords": "orange, coral, peach, tangerine, apricot, papaya, mandarin, pumpkin, mango, persimmon, clementine",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "Purple": {
+        "patterns": [
+          "\\b(?:purple|violet|lavender|lilac|plum|eggplant|aubergine|amethyst|orchid|mulberry|grape|heliotrope|wisteria|periwinkle[\\s-]+purple|indigo[\\s-]+purple)\\b"
+        ],
+        "keywords": "purple, violet, lavender, lilac, plum, eggplant, aubergine, amethyst, orchid, mulberry, grape, heliotrope, wisteria, periwinkle purple, indigo purple",
+        "source": "text",
+        "note": "Wzmianka w całym opisie/nazwie; może dotyczyć także detalu, nadruku albo nazwy własnej."
+      },
+      "Multicolor": {
+        "patterns": [
+          "\\bmulti[\\s-]*colo(?:u)?r(?:ed)?\\b",
+          "\\brainbow\\b",
+          "\\btie[\\s-]*dy(?:e|ed)\\b"
+        ],
+        "keywords": "multicolor, multicolour, multi-colored, multi-coloured, rainbow, tie-dye",
+        "source": "text",
+        "note": "Jawne określenia wielobarwności oraz tie-dye jako szeroki sygnał. Nie wyliczamy Multicolor z liczby innych trafień kolorów; tie-dye może być także dwukolorowe."
+      }
+    },
+    "main_composition": {
+      "Cotton": {
+        "patterns": [
+          "\\b(?:cotton|coton|cototn|supima|pima|cotto|cottom|cottoin|cottob)\\b"
+        ],
+        "keywords": "cotton, coton, cototn, supima, pima, cotto, cottom, cottoin, cottob",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Nazwy pima/supima są sygnałem bawełny. Denim nie jest automatycznie zaliczany do Cotton.",
+        "strict_patterns": [
+          "(?=\\b(?:cotton|coton|cototn|supima|pima|cotto|cottom|cottoin|cottob)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:cotton|coton|cototn|supima|pima|cotto|cottom|cottoin|cottob)\\b"
+        ],
+        "strict_keywords": "cotton, coton, cototn, supima, pima, cotto, cottom, cottoin, cottob",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Polyester": {
+        "patterns": [
+          "\\b(?:polyester|poylester|polyurethane|polyethylene|polypropylene|pvc|polyvinyl[\\s-]+chloride|polyetser|poliester|polyestger|polyeseter|polyerster|polyesters|polyster|polurethane|polyeurethane|polyutryhane|polyurethan|polyuretane|polypropelyne|polyproylene|polypropilene|polyethelyne|polyethyline|polyethene|polyvinylchloride)\\b"
+        ],
+        "keywords": "polyester, poylester, polyurethane, polyethylene, polypropylene, pvc, polyvinyl chloride, polyetser, poliester, polyestger, polyeseter, polyerster, polyesters, polyster, polurethane, polyeurethane, polyutryhane, polyurethan, polyuretane, polypropelyne, polyproylene, polypropilene, polyethelyne, polyethyline, polyethene, polyvinylchloride",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Grupowanie zgodne z obecnym mappingiem: polyurethane, polyethylene, polypropylene i PVC nie są chemicznie poliestrem.",
+        "strict_patterns": [
+          "\\b(?:polyester|poylester|polyetser|poliester|polyestger|polyeseter|polyerster|polyesters|polyster)\\b"
+        ],
+        "strict_keywords": "polyester, poylester, polyetser, poliester, polyestger, polyeseter, polyerster, polyesters, polyster",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Acrylic": {
+        "patterns": [
+          "\\b(?:acrylic|modacrylic|polyacrylic|acryl|polyacryl)\\b"
+        ],
+        "keywords": "acrylic, modacrylic, polyacrylic, acryl, polyacryl",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition.",
+        "strict_patterns": [
+          "\\b(?:acrylic|polyacrylic|acryl|polyacryl)\\b"
+        ],
+        "strict_keywords": "acrylic, polyacrylic, acryl, polyacryl",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Wool": {
+        "patterns": [
+          "\\b(?:wool|merino|lambswool|lambs[\\s-]+wool|lamb[\\s-]+wool|fleecewool|mohair|alpaca|angora|camel|yak|kidmohair)\\b"
+        ],
+        "keywords": "wool, merino, lambswool, lambs wool, lamb wool, fleecewool, mohair, alpaca, angora, camel, yak, kidmohair",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Grupa zgodna z mappingiem obejmuje różne włókna zwierzęce. Samo fleece nie jest sygnałem Wool.",
+        "strict_patterns": [
+          "(?=\\b(?:wool|merino|lambswool|lambs[\\s-]+wool|lamb[\\s-]+wool|fleecewool)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:wool|merino|lambswool|lambs[\\s-]+wool|lamb[\\s-]+wool|fleecewool)\\b"
+        ],
+        "strict_keywords": "wool, merino, lambswool, lambs wool, lamb wool, fleecewool",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Viscose": {
+        "patterns": [
+          "\\b(?:viscose|cupro|cupra|bemberg|rayon|acetate|triacetate|modal|micromodal|micro[\\s-]+modal|lyocell|tencel|bamboo|viscsoe|visocse|viscoe|curpo|curpa|lyocel|tencell|tensel|tri[\\s-]+acetate)\\b"
+        ],
+        "keywords": "viscose, cupro, cupra, bemberg, rayon, acetate, triacetate, modal, micromodal, micro modal, lyocell, tencel, bamboo, viscsoe, visocse, viscoe, curpo, curpa, lyocel, tencell, tensel, tri acetate",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Mapping scala pod Viscose różne włókna celulozowe; acetate, lyocell, modal i bamboo nie są po prostu synonimami wiskozy.",
+        "strict_patterns": [
+          "\\b(?:viscose|rayon|viscsoe|visocse|viscoe)\\b"
+        ],
+        "strict_keywords": "viscose, rayon, viscsoe, visocse, viscoe",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej. Rayon jest pozostawiony jako nazwa często używana dla wiskozy, chociaż termin może obejmować szerszą rodzinę włókien celulozowych."
+      },
+      "Elastane": {
+        "patterns": [
+          "\\b(?:elastane|elastan|elastodiene|elastomultiester|spandex|lycra|elastene|elstane|elasthane|elatane|elsatane|ealstane|elastsane|elastne|elastant|lyrca)\\b"
+        ],
+        "keywords": "elastane, elastan, elastodiene, elastomultiester, spandex, lycra, elastene, elstane, elasthane, elatane, elsatane, ealstane, elastsane, elastne, elastant, lyrca",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Elastodiene i elastomultiester są osobnymi rodzajami włókien elastycznych; grupowanie zachowuje aktualny mapping.",
+        "strict_patterns": [
+          "\\b(?:elastane|elastan|spandex|lycra|elastene|elstane|elasthane|elatane|elsatane|ealstane|elastsane|elastne|elastant|lyrca)\\b"
+        ],
+        "strict_keywords": "elastane, elastan, spandex, lycra, elastene, elstane, elasthane, elatane, elsatane, ealstane, elastsane, elastne, elastant, lyrca",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Nylon": {
+        "patterns": [
+          "\\b(?:nylon|polyamide|polyamid|poylamide|polymide|polyammide|polyamides|polyamdie)\\b"
+        ],
+        "keywords": "nylon, polyamide, polyamid, poylamide, polymide, polyammide, polyamides, polyamdie",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition.",
+        "strict_patterns": [
+          "\\b(?:nylon|polyamide|polyamid|poylamide|polymide|polyammide|polyamides|polyamdie)\\b"
+        ],
+        "strict_keywords": "nylon, polyamide, polyamid, poylamide, polymide, polyammide, polyamides, polyamdie",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Silk": {
+        "patterns": [
+          "\\b(?:silk|slik)\\b"
+        ],
+        "keywords": "silk, slik",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition.",
+        "strict_patterns": [
+          "(?=\\b(?:silk|slik)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:silk|slik)\\b"
+        ],
+        "strict_keywords": "silk, slik",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Leather": {
+        "patterns": [
+          "\\b(?:leather|lambskin|lamb[\\s-]+skin|calfskin|calf[\\s-]+skin|goatskin|goat[\\s-]+skin|cowhide|cow[\\s-]+hide|deerskin|deer[\\s-]+skin|pigskin|pig[\\s-]+skin|horsehide|horse[\\s-]+hide|sheepskin|sheep[\\s-]+skin|suede|nubuck|calf|lamb|goat|cow|buffalo|bull)\\b"
+        ],
+        "keywords": "leather, lambskin, lamb skin, calfskin, calf skin, goatskin, goat skin, cowhide, cow hide, deerskin, deer skin, pigskin, pig skin, horsehide, horse hide, sheepskin, sheep skin, suede, nubuck, calf, lamb, goat, cow, buffalo, bull",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Szerokie sygnały z mappingu obejmują także faux leather oraz nazwy zwierząt; nie potwierdzają naturalnej skóry ani jej wystąpienia w głównej części.",
+        "strict_patterns": [
+          "(?=\\b(?:leather|lambskin|lamb[\\s-]+skin|calfskin|calf[\\s-]+skin|goatskin|goat[\\s-]+skin|cowhide|cow[\\s-]+hide|deerskin|deer[\\s-]+skin|pigskin|pig[\\s-]+skin|horsehide|horse[\\s-]+hide|sheepskin|sheep[\\s-]+skin|suede|nubuck)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:leather|lambskin|lamb[\\s-]+skin|calfskin|calf[\\s-]+skin|goatskin|goat[\\s-]+skin|cowhide|cow[\\s-]+hide|deerskin|deer[\\s-]+skin|pigskin|pig[\\s-]+skin|horsehide|horse[\\s-]+hide|sheepskin|sheep[\\s-]+skin|suede|nubuck)\\b"
+        ],
+        "strict_keywords": "leather, lambskin, lamb skin, calfskin, calf skin, goatskin, goat skin, cowhide, cow hide, deerskin, deer skin, pigskin, pig skin, horsehide, horse hide, sheepskin, sheep skin, suede, nubuck",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Cashmere": {
+        "patterns": [
+          "\\b(?:cashmere|cashmire)\\b"
+        ],
+        "keywords": "cashmere, cashmire",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition.",
+        "strict_patterns": [
+          "(?=\\b(?:cashmere|cashmire)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:cashmere|cashmire)\\b"
+        ],
+        "strict_keywords": "cashmere, cashmire",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Linen": {
+        "patterns": [
+          "\\b(?:linen|flax|ramie|hemp)\\b"
+        ],
+        "keywords": "linen, flax, ramie, hemp",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Zgodnie z mappingiem Linen scala także ramie i hemp, które są osobnymi włóknami.",
+        "strict_patterns": [
+          "(?=\\b(?:linen|flax)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:linen|flax)\\b"
+        ],
+        "strict_keywords": "linen, flax",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Down": {
+        "patterns": [
+          "\\b(?:down|feather|feathers)\\b"
+        ],
+        "keywords": "down, feather, feathers",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Wzmianka może dotyczyć wypełnienia, a nie głównej części ubrania; feather to pióro, nie sam puch.",
+        "strict_patterns": [
+          "(?=\\b(?:down)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)\\b(?:down)\\b"
+        ],
+        "strict_keywords": "down",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      },
+      "Fur": {
+        "patterns": [
+          "\\b(?:fur|shearling|mink|fox|rabbit|raccoon|chinchilla|coyote|beaver|nutria|karakul)\\b"
+        ],
+        "keywords": "fur, shearling, mink, fox, rabbit, raccoon, chinchilla, coyote, beaver, nutria, karakul",
+        "source": "composition",
+        "note": "Wzmianka w pełnym input_composition, niezależnie od sekcji i udziału procentowego; nie jest to potwierdzenie main_composition. Sygnały obejmują naturalne oraz faux fur i nazwy futer. Mogą dotyczyć wykończenia lub podszewki, nie głównej części.",
+        "strict_patterns": [
+          "(?=\\b(?:fur|shearling|mink|fox|rabbit|raccoon|chinchilla|coyote|beaver|nutria|karakul)\\b)(?<!faux\\ )(?<!faux\\-)(?<!fake\\ )(?<!fake\\-)(?<!synthetic\\ )(?<!synthetic\\-)(?<!artificial\\ )(?<!artificial\\-)(?<!vegan\\ )(?<!vegan\\-)(?<!imitation\\ )(?<!imitation\\-)(?<!faux\\ mink\\ )(?<!faux\\ mink\\-)(?<!faux\\-mink\\ )(?<!faux\\-mink\\-)(?<!faux\\ fox\\ )(?<!faux\\ fox\\-)(?<!faux\\-fox\\ )(?<!faux\\-fox\\-)(?<!faux\\ rabbit\\ )(?<!faux\\ rabbit\\-)(?<!faux\\-rabbit\\ )(?<!faux\\-rabbit\\-)(?<!faux\\ raccoon\\ )(?<!faux\\ raccoon\\-)(?<!faux\\-raccoon\\ )(?<!faux\\-raccoon\\-)(?<!faux\\ chinchilla\\ )(?<!faux\\ chinchilla\\-)(?<!faux\\-chinchilla\\ )(?<!faux\\-chinchilla\\-)(?<!faux\\ coyote\\ )(?<!faux\\ coyote\\-)(?<!faux\\-coyote\\ )(?<!faux\\-coyote\\-)(?<!faux\\ beaver\\ )(?<!faux\\ beaver\\-)(?<!faux\\-beaver\\ )(?<!faux\\-beaver\\-)(?<!faux\\ nutria\\ )(?<!faux\\ nutria\\-)(?<!faux\\-nutria\\ )(?<!faux\\-nutria\\-)(?<!faux\\ karakul\\ )(?<!faux\\ karakul\\-)(?<!faux\\-karakul\\ )(?<!faux\\-karakul\\-)(?<!faux\\ animal\\ )(?<!faux\\ animal\\-)(?<!faux\\-animal\\ )(?<!faux\\-animal\\-)(?<!fake\\ mink\\ )(?<!fake\\ mink\\-)(?<!fake\\-mink\\ )(?<!fake\\-mink\\-)(?<!fake\\ fox\\ )(?<!fake\\ fox\\-)(?<!fake\\-fox\\ )(?<!fake\\-fox\\-)(?<!fake\\ rabbit\\ )(?<!fake\\ rabbit\\-)(?<!fake\\-rabbit\\ )(?<!fake\\-rabbit\\-)(?<!fake\\ raccoon\\ )(?<!fake\\ raccoon\\-)(?<!fake\\-raccoon\\ )(?<!fake\\-raccoon\\-)(?<!fake\\ chinchilla\\ )(?<!fake\\ chinchilla\\-)(?<!fake\\-chinchilla\\ )(?<!fake\\-chinchilla\\-)(?<!fake\\ coyote\\ )(?<!fake\\ coyote\\-)(?<!fake\\-coyote\\ )(?<!fake\\-coyote\\-)(?<!fake\\ beaver\\ )(?<!fake\\ beaver\\-)(?<!fake\\-beaver\\ )(?<!fake\\-beaver\\-)(?<!fake\\ nutria\\ )(?<!fake\\ nutria\\-)(?<!fake\\-nutria\\ )(?<!fake\\-nutria\\-)(?<!fake\\ karakul\\ )(?<!fake\\ karakul\\-)(?<!fake\\-karakul\\ )(?<!fake\\-karakul\\-)(?<!fake\\ animal\\ )(?<!fake\\ animal\\-)(?<!fake\\-animal\\ )(?<!fake\\-animal\\-)(?<!synthetic\\ mink\\ )(?<!synthetic\\ mink\\-)(?<!synthetic\\-mink\\ )(?<!synthetic\\-mink\\-)(?<!synthetic\\ fox\\ )(?<!synthetic\\ fox\\-)(?<!synthetic\\-fox\\ )(?<!synthetic\\-fox\\-)(?<!synthetic\\ rabbit\\ )(?<!synthetic\\ rabbit\\-)(?<!synthetic\\-rabbit\\ )(?<!synthetic\\-rabbit\\-)(?<!synthetic\\ raccoon\\ )(?<!synthetic\\ raccoon\\-)(?<!synthetic\\-raccoon\\ )(?<!synthetic\\-raccoon\\-)(?<!synthetic\\ chinchilla\\ )(?<!synthetic\\ chinchilla\\-)(?<!synthetic\\-chinchilla\\ )(?<!synthetic\\-chinchilla\\-)(?<!synthetic\\ coyote\\ )(?<!synthetic\\ coyote\\-)(?<!synthetic\\-coyote\\ )(?<!synthetic\\-coyote\\-)(?<!synthetic\\ beaver\\ )(?<!synthetic\\ beaver\\-)(?<!synthetic\\-beaver\\ )(?<!synthetic\\-beaver\\-)(?<!synthetic\\ nutria\\ )(?<!synthetic\\ nutria\\-)(?<!synthetic\\-nutria\\ )(?<!synthetic\\-nutria\\-)(?<!synthetic\\ karakul\\ )(?<!synthetic\\ karakul\\-)(?<!synthetic\\-karakul\\ )(?<!synthetic\\-karakul\\-)(?<!synthetic\\ animal\\ )(?<!synthetic\\ animal\\-)(?<!synthetic\\-animal\\ )(?<!synthetic\\-animal\\-)(?<!artificial\\ mink\\ )(?<!artificial\\ mink\\-)(?<!artificial\\-mink\\ )(?<!artificial\\-mink\\-)(?<!artificial\\ fox\\ )(?<!artificial\\ fox\\-)(?<!artificial\\-fox\\ )(?<!artificial\\-fox\\-)(?<!artificial\\ rabbit\\ )(?<!artificial\\ rabbit\\-)(?<!artificial\\-rabbit\\ )(?<!artificial\\-rabbit\\-)(?<!artificial\\ raccoon\\ )(?<!artificial\\ raccoon\\-)(?<!artificial\\-raccoon\\ )(?<!artificial\\-raccoon\\-)(?<!artificial\\ chinchilla\\ )(?<!artificial\\ chinchilla\\-)(?<!artificial\\-chinchilla\\ )(?<!artificial\\-chinchilla\\-)(?<!artificial\\ coyote\\ )(?<!artificial\\ coyote\\-)(?<!artificial\\-coyote\\ )(?<!artificial\\-coyote\\-)(?<!artificial\\ beaver\\ )(?<!artificial\\ beaver\\-)(?<!artificial\\-beaver\\ )(?<!artificial\\-beaver\\-)(?<!artificial\\ nutria\\ )(?<!artificial\\ nutria\\-)(?<!artificial\\-nutria\\ )(?<!artificial\\-nutria\\-)(?<!artificial\\ karakul\\ )(?<!artificial\\ karakul\\-)(?<!artificial\\-karakul\\ )(?<!artificial\\-karakul\\-)(?<!artificial\\ animal\\ )(?<!artificial\\ animal\\-)(?<!artificial\\-animal\\ )(?<!artificial\\-animal\\-)(?<!vegan\\ mink\\ )(?<!vegan\\ mink\\-)(?<!vegan\\-mink\\ )(?<!vegan\\-mink\\-)(?<!vegan\\ fox\\ )(?<!vegan\\ fox\\-)(?<!vegan\\-fox\\ )(?<!vegan\\-fox\\-)(?<!vegan\\ rabbit\\ )(?<!vegan\\ rabbit\\-)(?<!vegan\\-rabbit\\ )(?<!vegan\\-rabbit\\-)(?<!vegan\\ raccoon\\ )(?<!vegan\\ raccoon\\-)(?<!vegan\\-raccoon\\ )(?<!vegan\\-raccoon\\-)(?<!vegan\\ chinchilla\\ )(?<!vegan\\ chinchilla\\-)(?<!vegan\\-chinchilla\\ )(?<!vegan\\-chinchilla\\-)(?<!vegan\\ coyote\\ )(?<!vegan\\ coyote\\-)(?<!vegan\\-coyote\\ )(?<!vegan\\-coyote\\-)(?<!vegan\\ beaver\\ )(?<!vegan\\ beaver\\-)(?<!vegan\\-beaver\\ )(?<!vegan\\-beaver\\-)(?<!vegan\\ nutria\\ )(?<!vegan\\ nutria\\-)(?<!vegan\\-nutria\\ )(?<!vegan\\-nutria\\-)(?<!vegan\\ karakul\\ )(?<!vegan\\ karakul\\-)(?<!vegan\\-karakul\\ )(?<!vegan\\-karakul\\-)(?<!vegan\\ animal\\ )(?<!vegan\\ animal\\-)(?<!vegan\\-animal\\ )(?<!vegan\\-animal\\-)(?<!imitation\\ mink\\ )(?<!imitation\\ mink\\-)(?<!imitation\\-mink\\ )(?<!imitation\\-mink\\-)(?<!imitation\\ fox\\ )(?<!imitation\\ fox\\-)(?<!imitation\\-fox\\ )(?<!imitation\\-fox\\-)(?<!imitation\\ rabbit\\ )(?<!imitation\\ rabbit\\-)(?<!imitation\\-rabbit\\ )(?<!imitation\\-rabbit\\-)(?<!imitation\\ raccoon\\ )(?<!imitation\\ raccoon\\-)(?<!imitation\\-raccoon\\ )(?<!imitation\\-raccoon\\-)(?<!imitation\\ chinchilla\\ )(?<!imitation\\ chinchilla\\-)(?<!imitation\\-chinchilla\\ )(?<!imitation\\-chinchilla\\-)(?<!imitation\\ coyote\\ )(?<!imitation\\ coyote\\-)(?<!imitation\\-coyote\\ )(?<!imitation\\-coyote\\-)(?<!imitation\\ beaver\\ )(?<!imitation\\ beaver\\-)(?<!imitation\\-beaver\\ )(?<!imitation\\-beaver\\-)(?<!imitation\\ nutria\\ )(?<!imitation\\ nutria\\-)(?<!imitation\\-nutria\\ )(?<!imitation\\-nutria\\-)(?<!imitation\\ karakul\\ )(?<!imitation\\ karakul\\-)(?<!imitation\\-karakul\\ )(?<!imitation\\-karakul\\-)(?<!imitation\\ animal\\ )(?<!imitation\\ animal\\-)(?<!imitation\\-animal\\ )(?<!imitation\\-animal\\-)\\b(?:fur|shearling|mink|fox|rabbit|raccoon|chinchilla|coyote|beaver|nutria|karakul)\\b"
+        ],
+        "strict_keywords": "fur, shearling, mink, fox, rabbit, raccoon, chinchilla, coyote, beaver, nutria, karakul",
+        "strict_note": "Węższa nazwa/synonim materiału w dowolnej sekcji składu. Wyklucza bezpośredni prefiks faux/fake/synthetic/artificial/vegan/imitation; nie rozstrzyga wszystkich możliwych opisów mieszanin ani sekcji głównej."
+      }
+    },
+    "pattern": {
+      "Solid": {
+        "patterns": [
+          "\\b(?:solid|plain|monochrome|monochromatic|unpatterned|unprinted|single[\\s-]+color|single[\\s-]+colour|uniform[\\s-]+color|uniform[\\s-]+colour)\\b"
+        ],
+        "keywords": "solid, plain, monochrome, monochromatic, unpatterned, unprinted, single color, single colour, uniform color, uniform colour",
+        "source": "text",
+        "note": "Tylko jawne określenia; brak nazwanego wzoru nie daje Solid. Plain może odnosić się do splotu, monochrome nie zawsze znaczy brak wzoru."
+      },
+      "Striped": {
+        "patterns": [
+          "\\b(?:stripe|stripes|striped|striping|pinstripe|pinstripes|pinstriped|chalk[\\s-]+stripe|side[\\s-]+stripe|breton|ticking[\\s-]+stripe|variegated[\\s-]+stripe|chevron[\\s-]+stripe|candy[\\s-]+stripe|pencil[\\s-]+stripe|railroad[\\s-]+stripe)\\b"
+        ],
+        "keywords": "stripe, stripes, striped, striping, pinstripe, pinstripes, pinstriped, chalk stripe, side stripe, breton, ticking stripe, variegated stripe, chevron stripe, candy stripe, pencil stripe, railroad stripe",
+        "source": "text",
+        "note": "Lampasy i paski na detalach są liczone; sam ribbed nie oznacza pasków."
+      },
+      "Plaid": {
+        "patterns": [
+          "\\b(?:plaid|check|checks|checked|checkered|chequered|checkerboard|tartan|gingham|houndstooth|hounds[\\s-]+tooth|herringbone|argyle|windowpane|prince[\\s-]+of[\\s-]+wales|madras|tattersall)\\b"
+        ],
+        "keywords": "plaid, check, checks, checked, checkered, chequered, checkerboard, tartan, gingham, houndstooth, hounds tooth, herringbone, argyle, windowpane, prince of wales, madras, tattersall",
+        "source": "text",
+        "note": "Zgodnie z mappingiem obejmuje także herringbone i argyle, które nie są zwykłą kratą."
+      },
+      "Floral": {
+        "patterns": [
+          "\\b(?:floral|flower|flowers|flowered|botanical|tropical|hawaiian|leaf|leaves|foliage|palm|hibiscus|rose[\\s-]+print|rose[\\s-]+pattern|rose[\\s-]+motif|daisy|daisies|blossom|blossoms|botanic)\\b"
+        ],
+        "keywords": "floral, flower, flowers, flowered, botanical, tropical, hawaiian, leaf, leaves, foliage, palm, hibiscus, rose print, rose pattern, rose motif, daisy, daisies, blossom, blossoms, botanic",
+        "source": "text",
+        "note": "Szerokie motywy roślinne; Hawaiian/tropical mogą być również nazwą fasonu lub stylistyki."
+      },
+      "Camo": {
+        "patterns": [
+          "\\b(?:camo|camouflage|camouflaged)\\b"
+        ],
+        "keywords": "camo, camouflage, camouflaged",
+        "source": "text",
+        "note": "Military bez wzmianki o camo nie jest liczone."
+      },
+      "Animal Print": {
+        "patterns": [
+          "\\b(?:animal[\\s-]+print|animal[\\s-]+printed|animal[\\s-]+pattern|leopard|cheetah|jaguar|panther|zebra|tiger|snake|snakeskin|python|reptile|crocodile|croc[\\s-]+embossed|croc[\\s-]+print|alligator|cow[\\s-]+print|cow[\\s-]+pattern|dalmatian|giraffe)\\b"
+        ],
+        "keywords": "animal print, animal printed, animal pattern, leopard, cheetah, jaguar, panther, zebra, tiger, snake, snakeskin, python, reptile, crocodile, croc embossed, croc print, alligator, cow print, cow pattern, dalmatian, giraffe",
+        "source": "text",
+        "note": "Nazwy zwierząt mogą oznaczać pojedynczą grafikę lub faktyczny materiał, a nie deseń animal print; to celowo szeroki sygnał."
+      },
+      "Polka Dot": {
+        "patterns": [
+          "\\b(?:polka[\\s-]+dot|polka[\\s-]+dots|polka[\\s-]+dotted|dotted|dot|dots|spotted|pin[\\s-]+dot|micro[\\s-]+dot|polkadot|polkadots)\\b"
+        ],
+        "keywords": "polka dot, polka dots, polka dotted, dotted, dot, dots, spotted, pin dot, micro dot, polkadot, polkadots",
+        "source": "text",
+        "note": "Spotted może nakładać się na animal print."
+      },
+      "Other": {
+        "patterns": [
+          "\\b(?:graphic|graphics|graphical|artwork|photo[\\s-]+print|photographic|portrait[\\s-]+print|text[\\s-]+print|text[\\s-]+printed|text[\\s-]+graphic|lettering|slogan|logo|logos|monogram|monogrammed|wordmark|branded|colorblock|colorblocked|colourblock|colourblocked|color[\\s-]+block|colour[\\s-]+block|two[\\s-]+tone|bi[\\s-]+color|bicolor|bi[\\s-]+colour|bicolour|contrast[\\s-]+panel|contrast[\\s-]+panels|contrast[\\s-]+paneling|contrast[\\s-]+panelling|split[\\s-]+color|split[\\s-]+colour|tie[\\s-]+dye|tie[\\s-]+dyed|tiedye|acid[\\s-]+wash|acid[\\s-]+washed|bleached|dip[\\s-]+dye|dip[\\s-]+dyed|ombre|ombré|gradient|marbled|marble[\\s-]+print|marble[\\s-]+effect|shibori|cloud[\\s-]+wash|paint[\\s-]+splatter|paint[\\s-]+splattered|splatter|splattered|patchwork|paisley|abstract|geometric|geometrical|zigzag|zig[\\s-]+zag|chevron|ikat|aztec|tribal|psychedelic|baroque|damask|tapestry|kaleidoscope|kaleidoscopic)\\b"
+        ],
+        "keywords": "graphic, graphics, graphical, artwork, photo print, photographic, portrait print, text print, text printed, text graphic, lettering, slogan, logo, logos, monogram, monogrammed, wordmark, branded, colorblock, colorblocked, colourblock, colourblocked, color block, colour block, two tone, bi color, bicolor, bi colour, bicolour, contrast panel, contrast panels, contrast paneling, contrast panelling, split color, split colour, tie dye, tie dyed, tiedye, acid wash, acid washed, bleached, dip dye, dip dyed, ombre, ombré, gradient, marbled, marble print, marble effect, shibori, cloud wash, paint splatter, paint splattered, splatter, splattered, patchwork, paisley, abstract, geometric, geometrical, zigzag, zig zag, chevron, ikat, aztec, tribal, psychedelic, baroque, damask, tapestry, kaleidoscope, kaleidoscopic",
+        "source": "text",
+        "note": "Tylko pozytywne sygnały innych rozpoznawalnych wzorów; brak trafień nie jest Other. Logo i grafika mogą dotyczyć małego detalu. Bez ogólnego print/printed, które samo nie odróżnia Other od np. Floral. Nakładanie z nazwanymi wzorami jest dozwolone w audycie."
+      }
+    }
+  }
+}

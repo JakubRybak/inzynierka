@@ -1,0 +1,394 @@
+{
+  "scope": "TOPS category with subcategories T-SHIRTS, POLOS, TANK TOPS, TANK TOPS & CAMISOLES, BODYSUITS; unique input_productID across train and validation",
+  "unique_products": 10689,
+  "products_per_split": {
+    "train": 9511,
+    "validation": 1178
+  },
+  "inconsistent_compositions_per_product": 0,
+  "counts": {
+    "no_colon_sum_100": 9290,
+    "named_sections_present": 1293,
+    "no_colon_no_percentages": 11,
+    "no_colon_sum_not_100": 95
+  },
+  "by_subcategory": {
+    "TANK TOPS": {
+      "no_colon_sum_100": 156,
+      "named_sections_present": 17,
+      "no_colon_sum_not_100": 3,
+      "no_colon_no_percentages": 1
+    },
+    "POLOS": {
+      "no_colon_sum_100": 482,
+      "named_sections_present": 104,
+      "no_colon_sum_not_100": 4
+    },
+    "T-SHIRTS": {
+      "no_colon_sum_100": 7998,
+      "named_sections_present": 894,
+      "no_colon_no_percentages": 9,
+      "no_colon_sum_not_100": 60
+    },
+    "TANK TOPS & CAMISOLES": {
+      "no_colon_sum_100": 566,
+      "named_sections_present": 249,
+      "no_colon_sum_not_100": 27,
+      "no_colon_no_percentages": 1
+    },
+    "BODYSUITS": {
+      "no_colon_sum_100": 88,
+      "named_sections_present": 29,
+      "no_colon_sum_not_100": 1
+    }
+  },
+  "colon_count_distribution": {
+    "0": 9396,
+    "2": 1033,
+    "3": 139,
+    "4": 29,
+    "1": 81,
+    "5": 9,
+    "6": 2
+  },
+  "examples": {
+    "no_colon_sum_100": [
+      {
+        "product_id": 86624,
+        "split": "train",
+        "subcategory": "TANK TOPS",
+        "name": "Black Umtk-Bale Tank Top",
+        "composition": "94% cotton, 6% elastane."
+      },
+      {
+        "product_id": 86671,
+        "split": "train",
+        "subcategory": "POLOS",
+        "name": "Heathered Grey Cotton Pique Zebra Logo Polo",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86673,
+        "split": "train",
+        "subcategory": "POLOS",
+        "name": "Black Cotton Piqu� Zebra Logo Polo",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86623,
+        "split": "train",
+        "subcategory": "TANK TOPS",
+        "name": "White Umtk-Bale Tank Top",
+        "composition": "94% cotton, 6% elastane."
+      },
+      {
+        "product_id": 86672,
+        "split": "train",
+        "subcategory": "POLOS",
+        "name": "Purple Cotton Piqu� Zebra Logo Polo",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86794,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Logo T-Shirt",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86793,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Indigo Logo V-Neck T-Shirt",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86797,
+        "split": "train",
+        "subcategory": "POLOS",
+        "name": "Light Blue Cotton Pique Polo",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 86795,
+        "split": "train",
+        "subcategory": "TANK TOPS",
+        "name": "Black Mohawk Graphic Tank",
+        "composition": "70% cotton, 30% linen."
+      },
+      {
+        "product_id": 86791,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "White Tiger Pocket T-Shirt",
+        "composition": "100% cotton."
+      },
+      {
+        "product_id": 87015,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Blac Pyramid Print T-Shirt",
+        "composition": "50% cotton, 50% modal."
+      },
+      {
+        "product_id": 87012,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Prism Mickey Mouse T-Shirt",
+        "composition": "50% cotton, 50% modal."
+      }
+    ],
+    "named_sections_present": [
+      {
+        "product_id": 87537,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Enclosed Chain T-Shirt",
+        "composition": "Body: 100% cotton. Trim: 100% brass."
+      },
+      {
+        "product_id": 87384,
+        "split": "train",
+        "subcategory": "POLOS",
+        "name": "White Relaxed Fit Number & Stars Polo",
+        "composition": "Main: 100% cotton. Detail: 100% polyester."
+      },
+      {
+        "product_id": 87846,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black 3D Floral Print T-Shirt",
+        "composition": "Body: 100% polyester. Fabrix 2: 100% silk."
+      },
+      {
+        "product_id": 87919,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & White Striped Organza Overlay T-Shirt",
+        "composition": "Body: 55% cotton, 45% nylon. Shell: 100% silk."
+      },
+      {
+        "product_id": 87942,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "Black Neoprene Grid Print Cropped Tank Top",
+        "composition": "Body: 94% polyester, 6% spandex. Bonded fabric backing: 100% cotton. Adhesive: 100% polyester."
+      },
+      {
+        "product_id": 87821,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "Blush Mesh Panel Bustier",
+        "composition": "Body: 66% triacetate, 34% polyester. Panel: 80% nylon, 20% spandex. Lining: 85% polyester, 15% spandex."
+      },
+      {
+        "product_id": 88624,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & Brown Sequin-Embroidered Rotweiller T-Shirt",
+        "composition": "Body: 100% cotton. Ribbed trim: 97% cotton, 3% elastane."
+      },
+      {
+        "product_id": 89398,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "Turquoise Silk Scooped Out Tank Top",
+        "composition": "Body: 95% silk, 5% elastane. Trim: 100% silk."
+      },
+      {
+        "product_id": 89424,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "White Ribbed Drop Tail Tank Top",
+        "composition": "Body: 100% polyester. Trim fabric 1: 100% cotton. Trim fabric 2: 100% silk."
+      },
+      {
+        "product_id": 89776,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & White Print Slim Fit T-Shirt",
+        "composition": "Main: 100% cotton. Insert: 100% silk"
+      },
+      {
+        "product_id": 89975,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Silk Plaid Panel T-Shirt",
+        "composition": "Body: 100% cotton. Panel: 100% silk."
+      },
+      {
+        "product_id": 89935,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Grey Georgette Raglan Shirt",
+        "composition": "Body: 100% cotton. Trim: 100% silk."
+      }
+    ],
+    "no_colon_no_percentages": [
+      {
+        "product_id": 89976,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Carrion Collage T-Shirt",
+        "composition": "Mixed fibers."
+      },
+      {
+        "product_id": 94502,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & Ivory Striped Tank Top",
+        "composition": "Cotton"
+      },
+      {
+        "product_id": 98459,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "White Leather Panel Mcneal T-Shirt",
+        "composition": "Textile, leather."
+      },
+      {
+        "product_id": 98462,
+        "split": "train",
+        "subcategory": "TANK TOPS",
+        "name": "Navy Crawford Jersey Tank Top",
+        "composition": "Cotton."
+      },
+      {
+        "product_id": 99354,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Olive Green Cashmere Blend T-Shirt",
+        "composition": "Machine wash cold."
+      },
+      {
+        "product_id": 1074103,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & Red Suede-Trimmed Korben T-Shirt",
+        "composition": "Viscose."
+      },
+      {
+        "product_id": 1074003,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & White Wire Cut T-Shirt",
+        "composition": "Viscose."
+      },
+      {
+        "product_id": 1074503,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Grey & Black Leather Leeloo T-Shirt",
+        "composition": "Rayon, leather."
+      },
+      {
+        "product_id": 1933833,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Luxe T-Shirt",
+        "composition": "."
+      },
+      {
+        "product_id": 2099907,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "Black Leather Straight Cut Camisole",
+        "composition": "Lambskin."
+      },
+      {
+        "product_id": 117525,
+        "split": "validation",
+        "subcategory": "T-SHIRTS",
+        "name": "Navy 'Can't Knock The Hustle' Graphic T-Shirt",
+        "composition": "Cotton."
+      }
+    ],
+    "no_colon_sum_not_100": [
+      {
+        "product_id": 95879,
+        "split": "train",
+        "subcategory": "TANK TOPS",
+        "name": "Grey Accent Seam Tank Top",
+        "composition": "60% viscose, 26% nylon, 4% elastane."
+      },
+      {
+        "product_id": 97973,
+        "split": "train",
+        "subcategory": "TANK TOPS & CAMISOLES",
+        "name": "Pink Lace Inset Racer Back Logo Tank",
+        "composition": "100% cotton, 100% polyester."
+      },
+      {
+        "product_id": 98725,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Deep Green Leather & Cashmere Michelle T-Shirt",
+        "composition": "50% cashmere, 40% New Zealand lambskin."
+      },
+      {
+        "product_id": 100409,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Blue & White Jersey Bliss Stripe T-Shirt",
+        "composition": "47% cotton, 47% modal."
+      },
+      {
+        "product_id": 102016,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Grey V-Neck T-Shirt",
+        "composition": "59% polyester, 37% cotton, 13% rayon."
+      },
+      {
+        "product_id": 104547,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "White Level T-shirt",
+        "composition": "85% viscose, 20% silk."
+      },
+      {
+        "product_id": 107059,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & Silver Foil Print Raglan T-Shirt",
+        "composition": "85% Cotton, 14% nylon."
+      },
+      {
+        "product_id": 107216,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Dropped Shoulders T-Shirt",
+        "composition": "73% viscose, 23% polyester, 5% elastic."
+      },
+      {
+        "product_id": 107334,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Leather Oversized T-Shirt",
+        "composition": "100% Sheep leather. 100% Polyester lining."
+      },
+      {
+        "product_id": 107574,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black Molecule Oversize T-Shirt",
+        "composition": "66% nylon, 33% elastane."
+      },
+      {
+        "product_id": 110044,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Black & Grey Striped Short Sleeve T-Shirt",
+        "composition": "75% viscose, 25% polyester. 100% cotton trim."
+      },
+      {
+        "product_id": 112092,
+        "split": "train",
+        "subcategory": "T-SHIRTS",
+        "name": "Red Jersey Cortex T-Shirt",
+        "composition": "43% viscose, 23% micro modal, 7% wool, 3% spandex."
+      }
+    ]
+  },
+  "interpretation": "Sums are literal sums of every percentage in raw text, not a validated main-body composition. Colon-free sum=100 alone does not guarantee semantic completeness. Named sections require separate interpretation; percentages of different garment parts must not be added as a whole-garment composition."
+}
