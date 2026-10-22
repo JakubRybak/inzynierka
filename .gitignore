@@ -15,3 +15,15 @@ products/data/raw/
 
 # Raw product data (FashionGen h5)
 products_new/data/raw/
+
+# Generated Fashion-Gen manifests and image exports
+products_new/data/processed/
+
+# Active datasets
+/data/
+
+# Archived project files
+/archive/
+
+# macOS metadata
+.DS_Store
