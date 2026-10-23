@@ -18,7 +18,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Short Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 
 ### Tank tops & Camisoles
 - **`gender`**: `Men`, `Women`
@@ -28,7 +28,7 @@
 - **`strap_style`**: `Standard`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
 - **`strap_width`**: `Wide`, `Spaghetti`, `Other`, `Not Applicable`
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Other`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 
 ### Bodysuits
@@ -38,7 +38,7 @@
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Long Sleeve`
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Other`
-- **`strap_style`**: `Standard`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
+- **`strap_style`**: `Standard`, `Standard Sleeved`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
 - **`strap_width`**: `Wide`, `Spaghetti`, `Other`, `Not Applicable`
 
 ### Zasady
@@ -64,7 +64,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`collar_type`**: `Point Collar`, `Camp Collar`, `Stand Collar`, `Collarless`, `Other`
 
@@ -74,7 +74,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Collared`, `Other`
 
@@ -100,7 +100,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
@@ -112,7 +112,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
@@ -124,7 +124,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
@@ -135,7 +135,7 @@
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
@@ -315,7 +315,7 @@
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
-- **`fit`**: `Slim`, `Regular`, `Relaxed`
+- **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`waistband_type`**: `Structured`, `Elasticized`, `Other`
 - **`length`**: `Short`, `Mid-Length`, `Long`
 - **`rise`**: `High-Rise`, `Mid-Rise`, `Low-Rise`
