@@ -71,7 +71,6 @@ Kolumny `name` i `description`
 
 ```text
 Kolumny `name` i `description`
-├─ liczba wartości ≥ 2 → Other
 ├─ liczba wartości = 1 → wykryta wartość
 └─ else               → undefined
 ```

@@ -372,7 +372,7 @@
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Collared`, `Other`
 - **`dress_silhouette`**: `Fitted`, `Straight`, `A-Line`, `Other`
 - **`dress_type`**: `Slip`, `Shirt Dress`, `Wrap`, `Sweater Dress`, `Sweatshirt Dress`, `T-Shirt Dress`, `Other`
-- **`strap_style`**: `Standard`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
+- **`strap_style`**: `Standard`, `Standard Sleeved`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
 - **`strap_width`**: `Wide`, `Spaghetti`, `Other`, `Not Applicable`
 
 ### Zasady
