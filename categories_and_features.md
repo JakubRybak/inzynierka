@@ -162,7 +162,7 @@
 - **`gender`**: `Men`, `Women`
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
-- **`linning_composition`**: `Cotton`, `Polyester`, `Viscose`, `Nylon`, `Silk`, `Unlined`, `Unknown`
+- **`lining_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`, `Unlined`, `Unknown`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`coat_style`**: `Standard`, `Parka`, `Other`
@@ -176,7 +176,7 @@
 - **`gender`**: `Men`, `Women`
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
-- **`linning_composition`**: `Cotton`, `Polyester`, `Viscose`, `Nylon`, `Silk`, `Unlined`, `Unknown`
+- **`lining_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`, `Unlined`, `Unknown`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Button`, `Press-Stud`, `Double-Breasted`, `Belted`, `Open Front`, `Other`
@@ -189,7 +189,7 @@
 - **`gender`**: `Men`, `Women`
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
-- **`linning_composition`**: `Cotton`, `Polyester`, `Viscose`, `Nylon`, `Silk`, `Unlined`, `Unknown`
+- **`lining_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`, `Unlined`, `Unknown`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`jacket_style`**: `Biker`, `Denim`, `Windbreaker`, `Other`
@@ -203,7 +203,7 @@
 - **`gender`**: `Men`, `Women`
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
-- **`linning_composition`**: `Cotton`, `Polyester`, `Viscose`, `Nylon`, `Silk`, `Unlined`, `Unknown`
+- **`lining_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`, `Unlined`, `Unknown`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Button`, `Press-Stud`, `Double-Breasted`, `Belted`, `Open Front`, `Other`
@@ -215,7 +215,7 @@
 - **`gender`**: `Men`, `Women`
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
-- **`linning_composition`**: `Cotton`, `Polyester`, `Viscose`, `Nylon`, `Silk`, `Unlined`, `Unknown`
+- **`lining_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`, `Unlined`, `Unknown`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
 - **`hood`**: `With Hood`, `Without Hood`
 - **`closure_type`**: `Zip`, `Button`, `Press-Stud`, `Double-Breasted`, `Belted`, `Open Front`, `Other`
@@ -228,7 +228,7 @@
 - **`gender`**: single choice.
 - **`colors`**: multi choice — 1 lub 2 różne kolory albo samo `Multicolor`, bez koloru dominującego.
 - **`main_composition`**: jeden skład z udziałami procentowymi sumującymi się do 100%.
-- **`linning_composition`**: skład z udziałami procentowymi sumującymi się do 100% albo samodzielne `Unlined` lub `Unknown`.
+- **`lining_composition`**: skład z udziałami procentowymi sumującymi się do 100% albo samodzielne `Unlined` lub `Unknown`.
 - **`pattern`**: single choice.
 - **`hood`**: single choice.
 - **`coat_style`**: single choice.
