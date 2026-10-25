@@ -315,7 +315,7 @@
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
-- **`fit`**: `Slim`, `Regular`, `Oversized`
+- **`fit`**: `Skinny`, `Slim`, `Regular`, `Relaxed`
 - **`waistband_type`**: `Structured`, `Elasticized`, `Other`
 - **`length`**: `Short`, `Mid-Length`, `Long`
 - **`rise`**: `High-Rise`, `Mid-Rise`, `Low-Rise`
