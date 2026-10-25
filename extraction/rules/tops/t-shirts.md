@@ -9,7 +9,7 @@ Reguły i keywordy: [common/gender.md](../common/gender.md).
 <!-- results:gender -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8,961 | 100,00% |
+| Przypisane | 8 961 | 100,00% |
 | `undefined` | 0 | 0,00% |
 <!-- /results -->
 
@@ -20,7 +20,7 @@ Reguły i keywordy: [common/colors.md](../common/colors.md).
 <!-- results:colors -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8,893 | 99,24% |
+| Przypisane | 8 893 | 99,24% |
 | `undefined` | 68 | 0,76% |
 <!-- /results -->
 
@@ -31,23 +31,23 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8,635 | 96,36% |
+| Przypisane | 8 736 | 97,49% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 164 | 1,83% |
-| `ambiguous_main_section` | 85 | 0,95% |
-| `unmapped_material` | 15 | 0,17% |
+| `unparsed_composition` | 28 | 0,31% |
+| `ambiguous_main_section` | 117 | 1,31% |
+| `unmapped_material` | 18 | 0,20% |
 | `sum_not_100` | 62 | 0,69% |
 <!-- /results -->
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,346 | 15,02% |
-| `undefined` | 7,615 | 84,98% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 8 961 | 100,00% |
 <!-- /results -->
 
 ## `neckline`
@@ -63,8 +63,8 @@ Kolumny `name` i `description`
 <!-- results:neckline -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8,507 | 94,93% |
-| `undefined` | 454 | 5,07% |
+| Przypisane | 8 479 | 94,62% |
+| `undefined` | 482 | 5,38% |
 <!-- /results -->
 
 ## `fit`
@@ -81,7 +81,7 @@ Kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 551 | 6,15% |
-| `undefined` | 8,410 | 93,85% |
+| `undefined` | 8 410 | 93,85% |
 <!-- /results -->
 
 ## `length`
@@ -98,7 +98,7 @@ Kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 39 | 0,44% |
-| `undefined` | 8,922 | 99,56% |
+| `undefined` | 8 922 | 99,56% |
 <!-- /results -->
 
 ## `sleeve_length`
@@ -114,8 +114,8 @@ Kolumny `name` i `description`
 <!-- results:sleeve_length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8,517 | 95,05% |
-| `undefined` | 444 | 4,95% |
+| Przypisane | 8 751 | 97,66% |
+| `undefined` | 210 | 2,34% |
 <!-- /results -->
 
 ## Keywordy
@@ -150,5 +150,7 @@ Kolumny `name` i `description`
 
 | Wartość | Keywordy |
 | --- | --- |
+| `Sleeveless` | `sleeveless` |
 | `Short Sleeve` | `short sleeve`, `short sleeves`, `short-sleeved` |
+| `Three-Quarter Sleeve` | `three-quarter sleeve`, `three-quarter sleeves`, `three-quarter length sleeves`, `3/4 sleeve`, `3/4 sleeves`, `cropped sleeve`, `cropped sleeves`, `cropped-sleeve` |
 | `Long Sleeve` | `long sleeve`, `long sleeves`, `long-sleeved` |

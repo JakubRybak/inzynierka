@@ -31,23 +31,23 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 560 | 94,92% |
+| Przypisane | 572 | 96,95% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 13 | 2,20% |
-| `ambiguous_main_section` | 4 | 0,68% |
+| `unparsed_composition` | 0 | 0,00% |
+| `ambiguous_main_section` | 5 | 0,85% |
 | `unmapped_material` | 2 | 0,34% |
 | `sum_not_100` | 11 | 1,86% |
 <!-- /results -->
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 155 | 26,27% |
-| `undefined` | 435 | 73,73% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 590 | 100,00% |
 <!-- /results -->
 
 ## `sleeve_length`
@@ -63,8 +63,8 @@ Kolumny `name` i `description`
 <!-- results:sleeve_length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 578 | 97,97% |
-| `undefined` | 12 | 2,03% |
+| Przypisane | 580 | 98,31% |
+| `undefined` | 10 | 1,69% |
 <!-- /results -->
 
 ## `fit`
@@ -90,7 +90,9 @@ Kolumny `name` i `description`
 
 | Wartość | Keywordy |
 | --- | --- |
+| `Sleeveless` | `sleeveless` |
 | `Short Sleeve` | `short sleeve`, `short sleeves`, `short-sleeved` |
+| `Three-Quarter Sleeve` | `three-quarter sleeve`, `three-quarter sleeves`, `three-quarter length sleeves`, `3/4 sleeve`, `3/4 sleeves`, `cropped sleeve`, `cropped sleeves`, `cropped-sleeve` |
 | `Long Sleeve` | `long sleeve`, `long sleeves`, `long-sleeved` |
 
 ### `fit`

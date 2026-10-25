@@ -9,7 +9,7 @@ Reguły i keywordy: [common/gender.md](../common/gender.md).
 <!-- results:gender -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,913 | 100,00% |
+| Przypisane | 1 913 | 100,00% |
 | `undefined` | 0 | 0,00% |
 <!-- /results -->
 
@@ -20,7 +20,7 @@ Reguły i keywordy: [common/colors.md](../common/colors.md).
 <!-- results:colors -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,861 | 97,28% |
+| Przypisane | 1 861 | 97,28% |
 | `undefined` | 52 | 2,72% |
 <!-- /results -->
 
@@ -31,23 +31,23 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,604 | 83,85% |
+| Przypisane | 1 656 | 86,57% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 78 | 4,08% |
-| `ambiguous_main_section` | 152 | 7,95% |
+| `unparsed_composition` | 16 | 0,84% |
+| `ambiguous_main_section` | 162 | 8,47% |
 | `unmapped_material` | 33 | 1,73% |
 | `sum_not_100` | 46 | 2,40% |
 <!-- /results -->
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 260 | 13,59% |
-| `undefined` | 1,653 | 86,41% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 1 913 | 100,00% |
 <!-- /results -->
 
 ## `length`
@@ -65,8 +65,7 @@ Kolumna `original_category`
 <!-- results:length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,913 | 100,00% |
-| Wykluczenie produktu | 0 | 0,00% |
+| Przypisane | 1 913 | 100,00% |
 <!-- /results -->
 
 ## `skirt_silhouette`
@@ -83,7 +82,7 @@ Kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 168 | 8,78% |
-| `undefined` | 1,745 | 91,22% |
+| `undefined` | 1 745 | 91,22% |
 <!-- /results -->
 
 ## `skirt_type`
@@ -101,7 +100,7 @@ Kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 450 | 23,52% |
-| `undefined` | 1,463 | 76,48% |
+| `undefined` | 1 463 | 76,48% |
 <!-- /results -->
 
 ## `rise`
@@ -118,7 +117,7 @@ Kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 161 | 8,42% |
-| `undefined` | 1,752 | 91,58% |
+| `undefined` | 1 752 | 91,58% |
 <!-- /results -->
 
 ## Keywordy

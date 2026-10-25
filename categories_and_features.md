@@ -7,7 +7,7 @@
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
-- **`sleeve_length`**: `Short Sleeve`, `Long Sleeve`
+- **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Other`
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
@@ -17,7 +17,7 @@
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
-- **`sleeve_length`**: `Short Sleeve`, `Long Sleeve`
+- **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 
 ### Tank tops & Camisoles
@@ -36,7 +36,7 @@
 - **`colors`**: `Black`, `White`, `Grey`, `Blue`, `Red`, `Green`, `Pink`, `Beige`, `Brown`, `Yellow`, `Orange`, `Purple`, `Multicolor`
 - **`main_composition`**: `Cotton`, `Polyester`, `Acrylic`, `Wool`, `Viscose`, `Elastane`, `Nylon`, `Silk`, `Leather`, `Cashmere`, `Linen`, `Down`, `Fur`
 - **`pattern`**: `Solid`, `Striped`, `Plaid`, `Floral`, `Camo`, `Animal Print`, `Polka Dot`, `Other`
-- **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Long Sleeve`
+- **`sleeve_length`**: `Sleeveless`, `Short Sleeve`, `Three-Quarter Sleeve`, `Long Sleeve`
 - **`neckline`**: `Crewneck`, `Scoop Neck`, `V-Neck`, `High Neck`, `Other`
 - **`strap_style`**: `Standard`, `Standard Sleeved`, `Racerback`, `Halter`, `One-Shoulder`, `Strapless`, `Off-Shoulder`, `Other`
 - **`strap_width`**: `Wide`, `Spaghetti`, `Other`, `Not Applicable`

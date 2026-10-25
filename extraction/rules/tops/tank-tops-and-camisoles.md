@@ -9,7 +9,7 @@ Reguły i keywordy: [common/gender.md](../common/gender.md).
 <!-- results:gender -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,020 | 100,00% |
+| Przypisane | 1 020 | 100,00% |
 | `undefined` | 0 | 0,00% |
 <!-- /results -->
 
@@ -31,23 +31,23 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 889 | 87,16% |
+| Przypisane | 912 | 89,41% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 43 | 4,22% |
-| `ambiguous_main_section` | 50 | 4,90% |
+| `unparsed_composition` | 4 | 0,39% |
+| `ambiguous_main_section` | 65 | 6,37% |
 | `unmapped_material` | 8 | 0,78% |
-| `sum_not_100` | 30 | 2,94% |
+| `sum_not_100` | 31 | 3,04% |
 <!-- /results -->
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 151 | 14,80% |
-| `undefined` | 869 | 85,20% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 1 020 | 100,00% |
 <!-- /results -->
 
 ## `neckline`
@@ -63,8 +63,8 @@ Kolumny `name` i `description`
 <!-- results:neckline -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 639 | 62,65% |
-| `undefined` | 381 | 37,35% |
+| Przypisane | 637 | 62,45% |
+| `undefined` | 383 | 37,55% |
 <!-- /results -->
 
 ## `fit`
@@ -135,7 +135,7 @@ strap_style oraz kolumny `name` i `description`
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 19 | 1,86% |
-| `undefined` | 1,001 | 98,14% |
+| `undefined` | 1 001 | 98,14% |
 <!-- /results -->
 
 ## Keywordy

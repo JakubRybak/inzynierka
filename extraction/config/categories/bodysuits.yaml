@@ -1,0 +1,129 @@
+section: Tops
+category: Bodysuits
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Sleeveless:
+      - sleeveless
+      Short Sleeve:
+      - short sleeve
+      - short sleeves
+      - short-sleeved
+      Three-Quarter Sleeve:
+      - three-quarter sleeve
+      - three-quarter sleeves
+      - three-quarter length sleeves
+      - 3/4 sleeve
+      - 3/4 sleeves
+      - cropped sleeve
+      - cropped sleeves
+      - cropped-sleeve
+      Long Sleeve:
+      - long sleeve
+      - long sleeves
+      - long-sleeved
+  neckline:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Crewneck:
+      - crewneck
+      - crew neck
+      - crew-neck
+      Scoop Neck:
+      - scoop neck
+      - scoop-neck
+      - scoop neckline
+      V-Neck:
+      - v-neck
+      - v neck
+      - v-neckline
+      High Neck:
+      - high neck
+      - high-neck
+      - turtleneck
+      - turtle neck
+      - roll neck
+      - rollneck
+      - mock neck
+      - mock-neck
+      - funnel neck
+      Other:
+      - boat neck
+      - bateau neck
+      - cowl neck
+      - square neck
+      - sweetheart neckline
+      - henley neckline
+      - spread collar
+      - point collar
+  strap_style:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Standard: []
+      Standard Sleeved: []
+      Racerback:
+      - racerback
+      - racer back
+      - racer-back
+      Halter:
+      - halter
+      - halterneck
+      - halter neck
+      - halter-neck
+      One-Shoulder:
+      - one shoulder
+      - one-shoulder
+      - single shoulder
+      - single-shoulder
+      Strapless:
+      - strapless
+      Off-Shoulder:
+      - off shoulder
+      - off-shoulder
+      - off the shoulder
+      - off-the-shoulder
+      Other: []
+  strap_width:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Wide:
+      - wide straps
+      - wide shoulder straps
+      - broad straps
+      - broad shoulder straps
+      Spaghetti:
+      - spaghetti straps
+      - spaghetti shoulder straps
+      - thin straps
+      - thin shoulder straps
+      - narrow straps
+      - narrow shoulder straps
+      Other: []
+      Not Applicable: []
+    derive:
+      feature: strap_style
+      in:
+      - Strapless
+      - Standard Sleeved
+      value: Not Applicable

@@ -1,5 +1,7 @@
 # `colors`
 
+Przed wyszukiwaniem keywordów maskujemy w `name` wszystkie wystąpienia pełnej nazwy marki z kolumny `brand` danego produktu. Dopasowanie ignoruje wielkość liter i różnice między myślnikami a spacjami. Przy pustym `brand` nie maskujemy niczego.
+
 ```text
 Kolumna `name`
 ├─ wykryto Multicolor → [Multicolor]

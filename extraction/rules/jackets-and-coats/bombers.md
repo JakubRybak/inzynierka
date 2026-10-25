@@ -41,13 +41,13 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 364 | 23,14% |
-| `undefined` | 1,209 | 76,86% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 1 573 | 100,00% |
 <!-- /results -->
 
 ## `lining_composition`

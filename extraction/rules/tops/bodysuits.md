@@ -31,23 +31,23 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 112 | 94,92% |
+| Przypisane | 114 | 96,61% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 4 | 3,39% |
-| `ambiguous_main_section` | 1 | 0,85% |
+| `unparsed_composition` | 0 | 0,00% |
+| `ambiguous_main_section` | 3 | 2,54% |
 | `unmapped_material` | 0 | 0,00% |
 | `sum_not_100` | 1 | 0,85% |
 <!-- /results -->
 
 ## `pattern`
 
-Reguły i keywordy: [common/pattern.md](../common/pattern.md).
+Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 8 | 6,78% |
-| `undefined` | 110 | 93,22% |
+| Przypisane | 0 | 0,00% |
+| `undefined` | 118 | 100,00% |
 <!-- /results -->
 
 ## `sleeve_length`
@@ -63,8 +63,8 @@ Kolumny `name` i `description`
 <!-- results:sleeve_length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 111 | 94,07% |
-| `undefined` | 7 | 5,93% |
+| Przypisane | 112 | 94,92% |
+| `undefined` | 6 | 5,08% |
 <!-- /results -->
 
 ## `neckline`
@@ -128,6 +128,7 @@ strap_style oraz kolumny `name` i `description`
 | --- | --- |
 | `Sleeveless` | `sleeveless` |
 | `Short Sleeve` | `short sleeve`, `short sleeves`, `short-sleeved` |
+| `Three-Quarter Sleeve` | `three-quarter sleeve`, `three-quarter sleeves`, `three-quarter length sleeves`, `3/4 sleeve`, `3/4 sleeves`, `cropped sleeve`, `cropped sleeves`, `cropped-sleeve` |
 | `Long Sleeve` | `long sleeve`, `long sleeves`, `long-sleeved` |
 
 ### `neckline`

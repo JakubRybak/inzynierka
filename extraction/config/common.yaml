@@ -1,0 +1,190 @@
+features:
+  gender:
+    strategy: source_value
+    column: gender
+    allowed_values:
+    - Men
+    - Women
+    on_unresolved: exclude
+  colors:
+    strategy: colors
+    columns:
+    - name
+    keywords:
+      Black:
+      - black
+      White:
+      - white
+      - off-white
+      - ivory
+      - cream
+      - ecru
+      Grey:
+      - grey
+      - gray
+      - charcoal
+      - anthracite
+      Blue:
+      - navy
+      - navy blue
+      - midnight blue
+      - blue
+      - light blue
+      - cobalt
+      - indigo
+      - turquoise
+      Red:
+      - red
+      - burgundy
+      - maroon
+      - bordeaux
+      - crimson
+      - scarlet
+      Green:
+      - green
+      - olive
+      - khaki
+      - emerald
+      Pink:
+      - pink
+      - fuchsia
+      - rose pink
+      Beige:
+      - beige
+      - tan
+      - sand
+      - taupe
+      Brown:
+      - brown
+      - chocolate
+      - camel
+      Yellow:
+      - yellow
+      - mustard
+      Orange:
+      - orange
+      - rust
+      Purple:
+      - purple
+      - violet
+      - lilac
+      - lavender
+      - mauve
+      Multicolor:
+      - multicolor
+      - multicolour
+      - multicolored
+      - multicoloured
+      - multi-color
+      - multi-colour
+    ignore_column: brand
+    absorb_nested_matches: true
+    multicolor_value: Multicolor
+    max_named_colors: 2
+  main_composition:
+    strategy: composition
+    columns:
+    - composition
+    keywords:
+      Cotton:
+      - cotton
+      - coton
+      - cototn
+      Polyester:
+      - polyester
+      - poylester
+      - polyurethane
+      - polyethylene
+      - polypropylene
+      - pvc
+      - polyvinyl chloride
+      Acrylic:
+      - acrylic
+      - modacrylic
+      - polyacrylic
+      Wool:
+      - wool
+      - merino
+      - lambswool
+      - fleecewool
+      - mohair
+      - alpaca
+      - angora
+      - camel
+      - yak
+      Viscose:
+      - viscose
+      - rayon
+      - cupro
+      - cupra
+      - bemberg
+      - acetate
+      - triacetate
+      - modal
+      - micromodal
+      - lyocell
+      - tencel
+      - bamboo
+      Elastane:
+      - elastane
+      - spandex
+      - lycra
+      - elastodiene
+      - elastomultiester
+      Nylon:
+      - nylon
+      - polyamide
+      - polyamid
+      - polyamide-nylon
+      Silk:
+      - silk
+      Leather:
+      - leather
+      - suede
+      - nubuck
+      - lambskin
+      - calfskin
+      - goatskin
+      - cowhide
+      - deerskin
+      - pigskin
+      - horsehide
+      - sheepskin
+      - calf
+      - lamb
+      - goat
+      - cow
+      - buffalo
+      - bull
+      Cashmere:
+      - cashmere
+      Linen:
+      - linen
+      - flax
+      - ramie
+      - hemp
+      Down:
+      - down
+      - feather
+      - feathers
+      Fur:
+      - fur
+      - shearling
+      - faux fur
+    main_sections:
+    - main
+    - body
+    total: 100
+    tolerance: 0.01
+    on_unresolved: exclude
+  pattern:
+    strategy: llm
+    allowed_values:
+    - Solid
+    - Striped
+    - Plaid
+    - Floral
+    - Camo
+    - Animal Print
+    - Polka Dot
+    - Other

@@ -1,0 +1,65 @@
+section: Tops
+category: Polos
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Sleeveless:
+      - sleeveless
+      Short Sleeve:
+      - short sleeve
+      - short sleeves
+      - short-sleeved
+      Three-Quarter Sleeve:
+      - three-quarter sleeve
+      - three-quarter sleeves
+      - three-quarter length sleeves
+      - 3/4 sleeve
+      - 3/4 sleeves
+      - cropped sleeve
+      - cropped sleeves
+      - cropped-sleeve
+      Long Sleeve:
+      - long sleeve
+      - long sleeves
+      - long-sleeved
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Slim:
+      - slim fit
+      - slim-fit
+      - slim-fitting
+      - close-fitting
+      - form-fitting
+      - body-hugging
+      - fitted polo
+      - fitted polo shirt
+      Regular:
+      - regular fit
+      - regular-fit
+      - standard fit
+      - classic fit
+      Oversized:
+      - relaxed fit
+      - relaxed-fit
+      - loose fit
+      - loose-fitting
+      - oversized
+      - oversize
+      - boxy fit
+      - boxy-fit

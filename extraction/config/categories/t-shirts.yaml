@@ -1,0 +1,124 @@
+section: Tops
+category: T-shirts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  neckline:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Crewneck:
+      - crewneck
+      - crew neck
+      - crew-neck
+      Scoop Neck:
+      - scoop neck
+      - scoop-neck
+      - scoop neckline
+      V-Neck:
+      - v-neck
+      - v neck
+      - v-neckline
+      High Neck:
+      - high neck
+      - high-neck
+      - turtleneck
+      - turtle neck
+      - roll neck
+      - rollneck
+      - mock neck
+      - mock-neck
+      - funnel neck
+      Other:
+      - boat neck
+      - bateau neck
+      - cowl neck
+      - square neck
+      - sweetheart neckline
+      - henley neckline
+      - spread collar
+      - point collar
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Slim:
+      - slim fit
+      - slim-fit
+      - slim-fitting
+      - fitted t-shirt
+      - fitted tee
+      - close-fitting
+      - form-fitting
+      - body-hugging
+      Regular:
+      - regular fit
+      - regular-fit
+      - standard fit
+      - classic fit
+      Oversized:
+      - relaxed fit
+      - relaxed-fit
+      - loose fit
+      - loose-fitting
+      - oversized
+      - oversize
+      - boxy fit
+      - boxy-fit
+  length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Cropped:
+      - cropped t-shirt
+      - cropped tee
+      - cropped fit
+      - cropped length
+      - crop top
+      Regular:
+      - regular length
+      - standard length
+      Longline:
+      - longline
+      - long-line
+      - long length
+      - elongated body
+      - extended length
+      - extended-length
+  sleeve_length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Sleeveless:
+      - sleeveless
+      Short Sleeve:
+      - short sleeve
+      - short sleeves
+      - short-sleeved
+      Three-Quarter Sleeve:
+      - three-quarter sleeve
+      - three-quarter sleeves
+      - three-quarter length sleeves
+      - 3/4 sleeve
+      - 3/4 sleeves
+      - cropped sleeve
+      - cropped sleeves
+      - cropped-sleeve
+      Long Sleeve:
+      - long sleeve
+      - long sleeves
+      - long-sleeved

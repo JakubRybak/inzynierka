@@ -1,0 +1,157 @@
+section: Tops
+category: Tank tops & Camisoles
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  neckline:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Crewneck:
+      - crewneck
+      - crew neck
+      - crew-neck
+      Scoop Neck:
+      - scoop neck
+      - scoop-neck
+      - scoop neckline
+      V-Neck:
+      - v-neck
+      - v neck
+      - v-neckline
+      High Neck:
+      - high neck
+      - high-neck
+      - turtleneck
+      - turtle neck
+      - roll neck
+      - rollneck
+      - mock neck
+      - mock-neck
+      - funnel neck
+      Other:
+      - boat neck
+      - bateau neck
+      - cowl neck
+      - square neck
+      - sweetheart neckline
+      - henley neckline
+      - spread collar
+      - point collar
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Slim:
+      - slim fit
+      - slim-fit
+      - slim-fitting
+      - fitted tank
+      - fitted tank top
+      - fitted camisole
+      - fitted cami
+      - close-fitting
+      - form-fitting
+      - body-hugging
+      Regular:
+      - regular fit
+      - regular-fit
+      - standard fit
+      - classic fit
+      Oversized:
+      - relaxed fit
+      - relaxed-fit
+      - loose fit
+      - loose-fitting
+      - oversized
+      - oversize
+      - boxy fit
+      - boxy-fit
+  length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Cropped:
+      - cropped tank
+      - cropped tank top
+      - cropped camisole
+      - cropped cami
+      - cropped fit
+      - cropped length
+      - crop top
+      Regular:
+      - regular length
+      - standard length
+      Longline:
+      - longline
+      - long-line
+      - long length
+      - elongated body
+      - extended length
+      - extended-length
+  strap_style:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Standard: []
+      Racerback:
+      - racerback
+      - racer back
+      - racer-back
+      Halter:
+      - halter
+      - halterneck
+      - halter neck
+      - halter-neck
+      One-Shoulder:
+      - one shoulder
+      - one-shoulder
+      - single shoulder
+      - single-shoulder
+      Strapless:
+      - strapless
+      Off-Shoulder:
+      - off shoulder
+      - off-shoulder
+      - off the shoulder
+      - off-the-shoulder
+      Other: []
+  strap_width:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Wide:
+      - wide straps
+      - wide shoulder straps
+      - broad straps
+      - broad shoulder straps
+      Spaghetti:
+      - spaghetti straps
+      - spaghetti shoulder straps
+      - thin straps
+      - thin shoulder straps
+      - narrow straps
+      - narrow shoulder straps
+      Other: []
+      Not Applicable: []
+    derive:
+      feature: strap_style
+      in:
+      - Strapless
+      value: Not Applicable

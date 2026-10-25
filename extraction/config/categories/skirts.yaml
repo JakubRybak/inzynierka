@@ -1,0 +1,125 @@
+section: Skirts
+category: Skirts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  length:
+    strategy: source_map
+    column: original_category
+    mapping:
+      SHORT SKIRTS: Mini
+      MID LENGTH SKIRTS: Midi
+      LONG SKIRTS: Maxi
+    on_unresolved: exclude
+  skirt_silhouette:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Fitted:
+      - bodycon
+      - body-con
+      - figure-hugging
+      - body-hugging
+      - fitted silhouette
+      - fitted skirt
+      Straight:
+      - straight-cut
+      - straight cut
+      - straight silhouette
+      - straight skirt
+      A-Line:
+      - a-line
+      - a line
+      - fit-and-flare
+      - fit and flare
+      Other: []
+  skirt_type:
+    strategy: multi
+    columns:
+    - name
+    - description
+    keywords:
+      Pleated:
+      - pleated skirt
+      - pleated construction
+      - pleated throughout
+      - accordion pleats
+      - accordion pleated
+      - knife pleats
+      - knife-pleated
+      - box pleats
+      - box-pleated
+      - sunray pleats
+      - sunray-pleated
+      Wrap:
+      - wrap skirt
+      - wrap-front skirt
+      - wrap-style skirt
+      - wrap front
+      - wrap-front construction
+      - wrap construction
+      Asymmetric:
+      - asymmetric skirt
+      - asymmetrical skirt
+      - asymmetric hem
+      - asymmetrical hem
+      - asymmetric hemline
+      - asymmetrical hemline
+      - asymmetric construction
+      - asymmetrical construction
+      - high-low hem
+      - handkerchief hem
+      Tiered:
+      - tiered skirt
+      - tiered construction
+      - tiered design
+      - tiered hem
+      Ruffled:
+      - ruffled skirt
+      - ruffled construction
+      - ruffled hem
+      - ruffle hem
+      - ruffled trim
+      - ruffle trim
+      - frilled skirt
+      - frilled hem
+      - frilled trim
+      - flounced skirt
+      - flounced hem
+      - flounce hem
+      Other: []
+    exclusive_values:
+    - Other
+  rise:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      High-Rise:
+      - high-rise
+      - high rise
+      - high-waisted
+      - high waisted
+      - high-waist
+      - high waist
+      Mid-Rise:
+      - mid-rise
+      - mid rise
+      - medium rise
+      - regular rise
+      Low-Rise:
+      - low-rise
+      - low rise
+      - low-waisted
+      - low waisted
+      - low-waist
+      - low waist
