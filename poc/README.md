@@ -1,5 +1,7 @@
 # Fashion-Gen proof of concept
 
+> **UI / Search Bar Integration Hand-off**: Pełna dokumentacja integracyjna dla wyszukiwarki i bazy produktów znajduje się w [HANDOFF.md](HANDOFF.md).
+
 Pilot: 900 train products, 300 each from T-shirts, Dresses and Tank tops &
 Camisoles. Initial reference bank: 60 assistant-reviewed products with complete
 labels. Embeddings: main source image and description separately, Gemini
