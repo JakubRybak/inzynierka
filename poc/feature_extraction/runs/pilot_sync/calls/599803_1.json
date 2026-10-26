@@ -1,0 +1,149 @@
+{
+  "call_id": "pilot_sync/599803/1",
+  "product_id": "599803",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0029620000000000002,
+  "reservation_usd": 0.023636,
+  "started_at_utc": "2026-10-26T08:41:11.217651+00:00",
+  "request_sha256": "e463365e846301371023a1072e444df9ad741ccb858ebadfb9cd8646ae78c4c7",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "91849",
+      "modality": "image",
+      "cosine_similarity": 0.9095103740692139,
+      "image_ids": [
+        "91849_id_gridfs_1",
+        "91849_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "2441428",
+      "modality": "text",
+      "cosine_similarity": 0.787118673324585,
+      "image_ids": [
+        "2441428_id_gridfs_1",
+        "2441428_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 88,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/91849/91849_id_gridfs_1.png",
+      "sha256": "aa207144d69685266ce15d3b29cc0e2bc5775a9bef297c49549e3f60b43d11bc"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/91849/91849_id_gridfs_3.png",
+      "sha256": "9676f5fe0638da195098fb7b3c123a64d232b7a80bed9a07641d6c0a197fcad4"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2441428/2441428_id_gridfs_1.png",
+      "sha256": "ad8ed7791e8aea4e2799a2608a06fc35d68e707584c84370aca73c13e4db57ad"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2441428/2441428_id_gridfs_3.png",
+      "sha256": "25e3cdb6d60ea2a64646cab353d359b5404d4d3d6e44c364afabe9e307c0db6d"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/599803/599803_id_gridfs_1.png",
+      "sha256": "1a185cbf073df26a9ef924c3ff7a56b4ef7683a3139a2c02617bee1e1158726a"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/599803/599803_id_gridfs_2.png",
+      "sha256": "4c1bace54574c6b05e22b9503f398e679d81e6d9b3b6b658f6fc86a75dd7046e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/599803/599803_id_gridfs_3.png",
+      "sha256": "1c87c241bd6308d01b387fef567e8a411673e2b96921a0fb6e3de1392ae2ba54"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/599803/599803_id_gridfs_4.png",
+      "sha256": "2da45031b73c3dd0621c7bd58cbe1fce9583b7eed83f6de9d38a918e6f5e34ec"
+    }
+  ],
+  "input_tokens_counted": 6736,
+  "http_status": 200,
+  "seconds": 2.3166374170104973,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Solid\",\n    \"neckline\": \"Scoop Neck\",\n    \"fit\": \"Regular\",\n    \"length\": \"Regular\",\n    \"strap_style\": \"Standard\",\n    \"strap_width\": \"Wide\"\n  },\n  \"outside_schema_reasons\": {}\n}",
+              "thoughtSignature": "AY89a1/Ru3gc5NjYhBxQxEsVQdElxlL4jx8V4250liz4Ba+jpWVw81BA3zVU8ME9qRW9NENEXznarbvEODvtsbEb5KCX/3e/rWkZNw9Y6iS1PrAImrzhvPen5KMf8rOizMNvMvxYh8Fjq8g/QRqe1/MKDV2fkezKz5G28GLZuarAeyyXzTIbvHuH3FttFqSuE7cCDw41vCDLu2ShwtMbeBtU8qwEhRkRE2JAkdAnI29JiwiP5Q+Nrz/CXA51aQB3IJcXTkYVWy4iecDTyxXeDWmrulcAG+IgH0C+rDqTkzGJn2K/IeeAWYqjIiCLevLmJj9rGQB+1X+uqB9C+yh7dClxCNXdGey1i3KYuridChshEnoYbHzDFT6XNYknoFfOb4Xu3pmi+aJ07UP6Zy9UYSYmhaW6TqhfLWRTNUj/go0HQECsOWANyeOQVUAixKvBSxTYi4TnptHParrGTjJoa/ZkD3aEAi9iqDCXbr9DXiciN1xH5VP1DHDwWE0GiR67qVvmlEWZbUtrr6o6dVoLYGP99zoXEpyCEB6Y4wm8xrcTXVxGiJgJF+RY27A4LMbAl7oGS8eiM7Fipl+jcFuPXupBdJNWTtpcw6tEiVzSjexNwwidltb1fcGfoovv/L5kirT2xZF41BO3JTpuzDxCMVfKE0bu4fsM2qSiYnOTqVDS27MG+8QDqG5OJbXNFKqSSn5Wzp0X1pzBwx/8az7iNfIVjQZ5B0psjsf4BQtbm6ra224nQcaSuXRGtc7z2dHeV3hfIfmFrSTBZb0ixI5oZZNzivV1SQ7XO/v4gB1edfZGgQhDeiJ+bx47FpjASIZO1zvXiCXS1ExuGvFaFxIAqPZk4yzmIxaSp9L+4tBh/eF/E+vMD2g0udA3jJcFd0ezZ3vZw2lF9w0uYnqzVdPryisGQ9jKzV4Wcpw9W8n78VcmQSEha3IuWNxPAz+xBDhvOGzj0m6DLwx/yyd0D+ESMWBukOHJSgzKkzlxYfiR6PDLy8GGM4PvcdfXu1wBnwdOp9gN0O0U4lvgB52EnOAtLv1l6Duk9BCI4d9igUULfraRN1/yMxMnVgAq/b/9tXDYDzkF3JXE0PaA6Vwtan+UvSeYZwayvhhw9ZGl5EWgTk+vgrCSA85aBevii549oDPsDaQf228LKVJlU3HH0szkzbz8nNfDdcZnj/SYRZsbeklOLDigwyO9JB5An/ivym8CsheTJjtL2G1u3Qrb6bPjX0x6c4HrUq/L3aYrhnPUsnkCZqviYoBXoiAj9o9/vf3zn+ATpzqOMjyBVsNCn8XOy3d0MjcVX8c10BWKPEBM9RIriceuugQYkFyJAeV/dr9xqr5anVQIL7YKv3LdEmQyB6QHECr6eOXWjp3mYR8OGCjtTmbAqVsIs8Dq74Cq00YayVjop8rBIj+SVXS+2gRo3wipJUsuDJyCtNgYGR2wJBZdPuFDcpLKvKSPmr8KE2T4waZ4u/o1gFhVhn+D4gOyLqakJfAbW0II2bjI7SGawVjAmwq41XEsy3Xsh9Xw2yZNqtvp"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6840,
+      "candidatesTokenCount": 97,
+      "totalTokenCount": 7204,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2608
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 97
+        }
+      ],
+      "thoughtsTokenCount": 267
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T08:41:11.387377Z",
+    "responseId": "JxLfarHSF4rN1PIP7ebOqAQ"
+  },
+  "usage": {
+    "promptTokenCount": 6840,
+    "candidatesTokenCount": 97,
+    "totalTokenCount": 7204,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 2608
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 97
+      }
+    ],
+    "thoughtsTokenCount": 267
+  },
+  "estimated_usd": 0.0029620000000000002,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Solid",
+      "neckline": "Scoop Neck",
+      "fit": "Regular",
+      "length": "Regular",
+      "strap_style": "Standard",
+      "strap_width": "Wide"
+    },
+    "outside_schema_reasons": {}
+  },
+  "result_status": "ready"
+}

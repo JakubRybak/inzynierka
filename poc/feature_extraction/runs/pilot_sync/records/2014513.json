@@ -1,0 +1,342 @@
+{
+  "product_id": "2014513",
+  "brand": "Nehera",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Black"
+    ],
+    "main_composition": {
+      "Cotton": 100.0
+    },
+    "length": "Midi",
+    "pattern": "Solid",
+    "neckline": "Scoop Neck",
+    "dress_silhouette": "Straight",
+    "dress_type": [
+      "Other"
+    ],
+    "strap_style": "One-Shoulder",
+    "strap_width": "Wide"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Black": [
+          {
+            "column": "name",
+            "keyword": "black",
+            "matched": "black"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "MID LENGTH DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "outside_schema",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1",
+        "reason": "The garment has a single sleeve design, which is incompatible with standard single-length categories."
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2014513/1"
+      }
+    }
+  },
+  "status": "pending",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {
+    "sleeve_length": "The garment has a single sleeve design, which is incompatible with standard single-length categories."
+  },
+  "llm_metadata": {
+    "call_id": "pilot_sync/2014513/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "101310b2425c0d64e3927685078241e010b03756003ec11b94cf8407b0076690",
+    "neighbors": [
+      {
+        "product_id": "2300537",
+        "modality": "image",
+        "cosine_similarity": 0.8684031367301941,
+        "image_ids": [
+          "2300537_id_gridfs_1",
+          "2300537_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1924363",
+        "modality": "text",
+        "cosine_similarity": 0.8120723366737366,
+        "image_ids": [
+          "1924363_id_gridfs_1",
+          "1924363_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 459,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "sleeve_length": {
+                "type": "STRING",
+                "enum": [
+                  "Sleeveless",
+                  "Short Sleeve",
+                  "Three-Quarter Sleeve",
+                  "Long Sleeve",
+                  "outside_schema"
+                ]
+              },
+              "neckline": {
+                "type": "STRING",
+                "enum": [
+                  "Crewneck",
+                  "Scoop Neck",
+                  "V-Neck",
+                  "High Neck",
+                  "Collared",
+                  "Other"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "dress_type": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Slip",
+                    "Shirt Dress",
+                    "Wrap",
+                    "Sweater Dress",
+                    "Sweatshirt Dress",
+                    "T-Shirt Dress",
+                    "Other"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 6
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "sleeve_length",
+              "neckline",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "sleeve_length",
+              "neckline",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "sleeve_length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "sleeve_length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 7877,
+      "candidatesTokenCount": 152,
+      "totalTokenCount": 8778,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 3116
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4761
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 152
+        }
+      ],
+      "thoughtsTokenCount": 749
+    },
+    "estimated_usd": 0.0046156
+  },
+  "annotation_origin": "llm"
+}

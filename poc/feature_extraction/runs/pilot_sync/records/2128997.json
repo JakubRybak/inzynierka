@@ -1,0 +1,324 @@
+{
+  "product_id": "2128997",
+  "brand": "Alexachung",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Pink"
+    ],
+    "main_composition": {
+      "Polyester": 85.0,
+      "Nylon": 15.0
+    },
+    "length": "Maxi",
+    "sleeve_length": "Long Sleeve",
+    "neckline": "Scoop Neck",
+    "pattern": "Solid",
+    "dress_silhouette": "A-Line",
+    "dress_type": [
+      "Other"
+    ],
+    "strap_style": "Standard Sleeved",
+    "strap_width": "Not Applicable"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Pink": [
+          {
+            "column": "name",
+            "keyword": "pink",
+            "matched": "pink"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Polyester": [
+          {
+            "material": "polyester",
+            "percent": 85.0
+          }
+        ],
+        "Nylon": [
+          {
+            "material": "polyamide",
+            "percent": 15.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2128997/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "LONG DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Long Sleeve": [
+          {
+            "column": "description",
+            "keyword": "long sleeve",
+            "matched": "long sleeve"
+          }
+        ]
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Scoop Neck": [
+          {
+            "column": "description",
+            "keyword": "scoop neck",
+            "matched": "scoop neck"
+          },
+          {
+            "column": "description",
+            "keyword": "scoop-neck",
+            "matched": "scoop neck"
+          }
+        ]
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2128997/1"
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2128997/1"
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2128997/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2128997/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/2128997/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "d3634a866c00d930f2717b3a01f9fd7c50bc70ab6784e86cca381c39c3fbd86a",
+    "neighbors": [
+      {
+        "product_id": "2024273",
+        "modality": "image",
+        "cosine_similarity": 0.7488025426864624,
+        "image_ids": [
+          "2024273_id_gridfs_1",
+          "2024273_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "101979",
+        "modality": "text",
+        "cosine_similarity": 0.7255219221115112,
+        "image_ids": [
+          "101979_id_gridfs_1",
+          "101979_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 84,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "dress_type": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Slip",
+                    "Shirt Dress",
+                    "Wrap",
+                    "Sweater Dress",
+                    "Sweatshirt Dress",
+                    "T-Shirt Dress",
+                    "Other"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 6
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6733,
+      "candidatesTokenCount": 89,
+      "totalTokenCount": 7402,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2501
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 89
+        }
+      ],
+      "thoughtsTokenCount": 580
+    },
+    "estimated_usd": 0.0036924
+  },
+  "annotation_origin": "llm"
+}

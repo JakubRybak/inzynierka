@@ -1,0 +1,319 @@
+{
+  "product_id": "1173083",
+  "brand": "Yang Li",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Blue"
+    ],
+    "main_composition": {
+      "Wool": 55.0,
+      "Cotton": 45.0
+    },
+    "length": "Mini",
+    "sleeve_length": "Sleeveless",
+    "neckline": "V-Neck",
+    "dress_silhouette": "Straight",
+    "pattern": "Solid",
+    "dress_type": [
+      "Other"
+    ],
+    "strap_style": "Standard",
+    "strap_width": "Wide"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Blue": [
+          {
+            "column": "name",
+            "keyword": "navy",
+            "matched": "navy"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Wool": [
+          {
+            "material": "wool",
+            "percent": 55.0
+          }
+        ],
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 45.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1173083/2"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "SHORT DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Sleeveless": [
+          {
+            "column": "description",
+            "keyword": "sleeveless",
+            "matched": "sleeveless"
+          }
+        ]
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "V-Neck": [
+          {
+            "column": "description",
+            "keyword": "v-neck",
+            "matched": "v neck"
+          },
+          {
+            "column": "description",
+            "keyword": "v neck",
+            "matched": "v neck"
+          }
+        ]
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Straight": [
+          {
+            "column": "description",
+            "keyword": "shift dress",
+            "matched": "shift dress"
+          }
+        ]
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1173083/2"
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1173083/2"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1173083/2"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1173083/2",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "7f4d1531df8e22c28460649bd7f608cd125a494e2365464cb9c951801e75cf9e",
+    "neighbors": [
+      {
+        "product_id": "1200833",
+        "modality": "image",
+        "cosine_similarity": 0.8798651695251465,
+        "image_ids": [
+          "1200833_id_gridfs_1",
+          "1200833_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1346723",
+        "modality": "text",
+        "cosine_similarity": 0.7741554975509644,
+        "image_ids": [
+          "1346723_id_gridfs_1",
+          "1346723_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 554,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "dress_type": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Slip",
+                    "Shirt Dress",
+                    "Wrap",
+                    "Sweater Dress",
+                    "Sweatshirt Dress",
+                    "T-Shirt Dress",
+                    "Other"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 6
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6569,
+      "candidatesTokenCount": 74,
+      "totalTokenCount": 6864,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2337
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 74
+        }
+      ],
+      "thoughtsTokenCount": 221
+    },
+    "estimated_usd": 0.0027082
+  },
+  "annotation_origin": "llm"
+}

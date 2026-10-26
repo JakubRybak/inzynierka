@@ -1,0 +1,462 @@
+{
+  "type": "OBJECT",
+  "properties": {
+    "filters": {
+      "type": "ARRAY",
+      "items": {
+        "anyOf": [
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "brand"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "gender"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Men",
+                    "Women"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 2
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "colors"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "contains_any",
+                  "contains_all",
+                  "equals_set",
+                  "contains_none"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Beige",
+                    "Black",
+                    "Blue",
+                    "Brown",
+                    "Green",
+                    "Grey",
+                    "Multicolor",
+                    "Orange",
+                    "Pink",
+                    "Purple",
+                    "Red",
+                    "White",
+                    "Yellow"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 13
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "main_composition"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "contains_any",
+                  "contains_all",
+                  "equals_set",
+                  "contains_none"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Acrylic",
+                    "Cashmere",
+                    "Cotton",
+                    "Down",
+                    "Elastane",
+                    "Fur",
+                    "Leather",
+                    "Linen",
+                    "Nylon",
+                    "Polyester",
+                    "Silk",
+                    "Viscose",
+                    "Wool"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 13
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "pattern"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Animal Print",
+                    "Camo",
+                    "Floral",
+                    "Other",
+                    "Plaid",
+                    "Polka Dot",
+                    "Solid",
+                    "Striped"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 8
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "neckline"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Crewneck",
+                    "High Neck",
+                    "Other",
+                    "Scoop Neck",
+                    "V-Neck"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "fit"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Oversized",
+                    "Regular",
+                    "Slim"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 3
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "length"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Cropped",
+                    "Longline",
+                    "Regular"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 3
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "strap_style"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Halter",
+                    "Off-Shoulder",
+                    "One-Shoulder",
+                    "Other",
+                    "Racerback",
+                    "Standard",
+                    "Strapless"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 7
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
+              "feature": {
+                "type": "STRING",
+                "enum": [
+                  "strap_width"
+                ]
+              },
+              "operator": {
+                "type": "STRING",
+                "enum": [
+                  "in",
+                  "not_in"
+                ]
+              },
+              "values": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Not Applicable",
+                    "Other",
+                    "Spaghetti",
+                    "Wide"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 4
+              }
+            },
+            "required": [
+              "feature",
+              "operator",
+              "values"
+            ],
+            "propertyOrdering": [
+              "feature",
+              "operator",
+              "values"
+            ]
+          }
+        ]
+      }
+    },
+    "residual": {
+      "type": "STRING"
+    }
+  },
+  "required": [
+    "filters",
+    "residual"
+  ],
+  "propertyOrdering": [
+    "filters",
+    "residual"
+  ]
+}

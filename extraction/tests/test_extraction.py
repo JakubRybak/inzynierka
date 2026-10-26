@@ -20,7 +20,7 @@ class ExtractionTests(unittest.TestCase):
     def product(self, category='T-shirts', **updates):
         section = 'Dresses' if category == 'Dresses' else 'Skirts' if category == 'Skirts' else 'Tops'
         product = dict(product_id='test', section=section, category=category, name='Black product',
-                       description='', gender='Men', brand='', composition='100% cotton', original_category='')
+                       description='', gender='Men', brand='Example Brand', composition='100% cotton', original_category='')
         product.update(updates)
         return product
 
@@ -160,6 +160,22 @@ class ExtractionTests(unittest.TestCase):
         self.assertNotIn('pattern', result['features'])
         polo['gender'] = ''
         self.assertEqual(extract_product(polo, self.config[('Tops', 'Polos')])['status'], 'excluded')
+
+    def test_brand_is_top_level_and_required(self):
+        rules = self.config[('Tops', 'T-shirts')]
+        product = self.product(brand='Example Brand')
+        record = extract_product(product, rules)
+        self.assertEqual(record['brand'], 'Example Brand')
+        self.assertNotIn('brand', record['features'])
+        self.assertNotIn('brand', record['feature_metadata'])
+        self.assertNotIn({'feature': 'brand', 'reason': 'empty'}, record['exclusion_reasons'])
+
+        product['brand'] = '  '
+        record = extract_product(product, rules)
+        self.assertEqual(record['brand'], '  ')
+        self.assertEqual(record['status'], 'excluded')
+        self.assertIn({'feature': 'brand', 'reason': 'empty'}, record['exclusion_reasons'])
+        validate([record], self.config)
 
     def test_bad_config_rejected(self):
         for rule in [{'strategy': 'typo'}, {'strategy': 'single', 'colums': ['name']}]:

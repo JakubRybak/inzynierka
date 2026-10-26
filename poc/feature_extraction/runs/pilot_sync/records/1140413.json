@@ -1,0 +1,298 @@
+{
+  "product_id": "1140413",
+  "brand": "Alexander Wang",
+  "section": "Tops",
+  "category": "Tank tops & Camisoles",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Black"
+    ],
+    "main_composition": {
+      "Nylon": 100.0
+    },
+    "length": "Cropped",
+    "pattern": "Solid",
+    "neckline": "High Neck",
+    "fit": "Slim",
+    "strap_style": "Racerback",
+    "strap_width": "Wide"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Black": [
+          {
+            "column": "name",
+            "keyword": "black",
+            "matched": "black"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Nylon": [
+          {
+            "material": "polyamide",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1140413/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1140413/1"
+      }
+    },
+    "fit": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1140413/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Cropped": [
+          {
+            "column": "name",
+            "keyword": "crop top",
+            "matched": "crop top"
+          },
+          {
+            "column": "description",
+            "keyword": "crop top",
+            "matched": "crop top"
+          }
+        ]
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1140413/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1140413/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1140413/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "cfb7cf42d98cd11409e677a264c33f8847b49cb80758519b768e2ae1392af5a4",
+    "neighbors": [
+      {
+        "product_id": "695903",
+        "modality": "image",
+        "cosine_similarity": 0.812100887298584,
+        "image_ids": [
+          "695903_id_gridfs_1",
+          "695903_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1171083",
+        "modality": "text",
+        "cosine_similarity": 0.8002270460128784,
+        "image_ids": [
+          "1171083_id_gridfs_1",
+          "1171083_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 852,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "neckline": {
+                "type": "STRING",
+                "enum": [
+                  "Crewneck",
+                  "Scoop Neck",
+                  "V-Neck",
+                  "High Neck",
+                  "Other"
+                ]
+              },
+              "fit": {
+                "type": "STRING",
+                "enum": [
+                  "Slim",
+                  "Regular",
+                  "Oversized",
+                  "outside_schema"
+                ]
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "neckline",
+              "fit",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "neckline",
+              "fit",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "fit": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "fit"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6671,
+      "candidatesTokenCount": 89,
+      "totalTokenCount": 7431,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2439
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 89
+        }
+      ],
+      "thoughtsTokenCount": 671
+    },
+    "estimated_usd": 0.0039013
+  },
+  "annotation_origin": "llm"
+}

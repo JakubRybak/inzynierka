@@ -1,0 +1,349 @@
+{
+  "product_id": "100994",
+  "brand": "Stella McCartney",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Orange"
+    ],
+    "main_composition": {
+      "Viscose": 96.0,
+      "Elastane": 4.0
+    },
+    "length": "Mini",
+    "neckline": "V-Neck",
+    "pattern": "Solid",
+    "sleeve_length": "Short Sleeve",
+    "dress_silhouette": "Straight",
+    "dress_type": [
+      "Other"
+    ],
+    "strap_style": "Standard Sleeved",
+    "strap_width": "Not Applicable"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Orange": [
+          {
+            "column": "name",
+            "keyword": "rust",
+            "matched": "rust"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Viscose": [
+          {
+            "material": "rayon",
+            "percent": 64.0
+          },
+          {
+            "material": "acetate",
+            "percent": 32.0
+          }
+        ],
+        "Elastane": [
+          {
+            "material": "elastane",
+            "percent": 4.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "SHORT DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "V-Neck": [
+          {
+            "column": "description",
+            "keyword": "v-neck",
+            "matched": "v neck"
+          },
+          {
+            "column": "description",
+            "keyword": "v neck",
+            "matched": "v neck"
+          }
+        ]
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/100994/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/100994/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "3a317ee03eef32a14e2a4fb09c1f4ea00d63ce5e4efb37e86d50f637859a37cd",
+    "neighbors": [
+      {
+        "product_id": "98305",
+        "modality": "image",
+        "cosine_similarity": 0.8268163204193115,
+        "image_ids": [
+          "98305_id_gridfs_1",
+          "98305_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1181483",
+        "modality": "text",
+        "cosine_similarity": 0.7587815523147583,
+        "image_ids": [
+          "1181483_id_gridfs_1",
+          "1181483_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 764,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "sleeve_length": {
+                "type": "STRING",
+                "enum": [
+                  "Sleeveless",
+                  "Short Sleeve",
+                  "Three-Quarter Sleeve",
+                  "Long Sleeve",
+                  "outside_schema"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "dress_type": {
+                "type": "ARRAY",
+                "items": {
+                  "type": "STRING",
+                  "enum": [
+                    "Slip",
+                    "Shirt Dress",
+                    "Wrap",
+                    "Sweater Dress",
+                    "Sweatshirt Dress",
+                    "T-Shirt Dress",
+                    "Other"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 6
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "sleeve_length",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "sleeve_length",
+              "dress_silhouette",
+              "dress_type",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "sleeve_length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "sleeve_length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 7042,
+      "candidatesTokenCount": 110,
+      "totalTokenCount": 7521,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2810
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 110
+        }
+      ],
+      "thoughtsTokenCount": 369
+    },
+    "estimated_usd": 0.0033101
+  },
+  "annotation_origin": "llm"
+}

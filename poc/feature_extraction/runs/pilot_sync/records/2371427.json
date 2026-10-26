@@ -1,0 +1,277 @@
+{
+  "product_id": "2371427",
+  "brand": "Acne Studios",
+  "section": "Tops",
+  "category": "T-shirts",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "White",
+      "Red"
+    ],
+    "main_composition": {
+      "Cotton": 100.0
+    },
+    "neckline": "Crewneck",
+    "sleeve_length": "Three-Quarter Sleeve",
+    "pattern": "Other",
+    "fit": "Regular",
+    "length": "Regular"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "White": [
+          {
+            "column": "name",
+            "keyword": "white",
+            "matched": "white"
+          }
+        ],
+        "Red": [
+          {
+            "column": "name",
+            "keyword": "red",
+            "matched": "red"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2371427/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Crewneck": [
+          {
+            "column": "description",
+            "keyword": "crewneck",
+            "matched": "crewneck"
+          }
+        ]
+      }
+    },
+    "fit": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2371427/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2371427/1"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Three-Quarter Sleeve": [
+          {
+            "column": "description",
+            "keyword": "three-quarter sleeve",
+            "matched": "three quarter sleeve"
+          }
+        ]
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/2371427/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "a9ecb5896e61b9de235b1a3e6e41e7c8ca43726b76387334770d2582cbdd5008",
+    "neighbors": [
+      {
+        "product_id": "102301",
+        "modality": "image",
+        "cosine_similarity": 0.7720592617988586,
+        "image_ids": [
+          "102301_id_gridfs_1",
+          "102301_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "2402427",
+        "modality": "text",
+        "cosine_similarity": 0.8101396560668945,
+        "image_ids": [
+          "2402427_id_gridfs_1",
+          "2402427_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 880,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "fit": {
+                "type": "STRING",
+                "enum": [
+                  "Slim",
+                  "Regular",
+                  "Oversized",
+                  "outside_schema"
+                ]
+              },
+              "length": {
+                "type": "STRING",
+                "enum": [
+                  "Cropped",
+                  "Regular",
+                  "Longline",
+                  "outside_schema"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "fit",
+              "length"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "fit",
+              "length"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "fit": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              },
+              "length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "fit",
+              "length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6076,
+      "candidatesTokenCount": 65,
+      "totalTokenCount": 6374,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 1844
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 65
+        }
+      ],
+      "thoughtsTokenCount": 233
+    },
+    "estimated_usd": 0.0025678
+  },
+  "annotation_origin": "llm"
+}

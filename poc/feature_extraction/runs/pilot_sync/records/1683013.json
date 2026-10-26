@@ -1,0 +1,266 @@
+{
+  "product_id": "1683013",
+  "brand": "MM6 Maison Margiela",
+  "section": "Tops",
+  "category": "T-shirts",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Black"
+    ],
+    "main_composition": {
+      "Cotton": 95.0,
+      "Elastane": 5.0
+    },
+    "neckline": "Crewneck",
+    "fit": "Slim",
+    "sleeve_length": "Three-Quarter Sleeve",
+    "pattern": "Solid",
+    "length": "Regular"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Black": [
+          {
+            "column": "name",
+            "keyword": "black",
+            "matched": "black"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 95.0
+          }
+        ],
+        "Elastane": [
+          {
+            "material": "elastane",
+            "percent": 5.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1683013/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Crewneck": [
+          {
+            "column": "description",
+            "keyword": "crewneck",
+            "matched": "crewneck"
+          }
+        ]
+      }
+    },
+    "fit": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Slim": [
+          {
+            "column": "description",
+            "keyword": "fitted t-shirt",
+            "matched": "fitted t shirt"
+          }
+        ]
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1683013/1"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Three-Quarter Sleeve": [
+          {
+            "column": "description",
+            "keyword": "three-quarter sleeve",
+            "matched": "three quarter sleeve"
+          }
+        ]
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1683013/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "cdb1765a6af9c4f143342beafa071710ab9453c5ad0599b82137b58445d0f7fa",
+    "neighbors": [
+      {
+        "product_id": "1360813",
+        "modality": "image",
+        "cosine_similarity": 0.893541693687439,
+        "image_ids": [
+          "1360813_id_gridfs_1",
+          "1360813_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1779093",
+        "modality": "text",
+        "cosine_similarity": 0.7581959962844849,
+        "image_ids": [
+          "1779093_id_gridfs_1",
+          "1779093_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 757,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "length": {
+                "type": "STRING",
+                "enum": [
+                  "Cropped",
+                  "Regular",
+                  "Longline",
+                  "outside_schema"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "length"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "length"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 5817,
+      "candidatesTokenCount": 57,
+      "totalTokenCount": 6090,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 1585
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 57
+        }
+      ],
+      "thoughtsTokenCount": 216
+    },
+    "estimated_usd": 0.0024276
+  },
+  "annotation_origin": "llm"
+}

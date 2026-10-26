@@ -1,0 +1,327 @@
+{
+  "product_id": "1141023",
+  "brand": "3.1 Phillip Lim",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Blue"
+    ],
+    "main_composition": {
+      "Silk": 100.0
+    },
+    "length": "Mini",
+    "dress_type": [
+      "Slip"
+    ],
+    "pattern": "Solid",
+    "sleeve_length": "Sleeveless",
+    "neckline": "V-Neck",
+    "dress_silhouette": "Fitted",
+    "strap_style": "Standard",
+    "strap_width": "Spaghetti"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Blue": [
+          {
+            "column": "name",
+            "keyword": "navy",
+            "matched": "navy"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Silk": [
+          {
+            "material": "silk",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "SHORT DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "multi",
+      "evidence": {
+        "Slip": [
+          {
+            "column": "name",
+            "keyword": "slip dress",
+            "matched": "slip dress"
+          }
+        ]
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1141023/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1141023/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "6fe822c1d678c8e04023438ff8a3814ba9180cd333239bc746dc3034481110de",
+    "neighbors": [
+      {
+        "product_id": "2587618",
+        "modality": "image",
+        "cosine_similarity": 0.868574321269989,
+        "image_ids": [
+          "2587618_id_gridfs_1",
+          "2587618_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "2728708",
+        "modality": "text",
+        "cosine_similarity": 0.7910412549972534,
+        "image_ids": [
+          "2728708_id_gridfs_1",
+          "2728708_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 711,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "sleeve_length": {
+                "type": "STRING",
+                "enum": [
+                  "Sleeveless",
+                  "Short Sleeve",
+                  "Three-Quarter Sleeve",
+                  "Long Sleeve",
+                  "outside_schema"
+                ]
+              },
+              "neckline": {
+                "type": "STRING",
+                "enum": [
+                  "Crewneck",
+                  "Scoop Neck",
+                  "V-Neck",
+                  "High Neck",
+                  "Collared",
+                  "Other"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "sleeve_length",
+              "neckline",
+              "dress_silhouette",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "sleeve_length",
+              "neckline",
+              "dress_silhouette",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "sleeve_length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "sleeve_length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 7003,
+      "candidatesTokenCount": 106,
+      "totalTokenCount": 7342,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2771
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 106
+        }
+      ],
+      "thoughtsTokenCount": 233
+    },
+    "estimated_usd": 0.0029484
+  },
+  "annotation_origin": "llm"
+}

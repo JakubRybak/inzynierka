@@ -1,0 +1,311 @@
+{
+  "product_id": "1197873",
+  "brand": "Proenza Schouler",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Blue"
+    ],
+    "main_composition": {
+      "Wool": 70.0,
+      "Cashmere": 30.0
+    },
+    "length": "Mini",
+    "sleeve_length": "Long Sleeve",
+    "neckline": "Crewneck",
+    "dress_type": [
+      "Sweater Dress"
+    ],
+    "pattern": "Solid",
+    "dress_silhouette": "A-Line",
+    "strap_style": "Standard Sleeved",
+    "strap_width": "Not Applicable"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Blue": [
+          {
+            "column": "name",
+            "keyword": "navy",
+            "matched": "navy"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Wool": [
+          {
+            "material": "wool",
+            "percent": 70.0
+          }
+        ],
+        "Cashmere": [
+          {
+            "material": "cashmere",
+            "percent": 30.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1197873/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "SHORT DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Long Sleeve": [
+          {
+            "column": "description",
+            "keyword": "long sleeve",
+            "matched": "long sleeve"
+          }
+        ]
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Crewneck": [
+          {
+            "column": "description",
+            "keyword": "crewneck",
+            "matched": "crewneck"
+          }
+        ]
+      }
+    },
+    "dress_silhouette": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1197873/1"
+      }
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "multi",
+      "evidence": {
+        "Sweater Dress": [
+          {
+            "column": "name",
+            "keyword": "sweater dress",
+            "matched": "sweater dress"
+          },
+          {
+            "column": "description",
+            "keyword": "sweater dress",
+            "matched": "sweater dress"
+          }
+        ]
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1197873/1"
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/1197873/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1197873/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "f3ca4a765400335d3493839c3d3f63abe6f452c13ec9831d5641fdef3eb6f4ab",
+    "neighbors": [
+      {
+        "product_id": "1595933",
+        "modality": "image",
+        "cosine_similarity": 0.8408970832824707,
+        "image_ids": [
+          "1595933_id_gridfs_1",
+          "1595933_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1800533",
+        "modality": "text",
+        "cosine_similarity": 0.7908453941345215,
+        "image_ids": [
+          "1800533_id_gridfs_1",
+          "1800533_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 821,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "strap_style": {
+                "type": "STRING",
+                "enum": [
+                  "Standard",
+                  "Standard Sleeved",
+                  "Racerback",
+                  "Halter",
+                  "One-Shoulder",
+                  "Strapless",
+                  "Off-Shoulder",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "dress_silhouette",
+              "strap_style",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "dress_silhouette",
+              "strap_style",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6416,
+      "candidatesTokenCount": 73,
+      "totalTokenCount": 6725,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2184
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 73
+        }
+      ],
+      "thoughtsTokenCount": 236
+    },
+    "estimated_usd": 0.0026973
+  },
+  "annotation_origin": "llm"
+}

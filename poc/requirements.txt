@@ -1,0 +1,6 @@
+# Offline prompt preparation and paid embedding runner
+-r ../extraction/requirements.txt
+numpy
+Pillow
+google-auth[requests]
+requests

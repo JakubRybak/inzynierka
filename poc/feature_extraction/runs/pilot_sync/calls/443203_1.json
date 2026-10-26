@@ -1,0 +1,149 @@
+{
+  "call_id": "pilot_sync/443203/1",
+  "product_id": "443203",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.005177,
+  "reservation_usd": 0.023522300000000003,
+  "started_at_utc": "2026-10-26T08:41:22.233028+00:00",
+  "request_sha256": "dddc7bec6fc3cda098539e591ba31955ea12f6b1eac9776db189dc43d33b2b56",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "95398",
+      "modality": "image",
+      "cosine_similarity": 0.7967110872268677,
+      "image_ids": [
+        "95398_id_gridfs_1",
+        "95398_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "2173827",
+      "modality": "text",
+      "cosine_similarity": 0.7269690036773682,
+      "image_ids": [
+        "2173827_id_gridfs_1",
+        "2173827_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 92,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/95398/95398_id_gridfs_1.png",
+      "sha256": "11013c17c16c90cb23755ef5bd68a6c2b2c0a114807b2f954e6c8660561720b3"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/95398/95398_id_gridfs_3.png",
+      "sha256": "e2e5fab8f1999e194eb3dafa5f46dbac2fc384482ddf853ef0cbd24a3e190d77"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2173827/2173827_id_gridfs_1.png",
+      "sha256": "a0e4c97d51f89c85cd5d540207062bb854717cdb1d8ca8187d1040b2d92aa42d"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2173827/2173827_id_gridfs_3.png",
+      "sha256": "a115971396cc776a4d0be3465021514dc49f2f107c175494c73ffb3916241a2b"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/443203/443203_id_gridfs_1.png",
+      "sha256": "72773a7c36330393d1543ad15da936f1db4c478cc24cb4e7d83e226b24c94d2d"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/443203/443203_id_gridfs_2.png",
+      "sha256": "742896d20de99679c9507eb76b9cc737920a0dcb5daab5b9764e4952cd9a1e89"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/443203/443203_id_gridfs_3.png",
+      "sha256": "b11daef57ba384cac5b6d66a6e770062be8040548f025aa9ef409ad1f1058bc8"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/443203/443203_id_gridfs_4.png",
+      "sha256": "b1ca330235ecd656b305f0c4f9502d0de32f73c0e0194a873a5af51d7552b6ec"
+    }
+  ],
+  "input_tokens_counted": 6341,
+  "http_status": 200,
+  "seconds": 5.416224374988815,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"colors\": \"outside_schema\",\n    \"pattern\": \"Solid\",\n    \"fit\": \"Oversized\",\n    \"length\": \"Longline\"\n  },\n  \"outside_schema_reasons\": {\n    \"colors\": \"Silver is a metallic color not represented in the standard color families.\"\n  }\n}",
+              "thoughtSignature": "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"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6490,
+      "candidatesTokenCount": 100,
+      "totalTokenCount": 7782,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2258
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 100
+        }
+      ],
+      "thoughtsTokenCount": 1192
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T08:41:22.385495Z",
+    "responseId": "MhLfatfDF4r_x_APzZ3JqQU"
+  },
+  "usage": {
+    "promptTokenCount": 6490,
+    "candidatesTokenCount": 100,
+    "totalTokenCount": 7782,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2258
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 100
+      }
+    ],
+    "thoughtsTokenCount": 1192
+  },
+  "estimated_usd": 0.005177,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "colors": "outside_schema",
+      "pattern": "Solid",
+      "fit": "Oversized",
+      "length": "Longline"
+    },
+    "outside_schema_reasons": {
+      "colors": "Silver is a metallic color not represented in the standard color families."
+    }
+  },
+  "result_status": "pending"
+}

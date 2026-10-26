@@ -1,0 +1,146 @@
+{
+  "call_id": "pilot_sync/107498/1",
+  "product_id": "107498",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0026772,
+  "reservation_usd": 0.023317400000000002,
+  "started_at_utc": "2026-10-26T09:12:37.914600+00:00",
+  "request_sha256": "e86533d0fe32cbd72dca9148e595c263f4fb03695bc76f00a541f2d1b00f8d98",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "1894113",
+      "modality": "image",
+      "cosine_similarity": 0.8208737969398499,
+      "image_ids": [
+        "1894113_id_gridfs_1",
+        "1894113_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "2241067",
+      "modality": "text",
+      "cosine_similarity": 0.8051825165748596,
+      "image_ids": [
+        "2241067_id_gridfs_1",
+        "2241067_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 487,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/1894113/1894113_id_gridfs_1.png",
+      "sha256": "866e32bb510b55b45fedf7a8be57e7c3248df5c44d1a5e671028388bbfaf173a"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1894113/1894113_id_gridfs_3.png",
+      "sha256": "c1cd4960416098aa3d66d8381763168e308c16aaf1853c4fda0778a06d070d2c"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2241067/2241067_id_gridfs_1.png",
+      "sha256": "dc2568115d6a1dfb2752a0fa169642c8d6d8d859e7c9ac2ab547910b88fddddb"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2241067/2241067_id_gridfs_3.png",
+      "sha256": "4bce4d96650993062df416d26d44896df648f6793859373b2ac92fcf55624a87"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/107498/107498_id_gridfs_1.png",
+      "sha256": "c3e489889342f048a0d67532ee7e3af48dc05b12af29264d873c4eedaf5d9435"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/107498/107498_id_gridfs_2.png",
+      "sha256": "5cf75acabace81bdc16c1ef93a13392f1c4a5681cf1565e9b5797b86cd4830a6"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/107498/107498_id_gridfs_3.png",
+      "sha256": "ef2b7981eed4adf4bd6334624981fb183938b524eedca12821f0692c4a8964f5"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/107498/107498_id_gridfs_4.png",
+      "sha256": "33b9ed3502050a727c8d6e24966982ed7f9847c158fc0c59d66c4b4546363447"
+    }
+  ],
+  "input_tokens_counted": 6085,
+  "http_status": 200,
+  "seconds": 2.6045147080149036,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Other\",\n    \"fit\": \"Regular\",\n    \"length\": \"Regular\"\n  },\n  \"outside_schema_reasons\": {}\n}",
+              "thoughtSignature": "AY89a18FHATW5T21UPz32AC8bAxsQp5t4ML4cCMYx5A3ndBjx0+VJX4+f0CkeCwlpHU7xmPyFcKx5G/RB8giL0/sUGkA7QIcEJ+4fiKdtF8xdiR9ACNJBf15isTWl3dIBhLcchbVVOz1TgDWAT+YxF9Sm0qWTDbfDcyaE7SeSuOiTrStACmwqdz+cmxq9uSb51ELlOgayHM0fWOA0AuEG0t1haRcXcwyJ4GFnukNDPwzOhDMt/y4Q1aYk076ZK7PLgHlPkvTFzuL1mhu4fKIeLcQTO/tuaa2xwhr43BCglDCzQCJ9E9kj0z+HO24ST3d4eW0WtTnmpFkQOhdazOLFqjoeXs2GUXQ2FgCtT7mTgm1B30WXsCejsAwG2BVq62/OriuXIcuiCFGlDvhGC9uOaaGnwywaohOA3KF2ZttiiNrlMLfTSHt4djzQaR+ovIj3748pWxr01DR8LjHqukIiZ8mn2rT8pidQvOeYY23UtmCaGDMPHqBwZNRef0GqMMg5rLWXWBEsXvhFZ3aWbE9l0ejbZo+Gr7KbdbFMe4IV6twZfa7OhllT91fqjJtx6VubyEDX99HjDvEkuLKOB3pYcvMyG1VROQGT/TNJygyMrNhhR6crq3YZJWz7zM4+z0ecUZNBeO4sGpyNOpMA89R1yN5Ey8ilGw/zL2Yttus//WKEgifsVt2EwLWsMfjUoj450t1RBfA4W3APp1HMgMZ1G1aVZbFbnlpi6o9qMYr/1vWCDvHArMMcqrpZUjEOemJNVP4RLvAjN062qMU77+GW6NpVvCWWm+GYGDLWvo22ka/iGtmlYKQ+fB4dip6QL5FOVzScQZ3nBGZkjVF7CHXAWXftfDNl35RbNklsI2hWJQA8obBmrRxt7x2VsIMAbJTKMBO0ZqTfkP6dmP4zPe9BAJZPnXVH2QQxa1jsvu0mWITNlB99DpFTp1Dx2Qhjq9KPJT3CnRUbd4/9iR3Lfb6UCaB5j+24PnwoZs0sTSUfqpWTYKTwuifzba363GClqR8nagWefXsg4Rg1akmQ0VUR8S0FMmA3jILNV6U4Og7+LsYIESUKM7NVQit6bpck54Vfln7A0lmYdV4M3FfPSEgQDtChXRK9FmWIwPG/d2A8oShniJOvpV8r0t2zXVsYXMmaMile2k4/JeAcnRPFa3jpPhTSi4AfINz0A46VzZA305JiTF+c65Sd7lb0a6scsuxbZmdzidoMUf9BHljGoavTRtr67j9aNLKlz3Lxoo8kV+IIhs9Mpn0JZm2mf1YQBoZVUo7+enR97fdZiXfiOUNW4oKgDKIfkxuAYn6qrbJ3fDXWbT46GL8nHdJhg6B1GLkdomMgTezT6uWyr9LXpe6TavRLqygTqYeDxPLtwMv32F27EKynUl2IM27XdEuHcDpFyV9hjHzQj8Z6izorJtpgFCtDFGi/P0TAr+2teuiIMtDVjYCIj1g16CmHRh5ajnRQlk32662hZPxujew4Dah2ejLtJlePdkxVwvkZgKGqdagrHaqDuE+iM80SyH86SvvRg5+D1I8p8vuQvbOyXwPwEgDCIMzxFg0bHLT/4Q63omkku6vXJ72u3NqDI3DD+Hsw3WU3sy/MGbDMTo7kkcGobHcMuhE7D7OWopQmmhKqzwkNC9KA4Dggax+fYWMCjdHYkEVTQ=="
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6099,
+      "candidatesTokenCount": 65,
+      "totalTokenCount": 6438,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1867
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 65
+        }
+      ],
+      "thoughtsTokenCount": 274
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:12:38.167249Z",
+    "responseId": "hhnfatGaCp-2stMP5sqNiAQ"
+  },
+  "usage": {
+    "promptTokenCount": 6099,
+    "candidatesTokenCount": 65,
+    "totalTokenCount": 6438,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1867
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 65
+      }
+    ],
+    "thoughtsTokenCount": 274
+  },
+  "estimated_usd": 0.0026772,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Other",
+      "fit": "Regular",
+      "length": "Regular"
+    },
+    "outside_schema_reasons": {}
+  },
+  "result_status": "ready"
+}

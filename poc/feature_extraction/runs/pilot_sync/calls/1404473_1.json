@@ -1,0 +1,154 @@
+{
+  "call_id": "pilot_sync/1404473/1",
+  "product_id": "1404473",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0032096,
+  "reservation_usd": 0.023791100000000003,
+  "started_at_utc": "2026-10-26T08:51:53.092466+00:00",
+  "request_sha256": "a6fd0e356696a499bf3c65ce33b56a7456ba079df014f7aa7a2ab52bec8c0f47",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "2279467",
+      "modality": "image",
+      "cosine_similarity": 0.8617831468582153,
+      "image_ids": [
+        "2279467_id_gridfs_1",
+        "2279467_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "116849",
+      "modality": "text",
+      "cosine_similarity": 0.8130797743797302,
+      "image_ids": [
+        "116849_id_gridfs_1",
+        "116849_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 236,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/2279467/2279467_id_gridfs_1.png",
+      "sha256": "ebb2a93193166b87619ccc4502bb9db53766001552bfb468a88e297b9a513fa1"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2279467/2279467_id_gridfs_3.png",
+      "sha256": "c74fbe023c6f3a68a4575c11e5d284569ace0cbdfd22ac9ced8c0fefda8d3ef3"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/116849/116849_id_gridfs_1.png",
+      "sha256": "1ae1378d91567a25ae8b0f89f2bcd6d1ef231e06498546e224743f4328e58898"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/116849/116849_id_gridfs_3.png",
+      "sha256": "20742f5e388c6db14e3655c967917acc68f977bce41ddbbc1d1b650a50508171"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1404473/1404473_id_gridfs_1.png",
+      "sha256": "f60d0016be9d030204dc2797fa1e0fb24480271691a237d2e2ff4c37661f6413"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1404473/1404473_id_gridfs_2.png",
+      "sha256": "c64290f3ff62500db7c5856ee72de2d1725d9a7d4eed17bf0d2c000daee219cd"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1404473/1404473_id_gridfs_3.png",
+      "sha256": "6324f468ecb552a1bee6f281124c1adec789357fbd8302f5e1870803e3cf5956"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1404473/1404473_id_gridfs_4.png",
+      "sha256": "7e100c29de7e935bfb20eaab2d39bad8bd1ffe3e736b1a5e73b5409ad0c702ca"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1404473/1404473_id_gridfs_5.png",
+      "sha256": "e4999149de4c6422e8a735e5afc492d4a6649b9a51cf523f920ae4ba02b07a13"
+    }
+  ],
+  "input_tokens_counted": 7481,
+  "http_status": 200,
+  "seconds": 2.2775616250000894,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Solid\",\n    \"neckline\": \"Crewneck\",\n    \"dress_silhouette\": \"Straight\",\n    \"dress_type\": [\n      \"Other\"\n    ],\n    \"strap_style\": \"Standard Sleeved\",\n    \"strap_width\": \"Not Applicable\"\n  }\n}",
+              "thoughtSignature": "AY89a1+XhK3bDdhUK6VdBxl3RcgsaWrkXPO0+hZpbkJDufOu0Z7JSdZJShmmTs/i3Aicxeyr/ZomNxqiCOuH+nqlAyQtQzgonf44LxCY1oUz2tE585DeEEp0Ok/Jy50LQFpiyPZJ7WFKH0KzUYfkOubFDzie7tvkcBxieuA+yxPbry/5zT3qCfUjSo2cqMPMDbQ4NRvzl7qKmLKevggCxfpNRwJQ+xJD9rdCLPa4XUSx+bFwOt1mqC+DvN4WGvx31kQKgJivOagTBvJ5UOwAo512u7KdrUQT3+lflwm7jVtQmjca7TAH9MPoz+nJ/uzlUBJnJ3ifFI0geDluzIW8clm0cYZkRxvxckFc/CNtLUFS5sQScVCXYXTVJ2tn25vlfg2+sfSNIkZQ3BKFWaLA1aGZTRYszqoBggdNVDAkL6YJoBuS0NeVxYflxmB3JEvEudUn5AAjd+hmH3EaYE3ha96HMC9C6vxB47KHFmJUS/m5UY8paSTgjhzkUK+OBUke2i5yL8A8YQY+kBJXUEhD69rSDFwuzrvRJGFYUJV/Ja8OWaNlbTLUfiehXtISbc7b+yGphqY+bpyw3UrtSGi+LUjwVK72O2YifsyydhpRhhDb4Llsw5+NE9H4TZ6ZC+Fz+PmzYO7DaPo4uCU9i4HndGjEiCwGgoXOOkErM9jNt7+usyGalRAkOAynFm6/kMEXe50dRHOgkCOZTMZ+VUDrdMIvp/VLSyy6/GtN+fqPwuP9ahboNvPR5uwIPp2ES4nVr0bObUi+NfrL8P5Tx19XUgp+Sx3HNyWYCpfE3JsofgW1VVBaTe6/q07K8sc8WWMbABXQpEQLlN8Kz4RVZvg5ZcEM4s6yUdZ4EO9qPYIYzZXcQVcnVbsIS+QbOHc8HqFWCaetJ1nudG0BjpLtS41QhlOgIKQeg/+q45V64RaTXQT1H9RmDERtIwobWz5EaA3hmaYwJUuFKjGXDIqceVS5rwiDd3E8vS4NLCV6uaN5sd/vwJZ0mBgNhfnH6IiZ363NmrFSgpG9Os83uRbCNh3LBom54wf8WK+r8y2De/8gsdfAWjOt+BZ19FXGHENEzuInx/ydNZTymqpi2Td3/q7HRHUIWORuViZZ19nq2YPLK1+J9ZpJnBAznf/LE1Hus6f/3Zr89o5kw+Ub+i8u2kTvt73Z/0f/2c9Spb0pk5fARDrXhVTv3CtrfGKrTuGcu7mOt0qLRD6o4Nrtb7Q385d1m6ydDomeNczF7vfqQmjWX91jRM4upP9gcbCrvtzQoiRWHVBKfRPWWmnczQFFwxSEQp5HtNzPUA7lIl+WXv8qgfliFMGoKuroL+LH9dBynIQNLhInOp5ZSDhrmMBIQL6HiqEiXJfYZmFC+6V8nG5FOgTEmm6nShJ1MZx+98uq2Sdh4rEt2tbPAaD9UNv2wQhnG9EeAob3N52v6UwebbPuAuKPlVbW1Abr8BMse9oK6MLSjEZHJm0ckD8mY6wI/6xxODDW8Rfw65L6a863NZMohMk1Bo1jQxV0DIoKuNYOn3JKlDxu1ohPu/hmzf3SMpPMSJaP7oMb84+DLUhaf2RPbdIFaZPf6bPhrMF8BhGd+lb4df1Kt4e5t8mFsliZxqPtCJpDdoXZF58GVXVqGgDZZ5gl5jbwwLD2YJyTlBFY7e5XzX3WA6d5WJkNd6Pa"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 7532,
+      "candidatesTokenCount": 97,
+      "totalTokenCount": 7912,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2771
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4761
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 97
+        }
+      ],
+      "thoughtsTokenCount": 283
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T08:51:53.223691Z",
+    "responseId": "qRTfasvTDZ_fusEPxJCTmAM"
+  },
+  "usage": {
+    "promptTokenCount": 7532,
+    "candidatesTokenCount": 97,
+    "totalTokenCount": 7912,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2771
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4761
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 97
+      }
+    ],
+    "thoughtsTokenCount": 283
+  },
+  "estimated_usd": 0.0032096,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Solid",
+      "neckline": "Crewneck",
+      "dress_silhouette": "Straight",
+      "dress_type": [
+        "Other"
+      ],
+      "strap_style": "Standard Sleeved",
+      "strap_width": "Not Applicable"
+    }
+  },
+  "result_status": "ready"
+}

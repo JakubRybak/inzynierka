@@ -1,0 +1,150 @@
+{
+  "call_id": "pilot_sync/2109227/1",
+  "product_id": "2109227",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0029868,
+  "reservation_usd": 0.023624000000000003,
+  "started_at_utc": "2026-10-26T09:37:29.269367+00:00",
+  "request_sha256": "567bd3d0f5c4e63d0d48603a39b51dd89b50ea6e321145d894210acd1cbeeb21",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "1865523",
+      "modality": "image",
+      "cosine_similarity": 0.8394334316253662,
+      "image_ids": [
+        "1865523_id_gridfs_1",
+        "1865523_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "1701933",
+      "modality": "text",
+      "cosine_similarity": 0.8203610181808472,
+      "image_ids": [
+        "1701933_id_gridfs_1",
+        "1701933_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 815,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/1865523/1865523_id_gridfs_1.png",
+      "sha256": "4a28a4d1beca38cb8bcdd04c41d100828b3c0a0dcbd1d374cb985371451b5f80"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1865523/1865523_id_gridfs_3.png",
+      "sha256": "4d7a4d43a19140e19aec4e36f11cbd45013f0c96168455884ddc59da89ed89cb"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1701933/1701933_id_gridfs_1.png",
+      "sha256": "094ac36a106d729e0e9d6f28cf21a74caf6a830ce56fc34d5ab621776f387031"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1701933/1701933_id_gridfs_3.png",
+      "sha256": "4f39bae1552eb9a96444764a86bc5073fe3dbdbecbc179f220991799eeebeaa0"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2109227/2109227_id_gridfs_1.png",
+      "sha256": "04265c013dffb4e65bda22267331fbf132048fc5145d8d03c9790f42ef16c230"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2109227/2109227_id_gridfs_2.png",
+      "sha256": "c06f4eb67193fdd4d4348d7326fb0c2c4702c642b82bf15637e058111205f1cc"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2109227/2109227_id_gridfs_3.png",
+      "sha256": "bdf96644a7e926eb1f8ef9a736bfa73262abbc77d96867f728724c5a05550491"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2109227/2109227_id_gridfs_4.png",
+      "sha256": "e206e0ae2214dd134c2571ed16e29a173e45223fef344243d5c0aa62b9a76049"
+    }
+  ],
+  "input_tokens_counted": 6924,
+  "http_status": 200,
+  "seconds": 2.8134310000168625,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Striped\",\n    \"neckline\": \"Other\",\n    \"dress_silhouette\": \"Straight\",\n    \"dress_type\": [\n      \"T-Shirt Dress\"\n    ],\n    \"strap_style\": \"Standard Sleeved\",\n    \"strap_width\": \"Not Applicable\"\n  }\n}",
+              "thoughtSignature": "AY89a19L2nqDvRFMEutjUfUf6y8EK1GL9rSRaXmF6Idf6Mb1I4TWu+IfK9HSZc055DQJ9AOTUxKwYsQ7LAiiAREqqBGti2vZ0DK6IOE5i48LMDUSUGafJQ24KE/TfL4uEd4Uymlwb/5QTy7DxL3cdYVRGy4vvP+YTspWog5ut1x7cPBv+0u1McQcBupK72i2rx/4TV0BBsCFct7kebVLCQ0EvUu7CTjso25n5BIIA0YmIK3yY8KmePqC3V1lT2M6tyQ1fMuzvLRxYd2G3f05A1SyoD8ll1f3tQVMpHiaLWo9mNspZCbE+//Ez1nB0ZgKU63Xc/KiSs3RO+kqqFRNPf0gt4U6PtjUWYZCol3ccZCQtUGzKwZ3sqlC7kOJKXyLZud9pqrZknu411vIVpYlm5mKNCOQ5D+vv1pJu6K45TyiQktwG6HXndp5QG+oO9ndT/wJlfzrA8Rv9kdLU3Po4fdSZgLJKbXNMue3DRUoGB0ZQd5V7yBxNMqRwQeG99bNjFsVxSTpSySgxO1JJVgnuCMaJyo5cyIOTchulUMPvvfAwuGJkq9iVcSmY533w+jeVSL8wn68vorhS2gV4GzCy83OK1+llpsldtcOgWL8u5Nao+fURrJQ98AtWXTYO7KbCywurBTP40xh1vggPamSi2O/2rBh8wlWvO8XCT2R3ySo7Xnza2fAK4MK1hkGa/XAovytjuvY5Gjzq7yPCCwJVX8e+A6FnLvqXvqBEmJgg+IyDaesMlJDJ+sB5GA9wIWra66c7SHrukhU6LtSdP95MZqMcPUnGBnPg+MFBrozs8kCcPjJjF2xXQvwFtjSQMlsMUUabBftekxKUtFyDXs7l7StRUgIaZioPk5X8+OeH/vqE/ukO6zPRwzZIB6IyfiRsi/2b6d+K/uC9hP43dz/FV8YSqkzibCFIqkj6Lx0f8xbVkW1znRLxX9YPwCBf0rXnB1kO/TFXOJmgVCa6DCKTDDjv+bKv23LkP3U/M+DfTsmlPEe87jpdWagNwB2WnjAzG7zZbioM0AqbknOArPDDC2eXoSG9O48wned0IKjipJBXgEjc8KUmRsRZq3UaXrRfUcNynQ3yu8t3+R2QLM6rc9LACrns71yF/L9n+u4xfJgFqLmEx5HV/Wes5J2qNQMAKokfKFvacaEahXotGGpxpIPNWQ3BYHYgMgdjeckoYypoj0T7FQ84MEJeCnDyiTV3DY1DBnP1EhSokc/2iP9yh3X1lSuHO1dBcTyrJaVjN7h8LII1A+urt359Hs4ZsuvhhPlvQQ6kuFfSq7TqY2eijeB2AN1qIDjLllE/hU9XmQ3vstWnz9e/VVpOEPbw1+a/NJmKAhEnJEM1YsE48M81xX1wBXUbWyHMuiPE2yKQRNM8zxIkNShXAd9J9HCLDmNYspHTNl57mqWTgXazHunRP6dxJTz"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 7006,
+      "candidatesTokenCount": 100,
+      "totalTokenCount": 7360,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2774
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 100
+        }
+      ],
+      "thoughtsTokenCount": 254
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:37:29.417472Z",
+    "responseId": "WR_fasC9GZ_fusEPxJCTmAM"
+  },
+  "usage": {
+    "promptTokenCount": 7006,
+    "candidatesTokenCount": 100,
+    "totalTokenCount": 7360,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2774
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 100
+      }
+    ],
+    "thoughtsTokenCount": 254
+  },
+  "estimated_usd": 0.0029868,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Striped",
+      "neckline": "Other",
+      "dress_silhouette": "Straight",
+      "dress_type": [
+        "T-Shirt Dress"
+      ],
+      "strap_style": "Standard Sleeved",
+      "strap_width": "Not Applicable"
+    }
+  },
+  "result_status": "ready"
+}

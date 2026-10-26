@@ -1,0 +1,37 @@
+{
+  "project": "project-3a86f100-1aae-4780-84b",
+  "model": "gemini-embedding-2",
+  "location": "global",
+  "output_dimensionality": 3072,
+  "task_type": null,
+  "text_input": "description only, verbatim, no instruction prefix",
+  "image_input": "first source CSV image, original PNG bytes",
+  "normalization": "L2 float32 before Parquet export",
+  "settings_sha256": "76e3ad90c7372e409f10db95e1115b53e056e0e89529d6424272473cb76c9deb",
+  "pilot_sha256": "115b91401d526e7ff4771b1d52ac2d6df314af9cfadc5bab3a7f17bbac8b0e40",
+  "generated_at_utc": "2026-10-26T08:03:51.203467+00:00",
+  "counts": {
+    "image": 900,
+    "text": 900
+  },
+  "expected_per_modality": 900,
+  "complete": true,
+  "rates_usd_per_million_input_tokens": {
+    "image": 0.45,
+    "text": 0.2
+  },
+  "pricing_source": "https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing",
+  "pricing_checked_date": "2026-10-25",
+  "estimated_cost_usd": 0.11784499999999787,
+  "cost_note": "Usage tokens times published rates, not a billing invoice; pending/failed requests retain worst-case reservations.",
+  "tokens_by_modality": {
+    "image": 232200,
+    "text": 31959
+  },
+  "calls_by_status": {
+    "failed_or_uncertain": 3,
+    "completed": 1800
+  },
+  "estimated_successful_cost_usd": 0.11088179999999787,
+  "retained_failure_reservations_usd": 0.006963200000000001
+}

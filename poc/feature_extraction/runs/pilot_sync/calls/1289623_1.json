@@ -1,0 +1,144 @@
+{
+  "call_id": "pilot_sync/1289623/1",
+  "product_id": "1289623",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0019778,
+  "reservation_usd": 0.023303,
+  "started_at_utc": "2026-10-26T09:28:12.510827+00:00",
+  "request_sha256": "967922ade87e2aa979027d066142bd104db9fe4dc3a5cb48a14c53b6644955cf",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "1770603",
+      "modality": "image",
+      "cosine_similarity": 0.7581794261932373,
+      "image_ids": [
+        "1770603_id_gridfs_1",
+        "1770603_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "1731413",
+      "modality": "text",
+      "cosine_similarity": 0.8105829954147339,
+      "image_ids": [
+        "1731413_id_gridfs_1",
+        "1731413_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 695,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/1770603/1770603_id_gridfs_1.png",
+      "sha256": "1366e44bf69eced2e24a338d8cf2f59e110f17c8230b2b85dbf33efafbfeda4e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1770603/1770603_id_gridfs_3.png",
+      "sha256": "37f890e7c10d6011b6db6c183fd264eef8a5c3ca5ccd8615d22876cfab5f89ff"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1731413/1731413_id_gridfs_1.png",
+      "sha256": "2f17306db758f46e543f7130f4a82380876e1d7540387849ef535ed15dff3509"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1731413/1731413_id_gridfs_3.png",
+      "sha256": "b5ad2bbfca0e9e60c476c011d83616e403f253de833b5b1b3847749b7609ce5d"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_1.png",
+      "sha256": "d5810d52d78b2df0d0aa834d5e96c1eade065708534e6bc4ad407dda6d8843ff"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_2.png",
+      "sha256": "b272c7a94e712f8c5ae48634fe5a0c6438470238ec8857d650183b92332174a5"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_3.png",
+      "sha256": "6505c640906c3c553eb0ab9d598ff8689853be8d8c671354d81b2e685158c7ec"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_4.png",
+      "sha256": "62a30418f8ef368d9076cb108096276578597a75c0aa3f3fb783b1a78464f4b5"
+    }
+  ],
+  "input_tokens_counted": 6037,
+  "http_status": 200,
+  "seconds": 2.5943368750158697,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Other\",\n    \"fit\": \"Regular\",\n    \"length\": \"Regular\"\n  },\n  \"outside_schema_reasons\": {}\n}",
+              "thoughtSignature": "AY89a1/ThEpxcUD5xKBE835E5nIaE0l/xYGLy1EhgO8UEW4NFDgDc7UEw040mBFj5dITOfO/8NWZuXGJsjex3DHHDUM1BP/MObo65ZVJEJPkv6WgSB1DPUqEFE8="
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6051,
+      "candidatesTokenCount": 65,
+      "totalTokenCount": 6116,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1819
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 65
+        }
+      ]
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:28:12.712942Z",
+    "responseId": "LB3fau7BK9uCstMP_tjo8Qw"
+  },
+  "usage": {
+    "promptTokenCount": 6051,
+    "candidatesTokenCount": 65,
+    "totalTokenCount": 6116,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1819
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 65
+      }
+    ]
+  },
+  "estimated_usd": 0.0019778,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Other",
+      "fit": "Regular",
+      "length": "Regular"
+    },
+    "outside_schema_reasons": {}
+  },
+  "result_status": "ready"
+}

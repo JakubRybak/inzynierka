@@ -217,6 +217,9 @@ def assign(product, rule, assigned):
 
 def extract_product(product, rules):
     features, metadata, reasons = {}, {}, []
+    brand = product.get('brand') or ''
+    if not brand.strip():
+        reasons.append({'feature': 'brand', 'reason': 'empty'})
     for feature, rule in rules.items():
         value, status, source, evidence = assign(product, rule, features)
         metadata[feature] = {'status': status, 'source': source if status == 'assigned' else None,
@@ -225,7 +228,8 @@ def extract_product(product, rules):
             features[feature] = value
         elif rule.get('on_unresolved', 'llm') == 'exclude':
             reasons.append({'feature': feature, 'reason': status})
-    return {**{key: product[key] for key in ['product_id', 'section', 'category']},
+    return {'product_id': product['product_id'], 'brand': brand,
+            'section': product['section'], 'category': product['category'],
             'features': features, 'feature_metadata': metadata,
             'status': 'excluded' if reasons else 'ready' if len(features) == len(rules) else 'pending',
             'exclusion_reasons': reasons}

@@ -1,0 +1,306 @@
+{
+  "product_id": "2527078",
+  "brand": "adidas by Stella McCartney",
+  "section": "Tops",
+  "category": "Tank tops & Camisoles",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "Grey"
+    ],
+    "main_composition": {
+      "Polyester": 85.0,
+      "Elastane": 15.0
+    },
+    "neckline": "Scoop Neck",
+    "strap_style": "Racerback",
+    "pattern": "Other",
+    "fit": "Slim",
+    "length": "Regular",
+    "strap_width": "Wide"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Grey": [
+          {
+            "column": "name",
+            "keyword": "grey",
+            "matched": "grey"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Polyester": [
+          {
+            "material": "recycled polyester",
+            "percent": 85.0
+          }
+        ],
+        "Elastane": [
+          {
+            "material": "elastane",
+            "percent": 15.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2527078/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Scoop Neck": [
+          {
+            "column": "description",
+            "keyword": "scoop neck",
+            "matched": "scoop neck"
+          },
+          {
+            "column": "description",
+            "keyword": "scoop-neck",
+            "matched": "scoop neck"
+          }
+        ]
+      }
+    },
+    "fit": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2527078/1"
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2527078/1"
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Racerback": [
+          {
+            "column": "description",
+            "keyword": "racer back",
+            "matched": "racer back"
+          },
+          {
+            "column": "description",
+            "keyword": "racer-back",
+            "matched": "racer back"
+          }
+        ]
+      }
+    },
+    "strap_width": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/2527078/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/2527078/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "22557e1b11cc48b3dc44208df230913def4e9358f290ad547901324070b1c0b0",
+    "neighbors": [
+      {
+        "product_id": "2144217",
+        "modality": "image",
+        "cosine_similarity": 0.8290197253227234,
+        "image_ids": [
+          "2144217_id_gridfs_1",
+          "2144217_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1932673",
+        "modality": "text",
+        "cosine_similarity": 0.8534308075904846,
+        "image_ids": [
+          "1932673_id_gridfs_1",
+          "1932673_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 819,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "fit": {
+                "type": "STRING",
+                "enum": [
+                  "Slim",
+                  "Regular",
+                  "Oversized",
+                  "outside_schema"
+                ]
+              },
+              "length": {
+                "type": "STRING",
+                "enum": [
+                  "Cropped",
+                  "Regular",
+                  "Longline",
+                  "outside_schema"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "fit",
+              "length",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "fit",
+              "length",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "fit": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              },
+              "length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "fit",
+              "length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6316,
+      "candidatesTokenCount": 75,
+      "totalTokenCount": 6705,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2084
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 75
+        }
+      ],
+      "thoughtsTokenCount": 314
+    },
+    "estimated_usd": 0.0028672999999999997
+  },
+  "annotation_origin": "llm"
+}

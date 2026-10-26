@@ -1,0 +1,148 @@
+{
+  "call_id": "pilot_sync/1468853/1",
+  "product_id": "1468853",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0030092999999999995,
+  "reservation_usd": 0.023537600000000002,
+  "started_at_utc": "2026-10-26T09:23:42.190547+00:00",
+  "request_sha256": "2fd891fffe3bb411657e23d47040a21c8778d6b7be0c56e574a628f534881d1d",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "1891073",
+      "modality": "image",
+      "cosine_similarity": 0.9495275020599365,
+      "image_ids": [
+        "1891073_id_gridfs_1",
+        "1891073_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "1913213",
+      "modality": "text",
+      "cosine_similarity": 0.9034254550933838,
+      "image_ids": [
+        "1913213_id_gridfs_1",
+        "1913213_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 610,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/1891073/1891073_id_gridfs_1.png",
+      "sha256": "0b36098fb15afac89a64cdc4c3726a045eb097d391b0da29c5f68e0a09a3fe9e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1891073/1891073_id_gridfs_3.png",
+      "sha256": "297157518bba27169ede8a5023ee8b0a1a45388e4700d89164077535afb479af"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1913213/1913213_id_gridfs_1.png",
+      "sha256": "bec4605a18793960aa4afaccabfd5eb99b77cb7c170085736f89984a948855ba"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1913213/1913213_id_gridfs_3.png",
+      "sha256": "4ee5ee88b9b526c04dc734b572ebcb022a541c3e7a6b8304d0f42bf8471b476e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1468853/1468853_id_gridfs_1.png",
+      "sha256": "b6af35aaf134747ba45377fa5df24d81ccd84a515c3204a1972cd5a89ee2d0a4"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1468853/1468853_id_gridfs_2.png",
+      "sha256": "cc9a65efba6773a8874ee7309ebafd6a7e95d2d5ccdaae4b580b7a5fc3b82a71"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1468853/1468853_id_gridfs_3.png",
+      "sha256": "18239aff4567563c35c00102aaf049dbf8ec18f389d8964ce12be75079378186"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1468853/1468853_id_gridfs_4.png",
+      "sha256": "856ec5ba5a71ac25e28d49933751ebd5ec09ecfdd8512e9d056ddf69de15b865"
+    }
+  ],
+  "input_tokens_counted": 6532,
+  "http_status": 200,
+  "seconds": 3.003370582999196,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Solid\",\n    \"fit\": \"Slim\",\n    \"length\": \"Regular\",\n    \"strap_style\": \"Standard\",\n    \"strap_width\": \"Wide\"\n  },\n  \"outside_schema_reasons\": {}\n}",
+              "thoughtSignature": "AY89a19ACxulXaQlyyZJHk5IMmXPQS2i66QobQ0ijxHAaCZHZjAoTStLnEXulMLm8u3FtuEtCfpW0aHvWtwJRsRwtXVKZHl6fFzk71p0oetVMxzUv2i+iFo1oQ8NNCrJKGKnX3ZiHP2eEMuXminsxOBOK1RZH6rvshs1hg2OGrJTTqqY88XE3PQEuK5dIUkOohtdaIgFx8qfnEC91T3rCK6rTxH5Ky83z5pTqBG7uWkV7fatq754SCsoq9oELw/fiWXBJOTGlfd3zWlJfi7a2E0yo/9wSdnW3iuo4cBORrhw6erpKNu3Sk3tymNfDN7vVK91wZ2bUF+sFWPTa1JlsoStItBlqPvXJHLEpFbFfi8aKxRlEf7mi9KuLQh+DedSSjSopV9sgLwAVTfClr3RNILkmbYe7cjWwfM65h0ppajcsDaEtcZPmYqIu0I5auZnuLjZToyfdmBNJP201NsSzC9qsfSwlUYRoHBqg66PASN7kBR6fN+tyf8Uv0SJQFHk3ZXKyW+Jkpb3yFhc647/rK9ba/FufEu8TSNly8q/O4nnWdsl6+UNDRgWnngA1174DoyPTtp+iZnVIxB8TmlFmJaRlv4tJRt+MG1Ww6NzQbKDOM7auaMRUIvHtwe0w+bEK2xFaKzCgMU5FF0AG5dSa2fssw+w3B43rsj2VT6uLbujNf5FCw3pnpUihwOCl1FYCXu5x94S/gmE/NEhJSEczEHOhpaO+iFlY5cbR5iHYQh4/48NHr5tqAFfz1DNw5D6NbgNUoO1P7O1WI1kvfqsy+fjw5aZP8S8lDrIICeRZCIvtaOI6Ei8ykV4BNXuAJ9r/1orcFYzUVOElGjpc+LBko9mabvJZZZKkdmpDTLOGcLTj+Yoq97nGcwFt72fA/bqKPTYPlubWsyOMrdA4DPBPtvdjJl7sr1sjJ9J2Df+oL7ySt+E3Zp8R4rpbk32MBNl76ps97ZiXA4gHMCgLNWqs65buY5EW9fXQQCThm7XHFlEdfc/I1TK0+38ArpudyCVaN4lHQVUNBbWaAEbzoARvJsqOIlRx4TB7w+QO8IyNhczXmrNYQzO4gh54GrKwKIyMxBAALjC+eD+OVdN8EVBUZUDNLm146I1N07HdyYFU3uvAqglueE5SFVljxCXMaM/TvYFG6rtLZ9IL36ki189DQjO8Ge6Gs/JHeZF61ZBFjDxkpVhH5iaNx3r+SENHlyweQso/GsGBFkI4wNsfToBk1rOJYH5OK0VRjFdTZq+dEu1aH0/QKcFaB3pl+JFsTleTEe6l2gxrZdGenFu5l/V4aHUzDCGyoexdQCBcjb+9MYT5mFP8CFRpNThtVco3u/tdBm9EI0sFNHTdd1M8jOKczCMsCuec5N2u4NVFSNJkwIdcwP1kX9Ye1v17tZjbMc7xoLhV+MjF9eJrImxSpzc0OV0V/vxA0w3EWM6iAI4u6zXNEu5oJvFNsctnSWd0WwLI+xqlKKPzvkm/LYvjx28gT+YUyZNcCFjMiBY9xkYBIz5hUONcq0FS3caPWQFR/ALem9AU5qey6DCODgq+n05oEVJYowge0rc2uF7qrSgYUhHrS6DJc1LndoxAaNa90Vu/zCn/X3gXRjHmdfnlHM0v1/aaCQErDFg+1xB7qU4TLdclnQ9nYuuHsqPBXHmaWV7xIVUuoXKu/6W4rX26LiH5mEskt6EnABK4Ise"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6606,
+      "candidatesTokenCount": 85,
+      "totalTokenCount": 7017,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2374
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 85
+        }
+      ],
+      "thoughtsTokenCount": 326
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:23:42.447403Z",
+    "responseId": "HhzfaqunG6G8stMPk8XqmQ4"
+  },
+  "usage": {
+    "promptTokenCount": 6606,
+    "candidatesTokenCount": 85,
+    "totalTokenCount": 7017,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 2374
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 85
+      }
+    ],
+    "thoughtsTokenCount": 326
+  },
+  "estimated_usd": 0.0030092999999999995,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Solid",
+      "fit": "Slim",
+      "length": "Regular",
+      "strap_style": "Standard",
+      "strap_width": "Wide"
+    },
+    "outside_schema_reasons": {}
+  },
+  "result_status": "ready"
+}

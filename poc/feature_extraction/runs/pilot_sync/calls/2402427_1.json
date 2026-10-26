@@ -1,0 +1,81 @@
+{
+  "call_id": "pilot_sync/2402427/1",
+  "product_id": "2402427",
+  "attempt": 1,
+  "status": "http_error",
+  "accounted_usd": 0.0234788,
+  "reservation_usd": 0.0234788,
+  "started_at_utc": "2026-10-26T09:28:42.205091+00:00",
+  "request_sha256": "9e97b1a8af7d27704b9fa51a6b156c3221c87a5e4685493e27de9c8080faf126",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "2111377",
+      "modality": "image",
+      "cosine_similarity": 0.7806694507598877,
+      "image_ids": [
+        "2111377_id_gridfs_1",
+        "2111377_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "1289623",
+      "modality": "text",
+      "cosine_similarity": 0.8356416821479797,
+      "image_ids": [
+        "1289623_id_gridfs_1",
+        "1289623_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 704,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/2111377/2111377_id_gridfs_1.png",
+      "sha256": "926d447f50e3f16985124ed34090e912ccec44d5efe36330aed74f4e755f6ed4"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2111377/2111377_id_gridfs_3.png",
+      "sha256": "d67c8fa5435aeba1dde739d56020c34992579140aa5057fe7df5131a909df64f"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_1.png",
+      "sha256": "d5810d52d78b2df0d0aa834d5e96c1eade065708534e6bc4ad407dda6d8843ff"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1289623/1289623_id_gridfs_3.png",
+      "sha256": "6505c640906c3c553eb0ab9d598ff8689853be8d8c671354d81b2e685158c7ec"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2402427/2402427_id_gridfs_1.png",
+      "sha256": "27c976e2b96c30f55ca2606da1eeb9983545b904fb9bb97afca681e4c6434cbb"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2402427/2402427_id_gridfs_2.png",
+      "sha256": "4b95b178be4ec7eaf0455cd40bde9e11916b27eee757a08642eea2199309ea7b"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2402427/2402427_id_gridfs_3.png",
+      "sha256": "98efe35d9c5f85f683229bca010c2676483151ade750777450cd831479b10d19"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2402427/2402427_id_gridfs_4.png",
+      "sha256": "81c53c7cb103190a85edcb533ac5cb9eeb4d36719452079be7afd804f7955db4"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2402427/2402427_id_gridfs_5.png",
+      "sha256": "3183280459dbaa20cd8750c807db159f4b1cfd138c0a121239dbe3b55b505098"
+    }
+  ],
+  "input_tokens_counted": 6623,
+  "http_status": 429,
+  "seconds": 0.35373683299985714,
+  "response": {
+    "error": {
+      "code": 429,
+      "message": "Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.",
+      "status": "RESOURCE_EXHAUSTED"
+    }
+  },
+  "error": "HTTP 429"
+}

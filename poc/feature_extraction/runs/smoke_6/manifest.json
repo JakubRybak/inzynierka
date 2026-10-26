@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "project": "project-3a86f100-1aae-4780-84b",
+    "model": "gemini-3.5-flash-lite",
+    "location": "global",
+    "thinking": "MEDIUM",
+    "media_resolution": "MEDIUM",
+    "max_output_tokens": 8192,
+    "example_image_poses": [
+      "id_gridfs_1",
+      "id_gridfs_3"
+    ]
+  },
+  "fingerprint": "2e18c82aeb97e6ebe4329c90d425c039be9839f6a4518629b98c929b32385bb6",
+  "target_ids": [
+    "2071147",
+    "2029773",
+    "1170223",
+    "101979",
+    "96701",
+    "110446"
+  ],
+  "budget_usd": 0.3,
+  "initial_bank_size": 60,
+  "rates_usd_per_million": {
+    "input": 0.3,
+    "output_including_thinking": 2.5
+  },
+  "pricing_source": "https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing"
+}

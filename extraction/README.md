@@ -49,9 +49,12 @@ four output files. Existing outputs require --overwrite.
 
 ## Data format
 
-Columns: product_id, section, category, features, feature_metadata, status and
-exclusion_reasons. In Parquet, the three nested columns are JSON strings; JSONL
-contains their decoded objects. Original metadata and images are joined by product_id.
+Columns: product_id, brand, section, category, features, feature_metadata, status
+and exclusion_reasons. `brand` is copied from the source products CSV. An empty or
+whitespace-only brand excludes the product while retaining it in the output, with
+`{'feature': 'brand', 'reason': 'empty'}` in `exclusion_reasons`. In Parquet, the
+three nested columns are JSON strings; JSONL contains their decoded objects.
+Other original metadata and images are joined by product_id.
 
 features contains assigned values only. feature_metadata includes the status,
 source, strategy and evidence for every required feature. Product statuses are

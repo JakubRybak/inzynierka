@@ -1,0 +1,149 @@
+{
+  "call_id": "pilot_sync/1737343/1",
+  "product_id": "1737343",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0030332,
+  "reservation_usd": 0.0235292,
+  "started_at_utc": "2026-10-26T09:07:09.221410+00:00",
+  "request_sha256": "54fc4956f8f0ac901fd76e821c5396643b1e6f9aad597ae212719e1740072db9",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "2289607",
+      "modality": "image",
+      "cosine_similarity": 0.8212010264396667,
+      "image_ids": [
+        "2289607_id_gridfs_1",
+        "2289607_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "1737413",
+      "modality": "text",
+      "cosine_similarity": 0.8465999364852905,
+      "image_ids": [
+        "1737413_id_gridfs_1",
+        "1737413_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 414,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/2289607/2289607_id_gridfs_1.png",
+      "sha256": "4858f072c1e977799e361045f27c3fb3fe46236187c406ff744280f04e4ed6ea"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2289607/2289607_id_gridfs_3.png",
+      "sha256": "f9149870f29711c9e5ffec5bfbb8e1d83f4d84eecb1c3e25f5827359fd76a105"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737413/1737413_id_gridfs_1.png",
+      "sha256": "d2b3b8923c158420912dd25ccfc4025433ec11724d80321d67540f5183be7b12"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737413/1737413_id_gridfs_3.png",
+      "sha256": "c35fd9526fe45a3eb20142fc2d0230a73afd23d30cfb8c653b25b885d9e10935"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737343/1737343_id_gridfs_1.png",
+      "sha256": "345d94cdaa2ef7c722bdb04c43167dae4c0f45e7820195695b9fc0765f678ddc"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737343/1737343_id_gridfs_2.png",
+      "sha256": "e66a5ae99d405ae8e0659e4b4b11486e18cc9043fc068f11e8d8fad693a396a8"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737343/1737343_id_gridfs_3.png",
+      "sha256": "ea0aad91f55c8d72270feb0d7feca3dade059f28ad0018028cc09b9384a1d8da"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1737343/1737343_id_gridfs_4.png",
+      "sha256": "b5e4d9cb25d0792695233fba4d21f2f473794ce61708ecb52deaff39e300388e"
+    }
+  ],
+  "input_tokens_counted": 6744,
+  "http_status": 200,
+  "seconds": 3.669141457998194,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Solid\",\n    \"dress_silhouette\": \"Straight\",\n    \"dress_type\": [\n      \"Sweater Dress\"\n    ],\n    \"strap_style\": \"Standard Sleeved\",\n    \"strap_width\": \"Not Applicable\"\n  }\n}",
+              "thoughtSignature": "AY89a1/4c3A8jpZnYzNNkZOPa5OaNjsPpr9Ap2j5KTwsUWbIfc4/x5efk482W0Ur6NgQoGUBztAkDfc6zxEvjvggz9jC3VkGi+A1Sji43Yolb97Jq3ug/TAWMrfsZoMUG0gXszZxuUXqbPbejjA5xcrsS66uxCnfYVMWeLu7M3llWJicGBteOIpXjygqwqKRtwmAqmGeSD47dr2LHl9vP61uOE1KzmmVCvJSkco9Md8sLIn8WtfbNwBAPXqJqXSayIhh20gggxpnuToSpxJw52mHGCs0oar9XSuu9J2lLOtDMNIogVE7xiEXh6Xk4eYWjKSVVKdnvnnDkXyJHxObBJOPtqAJ9a3JpEVjEBINz1Y8fZZX2r3hvwZ1NtBhtav0R3DEBYn4tjYXv+HiwScsIVou+kUHYzCnjb/ViS8BeSjbf6HFVYFEzI/wflGhB3nB5kpMEVbkVUeGUQiQQZ2oOeQzsshd6DTSM9pc6aXWn46QzAu6UHW+79fYJUYWnj2ZMxozA80VoBAMv5ELv8xhrRRPaCNXuEvut2sTXgUNIzEd66bCACfAG9jCWFFVM8/AUcH/6Cp1Bc+n99l+h8c0OU2DaaIJ4LeBAxW1bUCMFqUoAYHfspV1I2EyOm/C8r0+HBbgBJgaQwmlv4lMDIgJKbrFGVG6Y92YHStfOGdgmRbNoF/BNHPNs4/lsPNeHSHVNp8BofTKYIJu47BZPoDhxNJC/lPpMVH4DUBr0K5T/xD7p94ytuxwKTVTA5NoV0iFd322rGWfMHMN42a5grkCmJm9Wh+64tsc1g1C5GNrmkdacZiVO/v5gYwuSZRX+l1P7y+iHe9xq6qKGXw0TEG0Nfm8vZBCuDIJN1eENuM45zcLHVgQpWQZ8mVJlkQzXADCq2+PhfGv9z0XzqPGWD/VTyyiyFqyMyDTFuEPb+VkmFkJfDkk956zvhzY62O/Fppaqk9guxXYoYkoAWGwQfNcxEA1LpRh/F/0LdcJ2AQqt+OV7wKFz0Xsz90nI2wxaAvs0nKmvnSaikDnz99sXEpPg98td1xmtxS2/ZTpyi+mrhoRAmn0Zk+NrQzKWsdZsWruaNOd8+NzlZ/iQ5pDUjhIcttaN8gqdY0LnFTVVhBSmwes36G+BkAquIj4feiE6JDckSLHY3PEVU4iEV0kXhiljUQj/qhifKgeXcpTPhuwHsIMY66D3n7p/JrTNZjboAG5qzG+9bPFJuUwpiGrtvMAUhmrQ6So/vscSqRzNc75Zc9q79NOKsfVjtLeie9TqwEd+eve7YONMNdcNXMv6Fjj89SjF67XTbE75NxUSOulmrohnimiLCOgROE3YSm67KBc7F+5QHGRczIvNtD6UP7h6DBO/mwBTiV5T3dP40DQg6fSawK2B0w2PEfgDE6eWQtyISpe/nMEqsBAuEvcBx0ucYBq1s2xHHfVhq/XwKKYMvBLThOpy+LMDIVm5sWT0i5bBZZREjCgKvbF6+oVQgl31S16gQGrCv9lH8N39Zpq302iYjUHwKhkllH8Cw9vzvVxC5VR8K8gi1uNIuEN+8wBCFOTcI/4O+pOKv3Y15kXCQHhA/P6CwoRpzZCCLNQ4mBiA/+M1jHFOeUP50eP60XYfTtVqXuFyG9izxxFoutuWI2Xouz7GMBUgjEtkTjdXoE56KoiK/g6sPRHSjk6wnPG4aArVYlMFR672ANONBB+HRN08oV5yfhdvoE="
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6794,
+      "candidatesTokenCount": 89,
+      "totalTokenCount": 7192,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2562
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 89
+        }
+      ],
+      "thoughtsTokenCount": 309
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:07:09.426638Z",
+    "responseId": "PRjfao6FGtuCstMP_tjo8Qw"
+  },
+  "usage": {
+    "promptTokenCount": 6794,
+    "candidatesTokenCount": 89,
+    "totalTokenCount": 7192,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 2562
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 89
+      }
+    ],
+    "thoughtsTokenCount": 309
+  },
+  "estimated_usd": 0.0030332,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Solid",
+      "dress_silhouette": "Straight",
+      "dress_type": [
+        "Sweater Dress"
+      ],
+      "strap_style": "Standard Sleeved",
+      "strap_width": "Not Applicable"
+    }
+  },
+  "result_status": "ready"
+}

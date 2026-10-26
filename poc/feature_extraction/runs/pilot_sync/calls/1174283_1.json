@@ -1,0 +1,150 @@
+{
+  "call_id": "pilot_sync/1174283/1",
+  "product_id": "1174283",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0030264999999999997,
+  "reservation_usd": 0.0236312,
+  "started_at_utc": "2026-10-26T09:26:18.228932+00:00",
+  "request_sha256": "5b35e57d846ee0b04954eff6d6b285d4641a88556d5dc529bebf26dde6edc967",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "626003",
+      "modality": "image",
+      "cosine_similarity": 0.8033611178398132,
+      "image_ids": [
+        "626003_id_gridfs_1",
+        "626003_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "544603",
+      "modality": "text",
+      "cosine_similarity": 0.7831010222434998,
+      "image_ids": [
+        "544603_id_gridfs_1",
+        "544603_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 660,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/626003/626003_id_gridfs_1.png",
+      "sha256": "79ea67b93ad97b66e602c5fb2260204f296dcdf63c18cfd709582c4fb8ce4860"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/626003/626003_id_gridfs_3.png",
+      "sha256": "8c0bec08d9f9b9d4b3e34032b05bad4690d316af250856bb4c592802b5e6932b"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/544603/544603_id_gridfs_1.png",
+      "sha256": "fa4e43088001edb64380fb69ad8f5ba529118a7cb1379564761c3e4bc4fe3f87"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/544603/544603_id_gridfs_3.png",
+      "sha256": "93524da8a738ecc7e857cc11e05e0dbfd72a92e7a8a43281668d24159b8ef433"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1174283/1174283_id_gridfs_1.png",
+      "sha256": "2133b33f35ae5b9259fd062586f284921391db2b12575f5c7db84d88088bfbe9"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1174283/1174283_id_gridfs_2.png",
+      "sha256": "77e24aed8f24d7410f37b841bc2644ee93c2e6c29be31239e9b40758dfe4a94b"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1174283/1174283_id_gridfs_3.png",
+      "sha256": "eb3dc92b975c03a681c5e96ad7bdc0621fea83d34e6148ab1dc2638ff112ea30"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1174283/1174283_id_gridfs_4.png",
+      "sha256": "b5228cbb0c6eff82000a658f126dde64ca20ce4726c2634ffae95b2360dc556f"
+    }
+  ],
+  "input_tokens_counted": 6948,
+  "http_status": 200,
+  "seconds": 2.4661312499956694,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Floral\",\n    \"neckline\": \"High Neck\",\n    \"dress_silhouette\": \"Fitted\",\n    \"dress_type\": [\n      \"Other\"\n    ],\n    \"strap_style\": \"Standard Sleeved\",\n    \"strap_width\": \"Not Applicable\"\n  }\n}",
+              "thoughtSignature": "AY89a1/5uuesGScX101DVn4ZBI/F50JV1MDiFYSlVnqd2Vep6s0ite8tbBtMtm0vNAXCsq0MoTzuqTsBaZP5buid7UGCx28m/sUzZJJUoaB4qN7p2h3o30B5Tt85n/RXY3D3wtSsfuPfFh9KTYPfCsqCTDuomM0TSt+CvXZ7lfaPoC9PBcNlflPrLWe1bNCeAh076gAzpwcmjzo2G1nBQnD2L3Nf0g+kc1VQV/jRfSs6Uh4AZSBYM76CMVr2kcK4+/jmPMVO25TnIIM+0kCkPx+DoEsx3H0h6LnnjZiOWaeEAw/CWWeuUr/rlKcILZYlFte2vDJsKSmxtRRf/gXk7Qh7sTlMdqfMjxejIHteTyodGq7LOy8l1HOPpEWuQJZ8Gzw9fDhAfuqBk+cWud/zyf35gCCNfqehumuMnFjpqE8lGNDeZghHrviWwwi+F7fPG8/8eTs94Cxh3OMCuPE6OJ6mk1jI2E2TkfsWkKXNsCAOETMT0+9i6e5fHPTgDcdV7bq6oIYvpWNefNh4WYEmPfa9SNHu9TcBbsqLXKFA3fXQyQuoXG12IHzoPKqdy0lA7STsPPa1GC8mol5fNVRTqR9Um8a+rMLkVsIIFvlD5sQpmOi1aKaOTD1P6Y7YSrAzcrpbTn6OpwaawbP/y7qRmf+hreG5m5kVbj9dmtOo+0MD3H6ZIoV6t7PHBjVR4JbC1PKvy+P5X8tcCzp3nwnI2jhrWuVLgdYAwfPE5vZgNtE4dIx0vDckT5e9rJrwW+m2m4BKl2DITBKxw8aZaar1MbRZvtCAY4PUiMwDJmDOUCzXq5TBreSJM+zcE4Pi6fYPtxikOBhSQPM3g7YPu6KC1++XqoPpl92aEWkv+UMZt0C4+7CW4v7XE++yBOJBI9weE34zb/27Ldf2sCYA4y7EOjaHVQ+n2v2NOJf0d87SxWGeAWmd0Ailzlp/mCKvUX2PznjQOjXWeviicTQBpJmXqC1esFuygREGmH9+sXv5QmPMJGCbo01jO/zHw7emWK+UpjjWe2PmNjwijoqBgsGVFIEXDYGrWOya58GEar6X2dBnO6arIczuxWrAvPVsdfWyYIkahI0CBwMsveniZaF5PJCSEgp+DKykHlmgUdXM2Ecac6KzkXWuk/dNg7FOqgy7qp4HUv8HkFJc1OPp4J/Iz+HmnY3jtFLLRIsfsEpi/+gGUtzhemA6coKb9nYrY47eA56o9jQqZpgBIkqePKLmm7WJIZEk2L3hUW8VFO+6E8enPqwdZs6RuMWXvnktF1S/+PXfdfhoFW3opi8G+URRc1HlJQt8udr9QUk69lji2sjmb7SykeS1UEGRzJWZZwSYHaDWif1Y55I7FVzKA1yXIVSCMSmdbi4VDmJ/aziA8pXubANuR1kxd72qbfBdB6JDgyV3hyRWiA2mKtw7Qgf27SkUN6IgO9fQiJCtFZi/AeMVh8YOerTsH5y4NtU5oBihc0npYhgHHmPeTO2UxcRfHJ/w1KLg93+0S/rNBS5TnW+68EvniIHkfgb0OvhYEjXLlrbrPRTdLa4VoWXK030/0zQ9o0nWHLhX"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 7030,
+      "candidatesTokenCount": 98,
+      "totalTokenCount": 7397,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 2798
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 98
+        }
+      ],
+      "thoughtsTokenCount": 269
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:26:18.375424Z",
+    "responseId": "uhzfaoD1FtuCstMP_tjo8Qw"
+  },
+  "usage": {
+    "promptTokenCount": 7030,
+    "candidatesTokenCount": 98,
+    "totalTokenCount": 7397,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 2798
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 98
+      }
+    ],
+    "thoughtsTokenCount": 269
+  },
+  "estimated_usd": 0.0030264999999999997,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Floral",
+      "neckline": "High Neck",
+      "dress_silhouette": "Fitted",
+      "dress_type": [
+        "Other"
+      ],
+      "strap_style": "Standard Sleeved",
+      "strap_width": "Not Applicable"
+    }
+  },
+  "result_status": "ready"
+}

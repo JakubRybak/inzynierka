@@ -13,12 +13,16 @@ from engine import extract_product, load_config, allowed_values
 ROOT = Path(__file__).resolve().parents[2]
 BASE = Path(__file__).resolve().parents[1]
 JSON_COLUMNS = ['features', 'feature_metadata', 'exclusion_reasons']
-COLUMNS = ['product_id', 'section', 'category', *JSON_COLUMNS[:2], 'status', JSON_COLUMNS[2]]
+COLUMNS = ['product_id', 'brand', 'section', 'category', *JSON_COLUMNS[:2], 'status', JSON_COLUMNS[2]]
 
 
 def validate(records, configs):
     assert len({r['product_id'] for r in records}) == len(records)
     for record in records:
+        assert isinstance(record['brand'], str)
+        brand_missing = not record['brand'].strip()
+        assert brand_missing == any(reason == {'feature': 'brand', 'reason': 'empty'}
+                                    for reason in record['exclusion_reasons'])
         rules = configs[(record['section'], record['category'])]
         assert set(record['feature_metadata']) == set(rules)
         for feature, meta in record['feature_metadata'].items():

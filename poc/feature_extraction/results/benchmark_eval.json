@@ -1,0 +1,3266 @@
+{
+  "summary": {
+    "total_queries": 26,
+    "category_accuracy": 0.9615384615384616,
+    "avg_step1_latency": 0.751,
+    "avg_step2_latency": 1.188,
+    "avg_total_latency": 1.665,
+    "total_cost_usd": 0.041553
+  },
+  "results": [
+    {
+      "test_case": {
+        "id": "T1",
+        "query": "oversized vintage graphic tee for men",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "gender": "Men",
+          "fit": "Oversized"
+        },
+        "expected_residual_contains": "vintage"
+      },
+      "parsed": {
+        "query": "oversized vintage graphic tee for men",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": "vintage graphic",
+        "step1_latency_seconds": 1.483,
+        "step2_latency_seconds": 1.231,
+        "total_latency_seconds": 2.714,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:04.735820+00:00",
+          "step1": {
+            "latency_seconds": 1.4828817499801517,
+            "usage": {
+              "promptTokenCount": 754,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 762,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 754
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.2309290420089383,
+            "usage": {
+              "promptTokenCount": 4312,
+              "candidatesTokenCount": 95,
+              "totalTokenCount": 4407,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4312
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 95
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Men"
+                  ]
+                },
+                {
+                  "feature": "fit",
+                  "operator": "in",
+                  "values": [
+                    "Oversized"
+                  ]
+                }
+              ],
+              "residual": "vintage graphic"
+            }
+          },
+          "total_latency_seconds": 2.714125124999555,
+          "total_tokens": {
+            "input": 5066,
+            "output": 103,
+            "total": 5169
+          },
+          "estimated_cost_usd": 0.0017772999999999999
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "gender",
+          true,
+          "got in ['Men']"
+        ],
+        [
+          "fit",
+          true,
+          "got in ['Oversized']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T2",
+        "query": "blue or navy crewneck t-shirt 100% cotton",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "colors": [
+            "Blue"
+          ],
+          "neckline": "Crewneck",
+          "main_composition": [
+            "Cotton"
+          ]
+        },
+        "color_operator": "contains_any"
+      },
+      "parsed": {
+        "query": "blue or navy crewneck t-shirt 100% cotton",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Crewneck"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.75,
+        "step2_latency_seconds": 1.201,
+        "total_latency_seconds": 1.951,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:07.450090+00:00",
+          "step1": {
+            "latency_seconds": 0.7500175000168383,
+            "usage": {
+              "promptTokenCount": 761,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 769,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 761
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.200930207996862,
+            "usage": {
+              "promptTokenCount": 4320,
+              "candidatesTokenCount": 134,
+              "totalTokenCount": 4454,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4320
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 134
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Blue"
+                  ]
+                },
+                {
+                  "feature": "neckline",
+                  "operator": "in",
+                  "values": [
+                    "Crewneck"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Cotton"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.951038833009079,
+          "total_tokens": {
+            "input": 5081,
+            "output": 142,
+            "total": 5223
+          },
+          "estimated_cost_usd": 0.0018793
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_any ['Blue']"
+        ],
+        [
+          "neckline",
+          true,
+          "got in ['Crewneck']"
+        ],
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Cotton']"
+        ],
+        [
+          "color_op",
+          true,
+          "got contains_any, expected contains_any"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T3",
+        "query": "white long sleeve t-shirt without polyester",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "colors": [
+            "White"
+          ],
+          "sleeve_length": "Long Sleeve"
+        },
+        "exclusion": [
+          "main_composition",
+          "Polyester"
+        ]
+      },
+      "parsed": {
+        "query": "white long sleeve t-shirt without polyester",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "White"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_none",
+            "values": [
+              "Polyester"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.771,
+        "step2_latency_seconds": 1.239,
+        "total_latency_seconds": 2.01,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:09.401234+00:00",
+          "step1": {
+            "latency_seconds": 0.7707151670183521,
+            "usage": {
+              "promptTokenCount": 755,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 763,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 755
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.2386876250093337,
+            "usage": {
+              "promptTokenCount": 4314,
+              "candidatesTokenCount": 137,
+              "totalTokenCount": 4451,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4314
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 137
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "White"
+                  ]
+                },
+                {
+                  "feature": "sleeve_length",
+                  "operator": "in",
+                  "values": [
+                    "Long Sleeve"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_none",
+                  "values": [
+                    "Polyester"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 2.0095002079906408,
+          "total_tokens": {
+            "input": 5069,
+            "output": 145,
+            "total": 5214
+          },
+          "estimated_cost_usd": 0.0018831999999999998
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_any ['White']"
+        ],
+        [
+          "sleeve_length",
+          true,
+          "got in ['Long Sleeve']"
+        ],
+        [
+          "exclude_Polyester",
+          true,
+          "got ('contains_none', ['Polyester'])"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T4",
+        "query": "men's Adidas running t-shirt in grey",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "brand": "Adidas",
+          "gender": "Men",
+          "colors": [
+            "Grey"
+          ]
+        },
+        "expected_residual_contains": "running"
+      },
+      "parsed": {
+        "query": "men's Adidas running t-shirt in grey",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Adidas"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Grey"
+            ]
+          }
+        ],
+        "residual": "running",
+        "step1_latency_seconds": 0.923,
+        "step2_latency_seconds": 1.329,
+        "total_latency_seconds": 2.252,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:11.410842+00:00",
+          "step1": {
+            "latency_seconds": 0.922921875026077,
+            "usage": {
+              "promptTokenCount": 757,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 765,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 757
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.3291112919978332,
+            "usage": {
+              "promptTokenCount": 4316,
+              "candidatesTokenCount": 130,
+              "totalTokenCount": 4446,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4316
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 130
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Men"
+                  ]
+                },
+                {
+                  "feature": "brand",
+                  "operator": "in",
+                  "values": [
+                    "Adidas"
+                  ]
+                },
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Grey"
+                  ]
+                }
+              ],
+              "residual": "running"
+            }
+          },
+          "total_latency_seconds": 2.252124791004462,
+          "total_tokens": {
+            "input": 5073,
+            "output": 138,
+            "total": 5211
+          },
+          "estimated_cost_usd": 0.0018669
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "brand",
+          true,
+          "got in ['Adidas']"
+        ],
+        [
+          "gender",
+          true,
+          "got in ['Men']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Grey']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T5",
+        "query": "green and yellow striped tee",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "colors": [
+            "Green",
+            "Yellow"
+          ],
+          "pattern": "Striped"
+        },
+        "color_operator": "contains_all"
+      },
+      "parsed": {
+        "query": "green and yellow striped tee",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_all",
+            "values": [
+              "Green",
+              "Yellow"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Striped"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.987,
+        "step2_latency_seconds": 1.05,
+        "total_latency_seconds": 2.037,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:13.663080+00:00",
+          "step1": {
+            "latency_seconds": 0.9868534579873085,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 760,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.0502158750023227,
+            "usage": {
+              "promptTokenCount": 4311,
+              "candidatesTokenCount": 98,
+              "totalTokenCount": 4409,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4311
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 98
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_all",
+                  "values": [
+                    "Green",
+                    "Yellow"
+                  ]
+                },
+                {
+                  "feature": "pattern",
+                  "operator": "in",
+                  "values": [
+                    "Striped"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 2.0371493749844376,
+          "total_tokens": {
+            "input": 5063,
+            "output": 106,
+            "total": 5169
+          },
+          "estimated_cost_usd": 0.0017839
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_all ['Green', 'Yellow']"
+        ],
+        [
+          "pattern",
+          true,
+          "got in ['Striped']"
+        ],
+        [
+          "color_op",
+          true,
+          "got contains_all, expected contains_all"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T6",
+        "query": "męska czarna koszulka bawełniana z krótkim rękawem",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "gender": "Men",
+          "colors": [
+            "Black"
+          ],
+          "main_composition": [
+            "Cotton"
+          ],
+          "sleeve_length": "Short Sleeve"
+        }
+      },
+      "parsed": {
+        "query": "męska czarna koszulka bawełniana z krótkim rękawem",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Short Sleeve"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.831,
+        "step2_latency_seconds": 1.23,
+        "total_latency_seconds": 2.061,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:15.700323+00:00",
+          "step1": {
+            "latency_seconds": 0.8306544160004705,
+            "usage": {
+              "promptTokenCount": 765,
+              "candidatesTokenCount": 8,
+              "totalTokenCount": 773,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 765
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 8
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.2302429580013268,
+            "usage": {
+              "promptTokenCount": 4323,
+              "candidatesTokenCount": 172,
+              "totalTokenCount": 4495,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4323
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 172
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Men"
+                  ]
+                },
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Black"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Cotton"
+                  ]
+                },
+                {
+                  "feature": "sleeve_length",
+                  "operator": "in",
+                  "values": [
+                    "Short Sleeve"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 2.0609982080059126,
+          "total_tokens": {
+            "input": 5088,
+            "output": 180,
+            "total": 5268
+          },
+          "estimated_cost_usd": 0.0019764
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "gender",
+          true,
+          "got in ['Men']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Black']"
+        ],
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Cotton']"
+        ],
+        [
+          "sleeve_length",
+          true,
+          "got in ['Short Sleeve']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "T7",
+        "query": "only black slim fit t-shirt",
+        "expected_category": "T-shirts",
+        "expected_features": {
+          "colors": [
+            "Black"
+          ],
+          "fit": "Slim"
+        },
+        "color_operator": "equals_set"
+      },
+      "parsed": {
+        "query": "only black slim fit t-shirt",
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Slim"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.639,
+        "step2_latency_seconds": 1.042,
+        "total_latency_seconds": 1.682,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:17.761430+00:00",
+          "step1": {
+            "latency_seconds": 0.639118207996944,
+            "usage": {
+              "promptTokenCount": 754,
+              "candidatesTokenCount": 13,
+              "totalTokenCount": 767,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 754
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 13
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "T-shirts"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.04231637500925,
+            "usage": {
+              "promptTokenCount": 4313,
+              "candidatesTokenCount": 92,
+              "totalTokenCount": 4405,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4313
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 92
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "equals_set",
+                  "values": [
+                    "Black"
+                  ]
+                },
+                {
+                  "feature": "fit",
+                  "operator": "in",
+                  "values": [
+                    "Slim"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.6815267500060145,
+          "total_tokens": {
+            "input": 5067,
+            "output": 105,
+            "total": 5172
+          },
+          "estimated_cost_usd": 0.0017826
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got equals_set ['Black']"
+        ],
+        [
+          "fit",
+          true,
+          "got in ['Slim']"
+        ],
+        [
+          "color_op",
+          true,
+          "got equals_set, expected equals_set"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D1",
+        "query": "emerald green maxi dress for prom",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "colors": [
+            "Green"
+          ],
+          "length": "Maxi"
+        },
+        "expected_residual_contains": "prom"
+      },
+      "parsed": {
+        "query": "emerald green maxi dress for prom",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Green"
+            ]
+          },
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Maxi"
+            ]
+          }
+        ],
+        "residual": "emerald green for prom",
+        "step1_latency_seconds": 0.69,
+        "step2_latency_seconds": 1.418,
+        "total_latency_seconds": 2.108,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:19.443224+00:00",
+          "step1": {
+            "latency_seconds": 0.6900780409923755,
+            "usage": {
+              "promptTokenCount": 753,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 760,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 753
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.4181116659892723,
+            "usage": {
+              "promptTokenCount": 5375,
+              "candidatesTokenCount": 98,
+              "totalTokenCount": 5473,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5375
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 98
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Green"
+                  ]
+                },
+                {
+                  "feature": "length",
+                  "operator": "in",
+                  "values": [
+                    "Maxi"
+                  ]
+                }
+              ],
+              "residual": "emerald green for prom"
+            }
+          },
+          "total_latency_seconds": 2.1083950830216054,
+          "total_tokens": {
+            "input": 6128,
+            "output": 105,
+            "total": 6233
+          },
+          "estimated_cost_usd": 0.0021009
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_any ['Green']"
+        ],
+        [
+          "length",
+          true,
+          "got in ['Maxi']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D2",
+        "query": "long sleeve floral wrap dress",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "sleeve_length": "Long Sleeve",
+          "pattern": "Floral",
+          "dress_type": [
+            "Wrap"
+          ]
+        }
+      },
+      "parsed": {
+        "query": "long sleeve floral wrap dress",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Floral"
+            ]
+          },
+          {
+            "feature": "dress_type",
+            "operator": "contains_any",
+            "values": [
+              "Wrap"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 1.022,
+        "step2_latency_seconds": 1.107,
+        "total_latency_seconds": 2.13,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:21.552161+00:00",
+          "step1": {
+            "latency_seconds": 1.0223199159954675,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 759,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1074619589780923,
+            "usage": {
+              "promptTokenCount": 5374,
+              "candidatesTokenCount": 134,
+              "totalTokenCount": 5508,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5374
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 134
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "sleeve_length",
+                  "operator": "in",
+                  "values": [
+                    "Long Sleeve"
+                  ]
+                },
+                {
+                  "feature": "pattern",
+                  "operator": "in",
+                  "values": [
+                    "Floral"
+                  ]
+                },
+                {
+                  "feature": "dress_type",
+                  "operator": "contains_any",
+                  "values": [
+                    "Wrap"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 2.1299768750031944,
+          "total_tokens": {
+            "input": 6126,
+            "output": 141,
+            "total": 6267
+          },
+          "estimated_cost_usd": 0.0021903
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "sleeve_length",
+          true,
+          "got in ['Long Sleeve']"
+        ],
+        [
+          "pattern",
+          true,
+          "got in ['Floral']"
+        ],
+        [
+          "dress_type",
+          true,
+          "got contains_any ['Wrap']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D3",
+        "query": "czarna sukienka midi bez ramiączek na imprezę",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "colors": [
+            "Black"
+          ],
+          "length": "Midi",
+          "strap_style": "Strapless"
+        },
+        "expected_residual_contains": "imprez"
+      },
+      "parsed": {
+        "query": "czarna sukienka midi bez ramiączek na imprezę",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Midi"
+            ]
+          },
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "Strapless"
+            ]
+          }
+        ],
+        "residual": "na imprezę",
+        "step1_latency_seconds": 0.655,
+        "step2_latency_seconds": 1.104,
+        "total_latency_seconds": 1.759,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:23.682378+00:00",
+          "step1": {
+            "latency_seconds": 0.6546265419747215,
+            "usage": {
+              "promptTokenCount": 760,
+              "candidatesTokenCount": 12,
+              "totalTokenCount": 772,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 760
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1036678340169601,
+            "usage": {
+              "promptTokenCount": 5382,
+              "candidatesTokenCount": 136,
+              "totalTokenCount": 5518,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5382
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 136
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Black"
+                  ]
+                },
+                {
+                  "feature": "length",
+                  "operator": "in",
+                  "values": [
+                    "Midi"
+                  ]
+                },
+                {
+                  "feature": "strap_style",
+                  "operator": "in",
+                  "values": [
+                    "Strapless"
+                  ]
+                }
+              ],
+              "residual": "na imprezę"
+            }
+          },
+          "total_latency_seconds": 1.7586415840196423,
+          "total_tokens": {
+            "input": 6142,
+            "output": 148,
+            "total": 6290
+          },
+          "estimated_cost_usd": 0.0022126
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_any ['Black']"
+        ],
+        [
+          "length",
+          true,
+          "got in ['Midi']"
+        ],
+        [
+          "strap_style",
+          true,
+          "got in ['Strapless']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D4",
+        "query": "women's knitted sweater dress in beige or brown",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "gender": "Women",
+          "dress_type": [
+            "Sweater Dress"
+          ],
+          "colors": [
+            "Beige",
+            "Brown"
+          ]
+        },
+        "color_operator": "contains_any"
+      },
+      "parsed": {
+        "query": "women's knitted sweater dress in beige or brown",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Beige",
+              "Brown"
+            ]
+          },
+          {
+            "feature": "dress_type",
+            "operator": "contains_any",
+            "values": [
+              "Sweater Dress"
+            ]
+          }
+        ],
+        "residual": "knitted",
+        "step1_latency_seconds": 0.613,
+        "step2_latency_seconds": 1.538,
+        "total_latency_seconds": 2.151,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:25.441394+00:00",
+          "step1": {
+            "latency_seconds": 0.6127478340058587,
+            "usage": {
+              "promptTokenCount": 757,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 764,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 757
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.5377170839929022,
+            "usage": {
+              "promptTokenCount": 5379,
+              "candidatesTokenCount": 143,
+              "totalTokenCount": 5522,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5379
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 143
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Women"
+                  ]
+                },
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Beige",
+                    "Brown"
+                  ]
+                },
+                {
+                  "feature": "dress_type",
+                  "operator": "contains_any",
+                  "values": [
+                    "Sweater Dress"
+                  ]
+                }
+              ],
+              "residual": "knitted"
+            }
+          },
+          "total_latency_seconds": 2.1508427079825196,
+          "total_tokens": {
+            "input": 6136,
+            "output": 150,
+            "total": 6286
+          },
+          "estimated_cost_usd": 0.0022158
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "gender",
+          true,
+          "got in ['Women']"
+        ],
+        [
+          "dress_type",
+          true,
+          "got contains_any ['Sweater Dress']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Beige', 'Brown']"
+        ],
+        [
+          "color_op",
+          true,
+          "got contains_any, expected contains_any"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D5",
+        "query": "red and white polka dot mini dress",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "colors": [
+            "Red",
+            "White"
+          ],
+          "pattern": "Polka Dot",
+          "length": "Mini"
+        },
+        "color_operator": "contains_all"
+      },
+      "parsed": {
+        "query": "red and white polka dot mini dress",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_all",
+            "values": [
+              "Red",
+              "White"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Polka Dot"
+            ]
+          },
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Mini"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.818,
+        "step2_latency_seconds": 1.164,
+        "total_latency_seconds": 1.982,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:27.593178+00:00",
+          "step1": {
+            "latency_seconds": 0.817779959004838,
+            "usage": {
+              "promptTokenCount": 754,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 761,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 754
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1640314160031267,
+            "usage": {
+              "promptTokenCount": 5376,
+              "candidatesTokenCount": 135,
+              "totalTokenCount": 5511,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5376
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 135
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_all",
+                  "values": [
+                    "Red",
+                    "White"
+                  ]
+                },
+                {
+                  "feature": "pattern",
+                  "operator": "in",
+                  "values": [
+                    "Polka Dot"
+                  ]
+                },
+                {
+                  "feature": "length",
+                  "operator": "in",
+                  "values": [
+                    "Mini"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.981959334021667,
+          "total_tokens": {
+            "input": 6130,
+            "output": 142,
+            "total": 6272
+          },
+          "estimated_cost_usd": 0.0021939999999999998
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_all ['Red', 'White']"
+        ],
+        [
+          "pattern",
+          true,
+          "got in ['Polka Dot']"
+        ],
+        [
+          "length",
+          true,
+          "got in ['Mini']"
+        ],
+        [
+          "color_op",
+          true,
+          "got contains_all, expected contains_all"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D6",
+        "query": "Gucci silk slip dress",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "brand": "Gucci",
+          "main_composition": [
+            "Silk"
+          ],
+          "dress_type": [
+            "Slip"
+          ]
+        }
+      },
+      "parsed": {
+        "query": "Gucci silk slip dress",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Gucci"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Silk"
+            ]
+          },
+          {
+            "feature": "dress_type",
+            "operator": "contains_any",
+            "values": [
+              "Slip"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.676,
+        "step2_latency_seconds": 1.051,
+        "total_latency_seconds": 1.727,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:29.575320+00:00",
+          "step1": {
+            "latency_seconds": 0.6762848329963163,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 6,
+              "totalTokenCount": 758,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.050864457996795,
+            "usage": {
+              "promptTokenCount": 5373,
+              "candidatesTokenCount": 135,
+              "totalTokenCount": 5508,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5373
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 135
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "brand",
+                  "operator": "in",
+                  "values": [
+                    "Gucci"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Silk"
+                  ]
+                },
+                {
+                  "feature": "dress_type",
+                  "operator": "contains_any",
+                  "values": [
+                    "Slip"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.7274858339806087,
+          "total_tokens": {
+            "input": 6125,
+            "output": 141,
+            "total": 6266
+          },
+          "estimated_cost_usd": 0.00219
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "brand",
+          true,
+          "got in ['Gucci']"
+        ],
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Silk']"
+        ],
+        [
+          "dress_type",
+          true,
+          "got contains_any ['Slip']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D7",
+        "query": "fitted cocktail dress with V-neck",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "dress_silhouette": "Fitted",
+          "neckline": "V-Neck"
+        },
+        "expected_residual_contains": "cocktail"
+      },
+      "parsed": {
+        "query": "fitted cocktail dress with V-neck",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "dress_silhouette",
+            "operator": "in",
+            "values": [
+              "Fitted"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "V-Neck"
+            ]
+          }
+        ],
+        "residual": "cocktail",
+        "step1_latency_seconds": 0.642,
+        "step2_latency_seconds": 1.053,
+        "total_latency_seconds": 1.695,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:31.303066+00:00",
+          "step1": {
+            "latency_seconds": 0.6417256669956259,
+            "usage": {
+              "promptTokenCount": 754,
+              "candidatesTokenCount": 12,
+              "totalTokenCount": 766,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 754
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 12
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.0534580000094138,
+            "usage": {
+              "promptTokenCount": 5376,
+              "candidatesTokenCount": 99,
+              "totalTokenCount": 5475,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5376
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 99
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "dress_silhouette",
+                  "operator": "in",
+                  "values": [
+                    "Fitted"
+                  ]
+                },
+                {
+                  "feature": "neckline",
+                  "operator": "in",
+                  "values": [
+                    "V-Neck"
+                  ]
+                }
+              ],
+              "residual": "cocktail"
+            }
+          },
+          "total_latency_seconds": 1.6953275840205606,
+          "total_tokens": {
+            "input": 6130,
+            "output": 111,
+            "total": 6241
+          },
+          "estimated_cost_usd": 0.0021165
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "dress_silhouette",
+          true,
+          "got in ['Fitted']"
+        ],
+        [
+          "neckline",
+          true,
+          "got in ['V-Neck']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "D8",
+        "query": "sukienka letnia w kwiaty z lnu",
+        "expected_category": "Dresses",
+        "expected_features": {
+          "pattern": "Floral",
+          "main_composition": [
+            "Linen"
+          ]
+        },
+        "expected_residual_contains": "letnia"
+      },
+      "parsed": {
+        "query": "sukienka letnia w kwiaty z lnu",
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Floral"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Linen"
+            ]
+          }
+        ],
+        "residual": "letnia",
+        "step1_latency_seconds": 0.77,
+        "step2_latency_seconds": 1.198,
+        "total_latency_seconds": 1.968,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:32.998485+00:00",
+          "step1": {
+            "latency_seconds": 0.7696895829867572,
+            "usage": {
+              "promptTokenCount": 757,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 764,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 757
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 7
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Dresses"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1978579169954173,
+            "usage": {
+              "promptTokenCount": 5379,
+              "candidatesTokenCount": 98,
+              "totalTokenCount": 5477,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5379
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 98
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "pattern",
+                  "operator": "in",
+                  "values": [
+                    "Floral"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Linen"
+                  ]
+                }
+              ],
+              "residual": "letnia"
+            }
+          },
+          "total_latency_seconds": 1.967772874981165,
+          "total_tokens": {
+            "input": 6136,
+            "output": 105,
+            "total": 6241
+          },
+          "estimated_cost_usd": 0.0021033
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "pattern",
+          true,
+          "got in ['Floral']"
+        ],
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Linen']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K1",
+        "query": "white ribbed racerback tank top for workout",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "colors": [
+            "White"
+          ],
+          "strap_style": "Racerback"
+        },
+        "expected_residual_contains": "workout"
+      },
+      "parsed": {
+        "query": "white ribbed racerback tank top for workout",
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "White"
+            ]
+          },
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "Racerback"
+            ]
+          }
+        ],
+        "residual": "ribbed for workout",
+        "step1_latency_seconds": 0.677,
+        "step2_latency_seconds": 1.268,
+        "total_latency_seconds": 1.946,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:34.966744+00:00",
+          "step1": {
+            "latency_seconds": 0.6774751670018304,
+            "usage": {
+              "promptTokenCount": 755,
+              "candidatesTokenCount": 11,
+              "totalTokenCount": 766,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 755
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Tank tops & Camisoles"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.2677208750101272,
+            "usage": {
+              "promptTokenCount": 4645,
+              "candidatesTokenCount": 102,
+              "totalTokenCount": 4747,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4645
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 102
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "White"
+                  ]
+                },
+                {
+                  "feature": "strap_style",
+                  "operator": "in",
+                  "values": [
+                    "Racerback"
+                  ]
+                }
+              ],
+              "residual": "ribbed for workout"
+            }
+          },
+          "total_latency_seconds": 1.945768917008536,
+          "total_tokens": {
+            "input": 5400,
+            "output": 113,
+            "total": 5513
+          },
+          "estimated_cost_usd": 0.0019025
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "colors",
+          true,
+          "got contains_any ['White']"
+        ],
+        [
+          "strap_style",
+          true,
+          "got in ['Racerback']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K2",
+        "query": "czarny damski top na cienkich ramiączkach bez wzoru",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "gender": "Women",
+          "colors": [
+            "Black"
+          ],
+          "strap_width": "Spaghetti",
+          "pattern": "Solid"
+        }
+      },
+      "parsed": {
+        "query": "czarny damski top na cienkich ramiączkach bez wzoru",
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "strap_width",
+            "operator": "in",
+            "values": [
+              "Spaghetti"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Solid"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.655,
+        "step2_latency_seconds": 1.169,
+        "total_latency_seconds": 1.825,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:36.913239+00:00",
+          "step1": {
+            "latency_seconds": 0.655289874994196,
+            "usage": {
+              "promptTokenCount": 763,
+              "candidatesTokenCount": 11,
+              "totalTokenCount": 774,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 763
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 11
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Tank tops & Camisoles"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1691972499829717,
+            "usage": {
+              "promptTokenCount": 4653,
+              "candidatesTokenCount": 167,
+              "totalTokenCount": 4820,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4653
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 167
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Black"
+                  ]
+                },
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Women"
+                  ]
+                },
+                {
+                  "feature": "strap_width",
+                  "operator": "in",
+                  "values": [
+                    "Spaghetti"
+                  ]
+                },
+                {
+                  "feature": "pattern",
+                  "operator": "in",
+                  "values": [
+                    "Solid"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.8247118339932058,
+          "total_tokens": {
+            "input": 5416,
+            "output": 178,
+            "total": 5594
+          },
+          "estimated_cost_usd": 0.0020698
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "gender",
+          true,
+          "got in ['Women']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Black']"
+        ],
+        [
+          "strap_width",
+          true,
+          "got in ['Spaghetti']"
+        ],
+        [
+          "pattern",
+          true,
+          "got in ['Solid']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K3",
+        "query": "silk camisole with scoop neck in pink",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "main_composition": [
+            "Silk"
+          ],
+          "neckline": "Scoop Neck",
+          "colors": [
+            "Pink"
+          ]
+        }
+      },
+      "parsed": {
+        "query": "silk camisole with scoop neck in pink",
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Silk"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Scoop Neck"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Pink"
+            ]
+          }
+        ],
+        "residual": "",
+        "step1_latency_seconds": 0.836,
+        "step2_latency_seconds": 1.148,
+        "total_latency_seconds": 1.984,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:38.738100+00:00",
+          "step1": {
+            "latency_seconds": 0.8359533750044648,
+            "usage": {
+              "promptTokenCount": 756,
+              "candidatesTokenCount": 10,
+              "totalTokenCount": 766,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 756
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 10
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Tank tops & Camisoles"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1480712910124566,
+            "usage": {
+              "promptTokenCount": 4646,
+              "candidatesTokenCount": 135,
+              "totalTokenCount": 4781,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4646
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 135
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Silk"
+                  ]
+                },
+                {
+                  "feature": "neckline",
+                  "operator": "in",
+                  "values": [
+                    "Scoop Neck"
+                  ]
+                },
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Pink"
+                  ]
+                }
+              ],
+              "residual": ""
+            }
+          },
+          "total_latency_seconds": 1.9841519170149695,
+          "total_tokens": {
+            "input": 5402,
+            "output": 145,
+            "total": 5547
+          },
+          "estimated_cost_usd": 0.0019831
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Silk']"
+        ],
+        [
+          "neckline",
+          true,
+          "got in ['Scoop Neck']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Pink']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K4",
+        "query": "men's Under Armour gym singlet in black or grey",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "brand": "Under Armour",
+          "gender": "Men",
+          "colors": [
+            "Black",
+            "Grey"
+          ]
+        },
+        "color_operator": "contains_any"
+      },
+      "parsed": {
+        "query": "men's Under Armour gym singlet in black or grey",
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Under Armour"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black",
+              "Grey"
+            ]
+          }
+        ],
+        "residual": "gym singlet",
+        "step1_latency_seconds": 0.576,
+        "step2_latency_seconds": 1.095,
+        "total_latency_seconds": 1.671,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:40.722354+00:00",
+          "step1": {
+            "latency_seconds": 0.5760708749876358,
+            "usage": {
+              "promptTokenCount": 758,
+              "candidatesTokenCount": 16,
+              "totalTokenCount": 774,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 758
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 16
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Tank tops & Camisoles"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.0951369579997845,
+            "usage": {
+              "promptTokenCount": 4648,
+              "candidatesTokenCount": 87,
+              "totalTokenCount": 4735,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4648
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 87
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "gender",
+                  "operator": "in",
+                  "values": [
+                    "Men"
+                  ]
+                },
+                {
+                  "feature": "brand",
+                  "operator": "in",
+                  "values": [
+                    "Under Armour"
+                  ]
+                },
+                {
+                  "feature": "colors",
+                  "operator": "contains_any",
+                  "values": [
+                    "Black",
+                    "Grey"
+                  ]
+                }
+              ],
+              "residual": "gym singlet"
+            }
+          },
+          "total_latency_seconds": 1.6713035829889122,
+          "total_tokens": {
+            "input": 5406,
+            "output": 103,
+            "total": 5509
+          },
+          "estimated_cost_usd": 0.0018793
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "brand",
+          true,
+          "got in ['Under Armour']"
+        ],
+        [
+          "gender",
+          true,
+          "got in ['Men']"
+        ],
+        [
+          "colors",
+          true,
+          "got contains_any ['Black', 'Grey']"
+        ],
+        [
+          "color_op",
+          true,
+          "got contains_any, expected contains_any"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K5",
+        "query": "cropped halter top without polyester",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "length": "Cropped",
+          "strap_style": "Halter"
+        },
+        "exclusion": [
+          "main_composition",
+          "Polyester"
+        ]
+      },
+      "parsed": {
+        "query": "cropped halter top without polyester",
+        "category": null,
+        "filters": [],
+        "residual": "cropped halter top without polyester",
+        "step1_latency_seconds": 0.62,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.62,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:42.393754+00:00",
+          "step1": {
+            "latency_seconds": 0.6200887080049142,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 5,
+              "totalTokenCount": 757,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.6201304580026772,
+          "estimated_cost_usd": 0.0002381
+        }
+      },
+      "cat_match": false,
+      "feature_eval": [
+        [
+          "length",
+          false,
+          "MISSING"
+        ],
+        [
+          "strap_style",
+          false,
+          "MISSING"
+        ],
+        [
+          "exclude_Polyester",
+          false,
+          "got None"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "K6",
+        "query": "loose cotton camisole with wide straps",
+        "expected_category": "Tank tops & Camisoles",
+        "expected_features": {
+          "fit": "Oversized",
+          "main_composition": [
+            "Cotton"
+          ],
+          "strap_width": "Wide"
+        }
+      },
+      "parsed": {
+        "query": "loose cotton camisole with wide straps",
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Oversized"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "strap_width",
+            "operator": "in",
+            "values": [
+              "Wide"
+            ]
+          }
+        ],
+        "residual": "camisole",
+        "step1_latency_seconds": 0.756,
+        "step2_latency_seconds": 1.125,
+        "total_latency_seconds": 1.882,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:43.013978+00:00",
+          "step1": {
+            "latency_seconds": 0.7562963329837658,
+            "usage": {
+              "promptTokenCount": 755,
+              "candidatesTokenCount": 16,
+              "totalTokenCount": 771,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 755
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 16
+                }
+              ]
+            },
+            "raw_output": {
+              "category": "Tank tops & Camisoles"
+            }
+          },
+          "step2": {
+            "latency_seconds": 1.1253260830126237,
+            "usage": {
+              "promptTokenCount": 4645,
+              "candidatesTokenCount": 138,
+              "totalTokenCount": 4783,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 4645
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 138
+                }
+              ]
+            },
+            "raw_output": {
+              "filters": [
+                {
+                  "feature": "fit",
+                  "operator": "in",
+                  "values": [
+                    "Oversized"
+                  ]
+                },
+                {
+                  "feature": "main_composition",
+                  "operator": "contains_any",
+                  "values": [
+                    "Cotton"
+                  ]
+                },
+                {
+                  "feature": "strap_width",
+                  "operator": "in",
+                  "values": [
+                    "Wide"
+                  ]
+                }
+              ],
+              "residual": "camisole"
+            }
+          },
+          "total_latency_seconds": 1.8817081669985782,
+          "total_tokens": {
+            "input": 5400,
+            "output": 154,
+            "total": 5554
+          },
+          "estimated_cost_usd": 0.002005
+        }
+      },
+      "cat_match": true,
+      "feature_eval": [
+        [
+          "fit",
+          true,
+          "got in ['Oversized']"
+        ],
+        [
+          "main_composition",
+          true,
+          "got contains_any ['Cotton']"
+        ],
+        [
+          "strap_width",
+          true,
+          "got in ['Wide']"
+        ]
+      ]
+    },
+    {
+      "test_case": {
+        "id": "O1",
+        "query": "czarne skórzane botki na obcasie",
+        "expected_category": null
+      },
+      "parsed": {
+        "query": "czarne skórzane botki na obcasie",
+        "category": null,
+        "filters": [],
+        "residual": "czarne skórzane botki na obcasie",
+        "step1_latency_seconds": 0.615,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.615,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:44.895797+00:00",
+          "step1": {
+            "latency_seconds": 0.6150772499968298,
+            "usage": {
+              "promptTokenCount": 758,
+              "candidatesTokenCount": 5,
+              "totalTokenCount": 763,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 758
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.6151226670190226,
+          "estimated_cost_usd": 0.0002399
+        }
+      },
+      "cat_match": true,
+      "feature_eval": []
+    },
+    {
+      "test_case": {
+        "id": "O2",
+        "query": "blue denim jeans slim fit for men",
+        "expected_category": null
+      },
+      "parsed": {
+        "query": "blue denim jeans slim fit for men",
+        "category": null,
+        "filters": [],
+        "residual": "blue denim jeans slim fit for men",
+        "step1_latency_seconds": 0.722,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.723,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:45.510982+00:00",
+          "step1": {
+            "latency_seconds": 0.7224587499804329,
+            "usage": {
+              "promptTokenCount": 754,
+              "candidatesTokenCount": 9,
+              "totalTokenCount": 763,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 754
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 9
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.7225006249791477,
+          "estimated_cost_usd": 0.0002487
+        }
+      },
+      "cat_match": true,
+      "feature_eval": []
+    },
+    {
+      "test_case": {
+        "id": "O3",
+        "query": "leather jacket for winter",
+        "expected_category": null
+      },
+      "parsed": {
+        "query": "leather jacket for winter",
+        "category": null,
+        "filters": [],
+        "residual": "leather jacket for winter",
+        "step1_latency_seconds": 0.71,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.71,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:46.233541+00:00",
+          "step1": {
+            "latency_seconds": 0.7102027499931864,
+            "usage": {
+              "promptTokenCount": 751,
+              "candidatesTokenCount": 5,
+              "totalTokenCount": 756,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 751
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.7102451249957085,
+          "estimated_cost_usd": 0.0002378
+        }
+      },
+      "cat_match": true,
+      "feature_eval": []
+    },
+    {
+      "test_case": {
+        "id": "O4",
+        "query": "cute summer tops for women",
+        "expected_category": null
+      },
+      "parsed": {
+        "query": "cute summer tops for women",
+        "category": null,
+        "filters": [],
+        "residual": "cute summer tops for women",
+        "step1_latency_seconds": 0.549,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.549,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:46.943855+00:00",
+          "step1": {
+            "latency_seconds": 0.5488035000162199,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 5,
+              "totalTokenCount": 757,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.5488519580103457,
+          "estimated_cost_usd": 0.0002381
+        }
+      },
+      "cat_match": true,
+      "feature_eval": []
+    },
+    {
+      "test_case": {
+        "id": "O5",
+        "query": "mens dress shirts slim fit",
+        "expected_category": null
+      },
+      "parsed": {
+        "query": "mens dress shirts slim fit",
+        "category": null,
+        "filters": [],
+        "residual": "mens dress shirts slim fit",
+        "step1_latency_seconds": 0.544,
+        "step2_latency_seconds": 0.0,
+        "total_latency_seconds": 0.544,
+        "metadata": {
+          "model": "gemini-3.5-flash-lite",
+          "project": "project-3a86f100-1aae-4780-84b",
+          "location": "global",
+          "thinking": "NONE",
+          "timestamp_utc": "2026-10-26T12:41:47.492781+00:00",
+          "step1": {
+            "latency_seconds": 0.5442252499924507,
+            "usage": {
+              "promptTokenCount": 752,
+              "candidatesTokenCount": 5,
+              "totalTokenCount": 757,
+              "trafficType": "ON_DEMAND",
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 752
+                }
+              ],
+              "candidatesTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 5
+                }
+              ]
+            },
+            "raw_output": {
+              "category": null
+            }
+          },
+          "total_latency_seconds": 0.5442679160041735,
+          "estimated_cost_usd": 0.0002381
+        }
+      },
+      "cat_match": true,
+      "feature_eval": []
+    }
+  ]
+}

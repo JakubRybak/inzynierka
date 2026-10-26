@@ -1,0 +1,149 @@
+{
+  "call_id": "pilot_sync/101569/1",
+  "product_id": "101569",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0039817,
+  "reservation_usd": 0.0235202,
+  "started_at_utc": "2026-10-26T08:59:32.465247+00:00",
+  "request_sha256": "948f093031013f1cd8edc6db4b4171d55a15dee2b8bc716d5cce2167699c7bdf",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "1469163",
+      "modality": "image",
+      "cosine_similarity": 0.8166666030883789,
+      "image_ids": [
+        "1469163_id_gridfs_1",
+        "1469163_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "2008003",
+      "modality": "text",
+      "cosine_similarity": 0.8292572498321533,
+      "image_ids": [
+        "2008003_id_gridfs_1",
+        "2008003_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 346,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/1469163/1469163_id_gridfs_1.png",
+      "sha256": "5826c849796d658c5cc84f81875efb64d62cfda8284a73ff1451008f23c0bce2"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/1469163/1469163_id_gridfs_3.png",
+      "sha256": "afeac4a0f36a9ee85f8cf72ec2762c2cc8be9f106be4dce06ffdad9a75fb3c4e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2008003/2008003_id_gridfs_1.png",
+      "sha256": "63be9e93924edcd060db358dcaabc465f418f61af952f7a0d6eebae0a7e43f10"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2008003/2008003_id_gridfs_3.png",
+      "sha256": "32a29103ac63197f89439ff3ab9336f8c1d8caf0461fd55f8a03888a2d0854a9"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/101569/101569_id_gridfs_1.png",
+      "sha256": "da39d38f106a7469ef69e28f07d2bed791cdeea4a800d1f643985b1a0fa4789e"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/101569/101569_id_gridfs_2.png",
+      "sha256": "dad01e17f3ef1dcde6afbc118d755191a59b64303feed81fcf4a4418ea83c8b2"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/101569/101569_id_gridfs_3.png",
+      "sha256": "eb22e30392b27bd89cc1e8d1a51914db8d07a365ef99c5133195d1a5eeb29e2f"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/101569/101569_id_gridfs_4.png",
+      "sha256": "059885964b98718d2c481862804b43d1cd618c6ed21e47b8018d7cf1d1a09be5"
+    }
+  ],
+  "input_tokens_counted": 6714,
+  "http_status": 200,
+  "seconds": 3.6210515839920845,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Other\",\n    \"dress_silhouette\": \"Fitted\",\n    \"dress_type\": [\n      \"Other\"\n    ],\n    \"strap_style\": \"Standard\",\n    \"strap_width\": \"Wide\"\n  }\n}",
+              "thoughtSignature": "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"
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6764,
+      "candidatesTokenCount": 85,
+      "totalTokenCount": 7545,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2532
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 85
+        }
+      ],
+      "thoughtsTokenCount": 696
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T08:59:32.604047Z",
+    "responseId": "dBbfao_vJNuCstMP_tjo8Qw"
+  },
+  "usage": {
+    "promptTokenCount": 6764,
+    "candidatesTokenCount": 85,
+    "totalTokenCount": 7545,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2532
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 85
+      }
+    ],
+    "thoughtsTokenCount": 696
+  },
+  "estimated_usd": 0.0039817,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Other",
+      "dress_silhouette": "Fitted",
+      "dress_type": [
+        "Other"
+      ],
+      "strap_style": "Standard",
+      "strap_width": "Wide"
+    }
+  },
+  "result_status": "ready"
+}

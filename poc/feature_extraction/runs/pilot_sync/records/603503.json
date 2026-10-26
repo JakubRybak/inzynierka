@@ -1,0 +1,275 @@
+{
+  "product_id": "603503",
+  "brand": "T by Alexander Wang",
+  "section": "Tops",
+  "category": "T-shirts",
+  "features": {
+    "gender": "Men",
+    "colors": [
+      "Grey"
+    ],
+    "main_composition": {
+      "Cotton": 100.0
+    },
+    "neckline": "Crewneck",
+    "fit": "Oversized",
+    "pattern": "Solid",
+    "length": "Regular",
+    "sleeve_length": "Short Sleeve"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Men"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "Grey": [
+          {
+            "column": "name",
+            "keyword": "grey",
+            "matched": "grey"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/603503/1"
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Crewneck": [
+          {
+            "column": "description",
+            "keyword": "crewneck",
+            "matched": "crewneck"
+          }
+        ]
+      }
+    },
+    "fit": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Oversized": [
+          {
+            "column": "description",
+            "keyword": "relaxed fit",
+            "matched": "relaxed fit"
+          },
+          {
+            "column": "description",
+            "keyword": "relaxed-fit",
+            "matched": "relaxed fit"
+          }
+        ]
+      }
+    },
+    "length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/603503/1"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "llm",
+      "strategy": "structured_output",
+      "evidence": {
+        "call_id": "pilot_sync/603503/1"
+      }
+    }
+  },
+  "status": "ready",
+  "exclusion_reasons": [],
+  "product_status": "ok",
+  "product_reason": "",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/603503/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "3a4781ab1a3742b7dd22ec96d62991374414b86e7d8f99db2514df476cceb66e",
+    "neighbors": [
+      {
+        "product_id": "95398",
+        "modality": "image",
+        "cosine_similarity": 0.84953373670578,
+        "image_ids": [
+          "95398_id_gridfs_1",
+          "95398_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1941353",
+        "modality": "text",
+        "cosine_similarity": 0.8898641467094421,
+        "image_ids": [
+          "1941353_id_gridfs_1",
+          "1941353_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 259,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "length": {
+                "type": "STRING",
+                "enum": [
+                  "Cropped",
+                  "Regular",
+                  "Longline",
+                  "outside_schema"
+                ]
+              },
+              "sleeve_length": {
+                "type": "STRING",
+                "enum": [
+                  "Sleeveless",
+                  "Short Sleeve",
+                  "Three-Quarter Sleeve",
+                  "Long Sleeve",
+                  "outside_schema"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "length",
+              "sleeve_length"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "length",
+              "sleeve_length"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          },
+          "outside_schema_reasons": {
+            "type": "OBJECT",
+            "properties": {
+              "length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              },
+              "sleeve_length": {
+                "type": "STRING",
+                "description": "One factual sentence; present only if this feature is outside_schema."
+              }
+            },
+            "required": [],
+            "propertyOrdering": [
+              "length",
+              "sleeve_length"
+            ]
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features",
+          "outside_schema_reasons"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6093,
+      "candidatesTokenCount": 69,
+      "totalTokenCount": 6391,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1861
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 69
+        }
+      ],
+      "thoughtsTokenCount": 229
+    },
+    "estimated_usd": 0.0025729
+  },
+  "annotation_origin": "llm"
+}

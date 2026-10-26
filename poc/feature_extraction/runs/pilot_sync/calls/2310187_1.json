@@ -1,0 +1,145 @@
+{
+  "call_id": "pilot_sync/2310187/1",
+  "product_id": "2310187",
+  "attempt": 1,
+  "status": "completed",
+  "accounted_usd": 0.0022086,
+  "reservation_usd": 0.0234806,
+  "started_at_utc": "2026-10-26T09:11:08.171993+00:00",
+  "request_sha256": "8f66dd896011d1251c5e1d96ef18bc75ba5668862e34dd33574370f6b49355a6",
+  "fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+  "neighbors": [
+    {
+      "product_id": "2134337",
+      "modality": "image",
+      "cosine_similarity": 0.7968895435333252,
+      "image_ids": [
+        "2134337_id_gridfs_1",
+        "2134337_id_gridfs_3"
+      ]
+    },
+    {
+      "product_id": "2017753",
+      "modality": "text",
+      "cosine_similarity": 0.772341787815094,
+      "image_ids": [
+        "2017753_id_gridfs_1",
+        "2017753_id_gridfs_3"
+      ]
+    }
+  ],
+  "bank_size_before": 470,
+  "images": [
+    {
+      "path": "data/processed/fashiongen/images/train/2134337/2134337_id_gridfs_1.png",
+      "sha256": "5e934035440826e4c51a86541aadf7ecf67bcd060ed337fe4311a794bed68f46"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2134337/2134337_id_gridfs_3.png",
+      "sha256": "12967c024f0721259e3a6db7a2be3ee1ac2c752f64acce3bf8930745f8d27bd9"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2017753/2017753_id_gridfs_1.png",
+      "sha256": "222fcacf72367598650ec5dfcd3f75301f4ef6c77660928de27e3e834150eda2"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2017753/2017753_id_gridfs_3.png",
+      "sha256": "2d7abf342fe73e13e7d56c8ff072b8fd11021d8472283db20b622ed5f2ea53e2"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2310187/2310187_id_gridfs_1.png",
+      "sha256": "3b03efcf21a3cd756fc48e98ff6f53ba4d83615260bdfe9413fa5898be7282dc"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2310187/2310187_id_gridfs_2.png",
+      "sha256": "f94189461f136702b462c67db7b2adb4427da1f1f30c055523ef0e37e05d2922"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2310187/2310187_id_gridfs_3.png",
+      "sha256": "b8a68b920e515f2ab6a87d8c1f241c795c585900b441bae33abc421075783fc2"
+    },
+    {
+      "path": "data/processed/fashiongen/images/train/2310187/2310187_id_gridfs_4.png",
+      "sha256": "f6c11bcd203593de5afeadeefdd53e0cc0240011477a41e96cbd2cc59ff40618"
+    }
+  ],
+  "input_tokens_counted": 6670,
+  "http_status": 200,
+  "seconds": 1.6328434589959215,
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "{\n  \"product_status\": \"ok\",\n  \"product_reason\": \"\",\n  \"features\": {\n    \"pattern\": \"Other\",\n    \"neckline\": \"Crewneck\",\n    \"dress_silhouette\": \"Straight\",\n    \"strap_style\": \"Standard Sleeved\",\n    \"strap_width\": \"Not Applicable\"\n  }\n}",
+              "thoughtSignature": "AY89a1+iyAQe6I9JL8dKIz7z5dd88B2xZbEpIeTVeSkSxy5iIDumOCFE7VCrqyd4EIhsz246diYJgB8z2Lv5+WZnS8M3t00TbVsFhniBrm+gQ05AiATbvRuy8zY="
+            }
+          ]
+        },
+        "finishReason": "STOP"
+      }
+    ],
+    "usageMetadata": {
+      "promptTokenCount": 6687,
+      "candidatesTokenCount": 81,
+      "totalTokenCount": 6768,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2455
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4232
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 81
+        }
+      ]
+    },
+    "modelVersion": "gemini-3.5-flash-lite",
+    "createTime": "2026-10-26T09:11:08.304244Z",
+    "responseId": "LBnfavTIEqG8stMPk8XqmQ4"
+  },
+  "usage": {
+    "promptTokenCount": 6687,
+    "candidatesTokenCount": 81,
+    "totalTokenCount": 6768,
+    "trafficType": "ON_DEMAND",
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2455
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 4232
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 81
+      }
+    ]
+  },
+  "estimated_usd": 0.0022086,
+  "parsed_output": {
+    "product_status": "ok",
+    "product_reason": "",
+    "features": {
+      "pattern": "Other",
+      "neckline": "Crewneck",
+      "dress_silhouette": "Straight",
+      "strap_style": "Standard Sleeved",
+      "strap_width": "Not Applicable"
+    }
+  },
+  "result_status": "ready"
+}

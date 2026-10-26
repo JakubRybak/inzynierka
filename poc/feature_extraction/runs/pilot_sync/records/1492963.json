@@ -1,0 +1,294 @@
+{
+  "product_id": "1492963",
+  "brand": "Jacquemus",
+  "section": "Dresses",
+  "category": "Dresses",
+  "features": {
+    "gender": "Women",
+    "colors": [
+      "White",
+      "Red"
+    ],
+    "main_composition": {
+      "Cotton": 100.0
+    },
+    "length": "Mini",
+    "sleeve_length": "Long Sleeve",
+    "neckline": "Collared",
+    "dress_type": [
+      "Shirt Dress"
+    ],
+    "strap_style": "One-Shoulder"
+  },
+  "feature_metadata": {
+    "gender": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_value",
+      "evidence": {
+        "gender": "Women"
+      }
+    },
+    "colors": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "colors",
+      "evidence": {
+        "White": [
+          {
+            "column": "name",
+            "keyword": "white",
+            "matched": "white"
+          }
+        ],
+        "Red": [
+          {
+            "column": "name",
+            "keyword": "red",
+            "matched": "red"
+          }
+        ]
+      }
+    },
+    "main_composition": {
+      "status": "assigned",
+      "source": "parser",
+      "strategy": "composition",
+      "evidence": {
+        "Cotton": [
+          {
+            "material": "cotton",
+            "percent": 100.0
+          }
+        ]
+      }
+    },
+    "pattern": {
+      "status": "undefined",
+      "source": null,
+      "strategy": "llm",
+      "evidence": {}
+    },
+    "length": {
+      "status": "assigned",
+      "source": "source_column",
+      "strategy": "source_map",
+      "evidence": {
+        "original_category": "SHORT DRESSES"
+      }
+    },
+    "sleeve_length": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Long Sleeve": [
+          {
+            "column": "description",
+            "keyword": "long sleeve",
+            "matched": "long sleeve"
+          }
+        ]
+      }
+    },
+    "neckline": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "Collared": [
+          {
+            "column": "description",
+            "keyword": "spread collar",
+            "matched": "spread collar"
+          }
+        ]
+      }
+    },
+    "dress_silhouette": {
+      "status": "undefined",
+      "source": null,
+      "strategy": "single",
+      "evidence": {}
+    },
+    "dress_type": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "multi",
+      "evidence": {
+        "Shirt Dress": [
+          {
+            "column": "name",
+            "keyword": "shirt dress",
+            "matched": "shirt dress"
+          }
+        ]
+      }
+    },
+    "strap_style": {
+      "status": "assigned",
+      "source": "keyword",
+      "strategy": "single",
+      "evidence": {
+        "One-Shoulder": [
+          {
+            "column": "description",
+            "keyword": "single shoulder",
+            "matched": "single shoulder"
+          },
+          {
+            "column": "description",
+            "keyword": "single-shoulder",
+            "matched": "single shoulder"
+          }
+        ]
+      }
+    },
+    "strap_width": {
+      "status": "undefined",
+      "source": null,
+      "strategy": "single",
+      "evidence": {}
+    }
+  },
+  "status": "needs_review",
+  "exclusion_reasons": [],
+  "product_status": "processing_error",
+  "product_reason": "Strap dependency conflict: flag for review; never overwrite keywords",
+  "outside_schema_reasons": {},
+  "llm_metadata": {
+    "call_id": "pilot_sync/1492963/1",
+    "model": "gemini-3.5-flash-lite",
+    "prompt_fingerprint": "156a010ffbd50ef4b41522ce6c3244de73c617bd1a18f21c5984e9ab8a456835",
+    "request_sha256": "3c78fe12896428287ce0fd82b8cbe20ab2b98415ebfc578f6930225352fb0cc1",
+    "neighbors": [
+      {
+        "product_id": "1640243",
+        "modality": "image",
+        "cosine_similarity": 0.7532041072845459,
+        "image_ids": [
+          "1640243_id_gridfs_1",
+          "1640243_id_gridfs_3"
+        ]
+      },
+      {
+        "product_id": "1869063",
+        "modality": "text",
+        "cosine_similarity": 0.8016371726989746,
+        "image_ids": [
+          "1869063_id_gridfs_1",
+          "1869063_id_gridfs_3"
+        ]
+      }
+    ],
+    "bank_size_before": 587,
+    "generation_config": {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        "type": "OBJECT",
+        "properties": {
+          "product_status": {
+            "type": "STRING",
+            "enum": [
+              "ok",
+              "out_of_category",
+              "unusable_product"
+            ]
+          },
+          "product_reason": {
+            "type": "STRING",
+            "description": "Empty when ok; otherwise one short factual sentence."
+          },
+          "features": {
+            "type": "OBJECT",
+            "properties": {
+              "pattern": {
+                "type": "STRING",
+                "enum": [
+                  "Solid",
+                  "Striped",
+                  "Plaid",
+                  "Floral",
+                  "Camo",
+                  "Animal Print",
+                  "Polka Dot",
+                  "Other"
+                ]
+              },
+              "dress_silhouette": {
+                "type": "STRING",
+                "enum": [
+                  "Fitted",
+                  "Straight",
+                  "A-Line",
+                  "Other"
+                ]
+              },
+              "strap_width": {
+                "type": "STRING",
+                "enum": [
+                  "Spaghetti",
+                  "Wide",
+                  "Other",
+                  "Not Applicable"
+                ]
+              }
+            },
+            "required": [
+              "pattern",
+              "dress_silhouette",
+              "strap_width"
+            ],
+            "propertyOrdering": [
+              "pattern",
+              "dress_silhouette",
+              "strap_width"
+            ],
+            "nullable": true,
+            "description": "Complete requested values when ok; null only for a product-level problem."
+          }
+        },
+        "required": [
+          "product_status",
+          "product_reason",
+          "features"
+        ],
+        "propertyOrdering": [
+          "product_status",
+          "product_reason",
+          "features"
+        ]
+      },
+      "thinkingConfig": {
+        "thinkingLevel": "MEDIUM"
+      },
+      "mediaResolution": "MEDIA_RESOLUTION_MEDIUM",
+      "maxOutputTokens": 8192
+    },
+    "usage": {
+      "promptTokenCount": 6568,
+      "candidatesTokenCount": 59,
+      "totalTokenCount": 7222,
+      "trafficType": "ON_DEMAND",
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 4761
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 1807
+        }
+      ],
+      "candidatesTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 59
+        }
+      ],
+      "thoughtsTokenCount": 595
+    },
+    "estimated_usd": 0.0036054
+  },
+  "annotation_origin": "llm"
+}
