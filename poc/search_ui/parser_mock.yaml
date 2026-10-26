@@ -8,10 +8,10 @@
 "black oversized cotton t-shirt for men":
   category: T-shirts
   filters:
-    - {feature: colors, operator: contains_any, values: [Black]}
-    - {feature: fit, operator: in, values: [Oversized]}
-    - {feature: main_composition, operator: contains_any, values: [Cotton]}
     - {feature: gender, operator: in, values: [Men]}
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: main_composition, operator: contains_any, values: [Cotton]}
+    - {feature: fit, operator: in, values: [Oversized]}
 "floral or striped t-shirt":
   category: T-shirts
   filters:
@@ -21,16 +21,19 @@
   filters:
     - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
     - {feature: main_composition, operator: contains_none, values: [Polyester]}
-"purple cropped linen v-neck t-shirt":
+"only cotton grey t-shirt":
   category: T-shirts
   filters:
-    - {feature: colors, operator: contains_any, values: [Purple]}
-    - {feature: length, operator: in, values: [Cropped]}
-    - {feature: main_composition, operator: contains_any, values: [Linen]}
-    - {feature: neckline, operator: in, values: [V-Neck]}
-"simple t-shirt for summer":
+    - {feature: main_composition, operator: equals_set, values: [Cotton]}
+    - {feature: colors, operator: contains_any, values: [Grey]}
+"t-shirt with a skull print":
   category: T-shirts
-  residual: simple for summer
+  residual: with a skull print
+"biała koszulka z długim rękawem":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [White]}
+    - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
 
 # Dresses
 "black midi dress":
@@ -48,22 +51,24 @@
   category: Dresses
   filters:
     - {feature: dress_type, operator: contains_any, values: [Wrap, Shirt Dress]}
-"long sleeve maxi dress without collar":
+"maxi dress not black":
   category: Dresses
   filters:
-    - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
     - {feature: length, operator: in, values: [Maxi]}
-    - {feature: neckline, operator: not_in, values: [Collared]}
-"green leather mini shirt dress":
+    - {feature: colors, operator: contains_none, values: [Black]}
+"red dress with ruffles":
   category: Dresses
   filters:
-    - {feature: colors, operator: contains_any, values: [Green]}
-    - {feature: main_composition, operator: contains_any, values: [Leather]}
-    - {feature: length, operator: in, values: [Mini]}
-    - {feature: dress_type, operator: contains_any, values: [Shirt Dress]}
-"elegant dress for a wedding":
+    - {feature: colors, operator: contains_any, values: [Red]}
+  residual: with ruffles
+"lace dress for an evening party":
   category: Dresses
-  residual: elegant for a wedding
+  residual: lace dress for an evening party
+"czarna sukienka na wesele":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+  residual: na wesele
 
 # Tank tops & Camisoles
 "white tank top":
@@ -75,22 +80,26 @@
   filters:
     - {feature: colors, operator: contains_all, values: [Black, White]}
     - {feature: pattern, operator: in, values: [Striped]}
-"halter or racerback tank top":
+"black or white racerback tank top":
   category: Tank tops & Camisoles
   filters:
-    - {feature: strap_style, operator: in, values: [Halter, Racerback]}
+    - {feature: colors, operator: contains_any, values: [Black, White]}
+    - {feature: strap_style, operator: in, values: [Racerback]}
 "men's tank top not black":
   category: Tank tops & Camisoles
   filters:
     - {feature: gender, operator: in, values: [Men]}
     - {feature: colors, operator: contains_none, values: [Black]}
-"yellow cropped linen racerback tank top":
+"only cotton tank top for women":
   category: Tank tops & Camisoles
   filters:
-    - {feature: colors, operator: contains_any, values: [Yellow]}
-    - {feature: length, operator: in, values: [Cropped]}
-    - {feature: main_composition, operator: contains_any, values: [Linen]}
-    - {feature: strap_style, operator: in, values: [Racerback]}
-"tank top for the gym":
+    - {feature: gender, operator: in, values: [Women]}
+    - {feature: main_composition, operator: equals_set, values: [Cotton]}
+"silk camisole with lace trim":
   category: Tank tops & Camisoles
-  residual: for the gym
+  filters:
+    - {feature: main_composition, operator: contains_any, values: [Silk]}
+  residual: with lace trim
+"ribbed tank top for summer":
+  category: Tank tops & Camisoles
+  residual: ribbed tank top for summer

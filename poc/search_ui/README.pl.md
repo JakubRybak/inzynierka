@@ -45,19 +45,19 @@ plik z cechami.
 
 - **Pasek wyszukiwania i przykłady** – wpisz zapytanie (po angielsku albo po polsku) albo kliknij jeden
   z przykładów, pogrupowanych według kategorii.
-- **Odczyt parsera** (pod paskiem) – warunki wyciągnięte przez parser, na zielono, oraz kategoria i residual,
-  czyli część zapytania, której nie dało się zamienić na filtr (np. „for a wedding”).
-- **Panel filtrów** (po lewej) – wszystkie cechy i wartości wybranej kategorii, zgodnie ze schematami odpowiedzi
+- **Odczyt parsera** (pod paskiem) – warunki wyciągnięte przez parser, każdy w osobnej linii: kategoria
+  w obramowaniu, uwzględnione wartości na zielono, wykluczone (AND NOT) na czerwono.
+- **Filtry** (przycisk nad wynikami, otwiera panel po prawej) – wszystkie cechy i wartości wybranej kategorii, zgodnie ze schematami odpowiedzi
   parsera, z liczbą produktów. Po wyszukaniu pokazuje to, co wybrał parser. Kliknięcie wartości przełącza
   *uwzględnij → wyklucz → nic*; cechy wielowartościowe (`colors`, `main_composition`, `dress_type`) mają też tryb:
   *any of*, *all of* albo *only*. Każda zmiana od razu wyszukuje ponownie z tymi filtrami, bez parsera.
   *Reset to parser* przywraca filtry parsera. Gdy parser nie znajdzie kategorii, można ją wybrać tutaj.
 - **Ranking** – `combined` (tekst + zdjęcie), `text`, `image` albo `hyde` (opis niżej).
-  **Rank by** – `residual` (domyślnie) albo `full query`.
-- **Czasy etapów** (po prawej) – parsowanie (z dwoma krokami LLM i kosztem), filtrowanie i sortowanie na jednej osi
-  czasu oraz czas całego żądania zmierzony w przeglądarce.
-- **Szczegóły produktu** – kliknięcie produktu pokazuje wszystkie zdjęcia, cechy, opis i wyniki sortowania.
-- Link w rodzaju `/?q=black+midi+dress&ranking=text&rank_by=query` od razu otwiera wyszukiwanie.
+- **Czasy etapów** (po lewej, pod odczytem parsera) – parsowanie (z dwoma krokami LLM), filtrowanie i sortowanie
+  na jednej osi czasu.
+- **Wyniki** (po prawej, wszystkie, przewijane) – zdjęcie, nazwa, marka, cena i cechy, które pasują do zapytania.
+  Kliknięcie produktu pokazuje wszystkie jego zdjęcia, opis i wszystkie cechy, z podświetlonymi dopasowanymi.
+- Link w rodzaju `/?q=black+midi+dress&ranking=text` od razu otwiera wyszukiwanie.
 
 ## Jak to działa
 
@@ -86,10 +86,9 @@ plik z cechami.
    porównywany z metadanymi produktu. Cechy albo wartości, których nie ma w indeksie, są pomijane z ostrzeżeniem.
    Gdy żaden produkt nie spełnia wszystkich warunków, wynik jest pusty.
 
-3. **Sortowanie** (`server.py`). Tekstem do sortowania jest residual, a gdy jest pusty albo wybrano
-   *Rank by: full query* – całe zapytanie. Przy każdym żądaniu liczony jest jego embedding `gemini-embedding-2`
-   (3072 wymiary) i porównywany (cosinus) z gotowymi embeddingami kandydatów:
-   - `text` – z opisami produktów; zapytanie wysyłane jako `task: search result | query: <tekst>`;
+3. **Sortowanie** (`server.py`). Przy każdym żądaniu liczony jest embedding całego zapytania
+   (`gemini-embedding-2`, 3072 wymiary) i porównywany (cosinus) z gotowymi embeddingami kandydatów:
+   - `text` – z opisami produktów; zapytanie wysyłane jako `task: search result | query: <zapytanie>`;
    - `image` – z głównymi zdjęciami produktów; wysyłany sam tekst;
    - `combined` – średnia z-score obu podobieństw, liczonych na kandydatach;
    - `hyde` – LLM (`gemini-3.5-flash-lite`) pisze opis idealnego produktu, a jego embedding jest porównywany
@@ -104,9 +103,7 @@ nagłówek `Cache-Control: no-store`. Przy starcie wczytywane są tylko indeks, 
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` albo `modul:funkcja` zwracająca wynik w formacie parsera |
 | `--ranking` | `combined` | domyślny ranking: `combined`, `text`, `image`, `hyde` |
-| `--rank-by` | `residual` | domyślny tekst do sortowania: `residual` albo `query` |
 | `--hyde-model` | `gemini-3.5-flash-lite` | model piszący opisy HyDE |
-| `--top` | `24` | liczba wyników przed *Show more* |
 | `--port` | `8000` | |
 | `--data` | `poc/search_ui/data` | indeks zbudowany przez `prepare.py` |
 | `--no-warmup` | | bez próbnego wywołania embeddingu przy starcie |
@@ -120,14 +117,14 @@ błędem, jeśli embeddingi nie obejmują wszystkich produktów z indeksu.
 
 | Endpoint | |
 | --- | --- |
-| `GET /api/search?q=…&ranking=…&rank_by=…` | cały pipeline |
-| `GET /api/search?q=…&filters=<json>` | bez parsera; `filters` to `{"category", "filters", "residual"}` w formacie parsera |
+| `GET /api/search?q=…&ranking=…` | cały pipeline |
+| `GET /api/search?q=…&filters=<json>` | bez parsera; `filters` to `{"category", "filters"}` w formacie parsera |
 | `GET /api/info` | nazwa parsera, ustawienia domyślne, kategorie, wartości panelu filtrów, przykładowe zapytania |
 | `GET /api/product?id=…` | szczegóły produktu |
 | `GET /images/<image_path>` | zdjęcie produktu |
 
 Odpowiedź wyszukiwania zawiera `parsed` (kategoria, filtry, residual i ich źródło), `tree`, `condition`,
-`warnings`, `results` (z `score`, `features` i dopasowanymi cechami `matched`), `ranking_text`, `rank_by`, `hyde`,
+`warnings`, `results` (z `score`, `features` i dopasowanymi cechami `matched`), `hyde`,
 `timings` (`parsing_ms`, `filtering_ms`, `ranking_ms`, `hyde_ms`, `query_embedding_ms`, `total_ms`), a przy
 parserze LLM także `parser_info` z czasem obu kroków parsera i szacowanym kosztem. Błędy wracają jako
 `{"error": {"stage", "message"}}` razem z czasami zmierzonymi do tego momentu.

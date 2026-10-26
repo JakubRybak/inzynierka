@@ -86,19 +86,12 @@ class RepeatedQuery(unittest.TestCase):
                                                                          "values": ["White"]}]})
         self.assertEqual((d["match"], d["results"]), ("none", []))
 
-    def test_rank_by_residual_or_full_query(self):
+    def test_ranking_uses_the_full_query(self):
         calls = []
         e, embedder = engine(pa.Parser("test", lambda q: {"category": "Dresses", "filters": [], "residual": "for a wedding"}))
         embedder.f = lambda text: calls.append(text) or np.ones(8, np.float32)
-        d = e.search("black dress for a wedding", "text")
-        self.assertEqual((d["rank_by"], d["ranking_text"], calls[-1]), ("residual", "for a wedding", "task: search result | query: for a wedding"))
-        d = e.search("black dress for a wedding", "text", rank_by="query")
-        self.assertEqual((d["rank_by"], calls[-1]), ("query", "task: search result | query: black dress for a wedding"))
-
-    def test_empty_residual_falls_back_to_the_query(self):
-        e, _ = engine()
-        d = e.search("black jeans", "text")
-        self.assertEqual((d["rank_by"], d["ranking_text"]), ("query", "black jeans"))
+        e.search("black dress for a wedding", "text")
+        self.assertEqual(calls, ["task: search result | query: black dress for a wedding"])
 
     def test_text_ranking_one_call(self):
         e, embedder = engine()

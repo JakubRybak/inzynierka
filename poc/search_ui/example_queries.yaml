@@ -1,24 +1,28 @@
-# Example queries shown in the UI. Each group: one feature, several features, OR, exclusion,
-# no results (empty: true) and a vague query where ranking does the work.
+# Example queries shown in the UI. Together they cover the parser (one or several features, OR, exclusion,
+# "and" / "only" for colors and composition, Polish queries) and ranking (parts of the query that are not
+# filters, e.g. a print, ruffles, lace or an occasion).
 
 T-shirts:
   - white t-shirt
   - black oversized cotton t-shirt for men
   - floral or striped t-shirt
   - long sleeve t-shirt without polyester
-  - {q: purple cropped linen v-neck t-shirt, empty: true}
-  - simple t-shirt for summer
+  - only cotton grey t-shirt
+  - t-shirt with a skull print
+  - biała koszulka z długim rękawem
 Dresses:
   - black midi dress
   - black silk slip dress
   - wrap or shirt dress
-  - long sleeve maxi dress without collar
-  - {q: green leather mini shirt dress, empty: true}
-  - elegant dress for a wedding
+  - maxi dress not black
+  - red dress with ruffles
+  - lace dress for an evening party
+  - czarna sukienka na wesele
 Tank tops & Camisoles:
   - white tank top
   - black and white striped tank top
-  - halter or racerback tank top
+  - black or white racerback tank top
   - men's tank top not black
-  - {q: yellow cropped linen racerback tank top, empty: true}
-  - tank top for the gym
+  - only cotton tank top for women
+  - silk camisole with lace trim
+  - ribbed tank top for summer

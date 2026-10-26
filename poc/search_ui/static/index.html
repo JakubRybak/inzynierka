@@ -1,48 +1,73 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Semantic search demo</title>
+<title>Semantic search</title>
 <style>
 :root { --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
-        --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2; --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8; }
+        --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2;
+        --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8;
+        --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490; }
 @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --mut:#a8a29e; --line:#44403c; --card:#292524; --acc:#93c5fd;
-        --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a; --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd; } }
+        --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a;
+        --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd;
+        --k-is:#86efac; --k-is-bg:#14532d; --k-not:#fca5a5; --k-not-bg:#4c1414; --k-cat:#67e8f9; } }
 * { box-sizing:border-box; }
 body { margin:0; font:14px/1.45 -apple-system, system-ui, sans-serif; background:var(--bg); color:var(--fg); }
-header { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); padding:12px 16px; }
-.top { display:flex; gap:16px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
-.left { flex:1 1 520px; min-width:0; }
-h1 { font-size:15px; margin:0 0 10px; font-weight:600; }
+.app { display:grid; grid-template-columns:400px minmax(0, 1fr); min-height:100vh; }
+.app.fopen { grid-template-columns:400px minmax(0, 1fr) 320px; }
+.side { position:sticky; top:0; height:100vh; overflow:auto; border-right:1px solid var(--line); padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
+.results { padding:14px 16px 40px; min-width:0; }
+.resbar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
+.resbar #status { margin:0; }
+#ftoggle { padding:4px 12px; font-size:13px; }
+#ftoggle.on { border-color:var(--acc); color:var(--acc); }
+#ftoggle .badge { display:inline-block; min-width:18px; margin-left:4px; padding:0 5px; border-radius:9px; background:var(--okbg); color:var(--ok); font-size:11px; font-weight:700; }
+@media (max-width: 800px) { .app, .app.fopen { grid-template-columns:1fr; } .side { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); }
+  #filters { position:static; height:auto; } }
 .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-input[type=text] { font:inherit; font-size:15px; padding:9px 12px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); flex:1 1 320px; min-width:0; }
+#q { font:inherit; font-size:15px; line-height:1.35; padding:7px 12px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); flex:1 1 200px; min-width:0; resize:none; }
 select, button { font:inherit; padding:7px 11px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
 button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); padding:8px 16px; }
 .meta { color:var(--mut); font-size:12px; }
 .groups, .examples { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.examples { flex-direction:column; align-items:flex-start; }
 .groups button { padding:2px 9px; font-size:12px; border-radius:12px; }
 .groups button.on { border-color:var(--acc); color:var(--acc); font-weight:600; }
 .examples button { padding:3px 8px; font-size:12px; color:var(--mut); }
 .examples button:hover { color:var(--fg); border-color:var(--acc); }
-.parser { margin-top:8px; }
-.parser b { color:var(--fg); }
+.options { margin-top:8px; }
+.options select { padding:3px 6px; font-size:12px; }
 .parsedtop { margin-top:10px; }
-.timings { flex:0 1 330px; min-width:270px; border:1px solid var(--line); border-radius:8px; background:var(--card); padding:10px 12px; font-size:12px; }
+.cond { margin:4px 0; display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:13px; }
+.leaf { background:var(--soft); border:1px solid var(--line); border-radius:5px; padding:1px 7px; }
+.leaf b { font-weight:600; }
+.leaf.k-is, .leaf.k-not { border-color:transparent; }
+.leaf.k-is { background:var(--k-is-bg); color:var(--k-is); } .op.k-is { color:var(--k-is); }
+.leaf.k-not { background:var(--k-not-bg); color:var(--k-not); } .op.k-not { color:var(--k-not); }
+.leaf.k-cat { background:transparent; border:1.5px solid var(--k-cat); color:var(--k-cat); font-weight:600; }
+.op { color:var(--acc); font-weight:700; font-size:11px; letter-spacing:.04em; }
+.lines { display:grid; grid-template-columns:auto minmax(0, 1fr); column-gap:6px; row-gap:4px; align-items:center; margin:4px 0; }
+.lines > .op { text-align:right; white-space:nowrap; }
+.lines > .cond { margin:0; }
+.paren { color:var(--mut); }
+.timings { border:1px solid var(--line); border-radius:8px; background:var(--card); padding:10px 12px; font-size:12px; }
 .timings.busy { opacity:.55; }
-.timings h2, #filters h2 { font-size:12px; margin:0 0 6px; color:var(--mut); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+#filters h2 { font-size:12px; margin:0 0 6px; color:var(--mut); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
 .st { display:grid; grid-template-columns:1fr auto; column-gap:8px; margin:5px 0; }
 .st .ms { font-variant-numeric:tabular-nums; font-weight:600; }
-.st .bar { grid-column:1/-1; height:6px; background:var(--soft); border-radius:3px; overflow:hidden; margin-top:2px; position:relative; }
+.st .bar { grid-column:1/-1; height:6px; background:var(--soft); border-radius:3px; overflow:hidden; margin-top:2px; }
 .st .bar i { display:block; height:100%; border-radius:3px; }
+.st .extra { grid-column:1/-1; color:var(--mut); }
 .st.sub { margin:2px 0 2px 12px; font-size:11px; color:var(--mut); }
 .st.sub .ms { font-weight:500; }
 .st.sub .bar { height:4px; }
-.c-parse { background:var(--c-parse); } .c-filter { background:var(--c-filter); } .c-rank { background:var(--c-rank); }
-.st .extra { grid-column:1/-1; color:var(--mut); }
 .st.total { border-top:1px solid var(--line); padding-top:6px; margin-top:8px; }
 .st.skip { color:var(--mut); }
-.layout { display:grid; grid-template-columns:280px minmax(0, 1fr); gap:16px; padding:14px 16px 40px; align-items:start; }
-@media (max-width: 800px) { .layout { grid-template-columns:1fr; } }
-#filters { position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:auto; border:1px solid var(--line); border-radius:8px; background:var(--card); padding:10px 12px; font-size:12px; }
+.c-parse { background:var(--c-parse); } .c-filter { background:var(--c-filter); } .c-rank { background:var(--c-rank); }
+#filters { display:none; position:sticky; top:0; height:100vh; overflow:auto; border-left:1px solid var(--line); background:var(--card); padding:14px 16px; font-size:12px; }
+.app.fopen #filters { display:block; }
+#filters .fclose { float:right; padding:0 8px; font-size:16px; line-height:20px; }
 #filters select { width:100%; margin:2px 0 8px; padding:5px 8px; }
+#filters .reset { width:100%; padding:4px; font-size:12px; margin-bottom:8px; }
 .facet { border-top:1px solid var(--line); padding:7px 0; }
 .fh { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px; }
 .fh b { font-size:12px; }
@@ -54,102 +79,80 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .val.in { background:var(--okbg); color:var(--ok); border-color:transparent; font-weight:600; }
 .val.out { background:var(--badbg); color:var(--bad); border-color:transparent; font-weight:600; text-decoration:line-through; }
 .brandq { width:100%; font:inherit; font-size:12px; padding:4px 6px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); margin-bottom:4px; }
-#filters .reset { width:100%; padding:4px; font-size:12px; margin-bottom:8px; }
-#parsed { margin-bottom:12px; }
-.cond { margin:4px 0; display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:13px; }
-.leaf { background:var(--soft); border:1px solid var(--line); border-radius:5px; padding:1px 7px; }
-.leaf b { font-weight:600; }
-.leaf.parser { background:var(--okbg); color:var(--ok); border-color:transparent; }
-.op { color:var(--acc); font-weight:700; font-size:11px; letter-spacing:.04em; }
-.paren { color:var(--mut); }
+#notes { margin-bottom:8px; }
 .warn { background:var(--hl); color:var(--hlfg); border-radius:6px; padding:6px 10px; margin:6px 0; font-size:13px; }
 .hyde { background:var(--soft); border-left:3px solid var(--acc); padding:6px 10px; margin:6px 0; font-size:13px; }
 .errorbox { background:var(--badbg); color:var(--bad); border-radius:6px; padding:8px 12px; margin:6px 0; }
-details { margin-top:6px; font-size:12px; }
-summary { cursor:pointer; color:var(--mut); }
-pre { white-space:pre-wrap; word-break:break-word; background:var(--soft); border:1px solid var(--line); border-radius:6px; padding:10px; font:12px/1.5 ui-monospace, Menlo, monospace; margin:6px 0 0; }
-#status { margin:10px 0 8px; font-size:14px; }
+#status { margin:4px 0 8px; font-size:14px; }
 #status b { font-weight:600; }
-.tag { display:inline-block; border-radius:10px; padding:1px 8px; font-size:12px; font-weight:600; }
-.tag.full { background:var(--okbg); color:var(--ok); }
-.tag.none { background:var(--hl); color:var(--hlfg); }
 .banner { background:var(--hl); color:var(--hlfg); border-radius:6px; padding:8px 12px; margin-bottom:10px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px; }
-.p { background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; cursor:pointer; position:relative; display:flex; flex-direction:column; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; }
+.p { background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; position:relative; cursor:pointer; }
 .p:hover { border-color:var(--acc); }
+#panel { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:10; }
+#panel.on { display:block; }
+#panel .box { position:absolute; right:0; top:0; bottom:0; width:min(560px, 100%); background:var(--bg); overflow:auto; padding:20px; border-left:1px solid var(--line); }
+#panel h2 { font-size:16px; margin:0 0 4px; }
+#panel table { border-collapse:collapse; width:100%; font-size:13px; margin-top:12px; }
+#panel td { border-bottom:1px solid var(--line); padding:5px 4px; vertical-align:top; }
+#panel td:first-child { color:var(--mut); width:40%; }
+#panel tr.on td:last-child { color:var(--ok); font-weight:600; }
+.photos { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:6px; margin:12px 0 0; }
+.photos img { width:100%; aspect-ratio:1/1; object-fit:contain; background:#fff; border-radius:6px; border:1px solid var(--line); }
+.close { float:right; }
+.desc { margin:12px 0 0; font-size:13px; line-height:1.5; }
 .p img, .p .noimg { width:100%; aspect-ratio:1/1; object-fit:contain; display:block; background:#fff; }
 .p .t { padding:7px 9px 9px; font-size:12px; }
 .p .t > b { font-size:13px; }
 .p .nr { position:absolute; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
-.chip { font-size:11px; border-radius:4px; padding:0 5px; border:1px solid var(--line); color:var(--mut); opacity:.75; }
-.chip.on { background:var(--okbg); color:var(--ok); border-color:transparent; opacity:1; font-weight:600; }
-.cat.on { color:var(--ok); font-weight:600; }
+.chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
 .empty { color:var(--mut); padding:40px 0; text-align:center; }
-#more { text-align:center; margin-top:14px; }
-#panel { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:10; }
-#panel.on { display:block; }
-#panel .box { position:absolute; right:0; top:0; bottom:0; width:min(620px, 100%); background:var(--bg); overflow:auto; padding:20px; border-left:1px solid var(--line); }
-#panel h2 { font-size:16px; margin:0 0 4px; }
-#panel h3 { font-size:13px; margin:18px 0 6px; color:var(--mut); text-transform:uppercase; letter-spacing:.04em; }
-#panel table { border-collapse:collapse; width:100%; font-size:13px; }
-#panel td { border-bottom:1px solid var(--line); padding:5px 4px; vertical-align:top; }
-#panel td:first-child { color:var(--mut); width:38%; }
-#panel tr.on td:last-child { color:var(--ok); font-weight:600; }
-.photos { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:6px; margin:10px 0; }
-.photos img { width:100%; aspect-ratio:1/1; object-fit:contain; background:#fff; border-radius:6px; border:1px solid var(--line); }
-.close { float:right; }
+.loading { grid-column:1/-1; display:flex; justify-content:center; padding:80px 0; }
+.spinner { width:36px; height:36px; border:3px solid var(--line); border-top-color:var(--acc); border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 </style></head><body>
-<header>
-  <div class="top">
-    <div class="left">
-      <h1>Semantic search demo <span class="meta" id="index"></span></h1>
+<div id="panel"><div class="box" id="box"></div></div>
+<div class="app" id="app">
+  <aside class="side">
+    <div>
       <form class="row" id="f">
-        <input type="text" id="q" placeholder="e.g. black midi dress" autocomplete="off" autofocus>
+        <textarea id="q" rows="2" placeholder="e.g. black midi dress" autocomplete="off" autofocus></textarea>
         <button class="go" type="submit">Search</button>
       </form>
       <div class="groups" id="groups"><span class="meta">Examples:</span></div>
       <div class="examples" id="examples"></div>
-      <div class="row parser meta">Parser: <b id="parser">…</b> · Ranking:
-        <select id="ranking"></select> · Rank by:
-        <select id="rankby"><option value="residual">residual</option><option value="query">full query</option></select></div>
+      <div class="row options meta">Ranking: <select id="ranking"></select></div>
       <div id="parsedTop" class="parsedtop"></div>
     </div>
-    <aside class="timings" id="timings"><h2>Stage timings</h2><div class="meta">Type a query or click an example.</div></aside>
-  </div>
-</header>
-<div class="layout">
-  <aside id="filters"><h2>Filters</h2><div class="meta">The parser picks the category and sets the filters. Click a value to include it, again to exclude it, once more to clear it.</div></aside>
-  <main>
-    <section id="parsed"></section>
-    <div id="status"></div>
+    <div class="timings" id="timings"><div class="meta">Type a query or click an example.</div></div>
+  </aside>
+  <main class="results">
+    <div class="resbar"><div id="status"></div><button type="button" id="ftoggle">Filters</button></div>
+    <div id="notes"></div>
     <div id="banner"></div>
     <div class="grid" id="grid"></div>
-    <div id="more"></div>
   </main>
+  <aside id="filters"></aside>
 </div>
-<div id="panel"><div class="box" id="box"></div></div>
 <script>
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num = n => Number(n).toLocaleString("en-US");
 const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
-const RANKING_NAMES = {combined: "combined (text + image)", text: "text (description)", image: "image",
-                       hyde: "HyDE (LLM-written description)"};
+const RANKING_NAMES = {combined: "embedding combined (text + image)", text: "embedding text", image: "embedding image",
+                       hyde: "embedding HyDE"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
-let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, shown = 0, seq = 0;
+let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0;
 let PANEL = {category: null, sel: {}, mode: {}}, brandQuery = "", applyTimer = null;
 
 fetch("/api/info", noCache).then(r => r.json()).then(d => {
   INFO = d;
-  $("index").textContent = `· ${num(d.products)} products: ` + Object.entries(d.categories).map(([k, n]) => `${k} ${num(n)}`).join(", ");
-  $("parser").textContent = d.parser;
   d.rankings.forEach(r => { const o = document.createElement("option"); o.value = r; o.textContent = RANKING_NAMES[r] || r; $("ranking").appendChild(o); });
   $("ranking").value = d.ranking;
-  $("rankby").value = d.rank_by;
   const groups = Object.keys(d.examples);
   groups.forEach(g => { const b = document.createElement("button"); b.type = "button"; b.textContent = g; b.dataset.g = g;
     b.onclick = () => showGroup(g); $("groups").appendChild(b); });
@@ -157,7 +160,6 @@ fetch("/api/info", noCache).then(r => r.json()).then(d => {
   drawPanel();
   const u = new URLSearchParams(location.search);
   if (u.get("ranking") && d.rankings.includes(u.get("ranking"))) $("ranking").value = u.get("ranking");
-  if (["residual", "query"].includes(u.get("rank_by"))) $("rankby").value = u.get("rank_by");
   if (u.get("q")) { $("q").value = u.get("q"); search(); }
 });
 function showGroup(g) {
@@ -167,11 +169,9 @@ function showGroup(g) {
     b.onclick = () => { $("q").value = q; search(); }; $("examples").appendChild(b); });
 }
 $("f").onsubmit = e => { e.preventDefault(); search(); };
-$("ranking").onchange = $("rankby").onchange = () => { if (D) search(D.parsed && D.parsed.source === "manual" ? panelFilters() : null); };
-$("panel").onclick = e => { if (e.target.id === "panel") $("panel").classList.remove("on"); };
-document.addEventListener("keydown", e => { if (e.key === "Escape") $("panel").classList.remove("on"); });
+$("q").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); search(); } };
+$("ranking").onchange = () => { if (D) search(D.parsed && D.parsed.source === "manual" ? panelFilters() : null); };
 
-// filter panel
 function panelFromParsed(p) {
   PANEL = {category: p && p.category || null, sel: {}, mode: {}};
   (p && p.filters || []).forEach(f => {
@@ -191,16 +191,21 @@ function panelFilters() {
       operator: !multi ? "in" : mode === "all" ? "contains_all" : mode === "exact" ? "equals_set" : "contains_any"});
     if (outs.length) filters.push({feature: fc.feature, values: outs, operator: multi ? "contains_none" : "not_in"});
   });
-  const sameQuery = PARSER_VIEW && PARSER_VIEW.query === $("q").value.trim();
-  return {category: PANEL.category, filters, residual: sameQuery ? PARSER_VIEW.info.residual || "" : ""};
+  return {category: PANEL.category, filters};
 }
+function toggleFilters() {
+  $("app").classList.toggle("fopen");
+  $("ftoggle").classList.toggle("on", $("app").classList.contains("fopen"));
+}
+$("ftoggle").onclick = toggleFilters;
+
 function drawPanel() {
   if (!INFO) return;
   const cats = Object.keys(INFO.facets);
-  let h = `<h2>Filters</h2><div class="meta">Category</div><select id="pcat"><option value="">— none —</option>` +
+  let h = `<button type="button" class="fclose" id="fclose" title="Close">×</button><h2>Filters</h2><div class="meta">Category</div><select id="pcat"><option value="">— none —</option>` +
     cats.map(c => `<option ${c === PANEL.category ? "selected" : ""}>${esc(c)}</option>`).join("") + `</select>` +
     (PARSED ? `<button type="button" class="reset" id="reset">Reset to parser</button>` : "");
-  if (!PANEL.category) h += `<div class="meta">Pick a category to see its filters.</div>`;
+  if (!PANEL.category) h += `<div class="meta">The parser picks the category and the filters; you can change them here.</div>`;
   else h += `<div class="meta">Click a value: include → exclude → off.</div>`;
   (INFO.facets[PANEL.category] || []).forEach(fc => {
     const s = PANEL.sel[fc.feature] || {};
@@ -218,6 +223,9 @@ function drawPanel() {
       `</div></div>`;
   });
   $("filters").innerHTML = h;
+  const active = Object.values(PANEL.sel).reduce((n, s) => n + Object.keys(s).length, 0);
+  $("ftoggle").innerHTML = `Filters${active ? `<span class="badge">${active}</span>` : ""}`;
+  $("fclose").onclick = toggleFilters;
   $("pcat").onchange = e => { PANEL = {category: e.target.value || null, sel: {}, mode: {}}; drawPanel(); if (PANEL.category) applySoon(); };
   $("filters").querySelectorAll(".val").forEach(b => b.onclick = () => {
     const s = PANEL.sel[b.dataset.f] = PANEL.sel[b.dataset.f] || {}, v = b.dataset.v;
@@ -233,32 +241,32 @@ function drawPanel() {
 
 async function search(manual = null) {
   const q = $("q").value.trim(); if (!q && !manual) return;
-  const mine = ++seq, t0 = performance.now();
-  const opts = `ranking=${encodeURIComponent($("ranking").value)}&rank_by=${$("rankby").value}`;
+  const mine = ++seq;
+  const opts = `ranking=${encodeURIComponent($("ranking").value)}`;
   history.replaceState(null, "", `?q=${encodeURIComponent(q)}&${opts}`);
   $("timings").classList.add("busy");
-  $("status").innerHTML = `<span class="meta">Searching${q ? ` for “${esc(q)}”` : ""}…</span>`;
+  $("status").innerHTML = $("banner").innerHTML = $("notes").innerHTML = "";
+  $("grid").innerHTML = `<div class="loading"><div class="spinner"></div></div>`;
   let url = `/api/search?q=${encodeURIComponent(q)}&${opts}`;
   if (manual) url += `&filters=${encodeURIComponent(JSON.stringify(manual))}`;
   let d;
   try {
-    const r = await fetch(url, noCache);
-    d = await r.json();
+    d = await (await fetch(url, noCache)).json();
   } catch (e) {
     d = {query: q, timings: {}, error: {stage: "connection to the server", message: String(e)}};
   }
   if (mine !== seq) return;
-  D = d; D.browser_ms = performance.now() - t0; shown = 0;
+  D = d;
   if (d.parsed && d.parsed.source === "parser") {
     PARSED = d.parsed; panelFromParsed(d.parsed);
-    PARSER_VIEW = {query: d.query, tree: d.tree, info: d.parser_info || {}, raw: d.raw};
+    PARSER_VIEW = {tree: d.tree};
   }
   $("timings").classList.remove("busy");
-  drawTimings(); drawPanel(); drawParsed(); drawResults();
+  drawTimings(); drawPanel(); drawParserTop(); drawNotes(); drawResults();
 }
 
 function drawTimings() {
-  const t = D.timings || {}, c = D.counts || {}, total = t.total_ms || 0, pi = D.parser_info || {};
+  const t = D.timings || {}, total = t.total_ms || 0, pi = D.parser_info || {};
   const pct = v => total ? Math.max(0, Math.min(100, 100 * v / total)) : 0;
   const row = (name, v, color, {extra = "", sub = false, start = 0} = {}) => {
     const cls = `st${sub ? " sub" : ""}`;
@@ -270,118 +278,101 @@ function drawTimings() {
   };
   const manual = D.parsed && D.parsed.source === "manual";
   const p = t.parsing_ms || 0, f = t.filtering_ms || 0;
-  const rankParts = [t.hyde_ms !== undefined ? `HyDE description ${fmtMs(t.hyde_ms)}` : "",
-                     t.query_embedding_ms ? `query embedding ${fmtMs(t.query_embedding_ms)}` : ""].filter(Boolean);
-  let html = `<h2>Stage timings</h2>` +
-    row("Parsing", t.parsing_ms, "c-parse", {extra: manual ? "skipped – filters set by hand" : pi.cost_usd ? `~$${pi.cost_usd.toFixed(4)} per query` : ""});
+  let html = row("Parsing", t.parsing_ms, "c-parse", {extra: manual ? "skipped – filters set by hand" : ""});
   if (!manual && pi.step1_s !== undefined && pi.step1_s !== null) {
     const s1 = pi.step1_s * 1000;
     html += row("step 1 · category", s1, "c-parse", {sub: true}) +
       (pi.step2_s ? row("step 2 · features", pi.step2_s * 1000, "c-parse", {sub: true, start: s1})
                   : row("step 2 · features", null, "c-parse", {sub: true, extra: "skipped, no category"}));
   }
-  html += row("Filtering", t.filtering_ms, "c-filter", {start: p,
-            extra: t.filtering_ms !== undefined ? `${num(c.index)} → ${num(c.candidates)} products` : ""}) +
-    row("Ranking", t.ranking_ms, "c-rank", {start: p + f, extra: rankParts.length ? "incl. " + rankParts.join(" · ")
-                                                                 : c.candidates === 0 ? "skipped, no candidates" : ""});
-  html += `<div class="st total"><span><b>Total</b> (server)</span><span class="ms">${fmtMs(t.total_ms)}</span>
-       <div class="extra">in the browser (whole request): <b>${fmtMs(D.browser_ms)}</b></div></div>`;
+  html += row("Filtering", t.filtering_ms, "c-filter", {start: p}) +
+    row("Ranking", t.ranking_ms, "c-rank", {start: p + f}) +
+    `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
   $("timings").innerHTML = html;
 }
 
-function treeHtml(c, cls = "", top = true) {
+// colour of a condition: category outlined, included green, excluded red
+function leafKind(c, neg) {
+  if (neg) return "k-not";
+  return c.feature === "category" ? "k-cat" : "k-is";
+}
+
+function treeHtml(c, neg = false, top = true) {
   if (!c) return `<span class="meta">no conditions</span>`;
   if (c.feature !== undefined) {
     const m = c.match || "any", single = c.values.length === 1 && m !== "exact";
     const op = m === "exact" ? "= only" : single ? "=" : m === "all" ? "⊇" : "∈";
     const v = single ? esc(c.values[0]) : `{${c.values.map(esc).join(", ")}}`;
-    return `<span class="leaf ${cls}">${esc(c.feature)} ${op} <b>${v}</b></span>`;
+    return `<span class="leaf ${leafKind(c, neg)}">${esc(c.feature)} ${op} <b>${v}</b></span>`;
   }
-  if (c.op === "not") return `<span class="op">NOT</span> ${treeHtml(c.arg, cls, false)}`;
-  const inner = c.args.map(a => treeHtml(a, cls, false)).join(` <span class="op">${c.op.toUpperCase()}</span> `);
+  if (c.op === "not") return `<span class="op k-not">NOT</span> ${treeHtml(c.arg, !neg, false)}`;
+  const inner = c.args.map(a => treeHtml(a, neg, false)).join(` <span class="op">${c.op.toUpperCase()}</span> `);
   return top ? inner : `<span class="paren">(</span>${inner}<span class="paren">)</span>`;
 }
 
-function drawParserTop() {
-  const pv = PARSER_VIEW;
-  if (!pv) { $("parsedTop").innerHTML = ""; return; }
-  const src = pv.info.source ? ` <span class="meta">(mock: ${esc(pv.info.source)})</span>` : "";
-  $("parsedTop").innerHTML = `<div class="meta">How the parser read “${esc(pv.query)}”:${src}</div>` +
-    `<div class="cond">${pv.tree ? treeHtml(pv.tree, "parser") : `<span class="meta">no category – outside the catalog</span>`}</div>` +
-    `<div class="meta">Category: <b>${esc(pv.info.category || "none")}</b> · residual: ` + (pv.info.residual ? `“${esc(pv.info.residual)}”` : "–") + `</div>`;
+// one top-level condition per line, prefixed with AND / AND NOT (red)
+function treeLines(c) {
+  const args = c.op === "and" ? c.args : [c];
+  return `<div class="lines">` + args.map((a, i) => {
+    const neg = a.op === "not", prefix = [i ? "AND" : "", neg ? "NOT" : ""].filter(Boolean).join(" ");
+    return `<span class="op ${neg ? "k-not" : "k-is"}">${prefix}</span><span class="cond">${treeHtml(neg ? a.arg : a, neg)}</span>`;
+  }).join("") + `</div>`;
 }
 
-function drawParsed() {
-  drawParserTop();
+function drawParserTop() {
+  $("parsedTop").innerHTML = PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "";
+}
+
+function drawNotes() {
   let h = "";
-  const manual = D.parsed && D.parsed.source === "manual", pv = PARSER_VIEW;
   if (D.error) h += `<div class="errorbox"><b>Error – stage: ${esc(D.error.stage)}</b><br>${esc(D.error.message)}</div>`;
-  if (manual && "tree" in D) h += `<div class="meta">Filters applied by hand:</div><div class="cond">${treeHtml(D.tree)}</div>`;
+  if (D.parsed && D.parsed.source === "manual" && "tree" in D)
+    h += `<div class="meta">Filters applied by hand:</div>${treeLines(D.tree)}`;
   if (D.hyde) h += `<div class="hyde"><span class="meta">HyDE description:</span> ${esc(D.hyde)}</div>`;
   (D.warnings || []).forEach(w => h += `<div class="warn">⚠ ${esc(w)}</div>`);
-  if (pv && pv.raw) h += `<details><summary>raw parser output</summary><pre>${esc(JSON.stringify(pv.raw, null, 2))}</pre></details>`;
-  if ("tree" in D) h += `<details><summary>condition tree</summary><pre>${esc(JSON.stringify(D.tree, null, 2))}</pre></details>`;
-  $("parsed").innerHTML = h;
+  $("notes").innerHTML = h;
 }
 
 function drawResults() {
-  $("banner").innerHTML = ""; $("grid").innerHTML = ""; $("more").innerHTML = "";
+  $("banner").innerHTML = ""; $("grid").innerHTML = "";
   if (D.error || !D.results) { $("status").innerHTML = ""; return; }
   if (D.match === "out_of_catalog") {
-    $("status").innerHTML = `<b>0 results</b> <span class="tag none">outside the catalog</span>`;
+    $("status").innerHTML = `<b>0 results</b>`;
     $("banner").innerHTML = `<div class="banner"><b>${esc(D.message)}</b><br>The catalog has: ` +
-      Object.keys(INFO ? INFO.categories : {}).map(esc).join(", ") + `. You can also pick a category in the filter panel.</div>`;
+      Object.keys(INFO ? INFO.categories : {}).map(esc).join(", ") + `.</div>`;
     return;
   }
   const n = D.counts.candidates;
-  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b>` +
-    (n ? ` <span class="meta">· ranking: ${D.ranking_text ? esc(RANKING_NAMES[D.ranking] || D.ranking) + " by " +
-      (D.rank_by === "residual" ? `residual “${esc(D.ranking_text)}”` : `full query` + (D.parser_info && !D.parser_info.residual ? " (empty residual)" : "")) : "none (no text)"}` +
-      (D.results.length < n ? ` · showing the top ${num(D.results.length)}` : "") + `</span>` : "");
+  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b>`;
   if (!n) { $("grid").innerHTML = `<div class="empty">No products meet all the conditions.</div>`; return; }
-  drawMore();
+  const g = $("grid");
+  D.results.forEach((p, i) => g.appendChild(card(p, i)));
 }
 
 function card(p, i) {
-  const hit = new Set(p.matched);
-  const feats = Object.entries(p.features).sort((a, b) => hit.has(b[0]) - hit.has(a[0]));
+  const hit = p.matched.filter(f => f in p.features);
   const d = document.createElement("div"); d.className = "p";
   d.innerHTML = `<span class="nr">${i + 1}</span>` +
     (p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : `<div class="noimg"></div>`) +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
-      <div class="meta"><span class="cat ${hit.has("category") ? "on" : ""}">${esc(p.category)}</span>${D.ranking_text ? ` · score ${p.score.toFixed(3)}` : ""}</div>
-      <div class="chips">${feats.map(([k, v]) => `<span class="chip ${hit.has(k) ? "on" : ""}" title="${esc(k)}">${esc(k)}: ${esc(v)}</span>`).join("")}</div></div>`;
+      ${hit.length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}</div>` : ""}</div>`;
   d.onclick = () => details(p);
   return d;
 }
 
-function drawMore() {
-  const top = INFO ? INFO.top : 24, g = $("grid");
-  D.results.slice(shown, shown + top).forEach((p, j) => g.appendChild(card(p, shown + j)));
-  shown = Math.min(D.results.length, shown + top);
-  $("more").innerHTML = shown < D.results.length
-    ? `<button type="button" id="moreBtn">Show more (${num(shown)} of ${num(D.results.length)})</button>` : "";
-  if ($("moreBtn")) $("moreBtn").onclick = drawMore;
-}
+$("panel").onclick = e => { if (e.target.id === "panel") $("panel").classList.remove("on"); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("panel").classList.remove("on"); });
 
 async function details(k) {
   $("box").innerHTML = `<div class="meta">Loading…</div>`; $("panel").classList.add("on");
   const r = await fetch("/api/product?id=" + encodeURIComponent(k.id), noCache), p = await r.json();
   if (!r.ok) { $("box").innerHTML = `<div class="errorbox">${esc(p.error ? p.error.message : r.status)}</div>`; return; }
   const hit = new Set(k.matched);
-  let h = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
-    `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)} · ${esc(p.section)} › ${esc(p.category)} · ${esc(p.gender)} · product_id ${esc(p.id)}</div>` +
-    `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>`;
-  h += `<h3>Features</h3><table>` +
-    Object.entries(p.features).map(([c, v]) => `<tr class="${hit.has(c) ? "on" : ""}"><td>${esc(c)}</td><td>${esc(v)}</td></tr>`).join("") + `</table>`;
-  if (D.ranking_text && (k.score_text !== null || k.score_image !== null))
-    h += `<h3>Ranking score</h3><table><tr><td>${esc(RANKING_NAMES[D.ranking] || D.ranking)}</td><td>${k.score.toFixed(4)}</td></tr>` +
-      (k.score_text !== null ? `<tr><td>cosine: ${D.ranking === "hyde" ? "HyDE description" : "query"} – description</td><td>${k.score_text.toFixed(4)}</td></tr>` : "") +
-      (k.score_image !== null ? `<tr><td>cosine: query – image</td><td>${k.score_image.toFixed(4)}</td></tr>` : "") + `</table>`;
-  h += `<h3>Description</h3><div>${esc(p.description)}</div><h3>Composition</h3><div>${esc(p.composition || "–")}</div>` +
-    `<h3>Fashion-Gen data</h3><table><tr><td>original category</td><td>${esc(p.original_category)}</td></tr><tr><td>season</td><td>${esc(p.season || "–")}</td></tr>` +
-    `<tr><td>extraction status</td><td>${esc(p.status)}</td></tr></table>`;
-  $("box").innerHTML = h;
+  $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
+    `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
+    `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>` +
+    (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
+    `<table>${Object.entries(p.features).map(([c, v]) => `<tr class="${hit.has(c) ? "on" : ""}"><td>${esc(c)}</td><td>${esc(v)}</td></tr>`).join("")}</table>`;
 }
 </script></body></html>

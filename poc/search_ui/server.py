@@ -3,7 +3,7 @@ Search demo: query -> parser -> feature filtering -> embedding ranking -> result
 Filters can also be set by hand in the page; the parser is then skipped.
 
     python poc/search_ui/server.py --parser llm
-    python poc/search_ui/server.py --parser mock --ranking combined --top 24 --port 8000
+    python poc/search_ui/server.py --parser mock --ranking combined --port 8000
 
 No caching: every query, including a repeated one, goes through the parser and the embedding API.
 """
@@ -29,7 +29,6 @@ import facets
 import parser_adapter
 
 RANKINGS = ("combined", "text", "image", "hyde")
-RANK_BY = ("residual", "query")
 PAGE = common.HERE / "static" / "index.html"
 EXAMPLES = common.HERE / "example_queries.yaml"
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
@@ -57,11 +56,11 @@ def _z(s, mask):
 
 
 class SearchEngine:
-    def __init__(self, products, T, I, parser, embedder, hyde=None, max_results=480):
+    def __init__(self, products, T, I, parser, embedder, hyde=None):
         self.products = [conditions.prepare_product(p) for p in products]
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
-        self.parser, self.embedder, self.hyde, self.max_results = parser, embedder, hyde, max_results
+        self.parser, self.embedder, self.hyde = parser, embedder, hyde
         self.vocabulary = conditions.Vocabulary(self.products)
         self.facets = facets.load(self.products)
         self.by_id = {p["product_id"]: p for p in self.products}
@@ -96,11 +95,8 @@ class SearchEngine:
         z_i[~mask] = z_i[mask].min() - 1 if mask.any() else 0
         return (_z(s_t, np.ones(len(cand), bool)) + z_i) / 2, s_t, s_i
 
-    def search(self, q, ranking="combined", manual=None, rank_by="residual"):
-        """
-        manual: {"category", "filters", "residual"} in the parser format; when given, the parser is not called.
-        rank_by: rank by the residual (falls back to the full query when it is empty) or by the full query.
-        """
+    def search(self, q, ranking="combined", manual=None):
+        """manual: {"category", "filters"} in the parser format; when given, the parser is not called."""
         t0 = time.perf_counter()
         timings = {}
         out = dict(query=q, parser=self.parser.name, ranking=ranking, timings=timings,
@@ -120,9 +116,8 @@ class SearchEngine:
                 out["parser_info"] = parser_adapter.parser_info(raw)
                 timings["parsing_ms"] = ms(t)
             else:
-                raw = dict(category=manual.get("category"), filters=manual.get("filters") or [],
-                           residual=manual.get("residual") or "")
-                out["parser_info"] = dict(category=raw["category"], residual=raw["residual"], source="manual")
+                raw = dict(category=manual.get("category"), filters=manual.get("filters") or [], residual="")
+                out["parser_info"] = dict(category=raw["category"], residual="", source="manual")
             out["parsed"] = dict(category=raw.get("category"), filters=raw.get("filters") or [],
                                  residual=raw.get("residual") or "", source="manual" if manual else "parser")
             tree = parser_adapter.to_condition(raw)
@@ -145,16 +140,11 @@ class SearchEngine:
         out.update(tree=tree, condition=conditions.describe(tree), match="full" if len(cand) else "none")
         out["counts"]["candidates"] = len(cand)
 
-        residual = out["parsed"]["residual"].strip()
-        text = residual if rank_by == "residual" and residual else q
-        out["rank_by"] = "residual" if text and text == residual and rank_by == "residual" else "query"
-        out["ranking_text"] = text
-
         t = time.perf_counter()
         s_t = s_i = None
-        if len(cand) and text:
+        if len(cand) and q:
             try:
-                score, s_t, s_i = self.rank(text, ranking, cand, out["parsed"]["category"], timings, out)
+                score, s_t, s_i = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)
@@ -164,7 +154,7 @@ class SearchEngine:
         timings["ranking_ms"] = ms(t)
 
         results = []
-        for j in order[: self.max_results]:
+        for j in order:
             i = int(cand[j])
             p = self.products[i]
             results.append(dict(
@@ -193,8 +183,7 @@ class SearchEngine:
                     features={k: _show_value(v) for k, v in sorted(p["features"].items())})
 
 
-def build_server(engine, image_dir, port=8000, ranking="combined", top=24, examples=EXAMPLES, page=PAGE,
-                 rank_by="residual"):
+def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
 
     class Handler(BaseHTTPRequestHandler):
@@ -218,19 +207,17 @@ def build_server(engine, image_dir, port=8000, ranking="combined", top=24, examp
                 if u.path == "/api/info":
                     ex = yaml.safe_load(Path(examples).read_text(encoding="utf-8")) if Path(examples).exists() else {}
                     ex = {k: [x if isinstance(x, str) else x["q"] for x in v or []] for k, v in (ex or {}).items()}
-                    return self.send(200, dict(parser=engine.parser.name, ranking=ranking, rankings=RANKINGS, top=top,
-                                               rank_by=rank_by,
+                    return self.send(200, dict(parser=engine.parser.name, ranking=ranking, rankings=RANKINGS,
                                                products=len(engine.products), facets=engine.facets, examples=ex,
                                                categories={k: sum(p["category"] == k for p in engine.products)
                                                            for k in engine.facets}))
                 if u.path == "/api/search":
                     q = params.get("q", [""])[0].strip()[:300]
                     r = params.get("ranking", [ranking])[0]
-                    by = params.get("rank_by", [rank_by])[0]
                     manual = json.loads(params["filters"][0]) if params.get("filters") else None
-                    if (not q and manual is None) or r not in RANKINGS or by not in RANK_BY:
+                    if (not q and manual is None) or r not in RANKINGS:
                         return self.send(400, {"error": dict(stage="request", message="empty query or unknown ranking")})
-                    return self.send(200, engine.search(q, r, manual, by))
+                    return self.send(200, engine.search(q, r, manual))
                 if u.path == "/api/product":
                     p = engine.product(params.get("id", [""])[0])
                     return self.send(200, p) if p else self.send(404, {"error": dict(stage="product", message="no such product")})
@@ -266,9 +253,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--parser", default="llm", help="llm, mock or module:function")
     ap.add_argument("--ranking", choices=RANKINGS, default="combined")
-    ap.add_argument("--rank-by", choices=RANK_BY, default="residual", help="text used for ranking")
     ap.add_argument("--hyde-model", default="gemini-3.5-flash-lite")
-    ap.add_argument("--top", type=int, default=24)
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)
     ap.add_argument("--no-warmup", action="store_true", help="skip the test embedding call at startup")
@@ -290,8 +275,8 @@ def main():
             print(f"Embedding API warm-up failed ({type(e).__name__}): check the network and GCP credentials")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
     engine = SearchEngine(products, T, I, parser, embedder, common.HydeWriter(args.hyde_model))
-    print(f"Parser: {engine.parser.name} · ranking: {args.ranking} by {args.rank_by}")
-    srv = build_server(engine, meta["dataset"], args.port, args.ranking, args.top, rank_by=args.rank_by)
+    print(f"Parser: {engine.parser.name} · ranking: {args.ranking}")
+    srv = build_server(engine, meta["dataset"], args.port, args.ranking)
     url = f"http://127.0.0.1:{args.port}/"
     print(f"\nReady: {url}  (Ctrl+C to stop)")
     if not args.no_browser:

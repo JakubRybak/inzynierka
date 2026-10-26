@@ -42,19 +42,19 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
 ## Using the page
 
 - **Search bar and examples** – type a query (English or Polish) or click one of the examples, grouped by category.
-- **Parser reading** (under the search bar) – the conditions the parser extracted, in green, plus the category and
-  the residual: the part of the query that did not map to any filter (e.g. "for a wedding").
-- **Filter panel** (left) – every feature and value of the selected category, as defined by the parser response
+- **Parser reading** (under the search bar) – the conditions the parser extracted, one per line: the category
+  outlined, included values in green, excluded ones (AND NOT) in red.
+- **Filters** (button above the results, opens a panel on the right) – every feature and value of the selected category, as defined by the parser response
   schemas, with the number of products. After a search it shows what the parser picked. Clicking a value cycles
   *include → exclude → off*; multi-valued features (`colors`, `main_composition`, `dress_type`) also have a mode:
   *any of*, *all of* or *only*. Every change searches again straight away with these filters, without the parser.
   *Reset to parser* restores the parser's filters. When the parser finds no category, you can pick one here.
 - **Ranking** – `combined` (text + image), `text`, `image` or `hyde` (see below).
-  **Rank by** – `residual` (default) or `full query`.
-- **Stage timings** (right) – parsing (with its two LLM steps and the cost), filtering and ranking, on one
-  timeline, plus the whole request as measured in the browser.
-- **Product details** – click a product for all its images, features, description and ranking scores.
-- A link like `/?q=black+midi+dress&ranking=text&rank_by=query` opens a search directly.
+- **Stage timings** (left, under the parser reading) – parsing (with its two LLM steps), filtering and ranking,
+  on one timeline.
+- **Results** (right, all of them, scrollable) – image, name, brand, price and the features that matched the
+  query. Clicking a product shows all its images, its description and every feature, the matched ones highlighted.
+- A link like `/?q=black+midi+dress&ranking=text` opens a search directly.
 
 ## How it works
 
@@ -83,10 +83,9 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
    product metadata. Features or values that do not occur in the index are dropped with a warning. When no product
    meets every condition, the result is empty.
 
-3. **Ranking** (`server.py`). The ranking text is the residual, or the full query when the residual is empty or
-   *Rank by: full query* is selected. It is embedded on every request with `gemini-embedding-2` (3072 dims) and
-   compared (cosine) with the precomputed embeddings of the candidates:
-   - `text` – with the product descriptions, query sent as `task: search result | query: <text>`;
+3. **Ranking** (`server.py`). The full query is embedded on every request with `gemini-embedding-2` (3072 dims)
+   and compared (cosine) with the precomputed embeddings of the candidates:
+   - `text` – with the product descriptions, query sent as `task: search result | query: <query>`;
    - `image` – with the main product images, plain text sent;
    - `combined` – mean of the z-scores of both, computed over the candidates;
    - `hyde` – an LLM (`gemini-3.5-flash-lite`) writes the description of an ideal product, and its embedding is
@@ -101,9 +100,7 @@ with `Cache-Control: no-store`. Only the index, the product embeddings and the A
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` or `module:function` returning the parser output format |
 | `--ranking` | `combined` | default ranking: `combined`, `text`, `image`, `hyde` |
-| `--rank-by` | `residual` | default ranking text: `residual` or `query` |
 | `--hyde-model` | `gemini-3.5-flash-lite` | model writing HyDE descriptions |
-| `--top` | `24` | results shown before *Show more* |
 | `--port` | `8000` | |
 | `--data` | `poc/search_ui/data` | index built by `prepare.py` |
 | `--no-warmup` | | skip the test embedding call at startup |
@@ -117,14 +114,14 @@ cover every indexed product.
 
 | Endpoint | |
 | --- | --- |
-| `GET /api/search?q=…&ranking=…&rank_by=…` | runs the whole pipeline |
-| `GET /api/search?q=…&filters=<json>` | skips the parser; `filters` is `{"category", "filters", "residual"}` in the parser format |
+| `GET /api/search?q=…&ranking=…` | runs the whole pipeline |
+| `GET /api/search?q=…&filters=<json>` | skips the parser; `filters` is `{"category", "filters"}` in the parser format |
 | `GET /api/info` | parser name, defaults, categories, filter panel values, example queries |
 | `GET /api/product?id=…` | product details |
 | `GET /images/<image_path>` | product image |
 
 The search response contains `parsed` (category, filters, residual and their source), `tree`, `condition`,
-`warnings`, `results` (with `score`, `features` and the `matched` features), `ranking_text`, `rank_by`, `hyde`,
+`warnings`, `results` (with `score`, `features` and the `matched` features), `hyde`,
 `timings` (`parsing_ms`, `filtering_ms`, `ranking_ms`, `hyde_ms`, `query_embedding_ms`, `total_ms`) and, for the LLM
 parser, `parser_info` with the latency of both parser steps and the estimated cost. Errors come back as
 `{"error": {"stage", "message"}}` with the timings measured so far.
