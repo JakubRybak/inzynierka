@@ -1,0 +1,96 @@
+# Mock parser responses in the LLM parser output format (queries from example_queries.yaml).
+
+# T-shirts
+"white t-shirt":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [White]}
+"black oversized cotton t-shirt for men":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: fit, operator: in, values: [Oversized]}
+    - {feature: main_composition, operator: contains_any, values: [Cotton]}
+    - {feature: gender, operator: in, values: [Men]}
+"floral or striped t-shirt":
+  category: T-shirts
+  filters:
+    - {feature: pattern, operator: in, values: [Floral, Striped]}
+"long sleeve t-shirt without polyester":
+  category: T-shirts
+  filters:
+    - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
+    - {feature: main_composition, operator: contains_none, values: [Polyester]}
+"purple cropped linen v-neck t-shirt":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [Purple]}
+    - {feature: length, operator: in, values: [Cropped]}
+    - {feature: main_composition, operator: contains_any, values: [Linen]}
+    - {feature: neckline, operator: in, values: [V-Neck]}
+"simple t-shirt for summer":
+  category: T-shirts
+  residual: simple for summer
+
+# Dresses
+"black midi dress":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: length, operator: in, values: [Midi]}
+"black silk slip dress":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: main_composition, operator: contains_any, values: [Silk]}
+    - {feature: dress_type, operator: contains_any, values: [Slip]}
+"wrap or shirt dress":
+  category: Dresses
+  filters:
+    - {feature: dress_type, operator: contains_any, values: [Wrap, Shirt Dress]}
+"long sleeve maxi dress without collar":
+  category: Dresses
+  filters:
+    - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
+    - {feature: length, operator: in, values: [Maxi]}
+    - {feature: neckline, operator: not_in, values: [Collared]}
+"green leather mini shirt dress":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Green]}
+    - {feature: main_composition, operator: contains_any, values: [Leather]}
+    - {feature: length, operator: in, values: [Mini]}
+    - {feature: dress_type, operator: contains_any, values: [Shirt Dress]}
+"elegant dress for a wedding":
+  category: Dresses
+  residual: elegant for a wedding
+
+# Tank tops & Camisoles
+"white tank top":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: colors, operator: contains_any, values: [White]}
+"black and white striped tank top":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: colors, operator: contains_all, values: [Black, White]}
+    - {feature: pattern, operator: in, values: [Striped]}
+"halter or racerback tank top":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: strap_style, operator: in, values: [Halter, Racerback]}
+"men's tank top not black":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: gender, operator: in, values: [Men]}
+    - {feature: colors, operator: contains_none, values: [Black]}
+"yellow cropped linen racerback tank top":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: colors, operator: contains_any, values: [Yellow]}
+    - {feature: length, operator: in, values: [Cropped]}
+    - {feature: main_composition, operator: contains_any, values: [Linen]}
+    - {feature: strap_style, operator: in, values: [Racerback]}
+"tank top for the gym":
+  category: Tank tops & Camisoles
+  residual: for the gym

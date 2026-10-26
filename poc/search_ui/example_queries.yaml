@@ -1,0 +1,24 @@
+# Example queries shown in the UI. Each group: one feature, several features, OR, exclusion,
+# no results (empty: true) and a vague query where ranking does the work.
+
+T-shirts:
+  - white t-shirt
+  - black oversized cotton t-shirt for men
+  - floral or striped t-shirt
+  - long sleeve t-shirt without polyester
+  - {q: purple cropped linen v-neck t-shirt, empty: true}
+  - simple t-shirt for summer
+Dresses:
+  - black midi dress
+  - black silk slip dress
+  - wrap or shirt dress
+  - long sleeve maxi dress without collar
+  - {q: green leather mini shirt dress, empty: true}
+  - elegant dress for a wedding
+Tank tops & Camisoles:
+  - white tank top
+  - black and white striped tank top
+  - halter or racerback tank top
+  - men's tank top not black
+  - {q: yellow cropped linen racerback tank top, empty: true}
+  - tank top for the gym
