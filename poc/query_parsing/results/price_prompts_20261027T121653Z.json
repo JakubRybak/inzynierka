@@ -1,0 +1,838 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "thinking": "NONE",
+  "location": "global",
+  "scope": "Raw structured model responses only; no parser normalization or UI filtering",
+  "input_usd_per_million_assumed": 0.3,
+  "output_usd_per_million_assumed": 2.5,
+  "results": [
+    {
+      "stage": "features",
+      "case": {
+        "category": "T-shirts",
+        "query": "black cotton tee below 175 dollars",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5119,
+        "candidatesTokenCount": 127,
+        "totalTokenCount": 5246,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5119
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 127
+          }
+        ]
+      },
+      "seconds": 1.9985042500011332,
+      "estimated_cost_usd": 0.0018532
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "T-shirts",
+        "query": "black cotton tee below 175 euros",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5119,
+        "candidatesTokenCount": 127,
+        "totalTokenCount": 5246,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5119
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 127
+          }
+        ]
+      },
+      "seconds": 1.1947747919984977,
+      "estimated_cost_usd": 0.0018532
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "T-shirts",
+        "query": "black cotton tee below 175 PLN",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5119,
+        "candidatesTokenCount": 127,
+        "totalTokenCount": 5246,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5119
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 127
+          }
+        ]
+      },
+      "seconds": 1.1777265000000625,
+      "estimated_cost_usd": 0.0018532
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Dresses",
+        "query": "sukienka do 399,99 zl",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 399.99
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 399.99
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 6187,
+        "candidatesTokenCount": 52,
+        "totalTokenCount": 6239,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 6187
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 52
+          }
+        ]
+      },
+      "seconds": 1.3118813749988476,
+      "estimated_cost_usd": 0.0019860999999999998
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Dresses",
+        "query": "dress costing at least 75 euros",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 75
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 75
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 6184,
+        "candidatesTokenCount": 48,
+        "totalTokenCount": 6232,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 6184
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 48
+          }
+        ]
+      },
+      "seconds": 1.3315592500002822,
+      "estimated_cost_usd": 0.0019752
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Tank tops & Camisoles",
+        "query": "tank top costing more than 40 PLN",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gt",
+            "value": 40
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gt",
+            "value": 40
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5457,
+        "candidatesTokenCount": 48,
+        "totalTokenCount": 5505,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5457
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 48
+          }
+        ]
+      },
+      "seconds": 1.042725082999823,
+      "estimated_cost_usd": 0.0017571
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Tank tops & Camisoles",
+        "query": "camisole priced at exactly 89.50 dollars",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "eq",
+            "value": 89.5
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "eq",
+            "value": 89.5
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5461,
+        "candidatesTokenCount": 50,
+        "totalTokenCount": 5511,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5461
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 50
+          }
+        ]
+      },
+      "seconds": 1.1082994579992373,
+      "estimated_cost_usd": 0.0017632999999999998
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Dresses",
+        "query": "dress priced between 110 and 230 euros",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 110
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 230
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 110
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 230
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 6189,
+        "candidatesTokenCount": 80,
+        "totalTokenCount": 6269,
+        "cachedContentTokenCount": 6005,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 6189
+          }
+        ],
+        "cacheTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 6005
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 80
+          }
+        ]
+      },
+      "seconds": 2.2039397499993356,
+      "estimated_cost_usd": 0.0020567
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "T-shirts",
+        "query": "tee above 70 but below 180 PLN",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gt",
+            "value": 70
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 180
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gt",
+            "value": 70
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 180
+          }
+        ],
+        "residual": ""
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5122,
+        "candidatesTokenCount": 79,
+        "totalTokenCount": 5201,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5122
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 79
+          }
+        ]
+      },
+      "seconds": 1.0508694579984876,
+      "estimated_cost_usd": 0.0017341
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "T-shirts",
+        "query": "100% cotton T-shirt size 42",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          }
+        ],
+        "residual_contains": [
+          "42"
+        ]
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          }
+        ],
+        "residual": "size 42"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5123,
+        "candidatesTokenCount": 63,
+        "totalTokenCount": 5186,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5123
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 63
+          }
+        ]
+      },
+      "seconds": 1.041921000000002,
+      "estimated_cost_usd": 0.0016944
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Tank tops & Camisoles",
+        "query": "cheap tank top around 80 euros",
+        "filters": [],
+        "residual_contains": [
+          "cheap",
+          "80"
+        ]
+      },
+      "actual": {
+        "filters": [],
+        "residual": "cheap tank top around 80 euros"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 5456,
+        "candidatesTokenCount": 24,
+        "totalTokenCount": 5480,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 5456
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 24
+          }
+        ]
+      },
+      "seconds": 0.8633863340000971,
+      "estimated_cost_usd": 0.0016967999999999998
+    },
+    {
+      "stage": "features",
+      "case": {
+        "category": "Dresses",
+        "query": "blue dress below 275 dollars for a wedding",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 275
+          }
+        ],
+        "residual_contains": [
+          "wedding"
+        ],
+        "residual_excludes": [
+          "275",
+          "dollar",
+          "blue"
+        ]
+      },
+      "actual": {
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 275
+          }
+        ],
+        "residual": "for a wedding"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 6187,
+        "candidatesTokenCount": 91,
+        "totalTokenCount": 6278,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 6187
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 91
+          }
+        ]
+      },
+      "seconds": 1.0772527919998538,
+      "estimated_cost_usd": 0.0020835999999999997
+    },
+    {
+      "stage": "category",
+      "case": {
+        "category": "T-shirts",
+        "query": "black cotton tee below 175 dollars",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lt",
+            "value": 175
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "category": "T-shirts"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 780,
+        "candidatesTokenCount": 13,
+        "totalTokenCount": 793,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 780
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 13
+          }
+        ]
+      },
+      "seconds": 0.9019819170007395,
+      "estimated_cost_usd": 0.0002665
+    },
+    {
+      "stage": "category",
+      "case": {
+        "category": "Dresses",
+        "query": "sukienka do 399,99 zl",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 399.99
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "category": "Dresses"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 782,
+        "candidatesTokenCount": 12,
+        "totalTokenCount": 794,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 782
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 12
+          }
+        ]
+      },
+      "seconds": 0.6262067080006091,
+      "estimated_cost_usd": 0.0002646
+    },
+    {
+      "stage": "category",
+      "case": {
+        "category": "Tank tops & Camisoles",
+        "query": "tank top costing more than 40 PLN",
+        "filters": [
+          {
+            "feature": "price",
+            "operator": "gt",
+            "value": 40
+          }
+        ],
+        "residual": ""
+      },
+      "actual": {
+        "category": "Tank tops & Camisoles"
+      },
+      "schema_valid": true,
+      "passed": true,
+      "usage": {
+        "promptTokenCount": 780,
+        "candidatesTokenCount": 11,
+        "totalTokenCount": 791,
+        "trafficType": "ON_DEMAND",
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 780
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11
+          }
+        ]
+      },
+      "seconds": 0.6216984580005374,
+      "estimated_cost_usd": 0.0002615
+    }
+  ],
+  "estimated_cost_usd": 0.0230995
+}

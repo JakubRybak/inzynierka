@@ -44,6 +44,9 @@ def to_condition(raw):
         raise conditions.ConditionError("filters must be a list")
     args = [{"feature": "category", "values": [raw["category"]]}]
     for i, f in enumerate(filters):
+        if isinstance(f, dict) and f.get("feature") == "price":
+            args.append(conditions.validate(f, f"filters[{i}]"))
+            continue
         if not isinstance(f, dict) or f.get("operator") not in OPERATORS:
             raise conditions.ConditionError(f"filters[{i}]: unknown operator {f.get('operator') if isinstance(f, dict) else f!r}")
         mode, negated = OPERATORS[f["operator"]]

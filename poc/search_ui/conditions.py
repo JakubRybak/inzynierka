@@ -9,6 +9,24 @@ intersection (default), all – the product has every value, exact – exactly t
 matches. category is compared with both category and section, brand with product metadata.
 """
 from collections import defaultdict
+import math
+import operator
+
+PRICE_OPERATORS = {"lt": operator.lt, "lte": operator.le, "gt": operator.gt,
+                   "gte": operator.ge, "eq": operator.eq}
+PRICE_SYMBOLS = {"lt": "<", "lte": "≤", "gt": ">", "gte": "≥", "eq": "="}
+
+
+def product_price(p):
+    """Positive finite catalog price; zero and invalid source values mean unknown."""
+    raw = p.get("msrpUSD")
+    if isinstance(raw, bool):
+        return None
+    try:
+        value = float(raw)
+    except (ValueError, TypeError, OverflowError):
+        return None
+    return value if math.isfinite(value) and value > 0 else None
 
 OPERATORS = {"and", "or", "not"}
 MATCH_MODES = {"any", "all", "exact"}
@@ -25,6 +43,13 @@ def validate(c, path="condition"):
     if not isinstance(c, dict):
         raise ConditionError(f"{path}: expected an object, got {type(c).__name__}")
     if "feature" in c:
+        if c["feature"] == "price":
+            v = c.get("value")
+            if (set(c) != {"feature", "operator", "value"}
+                    or c.get("operator") not in PRICE_OPERATORS
+                    or type(v) not in (int, float) or not math.isfinite(v) or v < 0):
+                raise ConditionError(f"{path}: price requires a numeric nonnegative value and lt/lte/gt/gte/eq")
+            return c
         if set(c) - {"feature", "values", "match"}:
             raise ConditionError(f"{path}: unknown keys {sorted(set(c) - {'feature', 'values', 'match'})}")
         v = c.get("values")
@@ -54,6 +79,8 @@ def describe(c, top=True):
     if c is None:
         return "no conditions"
     if "feature" in c:
+        if c["feature"] == "price":
+            return f"price {PRICE_SYMBOLS[c['operator']]} {c['value']:g}"
         v, mode = c["values"], c.get("match", "any")
         if mode == "exact":
             return f"{c['feature']} = only {{{', '.join(v)}}}"
@@ -105,6 +132,8 @@ def prune(c, vocabulary):
             return None
         if "feature" in c:
             f = c["feature"]
+            if f == "price":
+                return validate(c)
             if f not in vocabulary.values:
                 warnings.append(f"unsupported feature: {f} (dropped {describe(c)})")
                 return None
@@ -147,6 +176,7 @@ def prepare_product(p):
         else:
             v[f] = frozenset({str(val).casefold()})
     p["_v"] = v
+    p["_price"] = product_price(p)
     return p
 
 
@@ -154,6 +184,9 @@ def compile_condition(c):
     if c is None:
         return lambda p: True
     if "feature" in c:
+        if c["feature"] == "price":
+            compare, value = PRICE_OPERATORS[c["operator"]], c["value"]
+            return lambda p: p.get("_price") is not None and compare(p["_price"], value)
         f, vals, mode = c["feature"], frozenset(v.casefold() for v in c["values"]), c.get("match", "any")
         if mode == "all":
             return lambda p: f in p["_v"] and vals <= p["_v"][f]

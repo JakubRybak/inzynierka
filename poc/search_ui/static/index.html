@@ -147,7 +147,8 @@ const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
 let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0;
-let PANEL = {category: null, sel: {}, mode: {}}, brandQuery = "", applyTimer = null;
+const PRICE_OPS = {lt: "<", lte: "≤", gt: ">", gte: "≥", eq: "="};
+let PANEL = {category: null, sel: {}, mode: {}, prices: []}, brandQuery = "", applyTimer = null;
 
 fetch("/api/info", noCache).then(r => r.json()).then(d => {
   INFO = d;
@@ -173,8 +174,9 @@ $("q").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefau
 $("ranking").onchange = () => { if (D) search(D.parsed && D.parsed.source === "manual" ? panelFilters() : null); };
 
 function panelFromParsed(p) {
-  PANEL = {category: p && p.category || null, sel: {}, mode: {}};
+  PANEL = {category: p && p.category || null, sel: {}, mode: {}, prices: []};
   (p && p.filters || []).forEach(f => {
+    if (f.feature === "price") { PANEL.prices.push({...f}); return; }
     const s = PANEL.sel[f.feature] = PANEL.sel[f.feature] || {};
     if (EXCLUDE.has(f.operator)) f.values.forEach(v => s[v] = "out");
     else { f.values.forEach(v => s[v] = "in"); PANEL.mode[f.feature] = INCLUDE[f.operator] || "any"; }
@@ -184,6 +186,7 @@ function applySoon() { clearTimeout(applyTimer); applyTimer = setTimeout(() => s
 function panelFilters() {
   const filters = [];
   (INFO.facets[PANEL.category] || []).forEach(fc => {
+    if (fc.kind === "number") return;
     const s = PANEL.sel[fc.feature] || {};
     const ins = Object.keys(s).filter(v => s[v] === "in"), outs = Object.keys(s).filter(v => s[v] === "out");
     const multi = fc.kind === "multi", mode = PANEL.mode[fc.feature] || "any";
@@ -191,6 +194,7 @@ function panelFilters() {
       operator: !multi ? "in" : mode === "all" ? "contains_all" : mode === "exact" ? "equals_set" : "contains_any"});
     if (outs.length) filters.push({feature: fc.feature, values: outs, operator: multi ? "contains_none" : "not_in"});
   });
+  filters.push(...PANEL.prices.filter(p => p.value !== "").map(p => ({...p})));
   return {category: PANEL.category, filters};
 }
 function toggleFilters() {
@@ -208,6 +212,16 @@ function drawPanel() {
   if (!PANEL.category) h += `<div class="meta">The parser picks the category and the filters; you can change them here.</div>`;
   else h += `<div class="meta">Click a value: include → exclude → off.</div>`;
   (INFO.facets[PANEL.category] || []).forEach(fc => {
+    if (fc.kind === "number") {
+      h += `<div class="facet"><b>Price</b><div class="meta">Amounts compared directly; currencies are not converted.</div>` +
+        PANEL.prices.map((p, i) => `<div style="display:flex;gap:6px;align-items:center;margin:6px 0">` +
+          `<select data-price-op="${i}" aria-label="Price comparison ${i + 1}" style="width:60px;margin:0">` +
+          Object.entries(PRICE_OPS).map(([op, label]) => `<option value="${op}" ${op === p.operator ? "selected" : ""}>${esc(label)}</option>`).join("") +
+          `</select><input type="number" min="0" step="any" data-price-value="${i}" aria-label="Price amount ${i + 1}" value="${esc(p.value)}" style="width:100%;min-width:0">` +
+          `<button type="button" data-price-remove="${i}" aria-label="Remove price condition ${i + 1}">×</button></div>`).join("") +
+        `<button type="button" id="add-price">Add price condition</button></div>`;
+      return;
+    }
     const s = PANEL.sel[fc.feature] || {};
     let values = fc.values;
     if (fc.feature === "brand") {
@@ -223,10 +237,24 @@ function drawPanel() {
       `</div></div>`;
   });
   $("filters").innerHTML = h;
-  const active = Object.values(PANEL.sel).reduce((n, s) => n + Object.keys(s).length, 0);
+  const active = Object.values(PANEL.sel).reduce((n, s) => n + Object.keys(s).length, 0) + PANEL.prices.filter(p => p.value !== "").length;
   $("ftoggle").innerHTML = `Filters${active ? `<span class="badge">${active}</span>` : ""}`;
   $("fclose").onclick = toggleFilters;
-  $("pcat").onchange = e => { PANEL = {category: e.target.value || null, sel: {}, mode: {}}; drawPanel(); if (PANEL.category) applySoon(); };
+  $("pcat").onchange = e => { PANEL = {category: e.target.value || null, sel: {}, mode: {}, prices: PANEL.prices}; drawPanel(); if (PANEL.category) applySoon(); };
+  if ($("add-price")) $("add-price").onclick = () => { PANEL.prices.push({feature: "price", operator: "lte", value: ""}); drawPanel(); };
+  $("filters").querySelectorAll("[data-price-op]").forEach(el => el.onchange = () => {
+    const clause = PANEL.prices[Number(el.dataset.priceOp)];
+    clause.operator = el.value; if (clause.value !== "") applySoon();
+  });
+  $("filters").querySelectorAll("[data-price-value]").forEach(el => el.onchange = () => {
+    if (!el.checkValidity()) { el.reportValidity(); return; }
+    const value = el.value === "" ? "" : Number(el.value);
+    if (value !== "" && (!Number.isFinite(value) || value < 0)) return;
+    PANEL.prices[Number(el.dataset.priceValue)].value = value; applySoon();
+  });
+  $("filters").querySelectorAll("[data-price-remove]").forEach(el => el.onclick = () => {
+    PANEL.prices.splice(Number(el.dataset.priceRemove), 1); drawPanel(); applySoon();
+  });
   $("filters").querySelectorAll(".val").forEach(b => b.onclick = () => {
     const s = PANEL.sel[b.dataset.f] = PANEL.sel[b.dataset.f] || {}, v = b.dataset.v;
     s[v] = s[v] === "in" ? "out" : s[v] === "out" ? undefined : "in";
@@ -300,6 +328,7 @@ function leafKind(c, neg) {
 function treeHtml(c, neg = false, top = true) {
   if (!c) return `<span class="meta">no conditions</span>`;
   if (c.feature !== undefined) {
+    if (c.feature === "price") return `<span class="leaf ${leafKind(c, neg)}">price ${esc(PRICE_OPS[c.operator])} <b>${esc(c.value)}</b></span>`;
     const m = c.match || "any", single = c.values.length === 1 && m !== "exact";
     const op = m === "exact" ? "= only" : single ? "=" : m === "all" ? "⊇" : "∈";
     const v = single ? esc(c.values[0]) : `{${c.values.map(esc).join(", ")}}`;

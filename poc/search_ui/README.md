@@ -48,6 +48,7 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
   schemas, with the number of products. After a search it shows what the parser picked. Clicking a value cycles
   *include → exclude → off*; multi-valued features (`colors`, `main_composition`, `dress_type`) also have a mode:
   *any of*, *all of* or *only*. Every change searches again straight away with these filters, without the parser.
+  The numeric Price control supports `<`, `<=`, `>`, `>=` and `=`; add a second condition to form a range. Currency is not converted. Products with zero or unknown prices do not match an active price condition.
   *Reset to parser* restores the parser's filters. When the parser finds no category, you can pick one here.
 - **Ranking** – `combined` (text + image), `text`, `image` or `hyde` (see below).
 - **Stage timings** (left, under the parser reading) – parsing (with its two LLM steps), filtering and ranking,
@@ -68,6 +69,7 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
    | `not_in`, `contains_none` | the product has none of the values |
    | `contains_all` | the product has all the values |
    | `equals_set` | the product has exactly these values |
+   | `lt`, `lte`, `gt`, `gte`, `eq` | numeric `msrpUSD` price comparisons; price uses `value` rather than `values` |
 
    ```json
    {"op": "and", "args": [
@@ -80,7 +82,7 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
 2. **Filtering** (`conditions.py`). The tree is evaluated on every indexed product. Feature values are treated as
    sets; `main_composition` is the set of materials in it, whatever their share. A missing feature never matches,
    so a product without it is excluded by a positive filter and kept by a negative one. `brand` is compared with the
-   product metadata. Features or values that do not occur in the index are dropped with a warning. When no product
+   product metadata. A price comparison uses positive finite `msrpUSD`; zero, missing or invalid prices do not match. Features or values that do not occur in the index are dropped with a warning. When no product
    meets every condition, the result is empty.
 
 3. **Ranking** (`server.py`). The full query is embedded on every request with `gemini-embedding-2` (3072 dims)

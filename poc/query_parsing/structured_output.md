@@ -19,7 +19,7 @@ The response has one required field, `category`. It is one of `T-shirts`, `Tank 
 
 ## Step 2 definition
 
-The response has two required fields, `filters` and `residual`. `filters` may be empty; `residual` may be an empty string. Each filter has exactly `feature`, `operator`, and `values`.
+The response has two required fields, `filters` and `residual`. `filters` may be empty; `residual` may be an empty string. Categorical filters have exactly `feature`, `operator`, and `values`. Numeric price filters instead have exactly `feature: "price"`, `operator`, and a finite, nonnegative numeric `value`.
 
 Each category schema uses `anyOf` to pair every supported feature with its own operators and value vocabulary. This prevents mixing a valid feature with another feature's labels, such as `neckline: Mini`. Supported features include `brand` (single choice with operators `in` and `not_in` accepting open string brand names) across all categories. Every value list has at least one entry. Only the schema for Dresses includes `dress_type` and `dress_silhouette`; Tank tops & Camisoles has no `sleeve_length`. Collared and Standard Sleeved appear only where supported.
 
@@ -27,6 +27,9 @@ Each category schema uses `anyOf` to pair every supported feature with its own o
 | --- | --- |
 | Single choice | `in`, `not_in` |
 | Multi choice or material set | `contains_any`, `contains_all`, `equals_set`, `contains_none` |
+| Numeric price | `lt`, `lte`, `gt`, `gte`, `eq` |
+
+The price branch uses `type: NUMBER` and `minimum: 0`. Price ranges use two AND clauses, one per bound. Currency names and symbols are ignored without conversion. A mapped price and its currency are omitted from residual; vague or approximate prices stay in residual. Each category prompt includes price few-shot examples.
 
 The query schema does not apply the product's two-color limit to the list of query alternatives. For example, three alternatives are valid with `contains_any`. Likewise, `Other` may be one of several alternatives in a query, even though it occurs alone in a product's `dress_type` list. Product cardinality and exclusivity rules must not be copied onto query alternatives.
 
@@ -73,13 +76,14 @@ Before using a result, the application must check:
 
 - The response is complete JSON, the expected root keys are present, and no extra keys occur at any level.
 - Category is a supported scalar or null, and step 2 uses exactly the category chosen in step 1.
-- Every filter has a category-supported feature, a compatible operator, and values from that feature's enum.
+- Every filter has a category-supported feature and compatible operator. Categorical labels must belong to that feature's enum, except for open-string brand names. A price filter has a numeric `value` instead of `values`.
+- Numeric price values are finite, nonnegative numbers, excluding booleans and numeric strings.
 - Value lists are nonempty, contain strings, and have no duplicates.
 - `residual` is a string and the full original query remains available to ranking.
 - Refusals, truncated outputs, HTTP errors, or validation failures are retained as errors rather than converted to valid empty-filter searches.
 
 The schema does not establish semantic correctness: the model may still misread OR as AND, miss a requirement, or put the wrong meaning in residual. Dedicated contradiction detection remains deferred. The schemas omit unsupported constraints such as `uniqueItems` and `additionalProperties`; uniqueness and extra-key rejection must be checked locally.
 
-The prompts and schema definitions are prepared here. A query API runner and local response validator have not yet been implemented or tested against live requests.
+The price prompts and schemas are tested directly using `check_price_prompts.py`. Price support in the application's `QueryParser.parse()` normalization and search UI is pending: the existing normalizer expects `values` and discards numeric price clauses. This experiment therefore checks raw structured model responses, not end-to-end application filtering.
 
 Source: [Google Cloud structured output documentation](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/control-generated-output).

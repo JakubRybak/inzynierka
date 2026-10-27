@@ -8,6 +8,16 @@
           {
             "type": "OBJECT",
             "properties": {
+              "feature": {"type": "STRING", "enum": ["price"]},
+              "operator": {"type": "STRING", "enum": ["lt", "lte", "gt", "gte", "eq"]},
+              "value": {"type": "NUMBER", "minimum": 0}
+            },
+            "required": ["feature", "operator", "value"],
+            "propertyOrdering": ["feature", "operator", "value"]
+          },
+          {
+            "type": "OBJECT",
+            "properties": {
               "feature": {
                 "type": "STRING",
                 "enum": [

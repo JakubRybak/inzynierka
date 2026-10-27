@@ -26,6 +26,9 @@ def load(products, schemas=SCHEMAS):
         for option in json.loads(path.read_text(encoding="utf-8"))["properties"]["filters"]["items"]["anyOf"]:
             props = option["properties"]
             feature, operators = props["feature"]["enum"][0], props["operator"]["enum"]
+            if feature == "price":
+                features.append(dict(feature=feature, kind="number", operators=operators, values=[]))
+                continue
             allowed = props["values"]["items"].get("enum")
             if allowed is None:
                 # open vocabulary (brand): the values present in the index

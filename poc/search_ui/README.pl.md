@@ -51,6 +51,7 @@ plik z cechami.
   parsera, z liczbą produktów. Po wyszukaniu pokazuje to, co wybrał parser. Kliknięcie wartości przełącza
   *uwzględnij → wyklucz → nic*; cechy wielowartościowe (`colors`, `main_composition`, `dress_type`) mają też tryb:
   *any of*, *all of* albo *only*. Każda zmiana od razu wyszukuje ponownie z tymi filtrami, bez parsera.
+  Filtr ceny obsługuje `<`, `<=`, `>`, `>=` i `=`; drugi warunek pozwala ustawić przedział. Waluty nie są przeliczane. Produkty z ceną zero lub nieznaną nie pasują do aktywnego filtra ceny.
   *Reset to parser* przywraca filtry parsera. Gdy parser nie znajdzie kategorii, można ją wybrać tutaj.
 - **Ranking** – `combined` (tekst + zdjęcie), `text`, `image` albo `hyde` (opis niżej).
 - **Czasy etapów** (po lewej, pod odczytem parsera) – parsowanie (z dwoma krokami LLM), filtrowanie i sortowanie
@@ -71,6 +72,7 @@ plik z cechami.
    | `not_in`, `contains_none` | produkt nie ma żadnej z wartości |
    | `contains_all` | produkt ma wszystkie wartości |
    | `equals_set` | produkt ma dokładnie te wartości |
+   | `lt`, `lte`, `gt`, `gte`, `eq` | porównanie liczbowej ceny `msrpUSD`; filtr ceny używa `value` zamiast `values` |
 
    ```json
    {"op": "and", "args": [
@@ -83,7 +85,7 @@ plik z cechami.
 2. **Filtrowanie** (`conditions.py`). Drzewo jest sprawdzane na każdym produkcie z indeksu. Wartości cech traktujemy
    jak zbiory; `main_composition` to zbiór materiałów w składzie, niezależnie od ich udziału. Brakująca cecha nigdy
    nie pasuje, więc produkt bez niej odpada przy filtrze pozytywnym i zostaje przy negatywnym. `brand` jest
-   porównywany z metadanymi produktu. Cechy albo wartości, których nie ma w indeksie, są pomijane z ostrzeżeniem.
+   porównywany z metadanymi produktu. Filtr ceny porównuje dodatnią, skończoną wartość `msrpUSD`; zero, brak lub niepoprawna cena nie pasują. Cechy albo wartości, których nie ma w indeksie, są pomijane z ostrzeżeniem.
    Gdy żaden produkt nie spełnia wszystkich warunków, wynik jest pusty.
 
 3. **Sortowanie** (`server.py`). Przy każdym żądaniu liczony jest embedding całego zapytania

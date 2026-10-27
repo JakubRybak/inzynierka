@@ -49,6 +49,13 @@ def _show_value(v):
     return ", ".join(map(str, v)) if isinstance(v, list) else str(v)
 
 
+def _show_price(p):
+    value = conditions.product_price(p)
+    if value is None:
+        return ""
+    return (f"{value:,.0f}" if value.is_integer() else f"{value:,.2f}") + " USD"
+
+
 def _z(s, mask):
     if not mask.any():
         return np.zeros_like(s)
@@ -160,7 +167,7 @@ class SearchEngine:
             results.append(dict(
                 id=p["product_id"], name=_text(p["name"]), brand=_text(p.get("brand")), category=p["category"],
                 section=p["section"], gender=p.get("gender") or "",
-                price="" if p.get("msrpUSD") in (None, "") or p["msrpUSD"] != p["msrpUSD"] else f"{float(p['msrpUSD']):,.0f} USD",
+                price=_show_price(p),
                 image=f"/images/{p['images'][0]}" if p["images"] else "",
                 score=round(float(score[j]), 4),
                 score_text=None if s_t is None else round(float(s_t[j]), 4),
@@ -176,7 +183,7 @@ class SearchEngine:
         if p is None:
             return None
         return dict(id=pid, name=_text(p["name"]), brand=_text(p.get("brand")), category=p["category"], section=p["section"],
-                    gender=p.get("gender") or "", description=_text(p.get("description")),
+                    gender=p.get("gender") or "", price=_show_price(p), description=_text(p.get("description")),
                     composition=_text(p.get("composition")), season=p.get("season") or "",
                     original_category=f"{p.get('original_section')} / {p.get('original_category')}",
                     status=p.get("status"), images=[f"/images/{z}" for z in p["images"]],

@@ -15,12 +15,13 @@ import argparse
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import re
 import sys
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import google.auth
 from google.auth.transport.requests import AuthorizedSession, Request
@@ -61,10 +62,20 @@ class FilterClause:
 
 
 @dataclass
+class PriceFilterClause:
+    feature: str
+    operator: str
+    value: float
+
+    def to_dict(self) -> Dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
 class ParsedQuery:
     query: str
     category: Optional[str]
-    filters: List[FilterClause] = field(default_factory=list)
+    filters: List[Union[FilterClause, PriceFilterClause]] = field(default_factory=list)
     residual: str = ""
     step1_latency_seconds: float = 0.0
     step2_latency_seconds: float = 0.0
@@ -94,7 +105,8 @@ class ParsedQuery:
         if self.filters:
             lines.append("Filters:")
             for f in self.filters:
-                lines.append(f"  • {f.feature} {f.operator} {f.values}")
+                value = f.value if isinstance(f, PriceFilterClause) else f.values
+                lines.append(f"  • {f.feature} {f.operator} {value}")
         else:
             lines.append("Filters: None")
         lines.append(f"Residual: \"{self.residual}\"")
@@ -307,11 +319,20 @@ class QueryParser:
         }
 
         # Local validation & normalization of filters
-        validated_filters: List[FilterClause] = []
+        validated_filters: List[Union[FilterClause, PriceFilterClause]] = []
         raw_filters = step2_res.get("filters", [])
         for f in raw_filters:
             feat = f.get("feature")
             op = f.get("operator")
+            if feat == "price":
+                value = f.get("value")
+                if (set(f) != {"feature", "operator", "value"}
+                        or op not in {"lt", "lte", "gt", "gte", "eq"}
+                        or type(value) not in (int, float)
+                        or not math.isfinite(value) or value < 0):
+                    raise ValueError(f"Invalid price filter: {f!r}")
+                validated_filters.append(PriceFilterClause(feature=feat, operator=op, value=value))
+                continue
             vals = f.get("values", [])
             if not feat or not op or not vals:
                 continue

@@ -63,6 +63,9 @@ Output: {"category":"T-shirts"}
 
 Query: a top
 Output: {"category":null}
+
+Query: black cotton T-shirt under 200 euros
+Output: {"category":"T-shirts"}
 ```
 
 The application proceeds to step 2 only when `category` is not null. A null category produces no catalog search.
