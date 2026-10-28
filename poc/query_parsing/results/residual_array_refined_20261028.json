@@ -1,0 +1,1334 @@
+[
+  {
+    "query": "elegant dress for a summer wedding",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "elegant",
+      "for a summer wedding"
+    ],
+    "step1_latency_seconds": 1.215,
+    "step2_latency_seconds": 1.143,
+    "total_latency_seconds": 2.359,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:09.438300+00:00",
+      "step1": {
+        "latency_seconds": 1.2152671249996274,
+        "usage": {
+          "promptTokenCount": 777,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 789,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 777
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1432092919999377,
+        "usage": {
+          "promptTokenCount": 6424,
+          "candidatesTokenCount": 31,
+          "totalTokenCount": 6455,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6424
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 31
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "elegant",
+            "for a summer wedding"
+          ]
+        }
+      },
+      "total_latency_seconds": 2.359100500000295,
+      "total_tokens": {
+        "input": 7201,
+        "output": 43,
+        "total": 7244
+      },
+      "estimated_cost_usd": 0.0022678
+    }
+  },
+  {
+    "query": "modest dress for a graduation ceremony",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "modest",
+      "for a graduation ceremony"
+    ],
+    "step1_latency_seconds": 0.609,
+    "step2_latency_seconds": 1.009,
+    "total_latency_seconds": 1.618,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:11.797815+00:00",
+      "step1": {
+        "latency_seconds": 0.6085097090003728,
+        "usage": {
+          "promptTokenCount": 778,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 790,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 778
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.0093028749997757,
+        "usage": {
+          "promptTokenCount": 6424,
+          "candidatesTokenCount": 32,
+          "totalTokenCount": 6456,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6424
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 32
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "modest",
+            "for a graduation ceremony"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.6181458330001988,
+      "total_tokens": {
+        "input": 7202,
+        "output": 44,
+        "total": 7246
+      },
+      "estimated_cost_usd": 0.0022706
+    }
+  },
+  {
+    "query": "comfortable breathable dress for a beach holiday",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "comfortable",
+      "breathable",
+      "for a beach holiday"
+    ],
+    "step1_latency_seconds": 0.667,
+    "step2_latency_seconds": 1.177,
+    "total_latency_seconds": 1.844,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:13.416109+00:00",
+      "step1": {
+        "latency_seconds": 0.6665027920003013,
+        "usage": {
+          "promptTokenCount": 778,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 790,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 778
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1769118340002933,
+        "usage": {
+          "promptTokenCount": 6425,
+          "candidatesTokenCount": 37,
+          "totalTokenCount": 6462,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6425
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 37
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "comfortable",
+            "breathable",
+            "for a beach holiday"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.8437091669998154,
+      "total_tokens": {
+        "input": 7203,
+        "output": 49,
+        "total": 7252
+      },
+      "estimated_cost_usd": 0.0022834
+    }
+  },
+  {
+    "query": "a dress for autumn office parties",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "for autumn office parties"
+    ],
+    "step1_latency_seconds": 0.562,
+    "step2_latency_seconds": 1.007,
+    "total_latency_seconds": 1.57,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:15.260073+00:00",
+      "step1": {
+        "latency_seconds": 0.5624025829997663,
+        "usage": {
+          "promptTokenCount": 777,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 789,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 777
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.006701208999857,
+        "usage": {
+          "promptTokenCount": 6424,
+          "candidatesTokenCount": 26,
+          "totalTokenCount": 6450,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6424
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 26
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "for autumn office parties"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.5695201669996095,
+      "total_tokens": {
+        "input": 7201,
+        "output": 38,
+        "total": 7239
+      },
+      "estimated_cost_usd": 0.0022553
+    }
+  },
+  {
+    "query": "stylish but not too flashy dress for a date",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "stylish but not too flashy",
+      "for a date"
+    ],
+    "step1_latency_seconds": 0.515,
+    "step2_latency_seconds": 1.125,
+    "total_latency_seconds": 1.64,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:16.829838+00:00",
+      "step1": {
+        "latency_seconds": 0.5148805829999219,
+        "usage": {
+          "promptTokenCount": 780,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 787,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 780
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1248207079997883,
+        "usage": {
+          "promptTokenCount": 6427,
+          "candidatesTokenCount": 34,
+          "totalTokenCount": 6461,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6427
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 34
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "stylish but not too flashy",
+            "for a date"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.6400375840003107,
+      "total_tokens": {
+        "input": 7207,
+        "output": 41,
+        "total": 7248
+      },
+      "estimated_cost_usd": 0.0022646
+    }
+  },
+  {
+    "query": "red midi dress below 180 euros for a garden reception",
+    "category": "Dresses",
+    "filters": [
+      {
+        "feature": "colors",
+        "operator": "contains_any",
+        "values": [
+          "Red"
+        ]
+      },
+      {
+        "feature": "length",
+        "operator": "in",
+        "values": [
+          "Midi"
+        ]
+      },
+      {
+        "feature": "price",
+        "operator": "lt",
+        "value": 180
+      }
+    ],
+    "residual": [
+      "for a garden reception"
+    ],
+    "step1_latency_seconds": 0.66,
+    "step2_latency_seconds": 1.172,
+    "total_latency_seconds": 1.832,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:18.470168+00:00",
+      "step1": {
+        "latency_seconds": 0.6600315410000803,
+        "usage": {
+          "promptTokenCount": 784,
+          "candidatesTokenCount": 6,
+          "totalTokenCount": 790,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 784
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.171721417000299,
+        "usage": {
+          "promptTokenCount": 6431,
+          "candidatesTokenCount": 135,
+          "totalTokenCount": 6566,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6431
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 135
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Red"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Midi"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lt",
+              "value": 180
+            }
+          ],
+          "residual": [
+            "for a garden reception"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.832194250000157,
+      "total_tokens": {
+        "input": 7215,
+        "output": 141,
+        "total": 7356
+      },
+      "estimated_cost_usd": 0.0025169999999999997
+    }
+  },
+  {
+    "query": "soft T-shirt for long flights",
+    "category": "T-shirts",
+    "filters": [],
+    "residual": [
+      "soft",
+      "for long flights"
+    ],
+    "step1_latency_seconds": 0.907,
+    "step2_latency_seconds": 1.046,
+    "total_latency_seconds": 1.953,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:20.302610+00:00",
+      "step1": {
+        "latency_seconds": 0.9068905409999388,
+        "usage": {
+          "promptTokenCount": 778,
+          "candidatesTokenCount": 8,
+          "totalTokenCount": 786,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 778
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "T-shirts"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.046059540999977,
+        "usage": {
+          "promptTokenCount": 5366,
+          "candidatesTokenCount": 30,
+          "totalTokenCount": 5396,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5366
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 30
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "soft",
+            "for long flights"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.953240709000056,
+      "total_tokens": {
+        "input": 6144,
+        "output": 38,
+        "total": 6182
+      },
+      "estimated_cost_usd": 0.0019382
+    }
+  },
+  {
+    "query": "breathable and comfortable T-shirt for yoga",
+    "category": "T-shirts",
+    "filters": [],
+    "residual": [
+      "breathable",
+      "comfortable",
+      "for yoga"
+    ],
+    "step1_latency_seconds": 0.597,
+    "step2_latency_seconds": 1.098,
+    "total_latency_seconds": 1.695,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:22.256122+00:00",
+      "step1": {
+        "latency_seconds": 0.5965045830002964,
+        "usage": {
+          "promptTokenCount": 780,
+          "candidatesTokenCount": 13,
+          "totalTokenCount": 793,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 780
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 13
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "T-shirts"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.0982085409996216,
+        "usage": {
+          "promptTokenCount": 5367,
+          "candidatesTokenCount": 35,
+          "totalTokenCount": 5402,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5367
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 35
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "breathable",
+            "comfortable",
+            "for yoga"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.6950313749998713,
+      "total_tokens": {
+        "input": 6147,
+        "output": 48,
+        "total": 6195
+      },
+      "estimated_cost_usd": 0.0019641
+    }
+  },
+  {
+    "query": "T-shirt for tennis or badminton",
+    "category": "T-shirts",
+    "filters": [],
+    "residual": [
+      "for tennis or badminton"
+    ],
+    "step1_latency_seconds": 0.961,
+    "step2_latency_seconds": 1.016,
+    "total_latency_seconds": 1.977,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:23.951428+00:00",
+      "step1": {
+        "latency_seconds": 0.9605540829998063,
+        "usage": {
+          "promptTokenCount": 778,
+          "candidatesTokenCount": 13,
+          "totalTokenCount": 791,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 778
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 13
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "T-shirts"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.0159751250002955,
+        "usage": {
+          "promptTokenCount": 5366,
+          "candidatesTokenCount": 26,
+          "totalTokenCount": 5392,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5366
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 26
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "for tennis or badminton"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.9770506250001745,
+      "total_tokens": {
+        "input": 6144,
+        "output": 39,
+        "total": 6183
+      },
+      "estimated_cost_usd": 0.0019406999999999998
+    }
+  },
+  {
+    "query": "black cotton T-shirt",
+    "category": "T-shirts",
+    "filters": [
+      {
+        "feature": "colors",
+        "operator": "contains_any",
+        "values": [
+          "Black"
+        ]
+      },
+      {
+        "feature": "main_composition",
+        "operator": "contains_any",
+        "values": [
+          "Cotton"
+        ]
+      }
+    ],
+    "residual": [],
+    "step1_latency_seconds": 0.719,
+    "step2_latency_seconds": 1.171,
+    "total_latency_seconds": 1.89,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:25.929038+00:00",
+      "step1": {
+        "latency_seconds": 0.7186473330002627,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 8,
+          "totalTokenCount": 784,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "T-shirts"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1713339580001048,
+        "usage": {
+          "promptTokenCount": 5364,
+          "candidatesTokenCount": 97,
+          "totalTokenCount": 5461,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5364
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 97
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": []
+        }
+      },
+      "total_latency_seconds": 1.8902505000000929,
+      "total_tokens": {
+        "input": 6140,
+        "output": 105,
+        "total": 6245
+      },
+      "estimated_cost_usd": 0.0021045
+    }
+  },
+  {
+    "query": "lekka i elegancka sukienka na kolację",
+    "category": "Dresses",
+    "filters": [],
+    "residual": [
+      "lekka",
+      "elegancka",
+      "na kolację"
+    ],
+    "step1_latency_seconds": 0.764,
+    "step2_latency_seconds": 1.862,
+    "total_latency_seconds": 2.626,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:27.819368+00:00",
+      "step1": {
+        "latency_seconds": 0.7642430410000998,
+        "usage": {
+          "promptTokenCount": 781,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 793,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 781
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.8616240000001198,
+        "usage": {
+          "promptTokenCount": 6428,
+          "candidatesTokenCount": 38,
+          "totalTokenCount": 6466,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6428
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 38
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "lekka",
+            "elegancka",
+            "na kolację"
+          ]
+        }
+      },
+      "total_latency_seconds": 2.6262042499997733,
+      "total_tokens": {
+        "input": 7209,
+        "output": 50,
+        "total": 7259
+      },
+      "estimated_cost_usd": 0.0022877
+    }
+  },
+  {
+    "query": "airy camisole for hot summer days",
+    "category": "Tank tops & Camisoles",
+    "filters": [],
+    "residual": [
+      "airy",
+      "for hot summer days"
+    ],
+    "step1_latency_seconds": 0.808,
+    "step2_latency_seconds": 0.926,
+    "total_latency_seconds": 1.735,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:30.445768+00:00",
+      "step1": {
+        "latency_seconds": 0.808197249999921,
+        "usage": {
+          "promptTokenCount": 779,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 790,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 779
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 11
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Tank tops & Camisoles"
+        }
+      },
+      "step2": {
+        "latency_seconds": 0.9262133749998611,
+        "usage": {
+          "promptTokenCount": 5701,
+          "candidatesTokenCount": 31,
+          "totalTokenCount": 5732,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5701
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 31
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "airy",
+            "for hot summer days"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.7347382909997577,
+      "total_tokens": {
+        "input": 6480,
+        "output": 42,
+        "total": 6522
+      },
+      "estimated_cost_usd": 0.002049
+    }
+  },
+  {
+    "query": "comfortable tank top for gym workouts",
+    "category": "Tank tops & Camisoles",
+    "filters": [],
+    "residual": [
+      "comfortable",
+      "for gym workouts"
+    ],
+    "step1_latency_seconds": 0.963,
+    "step2_latency_seconds": 1.168,
+    "total_latency_seconds": 2.131,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:32.180675+00:00",
+      "step1": {
+        "latency_seconds": 0.9625545829999282,
+        "usage": {
+          "promptTokenCount": 777,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 788,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 777
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 11
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Tank tops & Camisoles"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1682531250003194,
+        "usage": {
+          "promptTokenCount": 5699,
+          "candidatesTokenCount": 30,
+          "totalTokenCount": 5729,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5699
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 30
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "comfortable",
+            "for gym workouts"
+          ]
+        }
+      },
+      "total_latency_seconds": 2.131016042000283,
+      "total_tokens": {
+        "input": 6476,
+        "output": 41,
+        "total": 6517
+      },
+      "estimated_cost_usd": 0.0020453
+    }
+  },
+  {
+    "query": "a tank top that is sporty but not too casual for brunch",
+    "category": "Tank tops & Camisoles",
+    "filters": [],
+    "residual": [
+      "sporty but not too casual",
+      "for brunch"
+    ],
+    "step1_latency_seconds": 1.134,
+    "step2_latency_seconds": 0.863,
+    "total_latency_seconds": 1.998,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:34.311845+00:00",
+      "step1": {
+        "latency_seconds": 1.1338807920001273,
+        "usage": {
+          "promptTokenCount": 783,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 794,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 783
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 11
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Tank tops & Camisoles"
+        }
+      },
+      "step2": {
+        "latency_seconds": 0.8634836670003097,
+        "usage": {
+          "promptTokenCount": 5705,
+          "candidatesTokenCount": 34,
+          "totalTokenCount": 5739,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5705
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 34
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "sporty but not too casual",
+            "for brunch"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.9978052080000452,
+      "total_tokens": {
+        "input": 6488,
+        "output": 45,
+        "total": 6533
+      },
+      "estimated_cost_usd": 0.0020589
+    }
+  },
+  {
+    "query": "romantyczny top na ramiączkach na randkę",
+    "category": "Tank tops & Camisoles",
+    "filters": [],
+    "residual": [
+      "romantyczny",
+      "na randkę"
+    ],
+    "step1_latency_seconds": 0.59,
+    "step2_latency_seconds": 0.907,
+    "total_latency_seconds": 1.498,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:36.309998+00:00",
+      "step1": {
+        "latency_seconds": 0.590030625000054,
+        "usage": {
+          "promptTokenCount": 784,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 795,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 784
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 11
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Tank tops & Camisoles"
+        }
+      },
+      "step2": {
+        "latency_seconds": 0.9073543330000575,
+        "usage": {
+          "promptTokenCount": 5705,
+          "candidatesTokenCount": 32,
+          "totalTokenCount": 5737,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5705
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 32
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": [
+            "romantyczny",
+            "na randkę"
+          ]
+        }
+      },
+      "total_latency_seconds": 1.4978400840000177,
+      "total_tokens": {
+        "input": 6489,
+        "output": 43,
+        "total": 6532
+      },
+      "estimated_cost_usd": 0.0020542
+    }
+  },
+  {
+    "query": "white tank top under 70",
+    "category": "Tank tops & Camisoles",
+    "filters": [
+      {
+        "feature": "colors",
+        "operator": "contains_any",
+        "values": [
+          "White"
+        ]
+      },
+      {
+        "feature": "price",
+        "operator": "lt",
+        "value": 70
+      }
+    ],
+    "residual": [],
+    "step1_latency_seconds": 0.649,
+    "step2_latency_seconds": 0.982,
+    "total_latency_seconds": 1.631,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T13:52:37.808125+00:00",
+      "step1": {
+        "latency_seconds": 0.6487620829998377,
+        "usage": {
+          "promptTokenCount": 778,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 789,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 778
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 11
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Tank tops & Camisoles"
+        }
+      },
+      "step2": {
+        "latency_seconds": 0.9819282500002373,
+        "usage": {
+          "promptTokenCount": 5700,
+          "candidatesTokenCount": 86,
+          "totalTokenCount": 5786,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5700
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 86
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "White"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lt",
+              "value": 70
+            }
+          ],
+          "residual": []
+        }
+      },
+      "total_latency_seconds": 1.6311788749999323,
+      "total_tokens": {
+        "input": 6478,
+        "output": 97,
+        "total": 6575
+      },
+      "estimated_cost_usd": 0.0021858999999999997
+    }
+  }
+]

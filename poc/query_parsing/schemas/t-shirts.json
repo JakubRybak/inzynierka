@@ -413,7 +413,8 @@
       }
     },
     "residual": {
-      "type": "STRING"
+      "type": "ARRAY",
+      "items": {"type": "STRING"}
     }
   },
   "required": [

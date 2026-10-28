@@ -76,7 +76,7 @@ class ParsedQuery:
     query: str
     category: Optional[str]
     filters: List[Union[FilterClause, PriceFilterClause]] = field(default_factory=list)
-    residual: str = ""
+    residual: List[str] = field(default_factory=list)
     step1_latency_seconds: float = 0.0
     step2_latency_seconds: float = 0.0
     total_latency_seconds: float = 0.0
@@ -254,7 +254,7 @@ class QueryParser:
                 query=query,
                 category=None,
                 filters=[],
-                residual="",
+                residual=[],
                 step1_latency_seconds=0.0,
                 step2_latency_seconds=0.0,
                 total_latency_seconds=0.0,
@@ -296,7 +296,7 @@ class QueryParser:
                 query=cleaned_query,
                 category=None,
                 filters=[],
-                residual=cleaned_query,
+                residual=[cleaned_query],
                 step1_latency_seconds=step1_latency,
                 step2_latency_seconds=0.0,
                 total_latency_seconds=total_latency,
@@ -343,7 +343,10 @@ class QueryParser:
                     FilterClause(feature=feat, operator=op, values=unique_vals)
                 )
 
-        residual = str(step2_res.get("residual", "")).strip()
+        raw_residual = step2_res.get("residual")
+        if not isinstance(raw_residual, list) or any(not isinstance(item, str) or not item.strip() for item in raw_residual):
+            raise ValueError("residual must be a list of nonempty strings")
+        residual = list(dict.fromkeys(item.strip() for item in raw_residual))
 
         # Aggregate metrics
         total_latency = time.perf_counter() - total_start

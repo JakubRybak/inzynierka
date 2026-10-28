@@ -1,0 +1,330 @@
+[
+  {
+    "query": "modest dress for work",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "modest dress for work",
+    "step1_latency_seconds": 1.918,
+    "step2_latency_seconds": 1.207,
+    "total_latency_seconds": 3.125,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:28:04.921598+00:00",
+      "step1": {
+        "latency_seconds": 1.9177623329960625,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 783,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2071476250057458,
+        "usage": {
+          "promptTokenCount": 6205,
+          "candidatesTokenCount": 21,
+          "totalTokenCount": 6226,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6205
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 21
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "modest dress for work"
+        }
+      },
+      "total_latency_seconds": 3.1254760419978993,
+      "total_tokens": {
+        "input": 6981,
+        "output": 28,
+        "total": 7009
+      },
+      "estimated_cost_usd": 0.0021643
+    }
+  },
+  {
+    "query": "modest dress to office",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "modest dress to office",
+    "step1_latency_seconds": 0.913,
+    "step2_latency_seconds": 1.658,
+    "total_latency_seconds": 2.571,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:28:08.047518+00:00",
+      "step1": {
+        "latency_seconds": 0.9126125000038883,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 6,
+          "totalTokenCount": 782,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.657758958004706,
+        "usage": {
+          "promptTokenCount": 6205,
+          "candidatesTokenCount": 21,
+          "totalTokenCount": 6226,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6205
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 21
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "modest dress to office"
+        }
+      },
+      "total_latency_seconds": 2.5707187079970026,
+      "total_tokens": {
+        "input": 6981,
+        "output": 27,
+        "total": 7008
+      },
+      "estimated_cost_usd": 0.0021617999999999997
+    }
+  },
+  {
+    "query": "elegant dress for a business dinner",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "elegant dress for a business dinner",
+    "step1_latency_seconds": 0.721,
+    "step2_latency_seconds": 1.263,
+    "total_latency_seconds": 1.984,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:28:10.618377+00:00",
+      "step1": {
+        "latency_seconds": 0.721014834001835,
+        "usage": {
+          "promptTokenCount": 777,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 784,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 777
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2629892499971902,
+        "usage": {
+          "promptTokenCount": 6207,
+          "candidatesTokenCount": 22,
+          "totalTokenCount": 6229,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6207
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 22
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "elegant dress for a business dinner"
+        }
+      },
+      "total_latency_seconds": 1.9844151249999413,
+      "total_tokens": {
+        "input": 6984,
+        "output": 29,
+        "total": 7013
+      },
+      "estimated_cost_usd": 0.0021677
+    }
+  },
+  {
+    "query": "black midi dress under 300 dollars for a wedding",
+    "category": "Dresses",
+    "filters": [
+      {
+        "feature": "colors",
+        "operator": "contains_any",
+        "values": [
+          "Black"
+        ]
+      },
+      {
+        "feature": "length",
+        "operator": "in",
+        "values": [
+          "Midi"
+        ]
+      },
+      {
+        "feature": "price",
+        "operator": "lt",
+        "value": 300
+      }
+    ],
+    "residual": "for a wedding",
+    "step1_latency_seconds": 0.784,
+    "step2_latency_seconds": 1.322,
+    "total_latency_seconds": 2.106,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:28:12.602953+00:00",
+      "step1": {
+        "latency_seconds": 0.7837654579998343,
+        "usage": {
+          "promptTokenCount": 783,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 790,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 783
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.3222370419971412,
+        "usage": {
+          "promptTokenCount": 6213,
+          "candidatesTokenCount": 128,
+          "totalTokenCount": 6341,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6213
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 128
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Midi"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lt",
+              "value": 300
+            }
+          ],
+          "residual": "for a wedding"
+        }
+      },
+      "total_latency_seconds": 2.106351790993358,
+      "total_tokens": {
+        "input": 6996,
+        "output": 135,
+        "total": 7131
+      },
+      "estimated_cost_usd": 0.0024363
+    }
+  }
+]

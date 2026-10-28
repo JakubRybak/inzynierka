@@ -1,0 +1,618 @@
+[
+  {
+    "query": "modest dress for work",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "modest for work",
+    "step1_latency_seconds": 1.565,
+    "step2_latency_seconds": 1.279,
+    "total_latency_seconds": 2.844,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:56:51.155676+00:00",
+      "step1": {
+        "latency_seconds": 1.5652301250011078,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 783,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2785397909974563,
+        "usage": {
+          "promptTokenCount": 6276,
+          "candidatesTokenCount": 20,
+          "totalTokenCount": 6296,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6276
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 20
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "modest for work"
+        }
+      },
+      "total_latency_seconds": 2.844065833996865,
+      "total_tokens": {
+        "input": 7052,
+        "output": 27,
+        "total": 7079
+      },
+      "estimated_cost_usd": 0.0021831
+    }
+  },
+  {
+    "query": "modest dress to office",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "modest to office",
+    "step1_latency_seconds": 0.948,
+    "step2_latency_seconds": 1.194,
+    "total_latency_seconds": 2.142,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:56:53.999797+00:00",
+      "step1": {
+        "latency_seconds": 0.9475789589996566,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 783,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.1937583340040874,
+        "usage": {
+          "promptTokenCount": 6276,
+          "candidatesTokenCount": 20,
+          "totalTokenCount": 6296,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6276
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 20
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "modest to office"
+        }
+      },
+      "total_latency_seconds": 2.1415533749968745,
+      "total_tokens": {
+        "input": 7052,
+        "output": 27,
+        "total": 7079
+      },
+      "estimated_cost_usd": 0.0021831
+    }
+  },
+  {
+    "query": "elegant dress for a business dinner",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "elegant for a business dinner",
+    "step1_latency_seconds": 0.583,
+    "step2_latency_seconds": 0.999,
+    "total_latency_seconds": 1.582,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:56:56.141448+00:00",
+      "step1": {
+        "latency_seconds": 0.5828974160031066,
+        "usage": {
+          "promptTokenCount": 777,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 784,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 777
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 0.9991126669992809,
+        "usage": {
+          "promptTokenCount": 6278,
+          "candidatesTokenCount": 21,
+          "totalTokenCount": 6299,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6278
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 21
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "elegant for a business dinner"
+        }
+      },
+      "total_latency_seconds": 1.5823196659985115,
+      "total_tokens": {
+        "input": 7055,
+        "output": 28,
+        "total": 7083
+      },
+      "estimated_cost_usd": 0.0021865
+    }
+  },
+  {
+    "query": "black midi dress under 300 dollars for a wedding",
+    "category": "Dresses",
+    "filters": [
+      {
+        "feature": "colors",
+        "operator": "contains_any",
+        "values": [
+          "Black"
+        ]
+      },
+      {
+        "feature": "length",
+        "operator": "in",
+        "values": [
+          "Midi"
+        ]
+      },
+      {
+        "feature": "price",
+        "operator": "lt",
+        "value": 300
+      }
+    ],
+    "residual": "for a wedding",
+    "step1_latency_seconds": 0.891,
+    "step2_latency_seconds": 1.303,
+    "total_latency_seconds": 2.194,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:56:57.724080+00:00",
+      "step1": {
+        "latency_seconds": 0.890918832999887,
+        "usage": {
+          "promptTokenCount": 783,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 795,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 783
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.3029182909958763,
+        "usage": {
+          "promptTokenCount": 6284,
+          "candidatesTokenCount": 128,
+          "totalTokenCount": 6412,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6284
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 128
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Midi"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lt",
+              "value": 300
+            }
+          ],
+          "residual": "for a wedding"
+        }
+      },
+      "total_latency_seconds": 2.1943532499935827,
+      "total_tokens": {
+        "input": 7067,
+        "output": 140,
+        "total": 7207
+      },
+      "estimated_cost_usd": 0.0024701
+    }
+  },
+  {
+    "query": "skromna sukienka do biura",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "skromna do biura",
+    "step1_latency_seconds": 0.641,
+    "step2_latency_seconds": 1.208,
+    "total_latency_seconds": 1.849,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:56:59.918859+00:00",
+      "step1": {
+        "latency_seconds": 0.6406569170067087,
+        "usage": {
+          "promptTokenCount": 779,
+          "candidatesTokenCount": 12,
+          "totalTokenCount": 791,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 779
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2083746249991236,
+        "usage": {
+          "promptTokenCount": 6280,
+          "candidatesTokenCount": 22,
+          "totalTokenCount": 6302,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6280
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 22
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "skromna do biura"
+        }
+      },
+      "total_latency_seconds": 1.8492905000020983,
+      "total_tokens": {
+        "input": 7059,
+        "output": 34,
+        "total": 7093
+      },
+      "estimated_cost_usd": 0.0022026999999999997
+    }
+  },
+  {
+    "query": "a dress",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "",
+    "step1_latency_seconds": 0.584,
+    "step2_latency_seconds": 1.046,
+    "total_latency_seconds": 1.63,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:57:01.768478+00:00",
+      "step1": {
+        "latency_seconds": 0.5840242499980377,
+        "usage": {
+          "promptTokenCount": 773,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 780,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 773
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.0459740419973969,
+        "usage": {
+          "promptTokenCount": 6274,
+          "candidatesTokenCount": 15,
+          "totalTokenCount": 6289,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6274
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 15
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": ""
+        }
+      },
+      "total_latency_seconds": 1.6303323329993873,
+      "total_tokens": {
+        "input": 7047,
+        "output": 22,
+        "total": 7069
+      },
+      "estimated_cost_usd": 0.0021690999999999998
+    }
+  },
+  {
+    "query": "a dress for work, elegant but not too formal",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "for work, elegant but not too formal",
+    "step1_latency_seconds": 0.858,
+    "step2_latency_seconds": 1.235,
+    "total_latency_seconds": 2.094,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:57:03.398909+00:00",
+      "step1": {
+        "latency_seconds": 0.8579319580021547,
+        "usage": {
+          "promptTokenCount": 781,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 788,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 781
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2354251659999136,
+        "usage": {
+          "promptTokenCount": 6282,
+          "candidatesTokenCount": 24,
+          "totalTokenCount": 6306,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6282
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 24
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "for work, elegant but not too formal"
+        }
+      },
+      "total_latency_seconds": 2.0936527499943622,
+      "total_tokens": {
+        "input": 7063,
+        "output": 31,
+        "total": 7094
+      },
+      "estimated_cost_usd": 0.0021964
+    }
+  },
+  {
+    "query": "a boat-neck dress",
+    "category": "Dresses",
+    "filters": [],
+    "residual": "boat-neck",
+    "step1_latency_seconds": 0.781,
+    "step2_latency_seconds": 1.255,
+    "total_latency_seconds": 2.036,
+    "metadata": {
+      "model": "gemini-3.5-flash-lite",
+      "project": "project-3a86f100-1aae-4780-84b",
+      "location": "global",
+      "thinking": "NONE",
+      "timestamp_utc": "2026-10-28T11:57:05.492816+00:00",
+      "step1": {
+        "latency_seconds": 0.7810173329999088,
+        "usage": {
+          "promptTokenCount": 776,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 783,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 776
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ]
+        },
+        "raw_output": {
+          "category": "Dresses"
+        }
+      },
+      "step2": {
+        "latency_seconds": 1.2546690829985891,
+        "usage": {
+          "promptTokenCount": 6277,
+          "candidatesTokenCount": 19,
+          "totalTokenCount": 6296,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6277
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 19
+            }
+          ]
+        },
+        "raw_output": {
+          "filters": [],
+          "residual": "boat-neck"
+        }
+      },
+      "total_latency_seconds": 2.0362253749990487,
+      "total_tokens": {
+        "input": 7053,
+        "output": 26,
+        "total": 7079
+      },
+      "estimated_cost_usd": 0.0021809
+    }
+  }
+]
