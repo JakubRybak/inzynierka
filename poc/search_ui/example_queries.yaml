@@ -1,34 +1,41 @@
-# Example queries shown in the UI. Together they cover the parser (one or several features, OR, exclusion,
-# "and" / "only" for colors and composition, Polish queries) and ranking (parts of the query that are not
-# filters, e.g. a print, ruffles, lace or an occasion).
+# Example queries shown in the UI. The first ones in each category cover the parser (several features, OR,
+# exclusion, "and" for colors, Polish, price); the rest cover the concepts ranking: an occasion, a style or a season,
+# two concepts in one query, a concept next to a detail that is not a concept.
 
 T-shirts:
-  - white t-shirt
   - black oversized cotton t-shirt for men
   - floral or striped t-shirt
   - long sleeve t-shirt without polyester
-  - only cotton grey t-shirt
-  - t-shirt with a skull print
   - biała koszulka z długim rękawem
   - black cotton t-shirt under 200 dollars
-  - t-shirt between 100 and 250 euros
+  - oversized t-shirt for the gym
+  - t-shirt for a music festival
+  - minimalist t-shirt for the office
+  - comfy t-shirt for lounging at home
+  - edgy black t-shirt for a night out
+  - long sleeve t-shirt for layering in autumn
 Dresses:
-  - black midi dress
-  - black silk slip dress
   - wrap or shirt dress
   - maxi dress not black
   - red dress with ruffles
-  - lace dress for an evening party
-  - czarna sukienka na wesele
   - black midi dress up to 500 PLN
-  - sukienka na wesele do 400 zł
+  - czarna sukienka na wesele
+  - black dress for a funeral
+  - minimalist dress for the office
+  - edgy dress for a night out
+  - modest dress for work
+  - boho dress for a wedding
+  - romantic dress for a date night
+  - lace dress for an evening party
+  - flowy summer dress for the beach
 Tank tops & Camisoles:
-  - white tank top
   - black and white striped tank top
   - black or white racerback tank top
   - men's tank top not black
-  - only cotton tank top for women
-  - silk camisole with lace trim
-  - ribbed tank top for summer
-  - white tank top under 150
   - silk camisole over 100 euros
+  - tank top for the gym
+  - elegant camisole for a date night
+  - tank top for a hot summer day
+  - sexy camisole for a party
+  - casual tank top for the beach
+  - ribbed tank top for summer

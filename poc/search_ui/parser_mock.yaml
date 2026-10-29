@@ -63,12 +63,26 @@
   residual: with ruffles
 "lace dress for an evening party":
   category: Dresses
-  residual: lace dress for an evening party
+  residual: lace for an evening party
 "czarna sukienka na wesele":
   category: Dresses
   filters:
     - {feature: colors, operator: contains_any, values: [Black]}
   residual: na wesele
+"dress for a wedding guest":
+  category: Dresses
+  residual: for a wedding guest
+"minimalist dress for the office":
+  category: Dresses
+  residual: minimalist for the office
+"black dress for a funeral":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+  residual: for a funeral
+"edgy dress for a night out":
+  category: Dresses
+  residual: edgy for a night out
 
 # Tank tops & Camisoles
 "white tank top":
@@ -103,3 +117,73 @@
 "ribbed tank top for summer":
   category: Tank tops & Camisoles
   residual: ribbed tank top for summer
+
+# Concept and price examples
+"black cotton t-shirt under 200 dollars":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: main_composition, operator: contains_any, values: [Cotton]}
+    - {feature: price, operator: lt, value: 200}
+"oversized t-shirt for the gym":
+  category: T-shirts
+  filters:
+    - {feature: fit, operator: in, values: [Oversized]}
+  residual: for the gym
+"t-shirt for a music festival":
+  category: T-shirts
+  residual: for a music festival
+"minimalist t-shirt for the office":
+  category: T-shirts
+  residual: minimalist for the office
+"comfy t-shirt for lounging at home":
+  category: T-shirts
+  residual: comfy for lounging at home
+"edgy black t-shirt for a night out":
+  category: T-shirts
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+  residual: edgy for a night out
+"long sleeve t-shirt for layering in autumn":
+  category: T-shirts
+  filters:
+    - {feature: sleeve_length, operator: in, values: [Long Sleeve]}
+  residual: for layering in autumn
+"black midi dress up to 500 PLN":
+  category: Dresses
+  filters:
+    - {feature: colors, operator: contains_any, values: [Black]}
+    - {feature: length, operator: in, values: [Midi]}
+    - {feature: price, operator: lte, value: 500}
+"modest dress for work":
+  category: Dresses
+  residual: modest for work
+"boho dress for a wedding":
+  category: Dresses
+  residual: boho for a wedding
+"romantic dress for a date night":
+  category: Dresses
+  residual: romantic for a date night
+"flowy summer dress for the beach":
+  category: Dresses
+  residual: flowy summer for the beach
+"silk camisole over 100 euros":
+  category: Tank tops & Camisoles
+  filters:
+    - {feature: main_composition, operator: contains_any, values: [Silk]}
+    - {feature: price, operator: gt, value: 100}
+"tank top for the gym":
+  category: Tank tops & Camisoles
+  residual: for the gym
+"elegant camisole for a date night":
+  category: Tank tops & Camisoles
+  residual: elegant for a date night
+"tank top for a hot summer day":
+  category: Tank tops & Camisoles
+  residual: for a hot summer day
+"sexy camisole for a party":
+  category: Tank tops & Camisoles
+  residual: sexy for a party
+"casual tank top for the beach":
+  category: Tank tops & Camisoles
+  residual: casual for the beach

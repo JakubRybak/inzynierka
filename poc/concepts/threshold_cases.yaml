@@ -1,0 +1,100 @@
+# Residuals for choosing the concept threshold (check_threshold.py), mostly real ones from step A.
+# positive: residual -> acceptable concept ids; the most similar chosen concept must be one of them.
+# negative: residuals that no concept should match; the ranking should fall back to combined.
+
+positive:
+  for a wedding guest: [wedding_guest]
+  wedding guest: [wedding_guest]
+  for a wedding: [wedding_guest]
+  wear to a wedding: [wedding_guest]
+  na wesele: [wedding_guest]
+  prom: [prom]
+  homecoming: [prom, party, cocktail_party]
+  cocktail: [cocktail_party]
+  for a cocktail party: [cocktail_party]
+  party: [party]
+  birthday party: [party]
+  night party: [party, night_out]
+  club: [night_out]
+  for a night out: [night_out]
+  going out: [night_out, party]
+  date night: [date_night]
+  romantic date night: [date_night, romantic]
+  for brunch with friends: [date_night, casual]
+  office: [office]
+  office work: [office]
+  for work: [office]
+  for a job interview: [office, formal]
+  beach vacation: [beach]
+  for the beach: [beach]
+  tropical vacation: [beach, summer]
+  gym: [gym]
+  workout: [gym, sporty]
+  yoga: [gym, sporty]
+  music festival: [music_festival]
+  festival: [music_festival]
+  funeral: [funeral]
+  for a funeral: [funeral]
+  na pogrzeb: [funeral]
+  casual: [casual]
+  everyday: [casual]
+  formal: [formal]
+  semi formal: [formal, cocktail_party]
+  evening: [formal, elegant]
+  elegant: [elegant]
+  chic: [elegant, minimalist]
+  sexy: [sexy]
+  modest: [modest]
+  boho: [boho]
+  bohemian: [boho]
+  vintage: [vintage]
+  retro: [vintage]
+  flowy: [flowy]
+  cute: [cute]
+  minimalist: [minimalist]
+  streetwear: [streetwear]
+  edgy: [edgy]
+  grunge: [edgy]
+  romantic: [romantic]
+  preppy: [preppy]
+  sporty: [sporty]
+  athleisure: [sporty]
+  summer: [summer]
+  winter: [winter]
+  cold weather: [winter]
+  spring: [spring]
+  fall: [autumn]
+  autumn: [autumn]
+  hot weather: [hot_weather]
+  heatwave: [hot_weather, summer]
+  for hot summer days: [hot_weather, summer]
+  layering: [layering]
+  layering under a blazer: [layering]
+  lounging at home: [loungewear]
+  comfy: [loungewear, casual]
+  # residuals from the search page (data/misses.jsonl, 2026-10-28)
+  lace dress for an evening party: [party, cocktail_party, night_out]
+  dress for cold days: [winter]
+  dress for very cold days: [winter]
+  dress for a beach with sleeves: [beach]
+  dress for hipsters: [streetwear, vintage]
+
+negative:
+  - with robert lewandowski
+  - for my grandma
+  - plus size
+  - size 12
+  - for girls
+  - toddler
+  - maternity
+  - big and tall
+  - petite
+  - with pockets
+  - ugly christmas
+  - star wars
+  - ohio state
+  - harry potter
+  - for my dog
+  - made in usa
+  - matching set
+  - cheap
