@@ -53,7 +53,9 @@ plik z cechami.
   *any of*, *all of* albo *only*. Każda zmiana od razu wyszukuje ponownie z tymi filtrami, bez parsera.
   Filtr ceny obsługuje `<`, `<=`, `>`, `>=` i `=`; drugi warunek pozwala ustawić przedział. Waluty nie są przeliczane. Produkty z ceną zero lub nieznaną nie pasują do aktywnego filtra ceny.
   *Reset to parser* przywraca filtry parsera. Gdy parser nie znajdzie kategorii, można ją wybrać tutaj.
-- **Ranking** – `combined` (tekst + zdjęcie), `text`, `image` albo `hyde` (opis niżej).
+- **Ranking** – `combined` (tekst + zdjęcie), `text`, `image`, `hyde` albo `concepts` (opis niżej). Pod odczytem
+  parsera: frazy residualu, a przy `concepts` koncept każdej frazy i jej podobieństwo do każdego konceptu
+  (przewijane; wybrany na fioletowo, przerywana linia na progu).
 - **Czasy etapów** (po lewej, pod odczytem parsera) – parsowanie (z dwoma krokami LLM), filtrowanie i sortowanie
   na jednej osi czasu.
 - **Wyniki** (po prawej, wszystkie, przewijane) – zdjęcie, nazwa, marka, cena i cechy, które pasują do zapytania.
@@ -62,7 +64,8 @@ plik z cechami.
 
 ## Jak to działa
 
-1. **Parsowanie** (`parser_adapter.py`). Parser zwraca `category`, `filters` i `residual`
+1. **Parsowanie** (`parser_adapter.py`). Parser zwraca `category`, `filters` i `residual` (lista fraz, po jednej
+   na wymaganie; string z parsera w starszym formacie staje się jedną frazą)
    (`QueryParser.to_dict()`). Kategoria `null` oznacza zapytanie spoza katalogu albo zbyt ogólne – wtedy
    wyszukiwanie się nie odbywa. W przeciwnym razie filtry są zamieniane na drzewo warunków (`conditions.py`):
 
@@ -94,7 +97,17 @@ plik z cechami.
    - `image` – z głównymi zdjęciami produktów; wysyłany sam tekst;
    - `combined` – średnia z-score obu podobieństw, liczonych na kandydatach;
    - `hyde` – LLM (`gemini-3.5-flash-lite`) pisze opis idealnego produktu, a jego embedding jest porównywany
-     z opisami produktów.
+     z opisami produktów;
+   - `concepts` – tylko z indeksem zbudowanym przez `prepare.py --concepts` (`concepts.py`, opis
+     w `poc/concepts/README.pl.md`). Embedding każdej frazy residualu, w tym samym formacie co nazwy konceptów, jest
+     porównywany z nimi; fraza bierze tylko najbardziej podobny koncept, gdy podobieństwo jest
+     ≥ `--concept-threshold`. Oceny 0–10 produktu dla tych konceptów, podzielone przez 10 (`--concept-norm raw`)
+     albo jako percentyle w obrębie kategorii (`percentile`), łączy `--concept-combine`: `geo` (średnia
+     geometryczna – oba wymagania muszą być spełnione, produkt słaby w jednej frazie spada), `mean` albo `min`.
+     Remisy rozstrzyga `combined`. Fraza bez konceptu powyżej progu jest pomijana i dopisywana do
+     `poc/concepts/data/misses.jsonl` (log, wyszukiwarka go nie czyta). Przy pustym residualu, kategorii bez ocen
+     albo braku dopasowanej frazy sortowanie to `combined`. Embeddingi fraz liczą się równolegle ze sobą
+     i z embeddingami zapytania.
 
 Nic nie jest cache'owane: powtórzone zapytanie znów wywołuje parser i API embeddingów, a każda odpowiedź HTTP ma
 nagłówek `Cache-Control: no-store`. Przy starcie wczytywane są tylko indeks, embeddingi produktów i klienci API.
@@ -104,30 +117,40 @@ nagłówek `Cache-Control: no-store`. Przy starcie wczytywane są tylko indeks, 
 | Opcja | Domyślnie | |
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` albo `modul:funkcja` zwracająca wynik w formacie parsera |
-| `--ranking` | `combined` | domyślny ranking: `combined`, `text`, `image`, `hyde` |
+| `--ranking` | `combined` | domyślny ranking: `combined`, `text`, `image`, `hyde`, `concepts` |
 | `--hyde-model` | `gemini-3.5-flash-lite` | model piszący opisy HyDE |
 | `--port` | `8000` | |
 | `--data` | `poc/search_ui/data` | indeks zbudowany przez `prepare.py` |
+| `--concept-threshold` | `0.72` | minimalne podobieństwo kosinusowe residual–koncept (zob. krok E w `poc/concepts/README.pl.md`) |
+| `--concept-combine` | `geo` | jak łączyć wyniki fraz: `geo`, `mean` albo `min` |
+| `--concept-norm` | `raw` | oceny konceptów podzielone przez 10 albo `percentile` w obrębie kategorii |
+| `--concept-alpha` | | `alpha · koncepty + (1 − alpha) · combined` na z-score zamiast samych konceptów |
 | `--no-warmup` | | bez próbnego wywołania embeddingu przy starcie |
 | `--no-browser` | | nie otwiera strony |
 
 `prepare.py` przyjmuje `--features` (`.parquet`, `.jsonl` albo `.csv`, jeden lub kilka plików), `--status`
 (tylko produkty z tymi statusami, np. `ready`), `--limit`, `--dataset`, `--embeddings` i `--output`. Kończy się
-błędem, jeśli embeddingi nie obejmują wszystkich produktów z indeksu.
+błędem, jeśli embeddingi nie obejmują wszystkich produktów z indeksu. `--concepts` dodaje kolumnę `concept__<id>`
+na każdy koncept z `poc/concepts/results/concept_scores.parquet` i zapisuje embeddingi nazw konceptów (jedno
+wywołanie na koncept, `--concept-format` `query` (domyślnie) albo `plain`) w `data/concepts.parquet`. Kategorie bez ocen są
+dozwolone; brak oceny w ocenionej kategorii przerywa budowanie. Hash `concepts.yaml` trafia do `meta.json`, a serwer
+nie wystartuje, jeśli plik się od tego czasu zmienił.
 
 ## HTTP API
 
 | Endpoint | |
 | --- | --- |
 | `GET /api/search?q=…&ranking=…` | cały pipeline |
-| `GET /api/search?q=…&filters=<json>` | bez parsera; `filters` to `{"category", "filters"}` w formacie parsera |
+| `GET /api/search?q=…&filters=<json>` | bez parsera; `filters` to `{"category", "filters", "residual"}` w formacie parsera (`residual`: lista fraz) |
 | `GET /api/info` | nazwa parsera, ustawienia domyślne, kategorie, wartości panelu filtrów, przykładowe zapytania |
 | `GET /api/product?id=…` | szczegóły produktu |
 | `GET /images/<image_path>` | zdjęcie produktu |
 
 Odpowiedź wyszukiwania zawiera `parsed` (kategoria, filtry, residual i ich źródło), `tree`, `condition`,
-`warnings`, `results` (z `score`, `features` i dopasowanymi cechami `matched`), `hyde`,
-`timings` (`parsing_ms`, `filtering_ms`, `ranking_ms`, `hyde_ms`, `query_embedding_ms`, `total_ms`), a przy
+`warnings`, `results` (z `score`, `features`, dopasowanymi cechami `matched` i ocenami wybranych konceptów
+`concepts`), `hyde`, `concepts` (frazy residualu, sposób łączenia, dla każdej frazy wybrane koncepty z podobieństwem
+i wagą oraz podobieństwo do każdego konceptu, wszystkie wybrane koncepty, powód fallbacku), `timings` (`parsing_ms`, `filtering_ms`, `ranking_ms`, `hyde_ms`, `query_embedding_ms`, `concepts_ms`,
+`total_ms`), a przy
 parserze LLM także `parser_info` z czasem obu kroków parsera i szacowanym kosztem. Błędy wracają jako
 `{"error": {"stage", "message"}}` razem z czasami zmierzonymi do tego momentu.
 
@@ -141,6 +164,7 @@ parserze LLM także `parser_info` z czasem obu kroków parsera i szacowanym kosz
 | `parser_adapter.py` | wynik parsera → drzewo warunków, mock parsera, wczytywanie parsera |
 | `llm_parser.py` | opakowanie `poc/scripts/query_parser.py` dla `--parser llm` |
 | `facets.py` | wartości panelu filtrów dla kategorii, ze schematów w `poc/query_parsing/schemas` |
+| `concepts.py` | oceny konceptów i embeddingi nazw w indeksie, wybór konceptów i sortowanie, log pudeł |
 | `common.py` | ścieżki, wczytywanie danych, embedder zapytań, HyDE |
 | `static/index.html` | strona (czytana przy każdym żądaniu, więc zmiany widać po odświeżeniu) |
 | `example_queries.yaml` | przykłady pokazywane na stronie |

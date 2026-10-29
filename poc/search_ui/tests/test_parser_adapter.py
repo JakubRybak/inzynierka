@@ -51,7 +51,7 @@ class ToCondition(unittest.TestCase):
         raw = parsed("Dresses", residual="for a wedding") | {"step1_latency_seconds": 0.7, "step2_latency_seconds": 1.1,
                                                              "metadata": {"estimated_cost_usd": 0.002}}
         i = pa.parser_info(raw)
-        self.assertEqual((i["category"], i["residual"], i["step2_s"], i["cost_usd"]), ("Dresses", "for a wedding", 1.1, 0.002))
+        self.assertEqual((i["category"], i["residual"], i["step2_s"], i["cost_usd"]), ("Dresses", ["for a wedding"], 1.1, 0.002))
 
 
 class Mock(unittest.TestCase):
@@ -71,7 +71,7 @@ class Mock(unittest.TestCase):
 
     def test_from_yaml(self):
         r = self.mock("black skinny jeans")
-        self.assertEqual((r["_mock"], r["category"], r["residual"]), ("parser_mock.yaml", "Jeans", ""))
+        self.assertEqual((r["_mock"], r["category"], r["residual"]), ("parser_mock.yaml", "Jeans", []))
         self.assertEqual(pa.to_condition(r)["args"][1], {"op": "not", "arg": {"feature": "fit", "values": ["Slim"]}})
 
     def test_yaml_reread_on_every_query(self):
@@ -80,7 +80,7 @@ class Mock(unittest.TestCase):
 
     def test_vocabulary(self):
         r = self.mock("black slim jean for men")
-        self.assertEqual((r["_mock"], r["category"], r["residual"]), ("vocabulary", "Jeans", "for"))
+        self.assertEqual((r["_mock"], r["category"], r["residual"]), ("vocabulary", "Jeans", ["for"]))
         self.assertIn({"feature": "colors", "operator": "contains_any", "values": ["Black"]}, r["filters"])
         self.assertIn({"feature": "fit", "operator": "in", "values": ["Slim"]}, r["filters"])
         self.assertIn({"feature": "gender", "operator": "in", "values": ["Men"]}, r["filters"])

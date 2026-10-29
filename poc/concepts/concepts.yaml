@@ -1,0 +1,39 @@
+# Abstract concepts used for ranking. The residual of a query is compared with the embedding of the name, so names
+# are written the way people search. An id never changes: scores are stored per id.
+# type: occasion | style | season (season also covers weather and comfort).
+
+- {id: wedding_guest, name: wedding guest, type: occasion, added: 2026-10-27}
+- {id: prom, name: prom, type: occasion, added: 2026-10-27}
+- {id: cocktail_party, name: cocktail party, type: occasion, added: 2026-10-27}
+- {id: party, name: party, type: occasion, added: 2026-10-27}
+- {id: night_out, name: night out, type: occasion, added: 2026-10-27}
+- {id: date_night, name: date night, type: occasion, added: 2026-10-27}
+- {id: office, name: office, type: occasion, added: 2026-10-27}
+- {id: beach, name: beach, type: occasion, added: 2026-10-27}
+- {id: gym, name: gym, type: occasion, added: 2026-10-27}
+- {id: music_festival, name: music festival, type: occasion, added: 2026-10-27}
+- {id: funeral, name: funeral, type: occasion, added: 2026-10-27}
+
+- {id: casual, name: casual, type: style, added: 2026-10-27}
+- {id: formal, name: formal, type: style, added: 2026-10-27}
+- {id: elegant, name: elegant, type: style, added: 2026-10-27}
+- {id: sexy, name: sexy, type: style, added: 2026-10-27}
+- {id: modest, name: modest, type: style, added: 2026-10-27}
+- {id: boho, name: boho, type: style, added: 2026-10-27}
+- {id: vintage, name: vintage, type: style, added: 2026-10-27}
+- {id: flowy, name: flowy, type: style, added: 2026-10-27}
+- {id: cute, name: cute, type: style, added: 2026-10-27}
+- {id: minimalist, name: minimalist, type: style, added: 2026-10-27}
+- {id: streetwear, name: streetwear, type: style, added: 2026-10-27}
+- {id: edgy, name: edgy, type: style, added: 2026-10-27}
+- {id: romantic, name: romantic, type: style, added: 2026-10-27}
+- {id: preppy, name: preppy, type: style, added: 2026-10-27}
+- {id: sporty, name: sporty, type: style, added: 2026-10-27}
+
+- {id: summer, name: summer, type: season, added: 2026-10-27}
+- {id: winter, name: winter, type: season, added: 2026-10-27}
+- {id: spring, name: spring, type: season, added: 2026-10-27}
+- {id: autumn, name: autumn, type: season, added: 2026-10-27}
+- {id: hot_weather, name: hot weather, type: season, added: 2026-10-27}
+- {id: layering, name: layering, type: season, added: 2026-10-27}
+- {id: loungewear, name: loungewear, type: season, added: 2026-10-27}

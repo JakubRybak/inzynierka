@@ -1,8 +1,10 @@
 """
 Builds the search index: extracted features + product metadata + images -> data/index.parquet.
 Product embeddings are the precomputed ones in poc/feature_extraction/embeddings.
+--concepts adds the concept scores from poc/concepts and embeds the concept names (one embedding call each).
 
     python poc/search_ui/prepare.py --features poc/feature_extraction/results/products.parquet --status ready
+    python poc/search_ui/prepare.py --features poc/feature_extraction/results/products.parquet --status ready --concepts
 """
 import argparse
 import json
@@ -14,6 +16,7 @@ from pathlib import Path
 import pandas as pd
 
 import common
+import concepts
 
 
 def build_index(features, dataset, limit=None, statuses=None):
@@ -43,6 +46,11 @@ def main():
     ap.add_argument("--dataset", type=Path, default=common.DATASET)
     ap.add_argument("--embeddings", type=Path, default=common.EMBEDDINGS)
     ap.add_argument("--output", type=Path, default=common.DATA)
+    ap.add_argument("--concepts", action="store_true", help="add concept scores (paid: one embedding call per concept)")
+    ap.add_argument("--concept-list", type=Path, default=concepts.CONCEPTS_YAML)
+    ap.add_argument("--concept-scores", type=Path, default=concepts.SCORES)
+    ap.add_argument("--concept-format", choices=sorted(concepts.FORMATS), default="query",
+                    help="text sent to the embedding model for concept names and residuals")
     args = ap.parse_args()
 
     dataset = args.dataset.resolve()
@@ -57,13 +65,33 @@ def main():
         sys.exit(f"No embeddings for {len(missing)} indexed products, e.g. {missing[:3]}")
     print(f"Embeddings: {manifest['model']}, {manifest['output_dimensionality']} dims, all indexed products covered")
 
+    concept_info = None
+    if args.concepts:
+        concept_list = concepts.load_list(args.concept_list)
+        embedder = common.QueryEmbedder(manifest["model"], manifest["output_dimensionality"])
+        concept_text = concepts.FORMATS[args.concept_format]
+        try:
+            d, rows, categories = concepts.build(d, concept_list, pd.read_parquet(args.concept_scores),
+                                                 lambda name: embedder(concept_text(name)))
+        except ValueError as e:
+            sys.exit(str(e))
+        concept_info = dict(yaml=str(args.concept_list.resolve()), yaml_sha256=concepts.file_hash(args.concept_list),
+                            scores=str(args.concept_scores.resolve()),
+                            scores_sha256=concepts.file_hash(args.concept_scores),
+                            format=args.concept_format, count=len(rows), categories=categories)
+        print(f"Concepts: {len(rows)}, scores for {', '.join(categories) or 'no category'}, format {args.concept_format}")
+
     args.output.mkdir(parents=True, exist_ok=True)
+    if concept_info:
+        rows.to_parquet(args.output / concepts.FILE, index=False)
+    elif (args.output / concepts.FILE).exists():
+        (args.output / concepts.FILE).unlink()
     d.assign(features=d["features"].map(lambda f: json.dumps(f, ensure_ascii=False, sort_keys=True)),
              images=d["images"].map(json.dumps)).to_parquet(args.output / common.INDEX, index=False)
     meta = dict(created=datetime.now().isoformat(timespec="seconds"), features=[str(p.resolve()) for p in args.features],
                 dataset=str(dataset), embeddings=str(args.embeddings.resolve()), model=manifest["model"],
                 dim=manifest["output_dimensionality"], products=len(d), limit=args.limit,
-                categories=d["category"].value_counts().to_dict())
+                categories=d["category"].value_counts().to_dict(), concepts=concept_info)
     (args.output / common.META).write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Saved {args.output / common.INDEX}")
 

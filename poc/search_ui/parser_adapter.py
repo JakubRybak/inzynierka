@@ -57,12 +57,18 @@ def to_condition(raw):
     return conditions.validate({"op": "and", "args": args})
 
 
+def residual_list(residual):
+    """Parser residual as a list of phrases; a string (a parser in the older format) becomes one phrase."""
+    items = [residual] if isinstance(residual, str) else list(residual or [])
+    return list(dict.fromkeys(s for s in (str(x).strip()[:300] for x in items) if s))
+
+
 def parser_info(raw):
     """Category, residual, step latencies and cost for the UI."""
     if not isinstance(raw, dict):
         return {}
     meta = raw.get("metadata") or {}
-    return dict(category=raw.get("category"), residual=raw.get("residual") or "",
+    return dict(category=raw.get("category"), residual=residual_list(raw.get("residual")),
                 step1_s=raw.get("step1_latency_seconds"), step2_s=raw.get("step2_latency_seconds"),
                 cost_usd=meta.get("estimated_cost_usd"), model=meta.get("model"), source=raw.get("_mock"))
 
@@ -134,7 +140,7 @@ class MockParser:
         examples = yaml.safe_load(self.path.read_text(encoding="utf-8")) if self.path.exists() else {}
         for query, result in (examples or {}).items():
             if normalize_text(query) == normalize_text(q):
-                return {"query": q, "filters": [], "residual": ""} | copy.deepcopy(result) | {"_mock": "parser_mock.yaml"}
+                return {"query": q, "filters": [], "residual": []} | copy.deepcopy(result) | {"_mock": "parser_mock.yaml"}
         text = f" {normalize_text(q)} "
         category, filters = None, {}
         for phrase in sorted(self.phrases, key=len, reverse=True):
@@ -150,4 +156,4 @@ class MockParser:
                 filters.setdefault((f, op), []).append(v)
         return {"query": q, "category": category,
                 "filters": [{"feature": f, "operator": op, "values": v} for (f, op), v in filters.items()],
-                "residual": text.strip(), "_mock": "vocabulary"}
+                "residual": residual_list(text), "_mock": "vocabulary"}

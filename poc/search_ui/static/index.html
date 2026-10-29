@@ -5,11 +5,13 @@
 :root { --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
         --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2;
         --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8;
-        --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490; }
+        --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490;
+        --k-con:#6d28d9; --k-con-bg:#ede9fe; }
 @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --mut:#a8a29e; --line:#44403c; --card:#292524; --acc:#93c5fd;
         --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a;
         --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd;
-        --k-is:#86efac; --k-is-bg:#14532d; --k-not:#fca5a5; --k-not-bg:#4c1414; --k-cat:#67e8f9; } }
+        --k-is:#86efac; --k-is-bg:#14532d; --k-not:#fca5a5; --k-not-bg:#4c1414; --k-cat:#67e8f9;
+        --k-con:#c4b5fd; --k-con-bg:#2e1065; } }
 * { box-sizing:border-box; }
 body { margin:0; font:14px/1.45 -apple-system, system-ui, sans-serif; background:var(--bg); color:var(--fg); }
 .app { display:grid; grid-template-columns:400px minmax(0, 1fr); min-height:100vh; }
@@ -29,7 +31,6 @@ select, button { font:inherit; padding:7px 11px; border:1px solid var(--line); b
 button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); padding:8px 16px; }
 .meta { color:var(--mut); font-size:12px; }
 .groups, .examples { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-.examples { flex-direction:column; align-items:flex-start; }
 .groups button { padding:2px 9px; font-size:12px; border-radius:12px; }
 .groups button.on { border-color:var(--acc); color:var(--acc); font-weight:600; }
 .examples button { padding:3px 8px; font-size:12px; color:var(--mut); }
@@ -107,6 +108,18 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .p .nr { position:absolute; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
+.chip.cc { background:var(--k-con-bg); color:var(--k-con); }
+.concepts { margin:6px 0 0; font-size:13px; }
+.concepts b { color:var(--k-con); font-weight:600; }
+.concepts .res { font-weight:600; }
+.concepts.phrase { margin-top:2px; padding-left:12px; }
+.clh { margin:8px 0 0; font-size:12px; font-weight:600; }
+.clist { margin:6px 0 0; max-height:200px; overflow:auto; border:1px solid var(--line); border-radius:6px; background:var(--card); font-size:12px; }
+.clist .c { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:8px; padding:1px 8px; }
+.clist .c span + span { text-align:right; font-variant-numeric:tabular-nums; }
+.clist .c.on { background:var(--k-con-bg); color:var(--k-con); font-weight:600; }
+.clist .cut { border-top:1px dashed var(--mut); color:var(--mut); font-size:11px; padding:0 8px; text-align:right; }
+#panel h3 { font-size:13px; margin:16px 0 0; }
 .empty { color:var(--mut); padding:40px 0; text-align:center; }
 .loading { grid-column:1/-1; display:flex; justify-content:center; padding:80px 0; }
 .spinner { width:36px; height:36px; border:3px solid var(--line); border-top-color:var(--acc); border-radius:50%; animation:spin .8s linear infinite; }
@@ -141,7 +154,8 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 const num = n => Number(n).toLocaleString("en-US");
 const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
 const RANKING_NAMES = {combined: "embedding combined (text + image)", text: "embedding text", image: "embedding image",
-                       hyde: "embedding HyDE"};
+                       hyde: "embedding HyDE", concepts: "concepts (residual → concept scores)"};
+const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
 const EXCLUDE = new Set(["not_in", "contains_none"]);
@@ -195,7 +209,7 @@ function panelFilters() {
     if (outs.length) filters.push({feature: fc.feature, values: outs, operator: multi ? "contains_none" : "not_in"});
   });
   filters.push(...PANEL.prices.filter(p => p.value !== "").map(p => ({...p})));
-  return {category: PANEL.category, filters};
+  return {category: PANEL.category, filters, residual: PARSED ? PARSED.residual || [] : []};
 }
 function toggleFilters() {
   $("app").classList.toggle("fopen");
@@ -314,7 +328,8 @@ function drawTimings() {
                   : row("step 2 · features", null, "c-parse", {sub: true, extra: "skipped, no category"}));
   }
   html += row("Filtering", t.filtering_ms, "c-filter", {start: p}) +
-    row("Ranking", t.ranking_ms, "c-rank", {start: p + f}) +
+    row("Ranking", t.ranking_ms, "c-rank", {start: p + f,
+        extra: t.concepts_ms !== undefined ? `incl. concept matching ${fmtMs(t.concepts_ms)}` : ""}) +
     `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
   $("timings").innerHTML = html;
 }
@@ -348,8 +363,44 @@ function treeLines(c) {
   }).join("") + `</div>`;
 }
 
+// the concept of every residual phrase; phrases without a concept do not take part in the ranking
+function conceptLine() {
+  const c = D && D.concepts;
+  if (!c) return "";
+  if (!c.selected.length)
+    return `<div class="concepts"><span class="meta">Concepts:</span> none – ranked by combined <span class="meta">(${esc(c.fallback)})</span></div>`;
+  const matched = c.phrases.filter(p => p.selected.length).length;
+  return `<div class="concepts"><span class="meta">Concepts${matched > 1 ? ` (${COMBINE_NAMES[c.combine]} of ${matched} phrases)` : ""}:</span></div>` +
+    c.phrases.map(p => `<div class="concepts phrase"><span class="res">${esc(p.text)}</span> → ` + (p.selected.length
+      ? p.selected.map(s => `<b>${esc(s.name)}</b> ${s.sim.toFixed(2)}`).join(" · ")
+      : `<span class="meta">none, skipped</span>`) + `</div>`).join("");
+}
+
+// similarity of every phrase to every concept, the chosen one highlighted, a dashed line at the threshold
+function conceptList() {
+  const c = D && D.concepts;
+  if (!c || !c.phrases.length) return "";
+  return c.phrases.map(p => (c.phrases.length > 1 ? `<div class="clh">${esc(p.text)}</div>` : "") + phraseList(c, p)).join("");
+}
+
+function phraseList(c, p) {
+  const chosen = new Set(p.selected.map(s => s.id));
+  let cut = false;
+  return `<div class="clist">` + p.sims.map(x => {
+    const line = !cut && x.sim < c.threshold ? (cut = true, `<div class="cut">threshold ${c.threshold.toFixed(2)}</div>`) : "";
+    return line + `<div class="c${chosen.has(x.id) ? " on" : ""}"><span>${esc(x.name)}</span><span>${x.sim.toFixed(3)}</span></div>`;
+  }).join("") + `</div>`;
+}
+
+function residualLine() {
+  if (!D || !D.parsed || !D.parsed.category) return "";
+  const r = D.parsed.residual;
+  return `<div class="concepts"><span class="meta">Residual:</span> ` + (r.length
+    ? r.map(x => `<span class="res">${esc(x)}</span>`).join(`<span class="meta"> · </span>`) : `<span class="meta">–</span>`) + `</div>`;
+}
+
 function drawParserTop() {
-  $("parsedTop").innerHTML = PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "";
+  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + conceptLine() + conceptList();
 }
 
 function drawNotes() {
@@ -385,7 +436,8 @@ function card(p, i) {
     (p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : `<div class="noimg"></div>`) +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
-      ${hit.length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}</div>` : ""}</div>`;
+      ${hit.length || p.concepts.length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
+        `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}</div>` : ""}</div>`;
   d.onclick = () => details(p);
   return d;
 }
@@ -397,11 +449,13 @@ async function details(k) {
   $("box").innerHTML = `<div class="meta">Loading…</div>`; $("panel").classList.add("on");
   const r = await fetch("/api/product?id=" + encodeURIComponent(k.id), noCache), p = await r.json();
   if (!r.ok) { $("box").innerHTML = `<div class="errorbox">${esc(p.error ? p.error.message : r.status)}</div>`; return; }
-  const hit = new Set(k.matched);
+  const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name));
   $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
     `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
-    `<table>${Object.entries(p.features).map(([c, v]) => `<tr class="${hit.has(c) ? "on" : ""}"><td>${esc(c)}</td><td>${esc(v)}</td></tr>`).join("")}</table>`;
+    `<table>${Object.entries(p.features).map(([c, v]) => `<tr class="${hit.has(c) ? "on" : ""}"><td>${esc(c)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` +
+    (p.concepts.length ? `<h3>Concept scores</h3><table>${p.concepts.map(c =>
+      `<tr class="${chosen.has(c.name) ? "on" : ""}"><td>${esc(c.name)}</td><td>${c.score}/10</td></tr>`).join("")}</table>` : "");
 }
 </script></body></html>

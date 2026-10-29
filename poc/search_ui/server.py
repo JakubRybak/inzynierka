@@ -5,6 +5,7 @@ Filters can also be set by hand in the page; the parser is then skipped.
     python poc/search_ui/server.py --parser llm
     python poc/search_ui/server.py --parser mock --ranking combined --port 8000
 
+Ranking "concepts" (index built with prepare.py --concepts) matches every residual phrase with the concept names.
 No caching: every query, including a repeated one, goes through the parser and the embedding API.
 """
 import argparse
@@ -24,11 +25,12 @@ import numpy as np
 import yaml
 
 import common
+import concepts
 import conditions
 import facets
 import parser_adapter
 
-RANKINGS = ("combined", "text", "image", "hyde")
+RANKINGS = ("combined", "text", "image", "hyde", "concepts")
 PAGE = common.HERE / "static" / "index.html"
 EXAMPLES = common.HERE / "example_queries.yaml"
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
@@ -63,18 +65,34 @@ def _z(s, mask):
 
 
 class SearchEngine:
-    def __init__(self, products, T, I, parser, embedder, hyde=None):
+    def __init__(self, products, T, I, parser, embedder, hyde=None, concept_ranker=None, concept_alpha=None):
         self.products = [conditions.prepare_product(p) for p in products]
+        self.concepts, self.concept_alpha = concept_ranker, concept_alpha
+        self.rankings = [r for r in RANKINGS if r != "concepts" or concept_ranker]
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
         self.parser, self.embedder, self.hyde = parser, embedder, hyde
         self.vocabulary = conditions.Vocabulary(self.products)
         self.facets = facets.load(self.products)
         self.by_id = {p["product_id"]: p for p in self.products}
-        self.pool = ThreadPoolExecutor(2)
+        self.position = {p["product_id"]: i for i, p in enumerate(self.products)}
+        self.pool = ThreadPoolExecutor(3)
 
     def rank(self, q, ranking, cand, category, timings, out):
-        """-> (score, text similarity, image similarity) for the candidates."""
+        """-> (score, text similarity, image similarity, tie-breaker or None) for the candidates."""
+        if ranking == "concepts":
+            job = self.pool.submit(self.concepts.match, out["parsed"]["residual"], category, q)
+            combined, s_t, s_i, _ = self.rank(q, "combined", cand, category, timings, out)
+            m = out["concepts"] = job.result()
+            if not m["selected"]:
+                timings["concepts_ms"] = round(m.pop("ms"), 1)
+                return combined, s_t, s_i, None
+            t = time.perf_counter()
+            score = self.concepts.scores(m["selected"], cand)
+            if self.concept_alpha is not None:
+                score = self.concept_alpha * _z(score, np.ones(len(cand), bool)) + (1 - self.concept_alpha) * combined
+            timings["concepts_ms"] = round(m.pop("ms") + (time.perf_counter() - t) * 1000, 1)
+            return score, s_t, s_i, combined
         if ranking == "hyde":
             t = time.perf_counter()
             out["hyde"] = self.hyde(q, category)
@@ -82,7 +100,7 @@ class SearchEngine:
             t = time.perf_counter()
             s_t = self.T[cand] @ common.normalize(self.embedder(out["hyde"]))
             timings["query_embedding_ms"] = ms(t)
-            return s_t, s_t, None
+            return s_t, s_t, None, None
         t = time.perf_counter()
         jobs = {}
         if ranking in ("text", "combined"):
@@ -94,16 +112,16 @@ class SearchEngine:
         s_t = self.T[cand] @ v["t"] if "t" in v else None
         s_i = self.I[cand] @ v["i"] if "i" in v else None
         if ranking == "text":
-            return s_t, s_t, s_i
+            return s_t, s_t, s_i, None
         mask = self.has_image[cand]
         if ranking == "image":
-            return np.where(mask, s_i, -1.0), s_t, s_i
+            return np.where(mask, s_i, -1.0), s_t, s_i, None
         z_i = _z(s_i, mask)
         z_i[~mask] = z_i[mask].min() - 1 if mask.any() else 0
-        return (_z(s_t, np.ones(len(cand), bool)) + z_i) / 2, s_t, s_i
+        return (_z(s_t, np.ones(len(cand), bool)) + z_i) / 2, s_t, s_i, None
 
     def search(self, q, ranking="combined", manual=None):
-        """manual: {"category", "filters"} in the parser format; when given, the parser is not called."""
+        """manual: {"category", "filters", "residual"} in the parser format; when given, the parser is not called."""
         t0 = time.perf_counter()
         timings = {}
         out = dict(query=q, parser=self.parser.name, ranking=ranking, timings=timings,
@@ -123,10 +141,12 @@ class SearchEngine:
                 out["parser_info"] = parser_adapter.parser_info(raw)
                 timings["parsing_ms"] = ms(t)
             else:
-                raw = dict(category=manual.get("category"), filters=manual.get("filters") or [], residual="")
-                out["parser_info"] = dict(category=raw["category"], residual="", source="manual")
+                raw = dict(category=manual.get("category"), filters=manual.get("filters") or [],
+                           residual=parser_adapter.residual_list(manual.get("residual"))[:10])
+                out["parser_info"] = dict(category=raw["category"], residual=raw["residual"], source="manual")
             out["parsed"] = dict(category=raw.get("category"), filters=raw.get("filters") or [],
-                                 residual=raw.get("residual") or "", source="manual" if manual else "parser")
+                                 residual=parser_adapter.residual_list(raw.get("residual")),
+                                 source="manual" if manual else "parser")
             tree = parser_adapter.to_condition(raw)
         except parser_adapter.OutOfCatalog as e:
             timings.setdefault("parsing_ms", ms(t))
@@ -151,15 +171,16 @@ class SearchEngine:
         s_t = s_i = None
         if len(cand) and q:
             try:
-                score, s_t, s_i = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out)
+                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)
-            order = np.argsort(-score, kind="stable")
+            order = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
         else:
             score, order = np.zeros(len(cand)), np.arange(len(cand))
         timings["ranking_ms"] = ms(t)
 
+        selected = (out.get("concepts") or {}).get("selected")
         results = []
         for j in order:
             i = int(cand[j])
@@ -173,7 +194,8 @@ class SearchEngine:
                 score_text=None if s_t is None else round(float(s_t[j]), 4),
                 score_image=None if s_i is None else round(float(s_i[j]), 4),
                 features={k: _show_value(v) for k, v in sorted(p["features"].items())},
-                matched=f["matched"].get(i, [])))
+                matched=f["matched"].get(i, []),
+                concepts=self.concepts.product_scores(i, selected) if selected else []))
         out["results"] = results
         timings["total_ms"] = ms(t0)
         return out
@@ -187,7 +209,9 @@ class SearchEngine:
                     composition=_text(p.get("composition")), season=p.get("season") or "",
                     original_category=f"{p.get('original_section')} / {p.get('original_category')}",
                     status=p.get("status"), images=[f"/images/{z}" for z in p["images"]],
-                    features={k: _show_value(v) for k, v in sorted(p["features"].items())})
+                    features={k: _show_value(v) for k, v in sorted(p["features"].items())},
+                    concepts=sorted(self.concepts.product_scores(self.position[pid]), key=lambda c: -c["score"])
+                    if self.concepts else [])
 
 
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
@@ -214,7 +238,7 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                 if u.path == "/api/info":
                     ex = yaml.safe_load(Path(examples).read_text(encoding="utf-8")) if Path(examples).exists() else {}
                     ex = {k: [x if isinstance(x, str) else x["q"] for x in v or []] for k, v in (ex or {}).items()}
-                    return self.send(200, dict(parser=engine.parser.name, ranking=ranking, rankings=RANKINGS,
+                    return self.send(200, dict(parser=engine.parser.name, ranking=ranking, rankings=engine.rankings,
                                                products=len(engine.products), facets=engine.facets, examples=ex,
                                                categories={k: sum(p["category"] == k for p in engine.products)
                                                            for k in engine.facets}))
@@ -222,7 +246,7 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                     q = params.get("q", [""])[0].strip()[:300]
                     r = params.get("ranking", [ranking])[0]
                     manual = json.loads(params["filters"][0]) if params.get("filters") else None
-                    if (not q and manual is None) or r not in RANKINGS:
+                    if (not q and manual is None) or r not in engine.rankings:
                         return self.send(400, {"error": dict(stage="request", message="empty query or unknown ranking")})
                     return self.send(200, engine.search(q, r, manual))
                 if u.path == "/api/product":
@@ -263,6 +287,13 @@ def main():
     ap.add_argument("--hyde-model", default="gemini-3.5-flash-lite")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)
+    ap.add_argument("--concept-threshold", type=float, default=0.72, help="minimum phrase-concept cosine similarity")
+    ap.add_argument("--concept-combine", choices=list(concepts.COMBINE), default="geo",
+                    help="how the scores of the residual phrases are combined: geometric mean, mean or minimum")
+    ap.add_argument("--concept-norm", choices=concepts.NORMS, default="raw",
+                    help="concept scores as percentiles within the category or as score / 10")
+    ap.add_argument("--concept-alpha", type=float, help="alpha * concepts + (1 - alpha) * combined (z-scores); "
+                                                         "default: concepts only, combined breaks ties")
     ap.add_argument("--no-warmup", action="store_true", help="skip the test embedding call at startup")
     ap.add_argument("--no-browser", action="store_true")
     args = ap.parse_args()
@@ -280,8 +311,16 @@ def main():
             print(f"Embedding API warm-up: {ms(t):.0f} ms")
         except Exception as e:
             print(f"Embedding API warm-up failed ({type(e).__name__}): check the network and GCP credentials")
+    ranker = concepts.load(args.data, meta, products, embedder, threshold=args.concept_threshold,
+                           combine=args.concept_combine, norm=args.concept_norm)
+    if ranker:
+        print(f"Concepts: {len(ranker.ids)}, scores for {', '.join(sorted(ranker.categories))} · threshold "
+              f"{ranker.threshold}, one concept per phrase, {ranker.combine} of phrases, {ranker.norm}, "
+              f"format {ranker.format}")
+    elif args.ranking == "concepts":
+        sys.exit("--ranking concepts needs an index built with prepare.py --concepts")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
-    engine = SearchEngine(products, T, I, parser, embedder, common.HydeWriter(args.hyde_model))
+    engine = SearchEngine(products, T, I, parser, embedder, common.HydeWriter(args.hyde_model), ranker, args.concept_alpha)
     print(f"Parser: {engine.parser.name} · ranking: {args.ranking}")
     srv = build_server(engine, meta["dataset"], args.port, args.ranking)
     url = f"http://127.0.0.1:{args.port}/"

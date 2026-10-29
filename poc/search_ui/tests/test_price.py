@@ -60,7 +60,7 @@ class PriceTests(unittest.TestCase):
         parser = QueryParser()
         filters = [{"feature": "colors", "operator": "contains_any", "values": ["Black"]}, price("lte", 100)]
         with patch.object(parser, "_call_api", side_effect=[
-                ({"category": "T-shirts"}, {}, 0), ({"filters": filters, "residual": ""}, {}, 0)]):
+                ({"category": "T-shirts"}, {}, 0), ({"filters": filters, "residual": []}, {}, 0)]):
             parsed = parser.parse("black tee up to 100 euros")
         self.assertEqual(parsed.to_dict()["filters"], filters)
         self.assertIn("price lte 100", parsed.summary())
@@ -87,7 +87,7 @@ class PriceTests(unittest.TestCase):
         parser = QueryParser()
         with patch.object(parser, "_call_api", side_effect=[
                 ({"category": "T-shirts"}, {}, 0),
-                ({"filters": [price("lt", "200")], "residual": ""}, {}, 0)]):
+                ({"filters": [price("lt", "200")], "residual": []}, {}, 0)]):
             with self.assertRaises(ValueError):
                 parser.parse("tee under 200")
 
