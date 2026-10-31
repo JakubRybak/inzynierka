@@ -1,7 +1,7 @@
 # Keyword extraction
 
-Supported categories: T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses and
-Skirts. Extraction processes **all products** from these categories, separately for
+Supported categories: T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts,
+the five Jackets & Coats categories, the four Pants categories, Shirts and Blouses. Extraction processes **all products** from these categories, separately for
 train and validation. It uses YAML and Python, without reading Markdown or calling LLMs.
 
 ## Run
@@ -25,9 +25,9 @@ are skipped and counted in console output, not marked as excluded products.
 
 ## Files
 
-- config/common.yaml: shared rules for gender, colors and main_composition, plus
-  the list of allowed pattern values for later LLM extraction.
-- config/categories/: six category configurations.
+- config/common.yaml: shared rules for gender, colors, main_composition and
+  lining_composition, plus the list of allowed pattern values for later LLM extraction.
+- config/categories/: seventeen category configurations.
 - scripts/engine.py: keyword matching, parsing and assignment strategies.
 - scripts/run_extraction.py: complete train/validation processing and output validation.
 - tests/test_extraction.py: behavior and persistence tests.
@@ -68,6 +68,11 @@ use references a common feature; exclude_phrases prevents T-shirt Dress from als
 matching Shirt Dress. derive handles strap_width = Not Applicable. Gender and
 main_composition failures exclude the product. Dresses and Skirts length comes
 only from original_category; an unmapped value also excludes the product.
+
+priority takes the first value, in keyword order, that has a match (Jeans distressing).
+default_value is assigned when nothing else resolved the feature (Jackets & Coats fit:
+Regular). lining_composition parses only a Lining section (section_only); without one,
+its fallback rule looks for Unlined in the description, otherwise the value is Unknown.
 
 Colors use only name and mask that product's brand. Pattern uses the llm strategy:
 it always remains undefined, without keyword matching or evidence, for later LLM

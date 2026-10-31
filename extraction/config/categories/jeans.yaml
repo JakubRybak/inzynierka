@@ -1,0 +1,303 @@
+section: Pants
+category: Jeans
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Skinny:
+      - skinny
+      - skinny-fit
+      - super skinny
+      Slim:
+      - slim
+      - slim-fit
+      - slim-cut
+      Regular:
+      - regular fit
+      - regular-fit
+      - classic fit
+      - standard fit
+      Relaxed:
+      - relaxed
+      - relaxed-fit
+      - loose
+      - loose-fit
+      - loose-fitting
+      - baggy
+      - oversized
+      - oversize
+      - boyfriend
+      - slouchy
+  leg_shape:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Straight:
+      - straight-leg
+      - straight leg
+      - straight-fit
+      - straight fit
+      - straight-cut
+      - straight jeans
+      - straight trousers
+      - straight pants
+      Tapered:
+      - tapered
+      - tapering
+      - carrot
+      - jogger
+      - joggers
+      Wide-Leg:
+      - wide-leg
+      - wide leg
+      - wide trousers
+      - wide jeans
+      - wide pants
+      - wide lounge pants
+      - palazzo
+      - culotte
+      - culottes
+      Flared:
+      - flared
+      - flare
+      - bootcut
+      - boot-cut
+      - bell-bottom
+      - bell-bottoms
+      Other:
+      - sarouel
+      - harem
+      - drop-crotch
+      - drop crotch
+      - dropped crotch
+      - balloon
+      - jodhpur
+      - jodhpurs
+  length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Cropped:
+      - cropped
+      - crop
+      - capri
+      - capris
+      - three-quarter
+      - 7/8
+      - ankle-grazing
+      - ankle grazing
+      - above ankle
+      - culotte
+      - culottes
+      Full-Length:
+      - full-length leg
+      - floor-length
+      - floor length
+      - extra-long
+      - long jeans
+      - long trousers
+      - long pants
+  rise:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      High-Rise:
+      - high-rise
+      - high rise
+      - high-waisted
+      - high waisted
+      - high-waist
+      - high waist
+      Mid-Rise:
+      - mid-rise
+      - mid rise
+      - medium rise
+      - regular rise
+      Low-Rise:
+      - low-rise
+      - low rise
+      - low-waisted
+      - low waisted
+      - low-waist
+      - low waist
+  waistband_type:
+    strategy: single
+    columns:
+    - description
+    keywords:
+      Elasticized:
+      - elasticized waistband
+      - elasticised waistband
+      - elastic waistband
+      - elasticized waist
+      - elasticised waist
+      - rib knit waistband
+      - ribbed waistband
+      - ribbed knit waistband
+      - drawstring
+      - drawstrings
+      - bungee
+      - pull-on
+      Other:
+      - paperbag
+      - paper bag
+      - tie-waist
+      - tie waist
+      - wrap waist
+      Structured:
+      - zip-fly
+      - zip fly
+      - button-fly
+      - button fly
+      - belt loop
+      - belt loops
+      - hook-and-eye
+      - hook and eye
+      - hook-and-bar
+      - hook and bar
+  cuff_style:
+    strategy: single
+    columns:
+    - description
+    keywords:
+      Zippered Cuff:
+      - zippered vent
+      - zippered vents
+      - zip vent
+      - zip vents
+      - zippered ankle cuffs
+      - zippered cuffs
+      - zipped cuffs
+      - zip at cuffs
+      - zip closure at cuffs
+      - zippered at
+      - zipped at
+      - zippered hem
+      - zip at hem
+      Elasticized Cuff:
+      - rib knit cuffs
+      - rib knit ankle cuffs
+      - ribbed knit ankle cuffs
+      - ribbed knit cuffs
+      - ribbed cuffs
+      - ribbed ankle cuffs
+      - elasticized cuffs
+      - elasticised cuffs
+      - elasticized ankle cuffs
+      - elasticised ankle cuffs
+      - elastic cuffs
+      - elastic ankle cuffs
+      - elasticized hem
+      - elasticized hems
+      - drawstring at cuffs
+      - drawstring at hem
+      - drawstrings at cuffs
+      - cinched cuffs
+      - gathered cuffs
+      - elasticized waistband and cuffs
+      - elasticized waistband and ankle cuffs
+      - elasticised waistband and cuffs
+      - elasticised waistband and ankle cuffs
+      - rib knit waistband and cuffs
+      - rib knit waistband and ankle cuffs
+      Other:
+      - cinch strap at cuffs
+      - cinch straps at cuffs
+      - buttoned vent at cuffs
+      - buttoned tab at cuffs
+      - button tab at cuffs
+      - press-stud tab at cuffs
+      - press-stud at cuffs
+      - press-studs at cuffs
+      - press-stud placket at ankle cuffs
+      - velcro fastening at cuffs
+      - velcro tab at cuffs
+      - snap at cuffs
+      - snaps at cuffs
+      - stirrup
+      - stirrups
+      Open Hem:
+      - rolled cuffs
+      - rolled ankle cuffs
+      - rolled hem
+      - raw edge at hem
+      - raw edges at hem
+      - raw edge at cuffs
+      - raw edges at cuffs
+      - raw edge at ankle cuffs
+      - raw hem
+      - raw-edge hem
+      - unfinished hem
+      - unfinished hems
+      - unfinished edge at cuffs
+      - unfinished hem at ankle cuffs
+      - unfinished hems at ankle cuffs
+      - serged ankle cuffs
+      - serged cuffs
+      - serged hem
+      - frayed hem
+      - vented cuffs
+      - vented hem
+      - vent at cuffs
+      - vents at cuffs
+      - slit at cuffs
+      - slits at cuffs
+      - split at cuffs
+      - turn-up cuffs
+      - turn-ups
+      - cuffed hem
+  distressing:
+    strategy: priority
+    columns:
+    - name
+    - description
+    keywords:
+      Distressed:
+      - distressed
+      - distressing
+      - ripped
+      - rips
+      - torn
+      - destroyed
+      - shredded
+      - shredding
+      - slashed
+      - slashes
+      - abrasion
+      - abrasions
+      Faded:
+      - fading
+      - faded
+      - whiskering
+      - whiskered
+      - stonewashed
+      - stone-washed
+      - acid wash
+      - acid-wash
+      - bleached
+      - bleaching
+      - honeycombing
+      - vintage wash
+      Clean:
+      - raw denim
+      - unwashed
+      - rinse
+      - rinsed
+      - dry denim

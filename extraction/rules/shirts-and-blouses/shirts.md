@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 4,185 | 96,45% |
+| Przypisane | 4,192 | 96,61% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 31 | 0,71% |
-| `ambiguous_main_section` | 83 | 1,91% |
+| `unparsed_composition` | 21 | 0,48% |
+| `ambiguous_main_section` | 77 | 1,77% |
 | `unmapped_material` | 20 | 0,46% |
-| `sum_not_100` | 20 | 0,46% |
+| `sum_not_100` | 29 | 0,67% |
 <!-- /results -->
 
 ## `pattern`
@@ -47,7 +47,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłączn
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 0 | 0,00% |
-| `undefined` | 4 339 | 100,00% |
+| `undefined` | 4,339 | 100,00% |
 <!-- /results -->
 
 ## `sleeve_length`
@@ -63,8 +63,8 @@ Kolumny `name` i `description`
 <!-- results:sleeve_length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 4,240 | 97,72% |
-| `undefined` | 99 | 2,28% |
+| Przypisane | 4,241 | 97,74% |
+| `undefined` | 98 | 2,26% |
 <!-- /results -->
 
 ## `fit`

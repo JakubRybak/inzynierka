@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 143 | 86,14% |
+| Przypisane | 152 | 91,57% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 6 | 3,61% |
-| `ambiguous_main_section` | 17 | 10,24% |
+| `unparsed_composition` | 3 | 1,81% |
+| `ambiguous_main_section` | 8 | 4,82% |
 | `unmapped_material` | 0 | 0,00% |
-| `sum_not_100` | 0 | 0,00% |
+| `sum_not_100` | 3 | 1,81% |
 <!-- /results -->
 
 ## `pattern`
@@ -68,8 +68,8 @@ Kolumna `composition` – sekcje Lining, Body lining, Lining N
 <!-- results:lining_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 94 | 56,63% |
-| `Unknown` | 72 | 43,37% |
+| Przypisane | 97 | 58,43% |
+| `Unknown` | 69 | 41,57% |
 <!-- /results -->
 
 ## `hood`

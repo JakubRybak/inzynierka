@@ -18,7 +18,7 @@ class ExtractionTests(unittest.TestCase):
         cls.config, _ = load_config(BASE / 'config')
 
     def product(self, category='T-shirts', **updates):
-        section = 'Dresses' if category == 'Dresses' else 'Skirts' if category == 'Skirts' else 'Tops'
+        section = {c: s for s, c in self.config}[category]
         product = dict(product_id='test', section=section, category=category, name='Black product',
                        description='', gender='Men', brand='Example Brand', composition='100% cotton', original_category='')
         product.update(updates)
@@ -30,7 +30,36 @@ class ExtractionTests(unittest.TestCase):
 
     def test_supported_scope(self):
         self.assertEqual(set(self.config), {('Tops', 'T-shirts'), ('Tops', 'Polos'),
-            ('Tops', 'Tank tops & Camisoles'), ('Tops', 'Bodysuits'), ('Dresses', 'Dresses'), ('Skirts', 'Skirts')})
+            ('Tops', 'Tank tops & Camisoles'), ('Tops', 'Bodysuits'), ('Dresses', 'Dresses'), ('Skirts', 'Skirts'),
+            *[('Jackets & Coats', c) for c in ('Bombers', 'Classic Coats', 'Jackets', 'Trench Coats', 'Vests')],
+            *[('Pants', c) for c in ('Cargo Pants', 'Jeans', 'Sweatpants & Lounge Pants', 'Trousers')],
+            ('Shirts & Blouses', 'Shirts'), ('Shirts & Blouses', 'Blouses')})
+
+    def test_lining_composition(self):
+        cases = [('Body: 100% wool. Lining: 100% cupro.', '', 'assigned', {'Viscose': 100.0}),
+                 ('100% wool.', 'Unlined. Tonal stitching.', 'assigned', 'Unlined'),
+                 ('100% wool.', 'Fully lined.', 'assigned', 'Unknown'),
+                 ('Body: 100% wool. Lining 1: 100% silk. Lining 2: 100% cupro.', '', 'assigned', 'Unknown'),
+                 ('Body: 100% wool. Sleeve lining: 100% silk.', '', 'assigned', 'Unknown')]
+        for composition, description, status, expected in cases:
+            with self.subTest(composition=composition, description=description):
+                value, actual, *_ = self.feature('Jackets', 'lining_composition', composition=composition,
+                                                 description=description)
+                self.assertEqual((value, actual), (expected, status))
+
+    def test_default_value(self):
+        self.assertEqual(self.feature('Jackets', 'fit', description='Oversized fit.')[:2], ('Oversized', 'assigned'))
+        self.assertEqual(self.feature('Jackets', 'fit', description='Oversized lapels.')[:3], ('Regular', 'assigned', 'default'))
+
+    def test_priority(self):
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading and distressing throughout.')[0], 'Distressed')
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading throughout.')[0], 'Faded')
+        self.assertIsNone(self.feature('Jeans', 'distressing', description='Tonal stitching.')[0])
+
+    def test_excluded_phrases(self):
+        self.assertEqual(self.feature('Shirts', 'collar_type', description='Open spread collar.')[0], 'Camp Collar')
+        self.assertIsNone(self.feature('Jackets', 'insulation', description='Fur-lined hood.')[0])
+        self.assertEqual(self.feature('Jackets', 'insulation', description='Fur-lined body.')[0], 'Other')
 
     def test_colors(self):
         for title, expected in [('Black White Red', ['Multicolor']), ('Multicolor Black', ['Multicolor']),
@@ -45,7 +74,8 @@ class ExtractionTests(unittest.TestCase):
         cases = [('100% cotton', 'assigned', {'Cotton': 100.0}),
                  ('Body: 98% cotton, 2% elastane. Lining: 100% silk.', 'assigned', {'Cotton': 98.0, 'Elastane': 2.0}),
                  ('Body: 100% cotton. Body: 100% silk.', 'ambiguous_main_section', None),
-                 ('Shell: 100% cotton.', 'ambiguous_main_section', None),
+                 ('Shell: 100% cotton.', 'assigned', {'Cotton': 100.0}),
+                 ('Shell: 100% cotton. Body: 100% silk.', 'ambiguous_main_section', None),
                  ('Body: 100% cotton. Trim 1: 90% wool, 10% nylon.', 'assigned', {'Cotton': 100.0}),
                  ('90% cotton', 'sum_not_100', None), ('100% mystery', 'unmapped_material', None),
                  ('cotton', 'unparsed_composition', None), ('', 'undefined', None),

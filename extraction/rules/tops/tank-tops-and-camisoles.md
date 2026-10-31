@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 912 | 89,41% |
+| Przypisane | 931 | 91,27% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 4 | 0,39% |
-| `ambiguous_main_section` | 65 | 6,37% |
-| `unmapped_material` | 8 | 0,78% |
-| `sum_not_100` | 31 | 3,04% |
+| `unparsed_composition` | 5 | 0,49% |
+| `ambiguous_main_section` | 43 | 4,22% |
+| `unmapped_material` | 9 | 0,88% |
+| `sum_not_100` | 32 | 3,14% |
 <!-- /results -->
 
 ## `pattern`
