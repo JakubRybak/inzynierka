@@ -80,8 +80,8 @@ Kolumny `name` i `description`
 <!-- results:fit -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 260 | 5,99% |
-| `undefined` | 4,079 | 94,01% |
+| Przypisane | 275 | 6,34% |
+| `undefined` | 4,064 | 93,66% |
 <!-- /results -->
 
 ## `length`
@@ -131,31 +131,25 @@ Kolumny `name` i `description`
 
 ### `fit`
 
-Keyword nie liczy się przed częścią ubrania: lapel, collar, pull-tab, hood, zip, pocket, button, patch, cuffs, logo, buckle, hardware, tab, sleeves, shoulders, hem.
-
 | Wartość | Keywordy |
 | --- | --- |
 | `Slim` | `slim fit`, `slim-fit`, `slim-fitting`, `close-fitting`, `form-fitting`, `body-hugging`, `fitted shirt`, `fitted blouse` |
 | `Regular` | `regular fit`, `regular-fit`, `standard fit`, `classic fit` |
-| `Oversized` | `relaxed fit`, `relaxed-fit`, `loose fit`, `loose-fitting`, `oversized`, `oversize`, `boxy`, `boxy fit`, `boxy-fit` |
+| `Oversized` | `relaxed fit`, `relaxed-fit`, `loose fit`, `loose-fitting`, `oversized`, `oversize`, `boxy`, `boxy fit`, `boxy-fit`; `oversized`, `oversize`, `boxy` nie uwzględniamy, gdy zaraz po nich stoi część ubrania: `lapel(s)`, `collar(s)`, `pull-tab(s)`, `hood(s)`, `zip(s)`, `zipper(s)`, `pocket(s)`, `button(s)`, `patch(es)`, `cuff(s)`, `logo(s)`, `buckle(s)`, `hardware`, `tab(s)`, `sleeves`, `shoulders`, `hem` |
 
 ### `length`
-
-Keyword nie liczy się przed częścią ubrania: lapel, collar, pull-tab, hood, zip, pocket, button, patch, cuffs, logo, buckle, hardware, tab, sleeves, shoulders, hem.
 
 | Wartość | Keywordy |
 | --- | --- |
 | `Cropped` | `cropped shirt`, `cropped blouse`, `cropped top`, `crop top`, `cropped fit`, `cropped length` |
 | `Regular` | `regular length`, `standard length` |
-| `Longline` | `longline`, `long-line`, `long length`, `elongated body`, `extended length`, `extended-length`, `tunic`, `overlong fit`, `overlong shirt`, `overlong blouse` |
+| `Longline` | `longline`, `long-line`, `long length`, `elongated body`, `extended length`, `extended-length`, `tunic`, `overlong fit`, `overlong shirt`, `overlong blouse`; `tunic` nie uwzględniamy we frazie `tunic collar` |
 
 ### `collar_type`
 
-Dłuższa fraza wygrywa: `open spread collar` → Camp Collar, nie Point Collar.
-
 | Wartość | Keywordy |
 | --- | --- |
-| `Point Collar` | `spread collar`, `point collar`, `pointed collar`, `button-down collar`, `button down collar`, `classic collar`, `cutaway collar`, `shirt collar` |
+| `Point Collar` | `spread collar`, `point collar`, `pointed collar`, `button-down collar`, `button down collar`, `classic collar`, `cutaway collar`, `shirt collar`; nie uwzględniamy dopasowania we frazie `open spread collar` |
 | `Camp Collar` | `camp collar`, `cuban collar`, `revere collar`, `resort collar`, `notched lapel collar`, `open spread collar` |
 | `Stand Collar` | `stand collar`, `stand-up collar`, `band collar`, `mandarin collar`, `tunic collar`, `funnel collar`, `funnel neck`, `mock neck`, `mock-neck`, `high neck`, `high-neck`, `turtleneck`, `turtle neck`, `roll neck`, `rollneck` |
 | `Collarless` | `collarless`, `crewneck`, `crew neck`, `crew-neck`, `v-neck`, `v neck`, `y-neck`, `scoop neck` |

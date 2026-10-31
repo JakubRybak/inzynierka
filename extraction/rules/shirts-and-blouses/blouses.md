@@ -80,8 +80,8 @@ Kolumny `name` i `description`
 <!-- results:fit -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 113 | 11,28% |
-| `undefined` | 889 | 88,72% |
+| Przypisane | 114 | 11,38% |
+| `undefined` | 888 | 88,62% |
 <!-- /results -->
 
 ## `length`
@@ -132,23 +132,19 @@ Kolumny `name` i `description`
 
 ### `fit`
 
-Keyword nie liczy się przed częścią ubrania: lapel, collar, pull-tab, hood, zip, pocket, button, patch, cuffs, logo, buckle, hardware, tab, sleeves, shoulders, hem.
-
 | Wartość | Keywordy |
 | --- | --- |
 | `Slim` | `slim fit`, `slim-fit`, `slim-fitting`, `close-fitting`, `form-fitting`, `body-hugging`, `fitted shirt`, `fitted blouse` |
 | `Regular` | `regular fit`, `regular-fit`, `standard fit`, `classic fit` |
-| `Oversized` | `relaxed fit`, `relaxed-fit`, `loose fit`, `loose-fitting`, `oversized`, `oversize`, `boxy`, `boxy fit`, `boxy-fit` |
+| `Oversized` | `relaxed fit`, `relaxed-fit`, `loose fit`, `loose-fitting`, `oversized`, `oversize`, `boxy`, `boxy fit`, `boxy-fit`; `oversized`, `oversize`, `boxy` nie uwzględniamy, gdy zaraz po nich stoi część ubrania: `lapel(s)`, `collar(s)`, `pull-tab(s)`, `hood(s)`, `zip(s)`, `zipper(s)`, `pocket(s)`, `button(s)`, `patch(es)`, `cuff(s)`, `logo(s)`, `buckle(s)`, `hardware`, `tab(s)`, `sleeves`, `shoulders`, `hem` |
 
 ### `length`
-
-Keyword nie liczy się przed częścią ubrania: lapel, collar, pull-tab, hood, zip, pocket, button, patch, cuffs, logo, buckle, hardware, tab, sleeves, shoulders, hem.
 
 | Wartość | Keywordy |
 | --- | --- |
 | `Cropped` | `cropped shirt`, `cropped blouse`, `cropped top`, `crop top`, `cropped fit`, `cropped length` |
 | `Regular` | `regular length`, `standard length` |
-| `Longline` | `longline`, `long-line`, `long length`, `elongated body`, `extended length`, `extended-length`, `tunic`, `overlong fit`, `overlong shirt`, `overlong blouse` |
+| `Longline` | `longline`, `long-line`, `long length`, `elongated body`, `extended length`, `extended-length`, `tunic`, `overlong fit`, `overlong shirt`, `overlong blouse`; `tunic` nie uwzględniamy we frazie `tunic collar` |
 
 ### `neckline`
 
