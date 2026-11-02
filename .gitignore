@@ -32,8 +32,5 @@ products_new/data/processed/
 # Local experiments
 /experiments/
 
-# Extracted product datasets
-/extraction/results/
-
-# Search UI index
-/poc/search_ui/data/
+# Generated extraction artifacts, request logs and embedding caches
+/feature_extraction/artifacts/

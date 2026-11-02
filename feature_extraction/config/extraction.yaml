@@ -1,0 +1,29 @@
+dataset: data/processed/fashiongen
+splits: [train, validation]
+selection: feature_extraction/config/samples/pilot_900.csv
+categories: [T-shirts, Dresses, Tank tops & Camisoles]
+references: feature_extraction/reference/products.jsonl
+embeddings: feature_extraction/artifacts/embeddings
+artifacts: feature_extraction/artifacts
+api:
+  project: project-3a86f100-1aae-4780-84b
+  location: global
+  model: gemini-3.5-flash-lite
+  timeout_seconds: 180
+  max_attempts: 2
+  retry_delay_seconds: 10
+  budget_usd: 5.0
+  input_usd_per_million: 0.30
+  output_usd_per_million: 2.50
+  max_input_tokens: 20000
+  max_output_tokens: 8192
+  thinking_level: MEDIUM
+  media_resolution: MEDIA_RESOLUTION_MEDIUM
+embedding_api:
+  model: gemini-embedding-2
+  dimension: 3072
+  timeout_seconds: 90
+  budget_usd: 0.25
+  max_input_tokens: 8192
+  image_usd_per_million: 0.45
+  text_usd_per_million: 0.20
