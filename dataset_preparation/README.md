@@ -1,13 +1,19 @@
 # Fashion-Gen dataset preparation
 
-`build_fashiongen.py` reads the original HDF5 datasets, selects clothing products,
-assigns project categories using `config/fashiongen_taxonomy.yaml`, and exports
+`catalog_preparation/prepare_catalog.py` reads the original HDF5 datasets, selects clothing products,
+assigns project categories using `catalog_preparation/fashiongen_taxonomy.yaml`, and exports
 product/image CSV manifests and lossless PNG images. Train and validation remain
 separate. Product descriptions and other metadata come from the first row of each
 product; each source image is linked by product ID and pose.
 
 The taxonomy defines source category mappings, conditional name/description rules
 and source exclusions. Product feature extraction is handled by `feature_extraction/`.
+
+## Stages
+
+`catalog_preparation/` selects source products, assigns project categories and
+exports the catalog and images. Additional preparation stages can be added as
+sibling directories.
 
 ## Run
 
@@ -16,7 +22,7 @@ From the repository root:
 
 ```sh
 source .venv/bin/activate
-python dataset_preparation/build_fashiongen.py \
+python dataset_preparation/catalog_preparation/prepare_catalog.py \
   --train data/raw/fashiongen_256_256_train.h5 \
   --validation data/raw/fashiongen_256_256_validation.h5
 ```

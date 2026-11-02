@@ -10,8 +10,8 @@ import h5py
 import numpy as np
 import yaml
 
-ROOT = Path(__file__).resolve().parents[1]
-CONFIG = Path(__file__).resolve().parent / 'config'
+ROOT = Path(__file__).resolve().parents[2]
+TAXONOMY = Path(__file__).resolve().with_name('fashiongen_taxonomy.yaml')
 FIELDS = ['productID', 'name', 'brand', 'gender', 'category', 'subcategory',
           'season', 'msrpUSD', 'composition', 'description', 'pose']
 
@@ -176,7 +176,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--train', type=Path)
     parser.add_argument('--validation', type=Path)
-    parser.add_argument('--taxonomy', type=Path, default=CONFIG / 'fashiongen_taxonomy.yaml')
+    parser.add_argument('--taxonomy', type=Path, default=TAXONOMY)
     parser.add_argument('--output', type=Path, default=ROOT / 'data/processed/fashiongen')
     parser.add_argument('--metadata-only', action='store_true', help='Skip PNG export; image paths remain empty.')
     args = parser.parse_args()

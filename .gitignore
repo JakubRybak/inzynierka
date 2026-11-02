@@ -20,8 +20,10 @@ products_new/data/raw/
 products_new/data/processed/
 
 # Active datasets
-/data/raw/
-/data/processed/
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
 
 # Archived project files
 /archive/

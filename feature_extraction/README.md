@@ -11,9 +11,8 @@ for the other previously implemented categories remain available in
 - `keywords/` contains the matching engine, composition parser and YAML definitions.
 - `llm/` contains the Vertex client, prompt builder, response validation and reference retrieval.
 - `llm/prompts/system.txt` and `feature_definitions.json` are prompt sources.
-- `llm/prompts/prompt_blocks.md` is the readable block catalogue.
 - `embeddings/` builds separate main-image and description embeddings.
-- `rules/` documents the extraction rules; `reference/` holds manual labels.
+- `docs/extraction_rules/` documents the extraction rules; `reference/` holds manual labels.
 - `artifacts/` holds local generated datasets, embedding caches, requests and run logs.
 - `tests/` contains offline regression tests.
 
