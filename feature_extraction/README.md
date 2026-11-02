@@ -19,6 +19,20 @@ for the other previously implemented categories remain available in
 The source taxonomy stays at `categories_and_features.md` in the repository root.
 Processed products and images stay at `data/processed/fashiongen/`.
 
+## Category-specific prompt definitions
+
+`llm/prompts/feature_definitions.json` stores independent definitions for each
+category and feature. For example, `T-shirts.neckline` and `Dresses.neckline`
+each have their own `instruction` and descriptions under `values`. Editing one
+category's definition affects only that category. The system instruction remains
+shared across categories.
+
+The builder selects the category first, then includes only unresolved features.
+Allowed labels still come from the keyword/category YAML configuration and must
+all have descriptions in that category's prompt definition. An unsupported
+category or a missing feature definition raises an error. To add an LLM category,
+add its feature definitions explicitly and enable it in the extraction config.
+
 ## Install and configure
 
 Run from the repository root with Python 3.10 or newer:

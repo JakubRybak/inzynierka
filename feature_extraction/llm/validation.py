@@ -4,7 +4,8 @@ from .prompt_builder import requested_rules, choices
 def validate_response(response, record):
     """Business validation beyond server schema; does not mutate keyword values."""
     rules = requested_rules(record)
-    reason_field = any('Other' not in choices(f, rule) for f, rule in rules.items())
+    category = record['category']
+    reason_field = any('Other' not in choices(category, f, rule) for f, rule in rules.items())
     expected = {'product_status', 'product_reason', 'features'}
     if reason_field:
         expected.add('outside_schema_reasons')
@@ -22,7 +23,7 @@ def validate_response(response, record):
         raise ValueError('Expected exactly the missing features for an ok product')
     outside = set()
     for feature, value in features.items():
-        values = choices(feature, rules[feature])
+        values = choices(category, feature, rules[feature])
         if value == 'outside_schema':
             if 'Other' in values:
                 raise ValueError('outside_schema forbidden when Other exists')

@@ -26,23 +26,32 @@ def requested_rules(record):
     if record['status'] == 'excluded' or record['exclusion_reasons']:
         raise ValueError('Excluded products must not be submitted')
     missing = {k: v for k, v in rules.items() if k not in record['features']}
-    if set(missing) - set(DEFINITIONS):
-        raise ValueError(f'Unsupported LLM features: {set(missing) - set(DEFINITIONS)}')
+    if missing:
+        definitions = category_definitions(record['category'])
+        if set(missing) - set(definitions):
+            raise ValueError(f"Unsupported LLM features for {record['category']}: {set(missing) - set(definitions)}")
     return missing
 
 
-def choices(feature, rule):
+def category_definitions(category):
+    if category not in DEFINITIONS:
+        raise ValueError(f'No LLM feature definitions for category: {category}')
+    return DEFINITIONS[category]
+
+
+def choices(category, feature, rule):
     allowed = allowed_values(rule)
-    values = [v for v in DEFINITIONS[feature]['values'] if v in allowed]
+    definition = category_definitions(category)[feature]
+    values = [v for v in definition['values'] if v in allowed]
     if set(values) != allowed:
-        raise ValueError(f'Definition/taxonomy mismatch: {feature}')
+        raise ValueError(f'Definition/taxonomy mismatch: {category}.{feature}')
     return values
 
 
-def build_schema(rules):
+def build_schema(rules, category):
     fields, reasons = {}, {}
     for feature, rule in rules.items():
-        values = choices(feature, rule)
+        values = choices(category, feature, rule)
         has_other = 'Other' in values
         if feature in ('colors', 'dress_type'):
             value_schema = {'type': 'ARRAY', 'items': enum(values), 'minItems': 1,
@@ -79,19 +88,21 @@ def build_prompt(record, source, images, examples):
                 or ref['category'] != record['category']
                 or ref['features']['gender'] != record['features']['gender']):
             raise ValueError('Reference must be complete, different, same category and gender')
+    category = record['category']
+    definitions = category_definitions(category)
     definition_lines = ['REQUESTED FEATURES']
     for feature, rule in rules.items():
-        definition_lines.extend(['', feature, DEFINITIONS[feature]['instruction']])
-        for value in choices(feature, rule):
-            definition_lines.append(f"- {value}: {DEFINITIONS[feature]['values'][value]}")
+        definition_lines.extend(['', feature, definitions[feature]['instruction']])
+        for value in choices(category, feature, rule):
+            definition_lines.append(f"- {value}: {definitions[feature]['values'][value]}")
         definition_lines.append('Other is available: only the listed values are allowed.'
-                                if 'Other' in choices(feature, rule)
+                                if 'Other' in choices(category, feature, rule)
                                 else 'Other is unavailable: outside_schema is permitted under the decision rules.')
     # Show this relation only when BOTH features are requested. Otherwise validate
     # it locally after merging, without disclosing a locked value or its definition.
     if 'strap_style' in rules and 'strap_width' in rules:
         styles = ['Strapless']
-        if 'Standard Sleeved' in choices('strap_style', rules['strap_style']):
+        if 'Standard Sleeved' in choices(category, 'strap_style', rules['strap_style']):
             styles.append('Standard Sleeved')
         definition_lines.extend(['', 'JOINT CONSTRAINT',
             'strap_width must equal Not Applicable if and only if strap_style is ' + ' or '.join(styles) + '.'])
@@ -116,6 +127,6 @@ def build_prompt(record, source, images, examples):
         'system_instruction': (PROMPTS / 'system.txt').read_text(),
         'parts': parts,
         'generation_config': {
-            'responseMimeType': 'application/json', 'responseSchema': build_schema(rules),
+            'responseMimeType': 'application/json', 'responseSchema': build_schema(rules, category),
         },
     }
