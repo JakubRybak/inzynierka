@@ -53,12 +53,9 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłączn
 ## `fit`
 
 ```text
-Kolumna `description` – fraza „<krój>-fit” / „<krój> fit”
-├─ dokładnie 1 wartość → wykryta wartość
-├─ ≥ 2 różne wartości  → undefined
-└─ brak frazy → kolumny `name` i `description`
-   ├─ liczba wartości = 1 → wykryta wartość
-   └─ else               → undefined
+Kolumny `name` i `description`
+├─ liczba wartości = 1 → wykryta wartość
+└─ else                → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -66,8 +63,8 @@ Kolumna `description` – fraza „<krój>-fit” / „<krój> fit”
 <!-- results:fit -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,559 | 72,99% |
-| `undefined` | 577 | 27,01% |
+| Przypisane | 1,546 | 72,38% |
+| `undefined` | 590 | 27,62% |
 <!-- /results -->
 
 ## `leg_shape`
@@ -125,11 +122,8 @@ Kolumny `name` i `description`
 
 ```text
 Kolumna `description`
-├─ zdanie o pasie (waist / waistband) z keywordem Elasticized → Elasticized
-├─ keyword Other                                              → Other
-├─ keyword Structured                                         → Structured
-├─ zdanie o pasie z „partially elasticized”                   → Elasticized
-└─ else                                                       → undefined
+├─ liczba wartości = 1 → wykryta wartość
+└─ else                → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -137,19 +131,16 @@ Kolumna `description`
 <!-- results:waistband_type -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 2,095 | 98,08% |
-| `undefined` | 41 | 1,92% |
+| Przypisane | 1,689 | 79,07% |
+| `undefined` | 447 | 20,93% |
 <!-- /results -->
 
 ## `cuff_style`
 
 ```text
-Kolumna `description` – zdania z cuff / cuffs / hem / hems, bez zdań o kieszeniach i bez zip-fly / button-fly
-├─ keyword Zippered Cuff    → Zippered Cuff
-├─ keyword Elasticized Cuff → Elasticized Cuff
-├─ keyword Other            → Other
-├─ keyword Open Hem         → Open Hem
-└─ else                     → undefined
+Kolumna `description`
+├─ liczba wartości = 1 → wykryta wartość
+└─ else                → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -157,15 +148,13 @@ Kolumna `description` – zdania z cuff / cuffs / hem / hems, bez zdań o kiesze
 <!-- results:cuff_style -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,418 | 66,39% |
-| `undefined` | 718 | 33,61% |
+| Przypisane | 1,160 | 54,31% |
+| `undefined` | 976 | 45,69% |
 <!-- /results -->
 
 ## Keywordy
 
 ### `fit`
-
-Fraza w opisie: `skinny-fit` → Skinny, `slim-fit` → Slim, `regular-fit` / `classic fit` / `standard fit` → Regular, `relaxed-fit` / `loose-fit` / `oversized fit` / `boyfriend fit` / `baggy fit` → Relaxed. Bez frazy – keywordy:
 
 | Wartość | Keywordy |
 | --- | --- |
@@ -201,11 +190,9 @@ Fraza w opisie: `skinny-fit` → Skinny, `slim-fit` → Slim, `regular-fit` / `c
 
 ### `waistband_type`
 
-Elasticized: `elasticized`, `elasticised`, `elastic`, `rib knit`, `ribbed`, `ribbed knit` najwyżej 2 słowa przed `waist` / `waistband` (bez „partially”) albo `drawstring`, `bungee`, `pull-on` w zdaniu o pasie.
-
 | Wartość | Keywordy |
 | --- | --- |
-| `Elasticized` | `elasticized waistband`, `elasticised waistband`, `elastic waistband`, `elasticized waist`, `rib knit waistband`, `ribbed waistband`, `ribbed knit waistband`, `drawstring`, `bungee`, `pull-on` |
+| `Elasticized` | `elasticized waistband`, `elasticised waistband`, `elastic waistband`, `elasticized waist`, `elasticised waist`, `rib knit waistband`, `ribbed waistband`, `ribbed knit waistband`, `drawstring`, `drawstrings`, `bungee`, `pull-on` |
 | `Other` | `paperbag`, `paper bag`, `tie-waist`, `tie waist`, `wrap waist` |
 | `Structured` | `zip-fly`, `zip fly`, `button-fly`, `button fly`, `belt loop`, `belt loops`, `hook-and-eye`, `hook and eye`, `hook-and-bar`, `hook and bar` |
 
@@ -213,7 +200,7 @@ Elasticized: `elasticized`, `elasticised`, `elastic`, `rib knit`, `ribbed`, `rib
 
 | Wartość | Keywordy |
 | --- | --- |
-| `Zippered Cuff` | `zip`, `zips`, `zipper`, `zippers`, `zippered`, `zipped` |
-| `Elasticized Cuff` | `elasticized`, `elasticised`, `elastic`, `rib knit`, `rib-knit`, `ribbed`, `drawstring`, `bungee`, `cinched`, `gathered` |
-| `Other` | `velcro`, `press-stud`, `press-studs`, `snap`, `snaps`, `button`, `buttoned`, `tab`, `stirrup`, `stirrups`, `strap`, `straps` |
-| `Open Hem` | `raw edge`, `raw edges`, `raw-edge`, `raw-edged`, `raw hem`, `unfinished`, `rolled`, `serged`, `vent`, `vented`, `frayed`, `slit`, `slits`, `split`, `cuffed`, `turn-up`, `turn-ups` |
+| `Zippered Cuff` | `zippered vent`, `zippered vents`, `zip vent`, `zip vents`, `zippered ankle cuffs`, `zippered cuffs`, `zipped cuffs`, `zip at cuffs`, `zip closure at cuffs`, `zippered at`, `zipped at`, `zippered hem`, `zip at hem` |
+| `Elasticized Cuff` | `rib knit cuffs`, `rib knit ankle cuffs`, `ribbed knit ankle cuffs`, `ribbed knit cuffs`, `ribbed cuffs`, `ribbed ankle cuffs`, `elasticized cuffs`, `elasticised cuffs`, `elasticized ankle cuffs`, `elasticised ankle cuffs`, `elastic cuffs`, `elastic ankle cuffs`, `elasticized hem`, `elasticized hems`, `drawstring at cuffs`, `drawstring at hem`, `drawstrings at cuffs`, `cinched cuffs`, `gathered cuffs`, `elasticized waistband and cuffs`, `elasticized waistband and ankle cuffs`, `elasticised waistband and cuffs`, `elasticised waistband and ankle cuffs`, `rib knit waistband and cuffs`, `rib knit waistband and ankle cuffs` |
+| `Other` | `cinch strap at cuffs`, `cinch straps at cuffs`, `buttoned vent at cuffs`, `buttoned tab at cuffs`, `button tab at cuffs`, `press-stud tab at cuffs`, `press-stud at cuffs`, `press-studs at cuffs`, `press-stud placket at ankle cuffs`, `velcro fastening at cuffs`, `velcro tab at cuffs`, `snap at cuffs`, `snaps at cuffs`, `stirrup`, `stirrups` |
+| `Open Hem` | `rolled cuffs`, `rolled ankle cuffs`, `rolled hem`, `raw edge at hem`, `raw edges at hem`, `raw edge at cuffs`, `raw edges at cuffs`, `raw edge at ankle cuffs`, `raw hem`, `raw-edge hem`, `unfinished hem`, `unfinished hems`, `unfinished edge at cuffs`, `unfinished hem at ankle cuffs`, `unfinished hems at ankle cuffs`, `serged ankle cuffs`, `serged cuffs`, `serged hem`, `frayed hem`, `vented cuffs`, `vented hem`, `vent at cuffs`, `vents at cuffs`, `slit at cuffs`, `slits at cuffs`, `split at cuffs`, `turn-up cuffs`, `turn-ups`, `cuffed hem` |
