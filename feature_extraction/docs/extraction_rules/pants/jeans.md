@@ -20,8 +20,8 @@ Reguły i keywordy: [common/colors.md](../common/colors.md).
 <!-- results:colors -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 3,690 | 99,62% |
-| `undefined` | 14 | 0,38% |
+| Przypisane | 3,689 | 99,60% |
+| `undefined` | 15 | 0,40% |
 <!-- /results -->
 
 ## `main_composition`
@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 3,561 | 96,14% |
+| Przypisane | 3,571 | 96,41% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 48 | 1,30% |
-| `ambiguous_main_section` | 22 | 0,59% |
-| `unmapped_material` | 33 | 0,89% |
-| `sum_not_100` | 40 | 1,08% |
+| `unparsed_composition` | 29 | 0,78% |
+| `ambiguous_main_section` | 21 | 0,57% |
+| `unmapped_material` | 34 | 0,92% |
+| `sum_not_100` | 49 | 1,32% |
 <!-- /results -->
 
 ## `pattern`
@@ -47,7 +47,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłączn
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 0 | 0,00% |
-| `undefined` | 3 704 | 100,00% |
+| `undefined` | 3,704 | 100,00% |
 <!-- /results -->
 
 ## `fit`
@@ -80,8 +80,8 @@ Kolumny `name` i `description`
 <!-- results:leg_shape -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 740 | 19,98% |
-| `undefined` | 2,964 | 80,02% |
+| Przypisane | 752 | 20,30% |
+| `undefined` | 2,952 | 79,70% |
 <!-- /results -->
 
 ## `length`
@@ -97,8 +97,8 @@ Kolumny `name` i `description`
 <!-- results:length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 497 | 13,42% |
-| `undefined` | 3,207 | 86,58% |
+| Przypisane | 499 | 13,47% |
+| `undefined` | 3,205 | 86,53% |
 <!-- /results -->
 
 ## `rise`
@@ -114,8 +114,8 @@ Kolumny `name` i `description`
 <!-- results:rise -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,941 | 52,40% |
-| `undefined` | 1,763 | 47,60% |
+| Przypisane | 1,942 | 52,43% |
+| `undefined` | 1,762 | 47,57% |
 <!-- /results -->
 
 ## `waistband_type`

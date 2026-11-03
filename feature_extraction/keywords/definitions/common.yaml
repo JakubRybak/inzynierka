@@ -85,7 +85,7 @@ features:
     strategy: composition
     columns:
     - composition
-    keywords:
+    keywords: &materials
       Cotton:
       - cotton
       - coton
@@ -174,9 +174,33 @@ features:
     main_sections:
     - main
     - body
+    - shell
     total: 100
     tolerance: 0.01
     on_unresolved: exclude
+  lining_composition:
+    strategy: composition
+    columns:
+    - composition
+    keywords: *materials
+    main_sections:
+    - lining
+    - lining 1
+    - lining 2
+    - lining 3
+    - lining 4
+    - body lining
+    section_only: true
+    total: 100
+    tolerance: 0.01
+    fallback:
+      strategy: single
+      columns:
+      - description
+      keywords:
+        Unlined:
+        - unlined
+    default_value: Unknown
   pattern:
     strategy: llm
     allowed_values:

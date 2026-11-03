@@ -1,8 +1,9 @@
 # Product feature extraction
 
-Keyword rules and Gemini complete the fixed product taxonomy. Keyword rules,
-LLM definitions and output validation support T-shirts, Polos, Tank tops &
-Camisoles, Bodysuits, Dresses, and Skirts. `config/extraction.yaml` selects the
+Keyword rules and Gemini complete the fixed product taxonomy. LLM definitions and
+output validation support T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses,
+and Skirts. Keyword rules also cover the five Jackets & Coats categories, the four
+Pants categories, Shirts and Blouses ([CHANGES.md](CHANGES.md)). `config/extraction.yaml` selects the
 active scope. Its default selection and manual reference bank still cover the
 original 900 products in T-shirts, Dresses, and Tank tops & Camisoles. Paid runs
 for the additional categories require a matching selection, complete references

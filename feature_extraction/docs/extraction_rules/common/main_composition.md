@@ -2,10 +2,10 @@
 
 ```text
 Kolumna `composition`
-├─ brak wartości                        → undefined
-├─ brak nazwanych sekcji                 → parsuj całą wartość
-├─ dokładnie jedna sekcja Main albo Body → parsuj wybraną sekcję
-└─ else                                 → ambiguous_main_section
+├─ brak wartości                               → undefined
+├─ brak nazwanych sekcji                        → parsuj całą wartość
+├─ dokładnie jedna sekcja Main, Body albo Shell → parsuj wybraną sekcję
+└─ else                                         → ambiguous_main_section
 ```
 
 ```text

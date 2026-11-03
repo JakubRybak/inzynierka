@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,979 | 92,65% |
+| Przypisane | 1,992 | 93,26% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 19 | 0,89% |
-| `ambiguous_main_section` | 100 | 4,68% |
-| `unmapped_material` | 18 | 0,84% |
-| `sum_not_100` | 20 | 0,94% |
+| `unparsed_composition` | 11 | 0,51% |
+| `ambiguous_main_section` | 86 | 4,03% |
+| `unmapped_material` | 19 | 0,89% |
+| `sum_not_100` | 28 | 1,31% |
 <!-- /results -->
 
 ## `pattern`
@@ -47,7 +47,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłączn
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 0 | 0,00% |
-| `undefined` | 2 136 | 100,00% |
+| `undefined` | 2,136 | 100,00% |
 <!-- /results -->
 
 ## `fit`

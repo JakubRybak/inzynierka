@@ -1,0 +1,577 @@
+section: Jackets & Coats
+category: Jackets
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  lining_composition:
+    use: lining_composition
+  hood:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      With Hood:
+      - hood
+      - hoods
+      - hooded
+      - hoodie
+      Without Hood: []
+  jacket_style:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Biker:
+      - biker
+      - moto
+      - motorcycle
+      Windbreaker:
+      - windbreaker
+      - windbreakers
+      - wind breaker
+      - anorak
+      Denim:
+      - denim
+      - jean jacket
+      - chambray
+      Other:
+      - trucker
+      - coach
+      - coaches
+      - military jacket
+      - field jacket
+      - utility jacket
+      - harrington
+      - track jacket
+      - shirt jacket
+      - shirt-jacket
+      - overshirt
+      - safari
+      - kimono
+      - blouson
+      - puffer
+      - bomber
+      - varsity
+      - flight jacket
+      - aviator
+      - workwear
+      - chore
+      - m65
+      - m-65
+      - rain jacket
+      - souvenir
+  closure_type:
+    strategy: llm
+    allowed_values:
+    - Zip
+    - Button
+    - Press-Stud
+    - Double-Breasted
+    - Belted
+    - Open Front
+    - Other
+  collar_type:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Lapel Collar:
+      - lapel
+      - lapels
+      - shawl collar
+      - notched collar
+      Point Collar:
+      - spread collar
+      - point collar
+      - pointed collar
+      - button-down collar
+      - shirt collar
+      - classic collar
+      Stand Collar:
+      - stand collar
+      - stand-up collar
+      - band collar
+      - mandarin collar
+      - funnel collar
+      - high neck
+      - high-neck
+      - turtleneck
+      - turtle neck
+      - roll neck
+      - rollneck
+      - mock neck
+      - mock-neck
+      - funnel neck
+      Other:
+      - collarless
+      - crewneck
+      - crew neck
+      - crew-neck
+      - v-neck
+      - v neck
+      - y-neck
+      - scoop neck
+      - peter pan collar
+  insulation:
+    strategy: single
+    columns:
+    - name
+    - description
+    - composition
+    keywords:
+      Down:
+      - down-filled
+      - down-fill
+      - down-filling
+      - goose down
+      - duck down
+      - quilted down
+      - feather
+      - feathers
+      - down jacket
+      - down coat
+      - down vest
+      - down bomber
+      - down parka
+      - down gilet
+      - down aviator
+      - down blouson
+      - down puffer
+      Shearling Lined:
+      - shearling-lined
+      - shearling lining
+      - lined in shearling
+      - shearling jacket
+      - shearling coat
+      - shearling vest
+      - shearling bomber
+      - shearling parka
+      - shearling gilet
+      - shearling aviator
+      - shearling blouson
+      Fleece Lined:
+      - fleece-lined
+      - fleece lining
+      - lined in fleece
+      - sherpa-lined
+      - sherpa lining
+      - teddy-lined
+      - teddy lining
+      - faux-shearling-lined
+      - faux-shearling lining
+      - pile-lined
+      - pile lining
+      - fleece jacket
+      - fleece coat
+      - fleece vest
+      - fleece bomber
+      - fleece parka
+      - fleece gilet
+      - fleece aviator
+      - fleece blouson
+      - sherpa jacket
+      - sherpa coat
+      - sherpa vest
+      - sherpa bomber
+      - sherpa parka
+      - sherpa gilet
+      - sherpa aviator
+      - sherpa blouson
+      - faux-shearling jacket
+      - faux-shearling coat
+      - faux-shearling vest
+      - faux-shearling bomber
+      - faux-shearling parka
+      - faux-shearling gilet
+      - faux-shearling aviator
+      - faux-shearling blouson
+      - pile jacket
+      - pile coat
+      - pile vest
+      - pile bomber
+      - pile parka
+      - pile gilet
+      - pile aviator
+      - pile blouson
+      Other:
+      - fur-lined
+      - fur lining
+      - lined in fur
+      - lined in faux fur
+      - faux-fur-lined
+      - faux-fur lining
+      Synthetic Padding:
+      - insulated
+      - insulation
+      - wadding
+      - wadded
+      - primaloft
+      - thinsulate
+      - puffer
+      - puffy
+      - quilted lining
+      - padded jacket
+      - padded coat
+      - padded vest
+      - padded bomber
+      - padded parka
+      - padded gilet
+      - padded aviator
+      - padded blouson
+      - quilted jacket
+      - quilted coat
+      - quilted vest
+      - quilted bomber
+      - quilted parka
+      - quilted gilet
+      - quilted aviator
+      - quilted blouson
+      Uninsulated:
+      - unlined
+      - unpadded
+      - uninsulated
+      - non-insulated
+    exclude_phrases:
+      Shearling Lined:
+      - faux shearling
+      - shearling-lined at hood
+      - shearling-lined at collar
+      - shearling-lined hood
+      - shearling-lined collar
+      - shearling lining at hood
+      - shearling lining at collar
+      - shearling lining hood
+      - shearling lining collar
+      - lined in shearling at hood
+      - lined in shearling at collar
+      - lined in shearling hood
+      - lined in shearling collar
+      - shearling jacket at hood
+      - shearling jacket at collar
+      - shearling jacket hood
+      - shearling jacket collar
+      - shearling coat at hood
+      - shearling coat at collar
+      - shearling coat hood
+      - shearling coat collar
+      - shearling vest at hood
+      - shearling vest at collar
+      - shearling vest hood
+      - shearling vest collar
+      - shearling bomber at hood
+      - shearling bomber at collar
+      - shearling bomber hood
+      - shearling bomber collar
+      - shearling parka at hood
+      - shearling parka at collar
+      - shearling parka hood
+      - shearling parka collar
+      - shearling gilet at hood
+      - shearling gilet at collar
+      - shearling gilet hood
+      - shearling gilet collar
+      - shearling aviator at hood
+      - shearling aviator at collar
+      - shearling aviator hood
+      - shearling aviator collar
+      - shearling blouson at hood
+      - shearling blouson at collar
+      - shearling blouson hood
+      - shearling blouson collar
+      Fleece Lined:
+      - fleece-lined at hood
+      - fleece-lined at collar
+      - fleece-lined hood
+      - fleece-lined collar
+      - fleece lining at hood
+      - fleece lining at collar
+      - fleece lining hood
+      - fleece lining collar
+      - lined in fleece at hood
+      - lined in fleece at collar
+      - lined in fleece hood
+      - lined in fleece collar
+      - sherpa-lined at hood
+      - sherpa-lined at collar
+      - sherpa-lined hood
+      - sherpa-lined collar
+      - sherpa lining at hood
+      - sherpa lining at collar
+      - sherpa lining hood
+      - sherpa lining collar
+      - teddy-lined at hood
+      - teddy-lined at collar
+      - teddy-lined hood
+      - teddy-lined collar
+      - teddy lining at hood
+      - teddy lining at collar
+      - teddy lining hood
+      - teddy lining collar
+      - faux-shearling-lined at hood
+      - faux-shearling-lined at collar
+      - faux-shearling-lined hood
+      - faux-shearling-lined collar
+      - faux-shearling lining at hood
+      - faux-shearling lining at collar
+      - faux-shearling lining hood
+      - faux-shearling lining collar
+      - pile-lined at hood
+      - pile-lined at collar
+      - pile-lined hood
+      - pile-lined collar
+      - pile lining at hood
+      - pile lining at collar
+      - pile lining hood
+      - pile lining collar
+      - faux-shearling jacket at hood
+      - faux-shearling jacket at collar
+      - faux-shearling jacket hood
+      - faux-shearling jacket collar
+      - faux-shearling coat at hood
+      - faux-shearling coat at collar
+      - faux-shearling coat hood
+      - faux-shearling coat collar
+      - faux-shearling vest at hood
+      - faux-shearling vest at collar
+      - faux-shearling vest hood
+      - faux-shearling vest collar
+      - faux-shearling bomber at hood
+      - faux-shearling bomber at collar
+      - faux-shearling bomber hood
+      - faux-shearling bomber collar
+      - faux-shearling parka at hood
+      - faux-shearling parka at collar
+      - faux-shearling parka hood
+      - faux-shearling parka collar
+      - faux-shearling gilet at hood
+      - faux-shearling gilet at collar
+      - faux-shearling gilet hood
+      - faux-shearling gilet collar
+      - faux-shearling aviator at hood
+      - faux-shearling aviator at collar
+      - faux-shearling aviator hood
+      - faux-shearling aviator collar
+      - faux-shearling blouson at hood
+      - faux-shearling blouson at collar
+      - faux-shearling blouson hood
+      - faux-shearling blouson collar
+      Other:
+      - fur-lined at hood
+      - fur-lined at collar
+      - fur-lined hood
+      - fur-lined collar
+      - fur lining at hood
+      - fur lining at collar
+      - fur lining hood
+      - fur lining collar
+      - lined in fur at hood
+      - lined in fur at collar
+      - lined in fur hood
+      - lined in fur collar
+      - lined in faux fur at hood
+      - lined in faux fur at collar
+      - lined in faux fur hood
+      - lined in faux fur collar
+      - faux-fur-lined at hood
+      - faux-fur-lined at collar
+      - faux-fur-lined hood
+      - faux-fur-lined collar
+      - faux-fur lining at hood
+      - faux-fur lining at collar
+      - faux-fur lining hood
+      - faux-fur lining collar
+  length:
+    strategy: llm
+    allowed_values:
+    - Cropped
+    - Regular
+    - Longline
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Oversized:
+      - relaxed fit
+      - relaxed-fit
+      - loose fit
+      - loose-fit
+      - loose-fitting
+      - oversized
+      - oversize
+      - boxy
+      - boxy fit
+      - boxy-fit
+      - cocoon
+      - slouchy
+    exclude_phrases:
+      Oversized:
+      - oversized lapel
+      - oversized lapels
+      - oversized collar
+      - oversized collars
+      - oversized pull-tab
+      - oversized pull-tabs
+      - oversized hood
+      - oversized hoods
+      - oversized zip
+      - oversized zips
+      - oversized zipper
+      - oversized zippers
+      - oversized pocket
+      - oversized pockets
+      - oversized button
+      - oversized buttons
+      - oversized patch
+      - oversized patches
+      - oversized cuff
+      - oversized cuffs
+      - oversized logo
+      - oversized logos
+      - oversized buckle
+      - oversized buckles
+      - oversized hardware
+      - oversized tab
+      - oversized tabs
+      - oversized sleeves
+      - oversized shoulders
+      - oversized hem
+      - oversize lapel
+      - oversize lapels
+      - oversize collar
+      - oversize collars
+      - oversize pull-tab
+      - oversize pull-tabs
+      - oversize hood
+      - oversize hoods
+      - oversize zip
+      - oversize zips
+      - oversize zipper
+      - oversize zippers
+      - oversize pocket
+      - oversize pockets
+      - oversize button
+      - oversize buttons
+      - oversize patch
+      - oversize patches
+      - oversize cuff
+      - oversize cuffs
+      - oversize logo
+      - oversize logos
+      - oversize buckle
+      - oversize buckles
+      - oversize hardware
+      - oversize tab
+      - oversize tabs
+      - oversize sleeves
+      - oversize shoulders
+      - oversize hem
+      - boxy lapel
+      - boxy lapels
+      - boxy collar
+      - boxy collars
+      - boxy pull-tab
+      - boxy pull-tabs
+      - boxy hood
+      - boxy hoods
+      - boxy zip
+      - boxy zips
+      - boxy zipper
+      - boxy zippers
+      - boxy pocket
+      - boxy pockets
+      - boxy button
+      - boxy buttons
+      - boxy patch
+      - boxy patches
+      - boxy cuff
+      - boxy cuffs
+      - boxy logo
+      - boxy logos
+      - boxy buckle
+      - boxy buckles
+      - boxy hardware
+      - boxy tab
+      - boxy tabs
+      - boxy sleeves
+      - boxy shoulders
+      - boxy hem
+      - cocoon lapel
+      - cocoon lapels
+      - cocoon collar
+      - cocoon collars
+      - cocoon pull-tab
+      - cocoon pull-tabs
+      - cocoon hood
+      - cocoon hoods
+      - cocoon zip
+      - cocoon zips
+      - cocoon zipper
+      - cocoon zippers
+      - cocoon pocket
+      - cocoon pockets
+      - cocoon button
+      - cocoon buttons
+      - cocoon patch
+      - cocoon patches
+      - cocoon cuff
+      - cocoon cuffs
+      - cocoon logo
+      - cocoon logos
+      - cocoon buckle
+      - cocoon buckles
+      - cocoon hardware
+      - cocoon tab
+      - cocoon tabs
+      - cocoon sleeves
+      - cocoon shoulders
+      - cocoon hem
+      - slouchy lapel
+      - slouchy lapels
+      - slouchy collar
+      - slouchy collars
+      - slouchy pull-tab
+      - slouchy pull-tabs
+      - slouchy hood
+      - slouchy hoods
+      - slouchy zip
+      - slouchy zips
+      - slouchy zipper
+      - slouchy zippers
+      - slouchy pocket
+      - slouchy pockets
+      - slouchy button
+      - slouchy buttons
+      - slouchy patch
+      - slouchy patches
+      - slouchy cuff
+      - slouchy cuffs
+      - slouchy logo
+      - slouchy logos
+      - slouchy buckle
+      - slouchy buckles
+      - slouchy hardware
+      - slouchy tab
+      - slouchy tabs
+      - slouchy sleeves
+      - slouchy shoulders
+      - slouchy hem
+      - oversized notched lapel
+      - oversized peak lapel
+      - oversized hoop pull-tab
+      - oversized textile pull-tab
+      - oversized spread collar
+      - oversized funnel collar
+      - slouchy funnel collar
+      - oversized resin buckle
+    default_value: Regular

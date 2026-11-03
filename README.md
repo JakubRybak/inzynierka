@@ -26,9 +26,10 @@ flag.
 
 ## Current scope
 
-Catalog preparation maps all 22 project categories. Keyword definitions and LLM
-prompts currently cover T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses,
-and Skirts. The default extraction config selects the original 900-product pilot
+Catalog preparation maps all 22 project categories. Keyword definitions cover
+T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts, the five Jackets &
+Coats categories, the four Pants categories, Shirts and Blouses. LLM prompts cover
+the first six. The default extraction config selects the original 900-product pilot
 and uses 60 manual references across T-shirts, Dresses, and Tank tops & Camisoles.
 The remaining categories need reference products and embeddings before paid runs.
 The current pipeline still needs scaling and recovery improvements before a

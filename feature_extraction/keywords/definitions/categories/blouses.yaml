@@ -1,0 +1,274 @@
+section: Shirts & Blouses
+category: Blouses
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Sleeveless:
+      - sleeveless
+      Short Sleeve:
+      - short sleeve
+      - short sleeves
+      - short-sleeved
+      - short-sleeve
+      - cap sleeve
+      - cap sleeves
+      - cap-sleeve
+      Three-Quarter Sleeve:
+      - three-quarter sleeve
+      - three-quarter sleeves
+      - three-quarter-sleeve
+      - three quarter sleeve
+      - three quarter sleeves
+      - 3/4 sleeve
+      - 3/4 sleeves
+      - cropped sleeve
+      - cropped sleeves
+      - cropped-sleeve
+      Long Sleeve:
+      - long sleeve
+      - long sleeves
+      - long-sleeved
+      - long-sleeve
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Slim:
+      - slim fit
+      - slim-fit
+      - slim-fitting
+      - close-fitting
+      - form-fitting
+      - body-hugging
+      - fitted shirt
+      - fitted blouse
+      Regular:
+      - regular fit
+      - regular-fit
+      - standard fit
+      - classic fit
+      Oversized:
+      - relaxed fit
+      - relaxed-fit
+      - loose fit
+      - loose-fitting
+      - oversized
+      - oversize
+      - boxy
+      - boxy fit
+      - boxy-fit
+    exclude_phrases:
+      Oversized:
+      - oversized lapel
+      - oversized lapels
+      - oversized collar
+      - oversized collars
+      - oversized pull-tab
+      - oversized pull-tabs
+      - oversized hood
+      - oversized hoods
+      - oversized zip
+      - oversized zips
+      - oversized zipper
+      - oversized zippers
+      - oversized pocket
+      - oversized pockets
+      - oversized button
+      - oversized buttons
+      - oversized patch
+      - oversized patches
+      - oversized cuff
+      - oversized cuffs
+      - oversized logo
+      - oversized logos
+      - oversized buckle
+      - oversized buckles
+      - oversized hardware
+      - oversized tab
+      - oversized tabs
+      - oversized sleeves
+      - oversized shoulders
+      - oversized hem
+      - oversize lapel
+      - oversize lapels
+      - oversize collar
+      - oversize collars
+      - oversize pull-tab
+      - oversize pull-tabs
+      - oversize hood
+      - oversize hoods
+      - oversize zip
+      - oversize zips
+      - oversize zipper
+      - oversize zippers
+      - oversize pocket
+      - oversize pockets
+      - oversize button
+      - oversize buttons
+      - oversize patch
+      - oversize patches
+      - oversize cuff
+      - oversize cuffs
+      - oversize logo
+      - oversize logos
+      - oversize buckle
+      - oversize buckles
+      - oversize hardware
+      - oversize tab
+      - oversize tabs
+      - oversize sleeves
+      - oversize shoulders
+      - oversize hem
+      - boxy lapel
+      - boxy lapels
+      - boxy collar
+      - boxy collars
+      - boxy pull-tab
+      - boxy pull-tabs
+      - boxy hood
+      - boxy hoods
+      - boxy zip
+      - boxy zips
+      - boxy zipper
+      - boxy zippers
+      - boxy pocket
+      - boxy pockets
+      - boxy button
+      - boxy buttons
+      - boxy patch
+      - boxy patches
+      - boxy cuff
+      - boxy cuffs
+      - boxy logo
+      - boxy logos
+      - boxy buckle
+      - boxy buckles
+      - boxy hardware
+      - boxy tab
+      - boxy tabs
+      - boxy sleeves
+      - boxy shoulders
+      - boxy hem
+  length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Cropped:
+      - cropped shirt
+      - cropped blouse
+      - cropped top
+      - crop top
+      - cropped fit
+      - cropped length
+      Regular:
+      - regular length
+      - standard length
+      Longline:
+      - longline
+      - long-line
+      - long length
+      - elongated body
+      - extended length
+      - extended-length
+      - tunic
+      - overlong fit
+      - overlong shirt
+      - overlong blouse
+    exclude_phrases:
+      Longline:
+      - tunic collar
+  neckline:
+    strategy: single_or_other
+    columns:
+    - name
+    - description
+    keywords:
+      Crewneck:
+      - crewneck
+      - crew neck
+      - crew-neck
+      - round neck
+      - round-neck
+      Scoop Neck:
+      - scoop neck
+      - scoop-neck
+      - scoop neckline
+      - scoopneck
+      V-Neck:
+      - v-neck
+      - v neck
+      - v-neckline
+      - y-neck
+      High Neck:
+      - high neck
+      - high-neck
+      - turtleneck
+      - turtle neck
+      - roll neck
+      - rollneck
+      - mock neck
+      - mock-neck
+      - funnel neck
+      Collared:
+      - spread collar
+      - point collar
+      - pointed collar
+      - button-down collar
+      - classic collar
+      - shirt collar
+      - band collar
+      - stand collar
+      - stand-up collar
+      - mandarin collar
+      - tunic collar
+      - camp collar
+      - convertible collar
+      - notched collar
+      - lapel collar
+      - notched lapel collar
+      - shawl collar
+      - shawl lapel collar
+      - peter pan collar
+      - tuxedo collar
+      - sailor collar
+      - wing collar
+      Other:
+      - boat neck
+      - bateau neck
+      - cowl neck
+      - square neck
+      - sweetheart neckline
+      - henley neckline
+      - boatneck
+      - cowl-neck
+      - henley collar
+      - off shoulder
+      - off-shoulder
+      - off the shoulder
+      - off-the-shoulder
+      - one shoulder
+      - one-shoulder
+      - single shoulder
+      - single-shoulder
+      - strapless
+      - halter
+      - halterneck
+      - halter neck
+      - halter-neck
+    conflict_value: Other

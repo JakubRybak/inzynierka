@@ -1,4 +1,4 @@
-"""Execute keyword rules for Tops, Dresses and Skirts from YAML configuration."""
+"""Execute keyword rules from YAML configuration."""
 import copy
 import re
 from pathlib import Path
@@ -8,7 +8,8 @@ import yaml
 from .composition import composition
 from .text import normalize, phrase
 
-STRATEGIES = {'source_value', 'source_map', 'colors', 'composition', 'single', 'single_or_other', 'multi', 'llm'}
+STRATEGIES = {'source_value', 'source_map', 'colors', 'composition', 'single', 'single_or_other', 'multi', 'priority',
+              'llm'}
 BASE_KEYS = {'strategy', 'columns', 'keywords', 'on_unresolved', 'derive', 'exclude_phrases'}
 OPTIONS = {
     'llm': {'allowed_values'},
@@ -19,8 +20,16 @@ OPTIONS = {
     'single': set(),
     'single_or_other': {'conflict_value'},
     'multi': {'exclusive_values'},
+    'priority': set(),
 }
 REQUIRED = OPTIONS
+# section_only: parse only the main section; fallback: rule used when this one is unresolved;
+# default_value: value assigned when nothing else resolved the feature.
+OPTIONAL = {
+    'composition': {'section_only', 'fallback', 'default_value'},
+    'single': {'default_value'},
+    'priority': {'default_value'},
+}
 
 
 
@@ -48,14 +57,15 @@ def allowed_values(rule):
         return set(rule['allowed_values'])
     if rule['strategy'] == 'source_map':
         return set(rule['mapping'].values())
-    return set(rule['keywords'])
+    allowed = set(rule['keywords']) | ({rule['default_value']} if 'default_value' in rule else set())
+    return allowed | allowed_values(rule['fallback']) if 'fallback' in rule else allowed
 
 
 def validate_rule(name, rule, previous):
     strategy = rule.get('strategy')
     if strategy not in STRATEGIES:
         raise ValueError(f'{name}: unknown strategy {strategy}')
-    unknown = set(rule) - BASE_KEYS - OPTIONS[strategy]
+    unknown = set(rule) - BASE_KEYS - OPTIONS[strategy] - OPTIONAL.get(strategy, set())
     missing = REQUIRED[strategy] - set(rule)
     if unknown or missing:
         raise ValueError(f'{name}: unknown keys {unknown}, missing keys {missing}')
@@ -70,6 +80,10 @@ def validate_rule(name, rule, previous):
     if strategy == 'llm' and (not rule['allowed_values'] or
                             any(not isinstance(v, str) or not v.strip() for v in rule['allowed_values'])):
         raise ValueError(f'{name}: allowed_values must contain nonempty strings')
+    if 'fallback' in rule:
+        validate_rule(f'{name}.fallback', rule['fallback'], previous)
+    if 'default_value' in rule and (not isinstance(rule['default_value'], str) or not rule['default_value'].strip()):
+        raise ValueError(f'{name}: default_value must be a nonempty string')
     allowed = allowed_values(rule)
     for field in ['exclusive_values']:
         if field in rule and (len(set(rule[field])) != len(rule[field]) or not set(rule[field]) <= allowed):
@@ -151,6 +165,15 @@ def resolve_single(hits):
 
 
 def assign(product, rule, assigned):
+    value, status, source, evidence = assign_rule(product, rule, assigned)
+    if status != 'assigned' and 'fallback' in rule:
+        value, status, source, evidence = assign(product, rule['fallback'], assigned)
+    if status != 'assigned' and 'default_value' in rule:
+        return rule['default_value'], 'assigned', 'default', evidence
+    return value, status, source, evidence
+
+
+def assign_rule(product, rule, assigned):
     strategy = rule['strategy']
     if strategy == 'llm':
         return None, 'undefined', None, {}
@@ -173,6 +196,8 @@ def assign(product, rule, assigned):
     elif strategy == 'multi':
         exclusive = [v for v in rule['exclusive_values'] if v in hits]
         value = exclusive[:1] if exclusive else list(hits) or None
+    elif strategy == 'priority':
+        value = next((v for v in rule['keywords'] if v in hits), None)
     else:
         raise ValueError(f'Unimplemented strategy: {strategy}')
     return value, 'assigned' if value is not None else 'undefined', 'keyword', hits

@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 2,895 | 71,57% |
+| Przypisane | 3,241 | 80,12% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 355 | 8,78% |
-| `ambiguous_main_section` | 726 | 17,95% |
-| `unmapped_material` | 46 | 1,14% |
-| `sum_not_100` | 23 | 0,57% |
+| `unparsed_composition` | 365 | 9,02% |
+| `ambiguous_main_section` | 328 | 8,11% |
+| `unmapped_material` | 49 | 1,21% |
+| `sum_not_100` | 62 | 1,53% |
 <!-- /results -->
 
 ## `pattern`
@@ -47,7 +47,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłączn
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 0 | 0,00% |
-| `undefined` | 4 045 | 100,00% |
+| `undefined` | 4,045 | 100,00% |
 <!-- /results -->
 
 ## `lining_composition`
@@ -68,8 +68,8 @@ Kolumna `composition` – sekcje Lining, Body lining, Lining N
 <!-- results:lining_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,846 | 45,64% |
-| `Unknown` | 2,199 | 54,36% |
+| Przypisane | 1,881 | 46,50% |
+| `Unknown` | 2,164 | 53,50% |
 <!-- /results -->
 
 ## `hood`
@@ -132,8 +132,8 @@ Kolumny `name` i `description`
 <!-- results:collar_type -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 3,243 | 80,17% |
-| `undefined` | 802 | 19,83% |
+| Przypisane | 3,244 | 80,20% |
+| `undefined` | 801 | 19,80% |
 <!-- /results -->
 
 ## `insulation`
