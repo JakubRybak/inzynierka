@@ -6,9 +6,9 @@ from pathlib import Path
 
 from .data import load_inputs
 from .keywords.engine import extract_product
-from .keywords.validation import validate
+from .validation import validate
 from .llm.client import ExtractionClient
-from .llm.prompt_builder import build_prompt, requested_rules
+from .llm.prompt_builder import build_prompt
 from .llm.references import ReferenceBank
 from .llm.validation import merge_result
 from .settings import BASE
@@ -34,14 +34,16 @@ def run(settings, run_name, stage='all', execute=False, limit=None):
 
 
 def extract(settings, folder, stage, execute, limit):
-    ids, source, images, seeds, configs = load_inputs(settings, limit)
-    keywords = {pid: extract_product(source[pid], configs[(source[pid]['section'], source[pid]['category'])])
+    ids, source, images, seeds, configs, schemas = load_inputs(settings, limit)
+    keywords = {pid: extract_product(source[pid], configs[(source[pid]['section'], source[pid]['category'])],
+                                     schemas[(source[pid]['section'], source[pid]['category'])])
                 for pid in ids}
-    validate(list(keywords.values()), configs)
+    validate(list(keywords.values()), schemas)
     # Hash all source evidence and code that can change prompt selection or output.
     evidence_ids = set(ids) | {r['product_id'] for r in seeds}
     files = sorted(BASE.rglob('*.py')) + sorted((BASE / 'llm/prompts').glob('*.txt'))
     files += sorted((BASE / 'llm/prompts').rglob('*.json')) + sorted((BASE / 'keywords/definitions').rglob('*.yaml'))
+    files += sorted((BASE / 'schema').rglob('*.yaml'))
     provenance = {'settings': settings, 'ids': ids, 'references': seeds,
                   'source': {pid: source[pid] for pid in sorted(evidence_ids)},
                   'images': {pid: [{**r, 'sha256': digest(Path(r['path']).read_bytes())} for r in images.get(pid, [])]

@@ -1,0 +1,24 @@
+section: Tops
+category: Polos
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    type: single_choice
+    values:
+    - Sleeveless
+    - Short Sleeve
+    - Three-Quarter Sleeve
+    - Long Sleeve
+  fit:
+    type: single_choice
+    values:
+    - Slim
+    - Regular
+    - Oversized

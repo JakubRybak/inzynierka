@@ -1,30 +1,22 @@
-"""Execute keyword rules from YAML configuration."""
+"""Execute keyword rules without defining product feature contracts."""
 import copy
-import re
 from pathlib import Path
 
-import yaml
-
+from ..config_io import read_yaml
+from ..schema import allowed_values
 from .composition import composition
 from .text import normalize, phrase
 
-STRATEGIES = {'source_value', 'source_map', 'colors', 'composition', 'single', 'single_or_other', 'multi', 'priority',
-              'llm'}
-BASE_KEYS = {'strategy', 'columns', 'keywords', 'on_unresolved', 'derive', 'exclude_phrases'}
 OPTIONS = {
-    'llm': {'allowed_values'},
-    'source_value': {'column', 'allowed_values'},
+    'source_value': {'column'},
     'source_map': {'column', 'mapping'},
-    'colors': {'ignore_column', 'absorb_nested_matches', 'multicolor_value', 'max_named_colors'},
-    'composition': {'main_sections', 'total', 'tolerance'},
-    'single': set(),
-    'single_or_other': {'conflict_value'},
-    'multi': {'exclusive_values'},
-    'priority': set(),
+    'colors': {'columns', 'keywords', 'ignore_column', 'absorb_nested_matches', 'multicolor_value'},
+    'composition': {'columns', 'keywords', 'main_sections'},
+    'single': {'columns', 'keywords'},
+    'single_or_other': {'columns', 'keywords', 'conflict_value'},
+    'multi': {'columns', 'keywords'},
+    'priority': {'columns', 'keywords'},
 }
-REQUIRED = OPTIONS
-# section_only: parse only the main section; fallback: rule used when there was nothing to parse;
-# default_value: value assigned when nothing else resolved the feature.
 OPTIONAL = {
     'composition': {'section_only', 'fallback', 'default_value'},
     'single': {'default_value'},
@@ -32,104 +24,75 @@ OPTIONAL = {
 }
 
 
-
-
-def read_yaml(path):
-    # safe_load rejects arbitrary Python objects; reject duplicate keys as well.
-    class UniqueLoader(yaml.SafeLoader):
-        pass
-
-    def mapping(loader, node, deep=False):
-        result = {}
-        for key_node, value_node in node.value:
-            key = loader.construct_object(key_node, deep=deep)
-            if key in result:
-                raise ValueError(f'Duplicate YAML key in {path}: {key}')
-            result[key] = loader.construct_object(value_node, deep=deep)
-        return result
-
-    UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, mapping)
-    return yaml.load(Path(path).read_text(), Loader=UniqueLoader)
-
-
-def allowed_values(rule):
-    if rule['strategy'] in {'source_value', 'llm'}:
-        return set(rule['allowed_values'])
-    if rule['strategy'] == 'source_map':
-        return set(rule['mapping'].values())
-    allowed = set(rule['keywords']) | ({rule['default_value']} if 'default_value' in rule else set())
-    return allowed | allowed_values(rule['fallback']) if 'fallback' in rule else allowed
-
-
-def validate_rule(name, rule, previous):
+def validate_rule(name, rule, definition):
     strategy = rule.get('strategy')
-    if strategy not in STRATEGIES:
-        raise ValueError(f'{name}: unknown strategy {strategy}')
-    unknown = set(rule) - BASE_KEYS - OPTIONS[strategy] - OPTIONAL.get(strategy, set())
-    missing = REQUIRED[strategy] - set(rule)
+    if strategy not in OPTIONS:
+        raise ValueError(f'{name}: unknown keyword strategy {strategy}')
+    unknown = set(rule) - {'strategy', 'exclude_phrases'} - OPTIONS[strategy] - OPTIONAL.get(strategy, set())
+    missing = OPTIONS[strategy] - set(rule)
     if unknown or missing:
         raise ValueError(f'{name}: unknown keys {unknown}, missing keys {missing}')
-    if rule.get('on_unresolved', 'llm') not in {'llm', 'exclude'}:
-        raise ValueError(f'{name}: invalid unresolved action')
-    if strategy not in {'source_value', 'source_map', 'llm'}:
-        if not rule.get('columns') or not rule.get('keywords'):
-            raise ValueError(f'{name}: columns and keywords required')
-        for value, keywords in rule['keywords'].items():
-            if not isinstance(value, str) or not isinstance(keywords, list) or any(not isinstance(k, str) or not k.strip() for k in keywords):
-                raise ValueError(f'{name}: invalid keyword list')
-    if strategy == 'llm' and (not rule['allowed_values'] or
-                            any(not isinstance(v, str) or not v.strip() for v in rule['allowed_values'])):
-        raise ValueError(f'{name}: allowed_values must contain nonempty strings')
-    if 'fallback' in rule:
-        validate_rule(f'{name}.fallback', rule['fallback'], previous)
-    if 'default_value' in rule and (not isinstance(rule['default_value'], str) or not rule['default_value'].strip()):
-        raise ValueError(f'{name}: default_value must be a nonempty string')
-    allowed = allowed_values(rule)
-    for field in ['exclusive_values']:
-        if field in rule and (len(set(rule[field])) != len(rule[field]) or not set(rule[field]) <= allowed):
-            raise ValueError(f'{name}: invalid {field}')
-    for field in ['conflict_value', 'multicolor_value']:
+    allowed = allowed_values(definition)
+    if strategy not in {'source_value', 'source_map'}:
+        columns, keywords = rule['columns'], rule['keywords']
+        if (not isinstance(columns, list) or not columns or any(not isinstance(c, str) or not c.strip() for c in columns)
+                or not isinstance(keywords, dict) or not keywords):
+            raise ValueError(f'{name}: columns and nonempty keywords required')
+        for value, phrases in keywords.items():
+            if (value not in allowed or not isinstance(phrases, list) or not phrases
+                    or any(not isinstance(k, str) or not k.strip() for k in phrases)):
+                raise ValueError(f'{name}: invalid keyword list or unknown value {value}')
+    elif not isinstance(rule['column'], str) or not rule['column'].strip():
+        raise ValueError(f'{name}: invalid source column')
+    if strategy == 'source_map' and (not rule['mapping'] or not set(rule['mapping'].values()) <= allowed):
+        raise ValueError(f'{name}: source mapping refers to unknown values')
+    expected_type = 'multi_choice' if strategy in {'colors', 'multi'} else 'composition' if strategy == 'composition' else 'single_choice'
+    # A composition fallback can return a special scalar such as Unlined.
+    if definition['type'] != expected_type and not (definition['type'] == 'composition' and strategy == 'single'):
+        raise ValueError(f'{name}: keyword strategy incompatible with schema type')
+    for field in ('default_value', 'conflict_value', 'multicolor_value'):
         if field in rule and rule[field] not in allowed:
             raise ValueError(f'{name}: invalid {field}')
-    for field in ['exclude_phrases']:
-        if field in rule and not set(rule[field]) <= allowed:
-            raise ValueError(f'{name}: {field} refers to unknown values')
-    if 'derive' in rule:
-        derive = rule['derive']
-        if set(derive) != {'feature', 'in', 'value'} or derive['feature'] not in previous or derive['value'] not in allowed:
-            raise ValueError(f'{name}: invalid or forward derivation')
-        if not set(derive['in']) <= allowed_values(previous[derive['feature']]):
-            raise ValueError(f'{name}: invalid derivation trigger')
+    if strategy == 'colors' and rule['multicolor_value'] not in definition.get('exclusive_values', []):
+        raise ValueError(f'{name}: multicolor must be exclusive in the schema')
+    if 'exclude_phrases' in rule:
+        for value, phrases in rule['exclude_phrases'].items():
+            if (value not in allowed or not isinstance(phrases, list)
+                    or any(not isinstance(k, str) or not k.strip() for k in phrases)):
+                raise ValueError(f'{name}: invalid excluded phrases')
+    if 'fallback' in rule:
+        validate_rule(f'{name}.fallback', rule['fallback'], definition)
 
 
-def load_config(directory):
+def load_config(directory, schemas):
+    """Load only extraction instructions; missing rules leave schema features unresolved."""
     directory = Path(directory)
     common_path = directory / 'common.yaml'
     common_doc = read_yaml(common_path)
     if set(common_doc) != {'features'}:
-        raise ValueError('Invalid common config header')
+        raise ValueError('Invalid common keyword config header')
     common = common_doc['features']
-    result, paths = {}, [common_path]
+    result, paths = {key: {} for key in schemas}, [common_path]
+    seen = set()
     for path in sorted((directory / 'categories').glob('*.yaml')):
         document = read_yaml(path)
         if set(document) != {'section', 'category', 'features'}:
-            raise ValueError(f'Invalid category config header: {path}')
-        key = (document['section'], document['category'])
-        if key in result:
-            raise ValueError(f'Duplicate category: {key}')
-        rules = {}
+            raise ValueError(f'Invalid category keyword config header: {path}')
+        key = document['section'], document['category']
+        if key not in schemas or key in seen:
+            raise ValueError(f'Unknown or duplicate keyword category: {key}')
+        seen.add(key)
         for name, spec in document['features'].items():
+            if name not in schemas[key]:
+                raise ValueError(f'{key}: unknown keyword feature {name}')
             if 'use' in spec:
                 if set(spec) != {'use'} or spec['use'] not in common:
-                    raise ValueError(f'{name}: invalid common reference')
+                    raise ValueError(f'{name}: invalid common keyword reference')
                 spec = common[spec['use']]
             rule = copy.deepcopy(spec)
-            validate_rule(name, rule, rules)
-            rules[name] = rule
-        result[key] = rules
+            validate_rule(name, rule, schemas[key][name])
+            result[key][name] = rule
         paths.append(path)
-    if not result:
-        raise ValueError('No configured categories')
     return result, paths
 
 
@@ -164,61 +127,60 @@ def resolve_single(hits):
 
 
 
-def assign(product, rule, assigned):
-    value, status, source, evidence = assign_rule(product, rule, assigned)
+def assign(product, rule, assigned, definition):
+    dependency = definition.get('value_dependency')
+    if dependency and assigned.get(dependency['feature']) in dependency['in']:
+        return dependency['value'], 'assigned', 'derived_rule', {dependency['feature']: assigned[dependency['feature']]}
+    if rule is None:
+        return None, 'undefined', None, {}
+    value, status, source, evidence = assign_rule(product, rule, definition)
     if status in ('undefined', 'no_section') and 'fallback' in rule:
-        value, status, source, evidence = assign(product, rule['fallback'], assigned)
+        value, status, source, evidence = assign(product, rule['fallback'], assigned, definition)
     if status != 'assigned' and 'default_value' in rule:
         return rule['default_value'], 'assigned', 'default', evidence
     return value, status, source, evidence
 
 
-def assign_rule(product, rule, assigned):
+def assign_rule(product, rule, definition):
     strategy = rule['strategy']
-    if strategy == 'llm':
-        return None, 'undefined', None, {}
-    if 'derive' in rule:
-        dependency = rule['derive']
-        if assigned.get(dependency['feature']) in dependency['in']:
-            return dependency['value'], 'assigned', 'derived_rule', {dependency['feature']: assigned[dependency['feature']]}
     if strategy == 'composition':
-        value, status, evidence = composition(product, rule, matches)
+        value, status, evidence = composition(product, rule, matches, definition)
         return value, status, 'parser', evidence
     if strategy in {'source_value', 'source_map'}:
         raw = product.get(rule['column'], '').strip()
-        value = raw if strategy == 'source_value' and raw in rule['allowed_values'] else rule.get('mapping', {}).get(raw)
+        value = raw if strategy == 'source_value' and raw in allowed_values(definition) else rule.get('mapping', {}).get(raw)
         return value, 'assigned' if value is not None else 'undefined', 'source_column', {rule['column']: raw}
     hits = matches(product, rule)
     if strategy == 'colors':
-        value = [rule['multicolor_value']] if rule['multicolor_value'] in hits or len(hits) > rule['max_named_colors'] else list(hits) or None
+        value = [rule['multicolor_value']] if rule['multicolor_value'] in hits or len(hits) > definition['max_items'] else list(hits) or None
     elif strategy in {'single', 'single_or_other'}:
         value = rule['conflict_value'] if strategy == 'single_or_other' and len(hits) >= 2 else resolve_single(hits)
     elif strategy == 'multi':
-        exclusive = [v for v in rule['exclusive_values'] if v in hits]
+        exclusive = [v for v in definition.get('exclusive_values', []) if v in hits]
         value = exclusive[:1] if exclusive else list(hits) or None
     elif strategy == 'priority':
         value = next((v for v in rule['keywords'] if v in hits), None)
     else:
-        raise ValueError(f'Unimplemented strategy: {strategy}')
+        raise ValueError(f'Unimplemented keyword strategy: {strategy}')
     return value, 'assigned' if value is not None else 'undefined', 'keyword', hits
 
 
-
-def extract_product(product, rules):
+def extract_product(product, rules, schema):
     features, metadata, reasons = {}, {}, []
     brand = product.get('brand') or ''
     if not brand.strip():
         reasons.append({'feature': 'brand', 'reason': 'empty'})
-    for feature, rule in rules.items():
-        value, status, source, evidence = assign(product, rule, features)
+    for feature, definition in schema.items():
+        rule = rules.get(feature)
+        value, status, source, evidence = assign(product, rule, features, definition)
         metadata[feature] = {'status': status, 'source': source if status == 'assigned' else None,
-                             'strategy': rule['strategy'], 'evidence': evidence}
+                             'strategy': rule['strategy'] if rule else None, 'evidence': evidence}
         if status == 'assigned':
             features[feature] = value
-        elif rule.get('on_unresolved', 'llm') == 'exclude':
+        elif definition.get('on_unresolved', 'llm') == 'exclude':
             reasons.append({'feature': feature, 'reason': status})
     return {'product_id': product['product_id'], 'brand': brand,
             'section': product['section'], 'category': product['category'],
             'features': features, 'feature_metadata': metadata,
-            'status': 'excluded' if reasons else 'ready' if len(features) == len(rules) else 'pending',
+            'status': 'excluded' if reasons else 'ready' if len(features) == len(schema) else 'pending',
             'exclusion_reasons': reasons}

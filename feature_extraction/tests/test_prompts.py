@@ -4,10 +4,14 @@ import copy
 import unittest
 from unittest.mock import patch
 
-from feature_extraction.keywords.engine import extract_product
+from feature_extraction.keywords.engine import extract_product, load_config
+from feature_extraction.settings import BASE
 from feature_extraction.llm import prompt_builder
-from feature_extraction.llm.prompt_builder import CONFIGS, build_prompt, requested_rules, choices, is_multi_value
+from feature_extraction.llm.prompt_builder import SCHEMAS, build_prompt, requested_features, choices, is_multi_value
 from feature_extraction.llm.validation import validate_response
+
+
+KEYWORDS, _ = load_config(BASE / 'keywords/definitions', SCHEMAS)
 
 
 class PromptTests(unittest.TestCase):
@@ -16,8 +20,8 @@ class PromptTests(unittest.TestCase):
         source = dict(product_id='target', name='Product', description='', brand='Brand',
                       section=section, category=category, gender='Women', composition='100% cotton',
                       original_category='SHORT SKIRTS' if category == 'Skirts' else 'SHORT DRESSES')
-        record = extract_product(source, CONFIGS[(section, category)])
-        missing = requested_rules(record)
+        record = extract_product(source, KEYWORDS[(section, category)], SCHEMAS[(section, category)])
+        missing = requested_features(record)
         features = {}
         for feature, rule in missing.items():
             allowed = choices(category, feature, rule)
@@ -36,12 +40,12 @@ class PromptTests(unittest.TestCase):
         for category in ['T-shirts', 'Dresses', 'Tank tops & Camisoles', 'Polos', 'Bodysuits', 'Skirts']:
             with self.subTest(category=category):
                 record, prompt, response = self.category_case(category)
-                requested = set(requested_rules(record))
+                requested = set(requested_features(record))
                 schema = prompt['generation_config']['responseSchema']['properties']['features']['properties']
                 self.assertEqual(set(schema), requested)
                 self.assertEqual(set(prompt_builder.category_definitions(category)), requested)
                 merged = validate_response(response, record)
-                self.assertEqual(set(merged), set(CONFIGS[(record['section'], category)]))
+                self.assertEqual(set(merged), set(SCHEMAS[(record['section'], category)]))
                 for key, value in record['features'].items():
                     self.assertEqual(merged[key], value)
                 for part in prompt['parts']:
@@ -127,8 +131,8 @@ class PromptTests(unittest.TestCase):
         source = dict(product_id='target', name='Black product', description='', brand='Brand',
                       section=section, category=category, gender='Women', composition='100% cotton',
                       original_category='SHORT DRESSES')
-        record = extract_product(source, CONFIGS[(section, category)])
-        labels = {key: record['features'].get(key, 'Other') for key in CONFIGS[(section, category)]}
+        record = extract_product(source, KEYWORDS[(section, category)], SCHEMAS[(section, category)])
+        labels = {key: record['features'].get(key, 'Other') for key in SCHEMAS[(section, category)]}
         examples = [{'record': {**record, 'product_id': str(i), 'features': labels, 'status': 'ready'},
                      'source': source, 'images': []} for i in range(2)]
         return build_prompt(record, source, [], examples)
@@ -168,12 +172,12 @@ class PromptTests(unittest.TestCase):
                 source = dict(product_id='target', name='Black product', description='', brand='Brand',
                               section=section, category=category, gender='Women', composition='100% cotton',
                               original_category='SHORT DRESSES')
-                record = extract_product(source, CONFIGS[(section, category)])
+                record = extract_product(source, KEYWORDS[(section, category)], SCHEMAS[(section, category)])
                 # All supported categories expose these fields; sleeve length is locked where applicable.
-                if 'sleeve_length' in CONFIGS[(section, category)]:
+                if 'sleeve_length' in SCHEMAS[(section, category)]:
                     record['features']['sleeve_length'] = 'Short Sleeve'
-                missing = requested_rules(record)
-                labels = {key: record['features'].get(key, 'Other') for key in CONFIGS[(section, category)]}
+                missing = requested_features(record)
+                labels = {key: record['features'].get(key, 'Other') for key in SCHEMAS[(section, category)]}
                 references = [{'record': {**record, 'product_id': str(i), 'features': labels, 'status': 'ready'},
                                'source': source, 'images': []} for i in range(2)]
                 prompt = build_prompt(record, source, [], references)
@@ -192,7 +196,7 @@ class PromptTests(unittest.TestCase):
     def test_keywords_cannot_be_overwritten_by_extra_output_fields(self):
         source = dict(product_id='1', name='Black tee', description='', brand='Brand', section='Tops',
                       category='T-shirts', gender='Men', composition='100% cotton')
-        record = extract_product(source, CONFIGS[('Tops', 'T-shirts')])
+        record = extract_product(source, KEYWORDS[('Tops', 'T-shirts')], SCHEMAS[('Tops', 'T-shirts')])
         with self.assertRaises(ValueError):
             validate_response({'product_status': 'ok', 'product_reason': '',
                                'features': {'gender': 'Women'}, 'outside_schema_reasons': {}}, record)

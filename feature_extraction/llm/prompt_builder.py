@@ -2,9 +2,7 @@
 import json
 from pathlib import Path
 
-from ..keywords.engine import allowed_values, load_config
-
-ROOT = Path(__file__).resolve().parents[2]
+from ..schema import allowed_values, is_multi_value, list_constraints, load_schemas
 
 PROMPTS = Path(__file__).resolve().parent / 'prompts'
 
@@ -24,7 +22,7 @@ def load_definitions(folder):
 
 
 COMMON_DEFINITIONS, DEFINITIONS = load_definitions(PROMPTS)
-CONFIGS, _ = load_config(ROOT / 'feature_extraction/keywords/definitions')
+SCHEMAS, _ = load_schemas()
 
 
 def obj(properties, required=None):
@@ -37,8 +35,8 @@ def enum(values):
     return {'type': 'STRING', 'enum': values}
 
 
-def requested_rules(record):
-    rules = CONFIGS[(record['section'], record['category'])]
+def requested_features(record):
+    rules = SCHEMAS[(record['section'], record['category'])]
     if record['status'] == 'excluded' or record['exclusion_reasons']:
         raise ValueError('Excluded products must not be submitted')
     missing = {k: v for k, v in rules.items() if k not in record['features']}
@@ -64,28 +62,27 @@ def choices(category, feature, rule):
     return values
 
 
-def is_multi_value(rule):
-    return rule['strategy'] in ('colors', 'multi')
-
-
-def list_constraints(rule, values):
-    if rule['strategy'] == 'colors':
-        return [rule['multicolor_value']], rule['max_named_colors']
-    exclusive = rule.get('exclusive_values', [])
-    return exclusive, max(1, len(set(values) - set(exclusive)))
-
-
 def build_schema(rules, category):
     fields, reasons = {}, {}
     for feature, rule in rules.items():
         values = choices(category, feature, rule)
         has_other = 'Other' in values
         if is_multi_value(rule):
-            _, max_items = list_constraints(rule, values)
+            _, max_items = list_constraints(rule)
             value_schema = {'type': 'ARRAY', 'items': enum(values), 'minItems': 1,
                             'maxItems': max_items}
             if not has_other:
                 value_schema = {'anyOf': [value_schema, enum(['outside_schema'])]}
+        elif rule['type'] == 'composition':
+            specials = rule.get('special_values', [])
+            materials = {value: {'type': 'NUMBER', 'minimum': 0, 'maximum': rule['total']}
+                         for value in values if value not in specials}
+            variants = [obj(materials, required=[])]
+            if specials:
+                variants.append(enum(specials))
+            if not has_other:
+                variants.append(enum(['outside_schema']))
+            value_schema = {'anyOf': variants}
         else:
             value_schema = enum(values if has_other else values + ['outside_schema'])
         fields[feature] = value_schema
@@ -105,7 +102,7 @@ def build_schema(rules, category):
 
 
 def build_prompt(record, source, images, examples):
-    rules = requested_rules(record)
+    rules = requested_features(record)
     if not rules:
         raise ValueError('No unresolved features; skip this product')
     if len(examples) != 2 or len({e['record']['product_id'] for e in examples}) != 2:
@@ -126,14 +123,13 @@ def build_prompt(record, source, images, examples):
         definition_lines.append('Other is available: only the listed values are allowed.'
                                 if 'Other' in choices(category, feature, rule)
                                 else 'Other is unavailable: outside_schema is permitted under the decision rules.')
-    # Show this relation only when BOTH features are requested. Otherwise validate
-    # it locally after merging, without disclosing a locked value or its definition.
-    if 'strap_style' in rules and 'strap_width' in rules:
-        styles = ['Strapless']
-        if 'Standard Sleeved' in choices(category, 'strap_style', rules['strap_style']):
-            styles.append('Standard Sleeved')
-        definition_lines.extend(['', 'JOINT CONSTRAINT',
-            'strap_width must equal Not Applicable if and only if strap_style is ' + ' or '.join(styles) + '.'])
+    # Include a dependency only when both features are requested; assigned values stay hidden.
+    for feature, definition in rules.items():
+        dependency = definition.get('value_dependency')
+        if dependency and dependency['feature'] in rules:
+            definition_lines.extend(['', 'JOINT CONSTRAINT',
+                feature + ' must equal ' + dependency['value'] + ' if and only if '
+                + dependency['feature'] + ' is ' + ' or '.join(dependency['in']) + '.'])
     parts = [{'text': '\n'.join(definition_lines)}, {'text':
         'The following two reference products illustrate the requested labels. '
         'They are not the target. Their labels are examples, not predictions for the target.'}]

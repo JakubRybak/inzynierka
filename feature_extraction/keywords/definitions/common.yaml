@@ -2,10 +2,6 @@ features:
   gender:
     strategy: source_value
     column: gender
-    allowed_values:
-    - Men
-    - Women
-    on_unresolved: exclude
   colors:
     strategy: colors
     columns:
@@ -80,7 +76,6 @@ features:
     ignore_column: brand
     absorb_nested_matches: true
     multicolor_value: Multicolor
-    max_named_colors: 2
   main_composition:
     strategy: composition
     columns:
@@ -175,9 +170,6 @@ features:
     - main
     - body
     - shell
-    total: 100
-    tolerance: 0.01
-    on_unresolved: exclude
   lining_composition:
     strategy: composition
     columns:
@@ -191,8 +183,6 @@ features:
     - lining 4
     - body lining
     section_only: true
-    total: 100
-    tolerance: 0.01
     fallback:
       strategy: single
       columns:
@@ -201,14 +191,3 @@ features:
         Unlined:
         - unlined
     default_value: Unknown
-  pattern:
-    strategy: llm
-    allowed_values:
-    - Solid
-    - Striped
-    - Plaid
-    - Floral
-    - Camo
-    - Animal Print
-    - Polka Dot
-    - Other

@@ -7,8 +7,6 @@ features:
     use: colors
   main_composition:
     use: main_composition
-  pattern:
-    use: pattern
   sleeve_length:
     strategy: single
     columns:
@@ -77,8 +75,6 @@ features:
     - name
     - description
     keywords:
-      Standard: []
-      Standard Sleeved: []
       Racerback:
       - racerback
       - racer back
@@ -100,7 +96,6 @@ features:
       - off-shoulder
       - off the shoulder
       - off-the-shoulder
-      Other: []
   strap_width:
     strategy: single
     columns:
@@ -119,11 +114,3 @@ features:
       - thin shoulder straps
       - narrow straps
       - narrow shoulder straps
-      Other: []
-      Not Applicable: []
-    derive:
-      feature: strap_style
-      in:
-      - Strapless
-      - Standard Sleeved
-      value: Not Applicable

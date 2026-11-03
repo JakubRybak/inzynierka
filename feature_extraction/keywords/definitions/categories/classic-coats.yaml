@@ -7,8 +7,6 @@ features:
     use: colors
   main_composition:
     use: main_composition
-  pattern:
-    use: pattern
   lining_composition:
     use: lining_composition
   hood:
@@ -22,7 +20,6 @@ features:
       - hoods
       - hooded
       - hoodie
-      Without Hood: []
   coat_style:
     strategy: single
     columns:
@@ -54,21 +51,6 @@ features:
       - wool coat
       - cashmere coat
       - double-breasted coat
-  closure_type:
-    strategy: multi
-    columns:
-    - description
-    keywords:
-      Zip: []
-      Button: []
-      Press-Stud: []
-      Double-Breasted: []
-      Belted: []
-      Open Front: []
-      Other: []
-    exclusive_values:
-    - Open Front
-    - Other
   collar_type:
     strategy: single
     columns:
@@ -380,12 +362,6 @@ features:
       - faux-fur lining at collar
       - faux-fur lining hood
       - faux-fur lining collar
-  length:
-    strategy: llm
-    allowed_values:
-    - Short
-    - Mid-Length
-    - Long
   fit:
     strategy: single
     columns:

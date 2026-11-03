@@ -5,7 +5,7 @@ from collections import Counter
 
 from .text import normalize
 
-def composition(product, rule, match_material):
+def composition(product, rule, match_material, definition):
     text = product.get(rule['columns'][0], '')
     if not text.strip():
         return None, 'undefined', {}
@@ -35,6 +35,6 @@ def composition(product, rule, match_material):
             return None, 'unmapped_material', {'unmapped_material': raw_material}
         totals[material] += float(match[1])
         evidence.setdefault(material, []).append({'material': raw_material, 'percent': float(match[1])})
-    if not math.isclose(sum(totals.values()), rule['total'], rel_tol=0, abs_tol=rule['tolerance']):
+    if not math.isclose(sum(totals.values()), definition['total'], rel_tol=0, abs_tol=definition['tolerance']):
         return None, 'sum_not_100', {'parsed_total': sum(totals.values())}
     return dict(totals), 'assigned', evidence

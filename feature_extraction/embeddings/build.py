@@ -15,7 +15,7 @@ from .client import EmbeddingClient
 
 
 def inputs_for(settings, limit):
-    ids, source, images, references, _ = load_inputs(settings, limit)
+    ids, source, images, references, _, _ = load_inputs(settings, limit)
     ids = list(dict.fromkeys(ids + [r['product_id'] for r in references]))
     inputs = []
     for pid in ids:

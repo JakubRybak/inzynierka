@@ -1,0 +1,78 @@
+section: Dresses
+category: Dresses
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  length:
+    type: single_choice
+    values:
+    - Mini
+    - Midi
+    - Maxi
+    on_unresolved: exclude
+  sleeve_length:
+    type: single_choice
+    values:
+    - Sleeveless
+    - Short Sleeve
+    - Three-Quarter Sleeve
+    - Long Sleeve
+  neckline:
+    type: single_choice
+    values:
+    - Crewneck
+    - Scoop Neck
+    - V-Neck
+    - High Neck
+    - Collared
+    - Other
+  dress_silhouette:
+    type: single_choice
+    values:
+    - Fitted
+    - Straight
+    - A-Line
+    - Other
+  dress_type:
+    type: multi_choice
+    values:
+    - Slip
+    - Shirt Dress
+    - Wrap
+    - Sweater Dress
+    - Sweatshirt Dress
+    - T-Shirt Dress
+    - Other
+    max_items: 6
+    exclusive_values:
+    - Other
+  strap_style:
+    type: single_choice
+    values:
+    - Standard
+    - Standard Sleeved
+    - Racerback
+    - Halter
+    - One-Shoulder
+    - Strapless
+    - Off-Shoulder
+    - Other
+  strap_width:
+    type: single_choice
+    values:
+    - Wide
+    - Spaghetti
+    - Other
+    - Not Applicable
+    value_dependency:
+      feature: strap_style
+      in:
+      - Strapless
+      - Standard Sleeved
+      value: Not Applicable

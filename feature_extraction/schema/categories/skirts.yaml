@@ -1,0 +1,43 @@
+section: Skirts
+category: Skirts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  length:
+    type: single_choice
+    values:
+    - Mini
+    - Midi
+    - Maxi
+    on_unresolved: exclude
+  skirt_silhouette:
+    type: single_choice
+    values:
+    - Fitted
+    - Straight
+    - A-Line
+    - Other
+  skirt_type:
+    type: multi_choice
+    values:
+    - Pleated
+    - Wrap
+    - Asymmetric
+    - Tiered
+    - Ruffled
+    - Other
+    max_items: 5
+    exclusive_values:
+    - Other
+  rise:
+    type: single_choice
+    values:
+    - High-Rise
+    - Mid-Rise
+    - Low-Rise

@@ -12,7 +12,10 @@ and embeddings first.
 ## Layout
 
 - `run.py` exposes the extraction command and `pipeline.py` manages the job.
-- `keywords/` contains the matching engine, composition parser and YAML definitions.
+- `schema/` defines category features, allowed values, single/multi choice and constraints.
+- `keywords/` contains only matching/parsing instructions and their YAML definitions.
+- `validation.py` validates feature values and dependencies for all extraction methods.
+- `config_io.py` reads YAML safely and rejects duplicate keys.
 - `llm/` contains the Vertex client, prompt builder, response validation and reference retrieval.
 - `llm/prompts/system.txt`, `common.json` and `categories/*.json` are prompt sources.
 - `embeddings/` builds separate main-image and description embeddings.
@@ -38,7 +41,7 @@ every category using that feature. Gender is assigned from the dataset and has n
 LLM prompt definition. Run fingerprints include JSON files in category subfolders.
 
 The builder selects the category first, then includes only unresolved features.
-Allowed labels still come from the keyword/category YAML configuration and must
+Allowed labels come from `schema/common.yaml` and `schema/categories/*.yaml` and must
 all have descriptions in that category's prompt definition. An unsupported
 category or a missing feature definition raises an error. To add an LLM category,
 add its feature definitions explicitly and enable it in the extraction config.
@@ -49,10 +52,45 @@ neckline and shoulder construction/strap width to colors, pattern and sleeve
 length. Skirts has colors, pattern, skirt silhouette, skirt type and rise. Skirt
 length is assigned exclusively from `original_category`; it is never an LLM task.
 
-The response builder and validator read list cardinality from the YAML strategy:
-`colors` and `multi` produce lists, other current LLM feature strategies produce
-single values. `exclusive_values` controls standalone labels for multi choice.
-Thus `skirt_type` and `dress_type` allow several distinct values or `Other` alone.
+## Shared feature schema and keyword rules
+
+`schema/common.yaml` defines shared features; `schema/categories/*.yaml` lists the
+complete, ordered feature set for each category and references shared definitions
+with `use`. Each feature declares `type` (`single_choice`, `multi_choice` or
+`composition`) and `values`. Multi choice also declares `max_items` and
+`exclusive_values`; compositions declare `total`, `tolerance` and optional scalar
+`special_values` such as `Unlined` and `Unknown`. `value_dependency` defines an
+if-and-only-if relation between single-choice values, including strap width.
+`on_unresolved: exclude` declares an exclusion policy independently of the extractor.
+
+The LLM response builder and the shared validator read this schema directly.
+They do not import keyword configurations or infer types from keyword strategies.
+For example, `closure_type` is multi choice even though no keyword rule exists for it.
+
+`keywords/definitions/` contains only extraction instructions: input columns,
+phrases, source mappings, matching strategies, composition sections and fallbacks.
+There is no `llm` strategy, no empty keyword lists, and no duplicate allowed-value
+or cardinality declarations. A feature with no keyword rule remains `undefined`
+unless its schema dependency derives the value. It can then be completed by the
+LLM if that category has prompt definitions. The metadata field `strategy` is
+`null` when no keyword rule exists; its source is `derived_rule` if a dependency
+assigned the value, otherwise `null` until another extractor fills it.
+
+For example:
+
+```yaml
+# schema/categories/<category>.yaml
+closure_type:
+  type: multi_choice
+  values: [Zip, Button, Press-Stud, Double-Breasted, Belted, Open Front, Other]
+  max_items: 5
+  exclusive_values: [Open Front, Other]
+```
+
+No corresponding keyword entry is needed. The keyword loader validates all rule
+outputs against the schema, including mappings, defaults and fallback values.
+`validation.py` checks actual scalar/list/composition values and dependencies;
+`llm/validation.py` additionally checks response status, requested keys and reasons.
 
 ## Install and configure
 
@@ -158,7 +196,7 @@ run currently replaces that run's product outputs with keyword-only records.
 
 Reusing a run name resumes saved products. A completed API response saved before
 an interruption can be replayed locally. Changed source evidence, code, configuration,
-references or existing embedding exports require a new run name. JSONL and Parquet
+references, shared schemas or existing embedding exports require a new run name. JSONL and Parquet
 files are each written through temporary files, with JSONL serving as the resume source.
 
 Paid inference requires `--execute` and Application Default Credentials for the

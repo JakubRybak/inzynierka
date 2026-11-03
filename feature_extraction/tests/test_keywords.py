@@ -7,15 +7,18 @@ import unittest
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
-from feature_extraction.keywords.engine import assign, extract_product, load_config, read_yaml, validate_rule
-from feature_extraction.keywords.validation import validate
+from feature_extraction.keywords.engine import assign, extract_product, load_config, validate_rule
+from feature_extraction.config_io import read_yaml
+from feature_extraction.validation import validate
+from feature_extraction.schema import load_schemas
 from feature_extraction.storage import export_products
 
 
 class ExtractionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.config, _ = load_config(BASE / 'keywords/definitions')
+        cls.schemas, _ = load_schemas()
+        cls.config, _ = load_config(BASE / 'keywords/definitions', cls.schemas)
 
     def product(self, category='T-shirts', **updates):
         section = {c: s for s, c in self.config}[category]
@@ -26,7 +29,8 @@ class ExtractionTests(unittest.TestCase):
 
     def feature(self, category, feature, **updates):
         product = self.product(category, **updates)
-        return assign(product, self.config[(product['section'], category)][feature], {})
+        key = product['section'], category
+        return assign(product, self.config[key].get(feature), {}, self.schemas[key][feature])
 
     def test_supported_scope(self):
         self.assertEqual(set(self.config), {('Tops', 'T-shirts'), ('Tops', 'Polos'),
@@ -115,7 +119,7 @@ class ExtractionTests(unittest.TestCase):
                 result = self.feature(category, 'pattern', name='Striped floral product',
                                       description='Solid color. Logo print. Camouflage throughout.')
                 self.assertEqual(result, (None, 'undefined', None, {}))
-                self.assertEqual(rules['pattern']['strategy'], 'llm')
+                self.assertNotIn('pattern', rules)
 
     def test_sleeveless_tshirts_and_polos(self):
         for category in ['T-shirts', 'Polos']:
@@ -158,19 +162,19 @@ class ExtractionTests(unittest.TestCase):
         for category, noun in [('Dresses', 'DRESSES'), ('Skirts', 'SKIRTS')]:
             self.assertEqual(self.feature(category, 'length', original_category='LONG ' + noun)[0], 'Maxi')
             product = self.product(category, name='Mini product', original_category='UNKNOWN')
-            result = extract_product(product, self.config[(product['section'], category)])
+            result = extract_product(product, self.config[(product['section'], category)], self.schemas[(product['section'], category)])
             self.assertEqual(result['status'], 'excluded')
             self.assertNotIn('length', result['features'])
 
     def test_strap_dependencies(self):
         for category in ['Bodysuits', 'Tank tops & Camisoles', 'Dresses']:
             product = self.product(category, description='Strapless top.', original_category='SHORT DRESSES')
-            result = extract_product(product, self.config[(product['section'], category)])
+            result = extract_product(product, self.config[(product['section'], category)], self.schemas[(product['section'], category)])
             self.assertEqual(result['features']['strap_width'], 'Not Applicable')
             rule = self.config[(product['section'], category)]['strap_width']
-            self.assertEqual(assign(product, rule, {'strap_style': 'Strapless'})[0], 'Not Applicable')
+            self.assertEqual(assign(product, rule, {'strap_style': 'Strapless'}, self.schemas[(product['section'], category)]['strap_width'])[0], 'Not Applicable')
             if category != 'Tank tops & Camisoles':
-                self.assertEqual(assign(product, rule, {'strap_style': 'Standard Sleeved'})[0], 'Not Applicable')
+                self.assertEqual(assign(product, rule, {'strap_style': 'Standard Sleeved'}, self.schemas[(product['section'], category)]['strap_width'])[0], 'Not Applicable')
 
     def test_skirt_multi(self):
         self.assertEqual(self.feature('Skirts', 'skirt_type', description='Pleated skirt with wrap construction.')[0], ['Pleated', 'Wrap'])
@@ -178,41 +182,41 @@ class ExtractionTests(unittest.TestCase):
     def test_excluded_retained_and_ready(self):
         product = self.product(composition='90% cotton')
         original = copy.deepcopy(product)
-        record = extract_product(product, self.config[('Tops', 'T-shirts')])
+        record = extract_product(product, self.config[('Tops', 'T-shirts')], self.schemas[('Tops', 'T-shirts')])
         self.assertEqual(product, original)
         self.assertEqual(record['status'], 'excluded')
         self.assertEqual(record['features']['colors'], ['Black'])
-        validate([record], self.config)
+        validate([record], self.schemas)
         with tempfile.TemporaryDirectory() as tmp:
             export_products(Path(tmp), [record])
             self.assertEqual(json.loads((Path(tmp) / 'products.jsonl').read_text()), record)
         polo = self.product('Polos', description='Solid color. Short sleeves. Slim-fit.')
-        result = extract_product(polo, self.config[('Tops', 'Polos')])
+        result = extract_product(polo, self.config[('Tops', 'Polos')], self.schemas[('Tops', 'Polos')])
         self.assertEqual(result['status'], 'pending')
         self.assertNotIn('pattern', result['features'])
         polo['gender'] = ''
-        self.assertEqual(extract_product(polo, self.config[('Tops', 'Polos')])['status'], 'excluded')
+        self.assertEqual(extract_product(polo, self.config[('Tops', 'Polos')], self.schemas[('Tops', 'Polos')])['status'], 'excluded')
 
     def test_brand_is_top_level_and_required(self):
         rules = self.config[('Tops', 'T-shirts')]
         product = self.product(brand='Example Brand')
-        record = extract_product(product, rules)
+        record = extract_product(product, rules, self.schemas[('Tops', 'T-shirts')])
         self.assertEqual(record['brand'], 'Example Brand')
         self.assertNotIn('brand', record['features'])
         self.assertNotIn('brand', record['feature_metadata'])
         self.assertNotIn({'feature': 'brand', 'reason': 'empty'}, record['exclusion_reasons'])
 
         product['brand'] = '  '
-        record = extract_product(product, rules)
+        record = extract_product(product, rules, self.schemas[('Tops', 'T-shirts')])
         self.assertEqual(record['brand'], '  ')
         self.assertEqual(record['status'], 'excluded')
         self.assertIn({'feature': 'brand', 'reason': 'empty'}, record['exclusion_reasons'])
-        validate([record], self.config)
+        validate([record], self.schemas)
 
     def test_bad_config_rejected(self):
         for rule in [{'strategy': 'typo'}, {'strategy': 'single', 'colums': ['name']}]:
             with self.assertRaises(ValueError):
-                validate_rule('test', rule, {})
+                validate_rule('test', rule, self.schemas[('Tops', 'T-shirts')]['neckline'])
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / 'bad.yaml'
             path.write_text('value: 1\nvalue: 2\n')

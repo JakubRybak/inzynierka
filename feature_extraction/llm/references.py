@@ -6,7 +6,10 @@ import numpy as np
 import pyarrow.parquet as pq
 
 from ..storage import digest
-from .prompt_builder import CONFIGS
+from ..schema import load_schemas
+from ..validation import validate_features
+
+SCHEMAS, _ = load_schemas()
 
 
 def example_images(images):
@@ -47,9 +50,10 @@ class ReferenceBank:
         pid = record['product_id']
         if record['status'] != 'ready' or record.get('product_status', 'ok') != 'ok':
             return False
-        rules = CONFIGS[(record['section'], record['category'])]
+        rules = SCHEMAS[(record['section'], record['category'])]
         if set(record['features']) != set(rules) or any(v == 'outside_schema' for v in record['features'].values()):
             raise ValueError(f'Incomplete reference: {pid}')
+        validate_features(record['features'], rules, complete=True)
         if not {'id_gridfs_1', 'id_gridfs_3'} <= {image['pose'] for image in self.images[pid]}:
             return False
         self.bank[pid] = record

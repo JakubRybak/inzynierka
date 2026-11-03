@@ -1,9 +1,10 @@
 """Validate model output and enforce cross-feature constraints."""
-from .prompt_builder import requested_rules, choices, is_multi_value, list_constraints
+from ..validation import validate_features, validate_value
+from .prompt_builder import SCHEMAS, requested_features, choices
 
 def validate_response(response, record):
     """Business validation beyond server schema; does not mutate keyword values."""
-    rules = requested_rules(record)
+    rules = requested_features(record)
     category = record['category']
     reason_field = any('Other' not in choices(category, f, rule) for f, rule in rules.items())
     expected = {'product_status', 'product_reason', 'features'}
@@ -29,26 +30,13 @@ def validate_response(response, record):
                 raise ValueError('outside_schema forbidden when Other exists')
             outside.add(feature)
             continue
-        rule = rules[feature]
-        if is_multi_value(rule):
-            if not isinstance(value, list) or not value or not all(isinstance(x, str) for x in value):
-                raise ValueError('Expected a nonempty string list')
-            if len(value) != len(set(value)) or not set(value) <= set(values):
-                raise ValueError('Invalid or duplicate labels')
-            exclusive, max_items = list_constraints(rule, values)
-            if any(label in value for label in exclusive) and len(value) != 1:
-                raise ValueError('Exclusive value mixed with other labels')
-            if len(value) > max_items:
-                raise ValueError(f'Too many values for {feature}')
-        elif not isinstance(value, str) or value not in values:
-            raise ValueError('Invalid feature value')
+        validate_value(value, rules[feature])
     if set(reasons) != outside or any(not isinstance(v, str) or not v.strip() for v in reasons.values()):
         raise ValueError('Reasons must match outside_schema features exactly')
     merged = {**record['features'], **features}
-    if 'strap_style' in merged and 'strap_width' in merged:
-        no_straps = merged['strap_style'] in ('Strapless', 'Standard Sleeved')
-        if (merged['strap_width'] == 'Not Applicable') != no_straps:
-            raise ValueError('Strap dependency conflict: flag for review; never overwrite keywords')
+    schema = SCHEMAS[(record['section'], category)]
+    validate_features({k: v for k, v in merged.items() if v != 'outside_schema'}, schema,
+                      complete=not outside)
     return merged
 
 

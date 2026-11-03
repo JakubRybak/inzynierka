@@ -7,8 +7,6 @@ features:
     use: colors
   main_composition:
     use: main_composition
-  pattern:
-    use: pattern
   lining_composition:
     use: lining_composition
   hood:
@@ -22,7 +20,6 @@ features:
       - hoods
       - hooded
       - hoodie
-      Without Hood: []
   jacket_style:
     strategy: single
     columns:
@@ -68,21 +65,6 @@ features:
       - m-65
       - rain jacket
       - souvenir
-  closure_type:
-    strategy: multi
-    columns:
-    - description
-    keywords:
-      Zip: []
-      Button: []
-      Press-Stud: []
-      Double-Breasted: []
-      Belted: []
-      Open Front: []
-      Other: []
-    exclusive_values:
-    - Open Front
-    - Other
   collar_type:
     strategy: single
     columns:
@@ -394,12 +376,6 @@ features:
       - faux-fur lining at collar
       - faux-fur lining hood
       - faux-fur lining collar
-  length:
-    strategy: llm
-    allowed_values:
-    - Cropped
-    - Regular
-    - Longline
   fit:
     strategy: single
     columns:

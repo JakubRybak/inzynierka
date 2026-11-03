@@ -1,0 +1,38 @@
+section: Tops
+category: T-shirts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  neckline:
+    type: single_choice
+    values:
+    - Crewneck
+    - Scoop Neck
+    - V-Neck
+    - High Neck
+    - Other
+  fit:
+    type: single_choice
+    values:
+    - Slim
+    - Regular
+    - Oversized
+  length:
+    type: single_choice
+    values:
+    - Cropped
+    - Regular
+    - Longline
+  sleeve_length:
+    type: single_choice
+    values:
+    - Sleeveless
+    - Short Sleeve
+    - Three-Quarter Sleeve
+    - Long Sleeve

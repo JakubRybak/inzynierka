@@ -1,0 +1,52 @@
+section: Jackets & Coats
+category: Bombers
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  lining_composition:
+    use: lining_composition
+  hood:
+    type: single_choice
+    values:
+    - With Hood
+    - Without Hood
+  closure_type:
+    type: multi_choice
+    values:
+    - Zip
+    - Button
+    - Press-Stud
+    - Double-Breasted
+    - Belted
+    - Open Front
+    - Other
+    max_items: 5
+    exclusive_values:
+    - Open Front
+    - Other
+  insulation:
+    type: single_choice
+    values:
+    - Down
+    - Shearling Lined
+    - Fleece Lined
+    - Other
+    - Synthetic Padding
+    - Uninsulated
+  length:
+    type: single_choice
+    values:
+    - Cropped
+    - Regular
+    - Longline
+  fit:
+    type: single_choice
+    values:
+    - Oversized
+    - Regular

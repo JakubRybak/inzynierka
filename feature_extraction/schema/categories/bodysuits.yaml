@@ -1,0 +1,50 @@
+section: Tops
+category: Bodysuits
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    type: single_choice
+    values:
+    - Sleeveless
+    - Short Sleeve
+    - Three-Quarter Sleeve
+    - Long Sleeve
+  neckline:
+    type: single_choice
+    values:
+    - Crewneck
+    - Scoop Neck
+    - V-Neck
+    - High Neck
+    - Other
+  strap_style:
+    type: single_choice
+    values:
+    - Standard
+    - Standard Sleeved
+    - Racerback
+    - Halter
+    - One-Shoulder
+    - Strapless
+    - Off-Shoulder
+    - Other
+  strap_width:
+    type: single_choice
+    values:
+    - Wide
+    - Spaghetti
+    - Other
+    - Not Applicable
+    value_dependency:
+      feature: strap_style
+      in:
+      - Strapless
+      - Standard Sleeved
+      value: Not Applicable

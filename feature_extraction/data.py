@@ -4,11 +4,13 @@ from pathlib import Path
 
 from .keywords.engine import load_config
 from .settings import BASE
+from .schema import load_schemas
 from .storage import read_jsonl
 
 
 def load_inputs(settings, limit=None):
-    configs, _ = load_config(BASE / 'keywords/definitions')
+    schemas, _ = load_schemas()
+    configs, _ = load_config(BASE / 'keywords/definitions', schemas)
     selected = None
     if settings.get('selection'):
         with Path(settings['selection']).open(newline='') as stream:
@@ -28,7 +30,7 @@ def load_inputs(settings, limit=None):
                     continue
                 if row['category'] not in settings['categories']:
                     continue
-                if (row['section'], row['category']) not in configs:
+                if (row['section'], row['category']) not in schemas:
                     raise ValueError(f'No rules for {row["category"]}')
                 if pid in source:
                     raise ValueError(f'Duplicate product ID across dataset: {pid}')
@@ -46,4 +48,4 @@ def load_inputs(settings, limit=None):
         target_ids = target_ids[:limit]
     if not target_ids:
         raise ValueError('No products selected')
-    return target_ids, source, images, references, configs
+    return target_ids, source, images, references, configs, schemas

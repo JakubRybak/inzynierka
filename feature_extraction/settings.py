@@ -1,7 +1,7 @@
 """Load repository-relative paths without depending on the shell directory."""
 from pathlib import Path
 
-from .keywords.engine import read_yaml
+from .config_io import read_yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = Path(__file__).resolve().parent

@@ -37,8 +37,8 @@ full-catalog LLM run.
 
 Human-readable extraction rules are in
 [feature_extraction/docs/extraction_rules/](feature_extraction/docs/extraction_rules/).
-Executable keyword rules and prompts are stored separately inside the extraction
-module.
+Shared feature contracts are in `feature_extraction/schema/`. Executable keyword
+rules and model-facing prompts are stored separately inside the extraction module.
 
 ## Local data
 

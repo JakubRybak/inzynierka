@@ -7,8 +7,6 @@ features:
     use: colors
   main_composition:
     use: main_composition
-  pattern:
-    use: pattern
   length:
     strategy: source_map
     column: original_category
@@ -16,7 +14,6 @@ features:
       SHORT SKIRTS: Mini
       MID LENGTH SKIRTS: Midi
       LONG SKIRTS: Maxi
-    on_unresolved: exclude
   skirt_silhouette:
     strategy: single
     columns:
@@ -40,7 +37,6 @@ features:
       - a line
       - fit-and-flare
       - fit and flare
-      Other: []
   skirt_type:
     strategy: multi
     columns:
@@ -95,9 +91,6 @@ features:
       - flounced skirt
       - flounced hem
       - flounce hem
-      Other: []
-    exclusive_values:
-    - Other
   rise:
     strategy: single
     columns:

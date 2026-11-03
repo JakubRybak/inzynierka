@@ -7,8 +7,6 @@ features:
     use: colors
   main_composition:
     use: main_composition
-  pattern:
-    use: pattern
   length:
     strategy: source_map
     column: original_category
@@ -16,7 +14,6 @@ features:
       SHORT DRESSES: Mini
       MID LENGTH DRESSES: Midi
       LONG DRESSES: Maxi
-    on_unresolved: exclude
   sleeve_length:
     strategy: single
     columns:
@@ -105,7 +102,6 @@ features:
       - a line
       - fit-and-flare
       - fit and flare
-      Other: []
   dress_type:
     strategy: multi
     columns:
@@ -134,9 +130,6 @@ features:
       - t-shirt dress
       - tee dress
       - tshirt dress
-      Other: []
-    exclusive_values:
-    - Other
     exclude_phrases:
       Shirt Dress:
       - t-shirt dress
@@ -146,8 +139,6 @@ features:
     - name
     - description
     keywords:
-      Standard: []
-      Standard Sleeved: []
       Racerback:
       - racerback
       - racer back
@@ -169,7 +160,6 @@ features:
       - off-shoulder
       - off the shoulder
       - off-the-shoulder
-      Other: []
   strap_width:
     strategy: single
     columns:
@@ -188,11 +178,3 @@ features:
       - thin shoulder straps
       - narrow straps
       - narrow shoulder straps
-      Other: []
-      Not Applicable: []
-    derive:
-      feature: strap_style
-      in:
-      - Strapless
-      - Standard Sleeved
-      value: Not Applicable

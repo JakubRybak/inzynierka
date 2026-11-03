@@ -14,7 +14,7 @@ New options, all optional:
 | `section_only` | `composition` | parse only a section from `main_sections`; text before the first label is ignored; no such section → status `no_section` |
 | `fallback` | `composition` | rule evaluated when there was nothing to parse (empty column or no section) |
 
-`allowed_values` includes `default_value` and the values of `fallback`.
+The shared schema must include all possible outputs, including `default_value` and the values of `fallback`.
 
 ## keywords/definitions/common.yaml
 
@@ -36,3 +36,17 @@ New options, all optional:
 - `common/main_composition.md`: the tree mentions Shell.
 - `main_composition` tables recomputed after the `shell` change, also in `dresses`, `skirts`, `tops/t-shirts` and
   `tops/tank-tops-and-camisoles`.
+
+## Shared feature contracts
+
+Feature types, values and constraints now live in `schema/`, independently of
+keyword extraction. Keyword `strategy` specifies matching/parsing behavior only.
+LLM-only fields have no keyword rule, replacing the old `llm` strategy and empty
+multi-choice keyword definitions. Missing fields still receive metadata and stay
+unresolved until LLM extraction; their keyword strategy is `null`.
+
+`validation.py` is shared by keyword extraction, reference checks and LLM result
+validation. Color limits, composition totals, standalone values and cross-feature
+dependencies come from the schema. The prompt builder and reference bank no longer
+load keyword definitions. Run fingerprints include schema YAML files; use a new run
+name after this migration. Historical artifacts are retained unchanged.
