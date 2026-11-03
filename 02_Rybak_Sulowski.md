@@ -1,14 +1,17 @@
 # Dokument etapu 2: Propozycja rozwiązania oraz analiza danych
+**Projekt inżynierski – Politechnika Warszawska Wydział MiNI**
 
-**Projekt:** System wyszukiwania semantycznego w e-commerce z wykorzystaniem modeli językowych  
-**Autorzy:** Jakub Rybak, Michał Sulowski  
-**Promotor:** dr hab. Marcin Paprzycki  
-**Data:** 03.11.2026  
-**Wersja:** 1.0
+---
 
-| Wersja | Data | Opis zmiany |
-| --- | --- | --- |
-| 1.0 | 03.11.2026 | Propozycja rozwiązania, uzasadnienie technik i raport z analizy danych. |
+## Metadane dokumentu i historia zmian
+| Wersja | Data | Autorzy | Opis zmiany |
+| --- | --- | --- | --- |
+| **1.0** | 03.11.2026 | Jakub Rybak | Wersja bazowa |
+| **2.0** | 03.11.2026 | Michał Sulowski | Doszczegółowienie |
+
+- **Tytuł projektu:** *System wyszukiwania semantycznego w e-commerce z wykorzystaniem modeli językowych*
+- **Autorzy:** Jakub Rybak, Michał Sulowski
+- **Promotor:** dr hab. Marcin Paprzycki
 
 Dokument rozwija specyfikację wymagań i zakres projektu z etapu 1. Przedstawia proponowane rozwiązanie, ocenę narzędzi i technik, założenia modelowania oraz wyniki wstępnej eksploracji i oceny jakości danych. Obejmuje również podział na moduły i wykonane przygotowanie danych.
 
@@ -19,7 +22,7 @@ System umożliwia wyszukiwanie produktów odzieżowych na podstawie zapytań w j
 ### Przygotowanie katalogu offline
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["1. Fashion-Gen"] --> B["2. Wybór produktów i kategorii"]
     B --> C["3. Ekstrakcja cech regułami"]
     B --> D["4. Embeddingi opisów i zdjęć"]
@@ -51,7 +54,7 @@ flowchart TD
 ### Obsługa zapytania
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["1. Zapytanie użytkownika"] --> B["2. Rozpoznanie kategorii"]
     B -->|Wybrano kategorię| C["3. Ekstrakcja filtrów i pozostałych potrzeb"]
     B -->|Brak kategorii| H["Brak wyszukiwania"]
@@ -206,4 +209,4 @@ Prototyp GUI pozwala wpisać query, zobaczyć interpretację parsera, zmienić f
 
 ---
 
-**Supervisor Signature (Architecture Acceptance):** ............................................ **Date:** 05.11.2026
+**Podpis promotora:** ............................................ **Data** ................
