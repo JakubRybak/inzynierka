@@ -40,7 +40,9 @@ class ExtractionTests(unittest.TestCase):
                  ('100% wool.', 'Unlined. Tonal stitching.', 'assigned', 'Unlined'),
                  ('100% wool.', 'Fully lined.', 'assigned', 'Unknown'),
                  ('Body: 100% wool. Lining 1: 100% silk. Lining 2: 100% cupro.', '', 'assigned', 'Unknown'),
-                 ('Body: 100% wool. Sleeve lining: 100% silk.', '', 'assigned', 'Unknown')]
+                 ('Body: 100% wool. Sleeve lining: 100% silk.', '', 'assigned', 'Unknown'),
+                 ('Body: 100% wool. Lining: 65% viscose, 45% polyester.', 'Unlined.', 'assigned', 'Unknown'),
+                 ('Body: 100% wool. Lining 1: 100% silk. Lining 2: 100% cupro.', 'Unlined.', 'assigned', 'Unknown')]
         for composition, description, status, expected in cases:
             with self.subTest(composition=composition, description=description):
                 value, actual, *_ = self.feature('Jackets', 'lining_composition', composition=composition,

@@ -68,8 +68,8 @@ Kolumna `composition` – sekcje Lining, Body lining, Lining N
 <!-- results:lining_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,340 | 60,96% |
-| `Unknown` | 858 | 39,04% |
+| Przypisane | 1,338 | 60,87% |
+| `Unknown` | 860 | 39,13% |
 <!-- /results -->
 
 ## `hood`
@@ -108,7 +108,7 @@ Kolumny `name` i `description`
 
 ## `closure_type`
 
-Cecha przypisywana wyłącznie przez LLM.
+Cecha przypisywana wyłącznie przez LLM. Wartość to lista bez powtórzeń; `Open Front` i `Other` występują samodzielnie.
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
 

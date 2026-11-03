@@ -23,7 +23,7 @@ OPTIONS = {
     'priority': set(),
 }
 REQUIRED = OPTIONS
-# section_only: parse only the main section; fallback: rule used when this one is unresolved;
+# section_only: parse only the main section; fallback: rule used when there was nothing to parse;
 # default_value: value assigned when nothing else resolved the feature.
 OPTIONAL = {
     'composition': {'section_only', 'fallback', 'default_value'},
@@ -166,7 +166,7 @@ def resolve_single(hits):
 
 def assign(product, rule, assigned):
     value, status, source, evidence = assign_rule(product, rule, assigned)
-    if status != 'assigned' and 'fallback' in rule:
+    if status in ('undefined', 'no_section') and 'fallback' in rule:
         value, status, source, evidence = assign(product, rule['fallback'], assigned)
     if status != 'assigned' and 'default_value' in rule:
         return rule['default_value'], 'assigned', 'default', evidence

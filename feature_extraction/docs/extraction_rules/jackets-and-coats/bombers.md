@@ -91,7 +91,7 @@ Kolumny `name` i `description`
 
 ## `closure_type`
 
-Cecha przypisywana wyłącznie przez LLM.
+Cecha przypisywana wyłącznie przez LLM. Wartość to lista bez powtórzeń; `Open Front` i `Other` występują samodzielnie.
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
 

@@ -12,7 +12,7 @@ New options, all optional:
 | `priority` | new strategy | the first value, in keyword order, that has a match (Jeans `distressing`) |
 | `default_value` | `single`, `priority`, `composition` | value assigned when nothing else resolved the feature (Jackets & Coats `fit`: `Regular`) |
 | `section_only` | `composition` | parse only a section from `main_sections`; text before the first label is ignored; no such section → status `no_section` |
-| `fallback` | `composition` | rule evaluated when this one is unresolved |
+| `fallback` | `composition` | rule evaluated when there was nothing to parse (empty column or no section) |
 
 `allowed_values` includes `default_value` and the values of `fallback`.
 

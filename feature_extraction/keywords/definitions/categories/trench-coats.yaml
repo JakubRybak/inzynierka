@@ -24,13 +24,18 @@ features:
       - hoodie
       Without Hood: []
   closure_type:
-    strategy: llm
-    allowed_values:
-    - Zip
-    - Button
-    - Press-Stud
-    - Double-Breasted
-    - Belted
+    strategy: multi
+    columns:
+    - description
+    keywords:
+      Zip: []
+      Button: []
+      Press-Stud: []
+      Double-Breasted: []
+      Belted: []
+      Open Front: []
+      Other: []
+    exclusive_values:
     - Open Front
     - Other
   collar_type:
