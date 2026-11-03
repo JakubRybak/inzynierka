@@ -58,9 +58,24 @@ Thus `skirt_type` and `dress_type` allow several distinct values or `Other` alon
 Run from the repository root with Python 3.10 or newer:
 
 ```sh
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r feature_extraction/requirements.txt
 ```
+
+Create the environment only on first setup; activate the existing environment
+on later runs.
+
+For paid calls, install the Google Cloud CLI and configure Application Default
+Credentials for the project selected in `config/extraction.yaml`:
+
+```sh
+gcloud auth application-default login
+gcloud auth application-default set-quota-project YOUR_PROJECT_ID
+```
+
+The account needs permission to call Vertex AI in that project. Replace
+`YOUR_PROJECT_ID` with the configured project ID.
 
 Edit `feature_extraction/config/extraction.yaml` to select the dataset, category
 scope, sample, references, embeddings, model, Vertex project, generation settings,
@@ -70,6 +85,8 @@ the repository root. A custom config file can be passed with `--config`.
 The default selection preserves the original 900 product IDs. Set `selection` to
 null or pass `--all-products` to process every product in the configured categories.
 The loader supports train and validation manifests and rejects duplicate IDs.
+Current extraction outputs combine selected splits in a single dataset and do
+not retain a split column. The reference bank is shared across selected splits.
 Generated outputs retain `brand`, `section`, `category`, `features`,
 `feature_metadata`, `status`, and `exclusion_reasons`, plus LLM status and provenance.
 
@@ -89,8 +106,9 @@ python -m feature_extraction.run --run-name extraction_900
 
 This mode makes no API calls. It saves keyword results, prompt previews and the
 initial manual records. Its summary reports planned calls and `complete: false`.
-During preparation, all examples come from the manual bank; a paid sequential run
-extends that bank after each valid result and may select different examples later.
+For a new run, preparation uses the manual bank. When resuming, previously saved
+ready results can also enter the bank. A paid sequential run extends the bank
+after each valid result and may select different examples later.
 
 Execute the same run only after reviewing its configuration and budget:
 
@@ -120,14 +138,22 @@ Choose a new embedding folder when changing the model or input recipe.
 
 ## Run files and resuming
 
-Each `artifacts/runs/<run_name>/` contains:
+Runs are stored under the configured `artifacts` directory in `runs/<run_name>/`.
+The default is `feature_extraction/artifacts/runs/<run_name>/`.
 
-- `config.json` with settings, selected IDs and an input/code fingerprint;
-- `keywords.jsonl` with all selected keyword results, including exclusions;
-- `requests/*_prompt.json` and `*_attempt_*.json` with prompts, raw responses,
-  image hashes, usage, costs and attempt status;
-- `products.jsonl` and `products.parquet` with matching column representations;
-- `reference_bank.jsonl` and `summary.json`.
+| File | Keyword-only stage | LLM preparation or execution |
+| --- | --- | --- |
+| `config.json` | Settings, selected IDs and fingerprint | Settings, selected IDs and fingerprint |
+| `keywords.jsonl` | All selected keyword results, including exclusions | Same keyword inputs |
+| `products.jsonl`, `products.parquet` | All selected keyword records | Saved records only; preparation may contain just manual, excluded or keyword-complete records |
+| `requests/*_prompt.json` | — | Prompt for each prepared product |
+| `requests/*_attempt_*.json` | — | Paid attempt journals with responses, usage, costs and status |
+| `reference_bank.jsonl` | — | Current bank of complete examples |
+| `summary.json` | Keyword counts and statuses | Progress, bank size and estimated cost |
+
+Parquet is written when at least one result record exists. Use a distinct run
+name for keyword-only exploration: running `--stage keywords` on a completed LLM
+run currently replaces that run's product outputs with keyword-only records.
 
 Reusing a run name resumes saved products. A completed API response saved before
 an interruption can be replayed locally. Changed source evidence, code, configuration,
@@ -142,7 +168,18 @@ attempts are never silently repaid on resume. Costs are estimates based on the
 configured token rates; compare them with actual billing before larger runs.
 
 Structured output requests only missing features. Existing keyword values remain
-immutable. Invalid output becomes `needs_review`; `outside_schema` remains pending.
+immutable. A parsed response rejected by the local feature validator is saved as
+`needs_review` with `product_status: processing_error`. A valid response reporting
+`out_of_category` or `unusable_product` is also saved as `needs_review`, preserving
+the model's reason and the features assigned before the call. `outside_schema`
+leaves the product `pending`.
+
+Transport failures, exhausted HTTP retries, malformed JSON, missing usage, and
+incomplete output such as `MAX_TOKENS` stop the run. Attempt journals preserve the
+response or error for inspection; these failures do not automatically produce a
+`needs_review` product record. Input/configuration errors and budget limits also
+stop execution. Resume after inspecting the saved state.
+
 A complete, valid `ready` product with the required image poses can join the bank.
 `ready` means schema and dependency validation passed; it is not a manual accuracy label.
 

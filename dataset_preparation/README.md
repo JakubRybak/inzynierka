@@ -17,8 +17,16 @@ sibling directories.
 
 ## Run
 
-Dependencies: `h5py`, `numpy`, and `PyYAML`.
-From the repository root:
+Use Python 3.10 or newer. Dependencies are `h5py`, `numpy`, and `PyYAML`.
+On first setup, create the environment from the repository root:
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install h5py numpy PyYAML
+```
+
+Place the original HDF5 files in `data/raw/`. Activate the environment and run:
 
 ```sh
 source .venv/bin/activate
