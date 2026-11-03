@@ -7,7 +7,23 @@ from ..keywords.engine import allowed_values, load_config
 ROOT = Path(__file__).resolve().parents[2]
 
 PROMPTS = Path(__file__).resolve().parent / 'prompts'
-DEFINITIONS = json.loads((PROMPTS / 'feature_definitions.json').read_text())
+
+
+def load_definitions(folder):
+    common = json.loads((folder / 'common.json').read_text())
+    categories = {}
+    for path in sorted((folder / 'categories').glob('*.json')):
+        document = json.loads(path.read_text())
+        if set(document) != {'category', 'features'}:
+            raise ValueError(f'Invalid category prompt file: {path}')
+        category = document['category']
+        if category in categories:
+            raise ValueError(f'Duplicate category prompt definitions: {category}')
+        categories[category] = document['features']
+    return common, categories
+
+
+COMMON_DEFINITIONS, DEFINITIONS = load_definitions(PROMPTS)
 CONFIGS, _ = load_config(ROOT / 'feature_extraction/keywords/definitions')
 
 
@@ -36,7 +52,7 @@ def requested_rules(record):
 def category_definitions(category):
     if category not in DEFINITIONS:
         raise ValueError(f'No LLM feature definitions for category: {category}')
-    return DEFINITIONS[category]
+    return {**COMMON_DEFINITIONS, **DEFINITIONS[category]}
 
 
 def choices(category, feature, rule):
@@ -48,14 +64,26 @@ def choices(category, feature, rule):
     return values
 
 
+def is_multi_value(rule):
+    return rule['strategy'] in ('colors', 'multi')
+
+
+def list_constraints(rule, values):
+    if rule['strategy'] == 'colors':
+        return [rule['multicolor_value']], rule['max_named_colors']
+    exclusive = rule.get('exclusive_values', [])
+    return exclusive, max(1, len(set(values) - set(exclusive)))
+
+
 def build_schema(rules, category):
     fields, reasons = {}, {}
     for feature, rule in rules.items():
         values = choices(category, feature, rule)
         has_other = 'Other' in values
-        if feature in ('colors', 'dress_type'):
+        if is_multi_value(rule):
+            _, max_items = list_constraints(rule, values)
             value_schema = {'type': 'ARRAY', 'items': enum(values), 'minItems': 1,
-                            'maxItems': 2 if feature == 'colors' else len(values) - 1}
+                            'maxItems': max_items}
             if not has_other:
                 value_schema = {'anyOf': [value_schema, enum(['outside_schema'])]}
         else:

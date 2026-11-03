@@ -1,16 +1,19 @@
 # Product feature extraction
 
-Keyword rules and Gemini complete the fixed product taxonomy. The initial LLM
-scope is T-shirts, Dresses, and Tank tops & Camisoles. Existing keyword definitions
-for the other previously implemented categories remain available in
-`keywords/definitions/`; `config/extraction.yaml` selects the active scope.
+Keyword rules and Gemini complete the fixed product taxonomy. Keyword rules,
+LLM definitions and output validation support T-shirts, Polos, Tank tops &
+Camisoles, Bodysuits, Dresses, and Skirts. `config/extraction.yaml` selects the
+active scope. Its default selection and manual reference bank still cover the
+original 900 products in T-shirts, Dresses, and Tank tops & Camisoles. Paid runs
+for the additional categories require a matching selection, complete references
+and embeddings first.
 
 ## Layout
 
 - `run.py` exposes the extraction command and `pipeline.py` manages the job.
 - `keywords/` contains the matching engine, composition parser and YAML definitions.
 - `llm/` contains the Vertex client, prompt builder, response validation and reference retrieval.
-- `llm/prompts/system.txt` and `feature_definitions.json` are prompt sources.
+- `llm/prompts/system.txt`, `common.json` and `categories/*.json` are prompt sources.
 - `embeddings/` builds separate main-image and description embeddings.
 - `docs/extraction_rules/` documents the extraction rules; `reference/` holds manual labels.
 - `artifacts/` holds local generated datasets, embedding caches, requests and run logs.
@@ -21,17 +24,34 @@ Processed products and images stay at `data/processed/fashiongen/`.
 
 ## Category-specific prompt definitions
 
-`llm/prompts/feature_definitions.json` stores independent definitions for each
-category and feature. For example, `T-shirts.neckline` and `Dresses.neckline`
-each have their own `instruction` and descriptions under `values`. Editing one
-category's definition affects only that category. The system instruction remains
-shared across categories.
+`llm/prompts/common.json` defines `colors` and `pattern` once for all categories.
+`llm/prompts/categories/*.json` contains one file per category, with a `category`
+name and a `features` dictionary. Each feature has an `instruction` and label
+descriptions under `values`. For example, T-shirts and Dresses each define
+`neckline` independently. The system instruction is shared across categories.
+
+Category-specific definitions take precedence over common definitions for the
+entire feature. A category can override a shared feature by defining its complete
+instruction and values locally. Otherwise, changes to `common.json` apply to
+every category using that feature. Gender is assigned from the dataset and has no
+LLM prompt definition. Run fingerprints include JSON files in category subfolders.
 
 The builder selects the category first, then includes only unresolved features.
 Allowed labels still come from the keyword/category YAML configuration and must
 all have descriptions in that category's prompt definition. An unsupported
 category or a missing feature definition raises an error. To add an LLM category,
 add its feature definitions explicitly and enable it in the extraction config.
+
+For matching features, category-specific entries use the same wording and label
+descriptions. Polos has colors, pattern, sleeve length and fit. Bodysuits adds
+neckline and shoulder construction/strap width to colors, pattern and sleeve
+length. Skirts has colors, pattern, skirt silhouette, skirt type and rise. Skirt
+length is assigned exclusively from `original_category`; it is never an LLM task.
+
+The response builder and validator read list cardinality from the YAML strategy:
+`colors` and `multi` produce lists, other current LLM feature strategies produce
+single values. `exclusive_values` controls standalone labels for multi choice.
+Thus `skirt_type` and `dress_type` allow several distinct values or `Other` alone.
 
 ## Install and configure
 

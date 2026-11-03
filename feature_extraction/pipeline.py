@@ -41,7 +41,7 @@ def extract(settings, folder, stage, execute, limit):
     # Hash all source evidence and code that can change prompt selection or output.
     evidence_ids = set(ids) | {r['product_id'] for r in seeds}
     files = sorted(BASE.rglob('*.py')) + sorted((BASE / 'llm/prompts').glob('*.txt'))
-    files += sorted((BASE / 'llm/prompts').glob('*.json')) + sorted((BASE / 'keywords/definitions').rglob('*.yaml'))
+    files += sorted((BASE / 'llm/prompts').rglob('*.json')) + sorted((BASE / 'keywords/definitions').rglob('*.yaml'))
     provenance = {'settings': settings, 'ids': ids, 'references': seeds,
                   'source': {pid: source[pid] for pid in sorted(evidence_ids)},
                   'images': {pid: [{**r, 'sha256': digest(Path(r['path']).read_bytes())} for r in images.get(pid, [])]

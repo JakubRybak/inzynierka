@@ -6,11 +6,122 @@ from unittest.mock import patch
 
 from feature_extraction.keywords.engine import extract_product
 from feature_extraction.llm import prompt_builder
-from feature_extraction.llm.prompt_builder import CONFIGS, build_prompt, requested_rules
+from feature_extraction.llm.prompt_builder import CONFIGS, build_prompt, requested_rules, choices, is_multi_value
 from feature_extraction.llm.validation import validate_response
 
 
 class PromptTests(unittest.TestCase):
+    def category_case(self, category):
+        section = category if category in ('Dresses', 'Skirts') else 'Tops'
+        source = dict(product_id='target', name='Product', description='', brand='Brand',
+                      section=section, category=category, gender='Women', composition='100% cotton',
+                      original_category='SHORT SKIRTS' if category == 'Skirts' else 'SHORT DRESSES')
+        record = extract_product(source, CONFIGS[(section, category)])
+        missing = requested_rules(record)
+        features = {}
+        for feature, rule in missing.items():
+            allowed = choices(category, feature, rule)
+            value = 'Other' if 'Other' in allowed else allowed[0]
+            features[feature] = [value] if is_multi_value(rule) else value
+        labels = {**record['features'], **features}
+        examples = [{'record': {**record, 'product_id': str(i), 'features': labels, 'status': 'ready'},
+                     'source': source, 'images': []} for i in range(2)]
+        prompt = build_prompt(record, source, [], examples)
+        response = {'product_status': 'ok', 'product_reason': '', 'features': features}
+        if 'outside_schema_reasons' in prompt['generation_config']['responseSchema']['properties']:
+            response['outside_schema_reasons'] = {}
+        return record, prompt, response
+
+    def test_all_six_categories_have_complete_llm_definitions_and_valid_outputs(self):
+        for category in ['T-shirts', 'Dresses', 'Tank tops & Camisoles', 'Polos', 'Bodysuits', 'Skirts']:
+            with self.subTest(category=category):
+                record, prompt, response = self.category_case(category)
+                requested = set(requested_rules(record))
+                schema = prompt['generation_config']['responseSchema']['properties']['features']['properties']
+                self.assertEqual(set(schema), requested)
+                self.assertEqual(set(prompt_builder.category_definitions(category)), requested)
+                merged = validate_response(response, record)
+                self.assertEqual(set(merged), set(CONFIGS[(record['section'], category)]))
+                for key, value in record['features'].items():
+                    self.assertEqual(merged[key], value)
+                for part in prompt['parts']:
+                    if part.get('text', '').startswith(('REFERENCE 1\n', 'REFERENCE 2\n')):
+                        labels = json.loads(part['text'].split('\n', 1)[1])['labels']
+                        self.assertEqual(set(labels), requested)
+                if category in ('Dresses', 'Skirts'):
+                    self.assertNotIn('length', schema)
+
+    def test_shared_features_have_consistent_definitions(self):
+        definitions = {category: prompt_builder.category_definitions(category)
+                       for category in prompt_builder.DEFINITIONS}
+        for category in ['Polos', 'Bodysuits']:
+            for feature in ['colors', 'pattern', 'sleeve_length']:
+                self.assertEqual(definitions[category][feature], definitions['T-shirts'][feature])
+        self.assertEqual(definitions['Polos']['fit'], definitions['T-shirts']['fit'])
+        self.assertEqual(definitions['Bodysuits']['neckline'], definitions['T-shirts']['neckline'])
+        for feature in ['strap_style', 'strap_width']:
+            self.assertEqual(definitions['Bodysuits'][feature], definitions['Dresses'][feature])
+        self.assertEqual(definitions['Skirts']['colors'], definitions['T-shirts']['colors'])
+        self.assertEqual(definitions['Skirts']['pattern']['values'], definitions['T-shirts']['pattern']['values'])
+
+    def test_common_pattern_is_used_by_every_category(self):
+        common = copy.deepcopy(prompt_builder.COMMON_DEFINITIONS)
+        common['pattern']['instruction'] = 'Shared pattern instruction.'
+        with patch.object(prompt_builder, 'COMMON_DEFINITIONS', common):
+            for category in prompt_builder.DEFINITIONS:
+                with self.subTest(category=category):
+                    _, prompt, _ = self.category_case(category)
+                    self.assertIn('Shared pattern instruction.', prompt['parts'][0]['text'])
+                    self.assertNotIn('pattern', prompt_builder.DEFINITIONS[category])
+                    self.assertNotIn('colors', prompt_builder.DEFINITIONS[category])
+
+    def test_category_definition_overrides_the_common_feature(self):
+        common = copy.deepcopy(prompt_builder.COMMON_DEFINITIONS)
+        common['pattern']['instruction'] = 'Shared pattern instruction.'
+        categories = copy.deepcopy(prompt_builder.DEFINITIONS)
+        categories['T-shirts']['pattern'] = copy.deepcopy(common['pattern'])
+        categories['T-shirts']['pattern']['instruction'] = 'Category pattern instruction.'
+        with patch.object(prompt_builder, 'COMMON_DEFINITIONS', common), \
+             patch.object(prompt_builder, 'DEFINITIONS', categories):
+            _, tshirt, _ = self.category_case('T-shirts')
+            _, dress, _ = self.category_case('Dresses')
+            self.assertIn('Category pattern instruction.', tshirt['parts'][0]['text'])
+            self.assertNotIn('Shared pattern instruction.', tshirt['parts'][0]['text'])
+            self.assertIn('Shared pattern instruction.', dress['parts'][0]['text'])
+
+    def test_skirt_type_accepts_multiple_values_and_other_alone(self):
+        record, prompt, response = self.category_case('Skirts')
+        schema = prompt['generation_config']['responseSchema']['properties']['features']['properties']
+        self.assertEqual(schema['skirt_type']['type'], 'ARRAY')
+        self.assertEqual(schema['skirt_type']['maxItems'], 5)
+        for value in [['Pleated', 'Asymmetric'], ['Wrap', 'Tiered', 'Ruffled'], ['Other']]:
+            with self.subTest(value=value):
+                response['features']['skirt_type'] = value
+                self.assertEqual(validate_response(response, record)['skirt_type'], value)
+        for value in ['Pleated', [], ['Pleated', 'Pleated'], ['Other', 'Wrap'], ['outside_schema'], 'outside_schema']:
+            with self.subTest(invalid=value):
+                response['features']['skirt_type'] = value
+                with self.assertRaises(ValueError):
+                    validate_response(response, record)
+
+    def test_skirt_rise_can_report_outside_schema_with_reason(self):
+        record, _, response = self.category_case('Skirts')
+        response['features']['rise'] = 'outside_schema'
+        with self.assertRaises(ValueError):
+            validate_response(response, record)
+        response['outside_schema_reasons'] = {'rise': 'The waistband is hidden in every view.'}
+        self.assertEqual(validate_response(response, record)['rise'], 'outside_schema')
+
+    def test_bodysuit_strap_dependency_includes_standard_sleeved(self):
+        record, prompt, response = self.category_case('Bodysuits')
+        self.assertIn('strap_style is Strapless or Standard Sleeved.', prompt['parts'][0]['text'])
+        for style in ['Strapless', 'Standard Sleeved']:
+            response['features'].update(strap_style=style, strap_width='Not Applicable')
+            self.assertEqual(validate_response(response, record)['strap_width'], 'Not Applicable')
+            response['features']['strap_width'] = 'Wide'
+            with self.assertRaises(ValueError):
+                validate_response(response, record)
+
     def neckline_prompt(self, category):
         section = 'Dresses' if category == 'Dresses' else 'Tops'
         source = dict(product_id='target', name='Black product', description='', brand='Brand',

@@ -1,5 +1,5 @@
 """Validate model output and enforce cross-feature constraints."""
-from .prompt_builder import requested_rules, choices
+from .prompt_builder import requested_rules, choices, is_multi_value, list_constraints
 
 def validate_response(response, record):
     """Business validation beyond server schema; does not mutate keyword values."""
@@ -29,16 +29,17 @@ def validate_response(response, record):
                 raise ValueError('outside_schema forbidden when Other exists')
             outside.add(feature)
             continue
-        if feature in ('colors', 'dress_type'):
+        rule = rules[feature]
+        if is_multi_value(rule):
             if not isinstance(value, list) or not value or not all(isinstance(x, str) for x in value):
                 raise ValueError('Expected a nonempty string list')
             if len(value) != len(set(value)) or not set(value) <= set(values):
                 raise ValueError('Invalid or duplicate labels')
-            exclusive = 'Multicolor' if feature == 'colors' else 'Other'
-            if exclusive in value and value != [exclusive]:
+            exclusive, max_items = list_constraints(rule, values)
+            if any(label in value for label in exclusive) and len(value) != 1:
                 raise ValueError('Exclusive value mixed with other labels')
-            if feature == 'colors' and len(value) > 2:
-                raise ValueError('Too many colors')
+            if len(value) > max_items:
+                raise ValueError(f'Too many values for {feature}')
         elif not isinstance(value, str) or value not in values:
             raise ValueError('Invalid feature value')
     if set(reasons) != outside or any(not isinstance(v, str) or not v.strip() for v in reasons.values()):
