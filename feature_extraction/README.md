@@ -69,6 +69,8 @@ For example, `closure_type` is multi choice even though no keyword rule exists f
 
 `keywords/definitions/` contains only extraction instructions: input columns,
 phrases, source mappings, matching strategies, composition sections and fallbacks.
+`main_section_patterns` optionally matches complete normalized section labels with
+regular expressions; lining accepts `lining [0-9]+`, including numbers above 4.
 There is no `llm` strategy, no empty keyword lists, and no duplicate allowed-value
 or cardinality declarations. A feature with no keyword rule remains `undefined`
 unless its schema dependency derives the value. It can then be completed by the

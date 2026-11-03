@@ -177,11 +177,9 @@ features:
     keywords: *materials
     main_sections:
     - lining
-    - lining 1
-    - lining 2
-    - lining 3
-    - lining 4
     - body lining
+    main_section_patterns:
+    - 'lining [0-9]+'
     section_only: true
     fallback:
       strategy: single

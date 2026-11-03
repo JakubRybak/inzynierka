@@ -52,7 +52,7 @@
 - **`fit`**: single choice.
 - **`length`**: single choice.
 - **`strap_style`**: single choice.
-- **`strap_width`**: single choice; `Not Applicable` oznacza brak ramiączek.
+- **`strap_width`**: single choice; w Tank tops & Camisoles wartość `Not Applicable` wtedy i tylko wtedy, gdy cecha `strap_style` ma wartość `Strapless`; w Bodysuits wartość `Not Applicable` wtedy i tylko wtedy, gdy cecha `strap_style` ma wartość `Strapless` lub `Standard Sleeved`.
 
 ---
 
@@ -387,4 +387,4 @@
 - **`dress_silhouette`**: single choice.
 - **`dress_type`**: multi choice, bez powtórzeń; `Other` występuje samodzielnie.
 - **`strap_style`**: single choice.
-- **`strap_width`**: single choice; `Not Applicable` oznacza brak ramiączek.
+- **`strap_width`**: single choice; wartość `Not Applicable` wtedy i tylko wtedy, gdy cecha `strap_style` ma wartość `Strapless` lub `Standard Sleeved`.

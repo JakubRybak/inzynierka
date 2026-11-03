@@ -50,3 +50,10 @@ validation. Color limits, composition totals, standalone values and cross-featur
 dependencies come from the schema. The prompt builder and reference bank no longer
 load keyword definitions. Run fingerprints include schema YAML files; use a new run
 name after this migration. Historical artifacts are retained unchanged.
+
+## Numbered lining sections
+
+`lining_composition` accepts `Lining N` with any numeric suffix through the
+`main_section_patterns` keyword option. Patterns match complete normalized labels;
+`Sleeve lining N` and labels with extra text remain unrecognized. Multiple matching
+sections still produce `Unknown`, without averaging or using the Unlined fallback.

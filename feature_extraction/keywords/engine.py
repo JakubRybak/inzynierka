@@ -1,5 +1,6 @@
 """Execute keyword rules without defining product feature contracts."""
 import copy
+import re
 from pathlib import Path
 
 from ..config_io import read_yaml
@@ -18,7 +19,7 @@ OPTIONS = {
     'priority': {'columns', 'keywords'},
 }
 OPTIONAL = {
-    'composition': {'section_only', 'fallback', 'default_value'},
+    'composition': {'section_only', 'main_section_patterns', 'fallback', 'default_value'},
     'single': {'default_value'},
     'priority': {'default_value'},
 }
@@ -60,6 +61,16 @@ def validate_rule(name, rule, definition):
             if (value not in allowed or not isinstance(phrases, list)
                     or any(not isinstance(k, str) or not k.strip() for k in phrases)):
                 raise ValueError(f'{name}: invalid excluded phrases')
+    if 'main_section_patterns' in rule:
+        patterns = rule['main_section_patterns']
+        if (not isinstance(patterns, list) or not patterns
+                or any(not isinstance(pattern, str) or not pattern.strip() for pattern in patterns)):
+            raise ValueError(f'{name}: expected nonempty section patterns')
+        for pattern in patterns:
+            try:
+                re.compile(pattern)
+            except re.error as error:
+                raise ValueError(f'{name}: invalid section pattern {pattern}') from error
     if 'fallback' in rule:
         validate_rule(f'{name}.fallback', rule['fallback'], definition)
 

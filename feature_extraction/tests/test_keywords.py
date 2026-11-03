@@ -53,6 +53,32 @@ class ExtractionTests(unittest.TestCase):
                                                  description=description)
                 self.assertEqual((value, actual), (expected, status))
 
+    def test_numbered_lining_sections_match_whole_labels(self):
+        for number in ['1', '4', '5', '12', '100', '001']:
+            with self.subTest(number=number):
+                self.assertEqual(self.feature('Jackets', 'lining_composition',
+                    composition=f'Body: 100% wool. Lining {number}: 60% cotton, 40% silk.')[0],
+                    {'Cotton': 60.0, 'Silk': 40.0})
+        for label in ['Sleeve lining 12', 'Body lining 12', 'Lining 12 extra', 'Lining 12A', 'Lining12']:
+            with self.subTest(label=label):
+                self.assertEqual(self.feature('Jackets', 'lining_composition',
+                    composition=f'Body: 100% wool. {label}: 100% silk.')[0], 'Unknown')
+        for text in [
+                'Lining 5: 100% cotton. Lining 12: 100% silk.',
+                'Lining: 100% cotton. Lining 5: 100% silk.',
+                'Lining 12: 100% cotton. Lining 12: 100% silk.',
+                'Lining 12: 90% cotton.']:
+            with self.subTest(text=text):
+                self.assertEqual(self.feature('Jackets', 'lining_composition',
+                    composition=text, description='Unlined.')[0], 'Unknown')
+
+    def test_invalid_section_patterns_are_rejected(self):
+        rule = self.config[('Jackets & Coats', 'Jackets')]['lining_composition']
+        definition = self.schemas[('Jackets & Coats', 'Jackets')]['lining_composition']
+        for patterns in ['lining [0-9]+', [], [''], ['[']]:
+            with self.subTest(patterns=patterns), self.assertRaises(ValueError):
+                validate_rule('lining_composition', {**rule, 'main_section_patterns': patterns}, definition)
+
     def test_default_value(self):
         self.assertEqual(self.feature('Jackets', 'fit', description='Oversized fit.')[:2], ('Oversized', 'assigned'))
         self.assertEqual(self.feature('Jackets', 'fit', description='Oversized lapels.')[:3], ('Regular', 'assigned', 'default'))
@@ -87,6 +113,22 @@ class ExtractionTests(unittest.TestCase):
                  ('cotton', 'unparsed_composition', None), ('', 'undefined', None),
                  ('50% cotton, 50% coton', 'assigned', {'Cotton': 100.0})]
         for text, status, expected in cases:
+            with self.subTest(text=text):
+                value, actual, *_ = self.feature('T-shirts', 'main_composition', composition=text)
+                self.assertEqual((value, actual), (expected, status))
+
+    def test_unnamed_prefix_is_ignored_when_main_section_is_unique(self):
+        cases = [
+            ('100% polyester. Body: 100% cotton.', {'Cotton': 100.0}, 'assigned'),
+            ('100% mystery. Shell: 98% cotton, 2% elastane.',
+             {'Cotton': 98.0, 'Elastane': 2.0}, 'assigned'),
+            ('35% polyester, 25% brass, 16% glass, 10% viscose, 5% cotton, 5% copper. Body: 100% cotton.',
+             {'Cotton': 100.0}, 'assigned'),
+            ('100% polyester. Main: 90% cotton.', None, 'sum_not_100'),
+            ('100% polyester. Body: 100% cotton. Shell: 100% silk.', None, 'ambiguous_main_section'),
+            ('100% cotton. Lining: 100% silk.', None, 'ambiguous_main_section'),
+        ]
+        for text, expected, status in cases:
             with self.subTest(text=text):
                 value, actual, *_ = self.feature('T-shirts', 'main_composition', composition=text)
                 self.assertEqual((value, actual), (expected, status))

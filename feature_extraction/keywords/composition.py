@@ -10,14 +10,16 @@ def composition(product, rule, match_material, definition):
     if not text.strip():
         return None, 'undefined', {}
     # Section boundaries accept Unicode letters and replacement characters from
-    # damaged labels. Only exact labels from main_sections can select the main part.
+    # damaged labels. Section names and configured patterns must match the full label.
     chunks = re.split(r'((?:[^\W\d_]|\uFFFD)(?:[^\W_]|[\uFFFD\u0300-\u036f \t/-])*):', text)
     if len(chunks) > 1:
         sections = [(normalize(chunks[i]), chunks[i + 1]) for i in range(1, len(chunks), 2)]
-        main = [body for label, body in sections if label in rule['main_sections']]
+        main = [body for label, body in sections
+                if label in rule['main_sections']
+                or any(re.fullmatch(pattern, label) for pattern in rule.get('main_section_patterns', []))]
         if rule.get('section_only') and not main:
             return None, 'no_section', {}
-        if len(main) != 1 or chunks[0].strip(' .;,\n') and not rule.get('section_only'):
+        if len(main) != 1:
             return None, 'ambiguous_main_section', {}
         text = main[0]
     elif rule.get('section_only'):

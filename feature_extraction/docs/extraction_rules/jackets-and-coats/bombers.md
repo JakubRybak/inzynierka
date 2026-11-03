@@ -31,10 +31,10 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,278 | 81,25% |
+| Przypisane | 1,279 | 81,31% |
 | `undefined` | 0 | 0,00% |
 | `unparsed_composition` | 49 | 3,12% |
-| `ambiguous_main_section` | 188 | 11,95% |
+| `ambiguous_main_section` | 187 | 11,89% |
 | `unmapped_material` | 23 | 1,46% |
 | `sum_not_100` | 35 | 2,23% |
 <!-- /results -->
@@ -53,7 +53,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha single choice, przypis
 ## `lining_composition`
 
 ```text
-Kolumna `composition` – sekcje Lining, Body lining, Lining N
+Kolumna `composition` – sekcje Lining, Body lining, Lining N (N to dowolny numer)
 ├─ ≥ 2 sekcje → Unknown
 ├─ 1 sekcja   → parsuj jak main_composition
 │  ├─ poprawny skład → zapisz skład

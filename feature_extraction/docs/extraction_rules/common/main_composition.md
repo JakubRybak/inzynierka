@@ -16,6 +16,8 @@ Wybrany fragment kolumny `composition`
 └─ else                                       → zapisz skład
 ```
 
+Jeśli wybrano nazwaną sekcję, fragment przed pierwszą nazwaną sekcją jest pomijany.
+
 **Dalsze postępowanie:** `undefined`, `unparsed_composition`, `ambiguous_main_section`, `unmapped_material` lub `sum_not_100` → wykluczenie produktu ze zbioru. Nie ustalamy składu przez LLM.
 
 ## Keywordy

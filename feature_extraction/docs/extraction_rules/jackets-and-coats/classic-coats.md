@@ -53,7 +53,7 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha single choice, przypis
 ## `lining_composition`
 
 ```text
-Kolumna `composition` – sekcje Lining, Body lining, Lining N
+Kolumna `composition` – sekcje Lining, Body lining, Lining N (N to dowolny numer)
 ├─ ≥ 2 sekcje → Unknown
 ├─ 1 sekcja   → parsuj jak main_composition
 │  ├─ poprawny skład → zapisz skład
