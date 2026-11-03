@@ -41,7 +41,7 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 
 ## `pattern`
 
-Reguły: [common/pattern.md](../common/pattern.md). Cecha przypisywana wyłącznie przez LLM.
+Reguły: [common/pattern.md](../common/pattern.md). Cecha single choice, przypisywana wyłącznie przez LLM.
 
 <!-- results:pattern -->
 | Wynik | Produkty | % |
@@ -91,7 +91,7 @@ Kolumny `name` i `description`
 
 ## `closure_type`
 
-Cecha przypisywana wyłącznie przez LLM. Wartość to lista bez powtórzeń; `Open Front` i `Other` występują samodzielnie.
+Cecha multi choice, przypisywana wyłącznie przez LLM. Bez powtórzeń; `Open Front` i `Other` występują samodzielnie.
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
 
@@ -138,7 +138,7 @@ Kolumny `name`, `description` i `composition`
 
 ## `length`
 
-Cecha przypisywana wyłącznie przez LLM (zdjęcie).
+Cecha single choice, przypisywana wyłącznie przez LLM (zdjęcie).
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM (zdjęcie).
 
