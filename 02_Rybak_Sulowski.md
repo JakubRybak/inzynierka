@@ -202,3 +202,8 @@ Dla pilotażu obliczono również 900 embeddingów zdjęć i 900 embeddingów op
 Przygotowanie danych jest zaimplementowane: powstają osobne pliki produktów i manifesty zdjęć dla train oraz validation. Zdjęcia są eksportowane do plików i łączone z metadanymi przez identyfikatory. Wyniki ekstrakcji są zapisywane w JSONL i Parquet wraz z cechami, źródłem przypisań, statusem i powodami wykluczeń. Dane źródłowe pozostają zachowane.
 
 Prototyp GUI pozwala wpisać query, zobaczyć interpretację parsera, zmienić filtry i przejrzeć zdjęcia oraz cechy wyników. Służy także do obserwowania czasu parsowania, filtrowania i rankingu.
+
+
+---
+
+**Supervisor Signature (Architecture Acceptance):** ............................................ **Date:** 05.11.2026
