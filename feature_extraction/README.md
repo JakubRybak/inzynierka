@@ -4,10 +4,11 @@ Keyword rules and Gemini complete the fixed product taxonomy. LLM definitions an
 output validation support T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses,
 and Skirts. Keyword rules also cover the five Jackets & Coats categories, the four
 Pants categories, Shirts and Blouses. `config/extraction.yaml` selects the
-active scope. Its default selection and manual reference bank still cover the
-original 900 products in T-shirts, Dresses, and Tank tops & Camisoles. Paid runs
-for the additional categories require a matching selection, complete references
-and embeddings first.
+active scope. Its default selection still covers the original 900 products in
+T-shirts, Dresses, and Tank tops & Camisoles. The reference file contains 120
+products: 20 per supported LLM category. The default category filter uses the
+original 60 references; Polos, Bodysuits and Skirts also have reviewed references,
+but need a matching product selection and embedding coverage before paid runs.
 
 ## Layout
 

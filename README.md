@@ -31,7 +31,9 @@ T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts, the five Jac
 Coats categories, the four Pants categories, Shirts and Blouses. LLM prompts cover
 the first six. The default extraction config selects the original 900-product pilot
 and uses 60 manual references across T-shirts, Dresses, and Tank tops & Camisoles.
-The remaining categories need reference products and embeddings before paid runs.
+The reference file also includes 20 reviewed products each for Polos, Bodysuits
+and Skirts; these categories still need product selection and embeddings before
+paid runs. Other categories require LLM definitions and references as well.
 The current pipeline still needs scaling and recovery improvements before a
 full-catalog LLM run.
 
