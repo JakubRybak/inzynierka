@@ -1,13 +1,10 @@
 # Product feature extraction
 
-Keyword rules and Gemini complete the fixed product taxonomy. LLM definitions and
-output validation support T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses,
-Skirts, Knit Sweaters, Sweatshirts, Hoodies & Zipups, and Cardigans. Keyword rules
-also cover the five Jackets & Coats categories, the four Pants categories, Shirts,
-Blouses and Shorts. `config/extraction.yaml` selects the active scope. Its default
-selection still covers the original 900 products in T-shirts, Dresses, and Tank
-tops & Camisoles. The reference file contains 200 reviewed products: 20 per
-supported LLM category. The default category filter uses the original 60
+Keyword rules and Gemini complete the fixed product taxonomy. Keyword rules, LLM
+definitions and output validation cover all 22 categories. `config/extraction.yaml`
+selects the active scope. Its default selection still covers the original 900 products
+in T-shirts, Dresses, and Tank tops & Camisoles. The reference file contains 440
+reviewed products: 20 per category. The default category filter uses the original 60
 references. Running additional categories requires a matching product selection
 and embedding coverage for their targets and references.
 
@@ -64,6 +61,13 @@ The 80 Sweaters references include 10 Men and 10 Women per category. Existing
 keyword assignments are preserved, and missing features were assigned by Codex
 from catalog descriptions and images, with `source: manual` metadata. These
 references are marked `user_verified: false`; they are not independent human gold.
+
+Pants, Shorts, Shirts, Blouses and Jackets & Coats reuse existing wording where a
+feature already exists: sleeve length, fit and length from T-shirts, neckline from
+Dresses and rise labels from Skirts. Shirts and Blouses add a shirt-tail note to length,
+and Shorts shares fit, rise and waistband type with Pants. Their 240 references keep
+keyword assignments; missing features were assigned by Claude from catalog descriptions
+and images, with `source: manual` metadata. They are also marked `user_verified: false`.
 
 ## Shared feature schema and keyword rules
 
