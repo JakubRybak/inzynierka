@@ -31,12 +31,12 @@ Reguły i keywordy: [common/main_composition.md](../common/main_composition.md).
 <!-- results:main_composition -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,833 | 89,28% |
+| Przypisane | 1,911 | 93,08% |
 | `undefined` | 0 | 0,00% |
-| `unparsed_composition` | 71 | 3,46% |
-| `ambiguous_main_section` | 89 | 4,34% |
-| `unmapped_material` | 23 | 1,12% |
-| `sum_not_100` | 37 | 1,80% |
+| `unparsed_composition` | 27 | 1,32% |
+| `ambiguous_main_section` | 51 | 2,48% |
+| `unmapped_material` | 24 | 1,17% |
+| `sum_not_100` | 40 | 1,95% |
 <!-- /results -->
 
 ## `pattern`
@@ -47,18 +47,15 @@ Reguły: [common/pattern.md](../common/pattern.md). Cecha single choice, przypis
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
 | Przypisane | 0 | 0,00% |
-| `undefined` | 2 053 | 100,00% |
+| `undefined` | 2,053 | 100,00% |
 <!-- /results -->
 
 ## `fit`
 
 ```text
-Kolumna `description` – fraza „<krój>-fit” / „<krój> fit”
-├─ dokładnie 1 wartość → wykryta wartość
-├─ ≥ 2 różne wartości  → undefined
-└─ brak frazy → kolumny `name` i `description`
-   ├─ liczba wartości = 1 → wykryta wartość
-   └─ else               → undefined
+Kolumny `name` i `description`
+├─ liczba wartości = 1 → wykryta wartość
+└─ else                → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -66,19 +63,16 @@ Kolumna `description` – fraza „<krój>-fit” / „<krój> fit”
 <!-- results:fit -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,279 | 62,30% |
-| `undefined` | 774 | 37,70% |
+| Przypisane | 1,272 | 61,96% |
+| `undefined` | 781 | 38,04% |
 <!-- /results -->
 
 ## `waistband_type`
 
 ```text
 Kolumna `description`
-├─ zdanie o pasie (waist / waistband) z keywordem Elasticized → Elasticized
-├─ keyword Other                                              → Other
-├─ keyword Structured                                         → Structured
-├─ zdanie o pasie z „partially elasticized”                   → Elasticized
-└─ else                                                       → undefined
+├─ liczba wartości = 1 → wykryta wartość
+└─ else                → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -86,8 +80,8 @@ Kolumna `description`
 <!-- results:waistband_type -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 1,877 | 91,43% |
-| `undefined` | 176 | 8,57% |
+| Przypisane | 1,563 | 76,13% |
+| `undefined` | 490 | 23,87% |
 <!-- /results -->
 
 ## `length`
@@ -103,8 +97,8 @@ Kolumny `name` i `description`
 <!-- results:length -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 61 | 2,97% |
-| `undefined` | 1,992 | 97,03% |
+| Przypisane | 82 | 3,99% |
+| `undefined` | 1,971 | 96,01% |
 <!-- /results -->
 
 ## `rise`
@@ -137,15 +131,13 @@ Kolumny `name` i `description`
 <!-- results:shorts_type -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 536 | 26,11% |
-| `undefined` | 1,517 | 73,89% |
+| Przypisane | 752 | 36,63% |
+| `undefined` | 1,301 | 63,37% |
 <!-- /results -->
 
 ## Keywordy
 
 ### `fit`
-
-Fraza w opisie: `skinny-fit` → Skinny, `slim-fit` → Slim, `regular-fit` / `classic fit` / `standard fit` → Regular, `relaxed-fit` / `loose-fit` / `oversized fit` / `boyfriend fit` / `baggy fit` → Relaxed. Bez frazy – keywordy:
 
 | Wartość | Keywordy |
 | --- | --- |
@@ -156,11 +148,9 @@ Fraza w opisie: `skinny-fit` → Skinny, `slim-fit` → Slim, `regular-fit` / `c
 
 ### `waistband_type`
 
-Elasticized: `elasticized`, `elasticised`, `elastic`, `rib knit`, `ribbed`, `ribbed knit` najwyżej 2 słowa przed `waist` / `waistband` (bez „partially”) albo `drawstring`, `bungee`, `pull-on` w zdaniu o pasie.
-
 | Wartość | Keywordy |
 | --- | --- |
-| `Elasticized` | `elasticized waistband`, `elasticised waistband`, `elastic waistband`, `elasticized waist`, `rib knit waistband`, `ribbed waistband`, `ribbed knit waistband`, `drawstring`, `bungee`, `pull-on` |
+| `Elasticized` | `elasticized waistband`, `elasticised waistband`, `elastic waistband`, `elasticized waist`, `elasticised waist`, `rib knit waistband`, `ribbed waistband`, `ribbed knit waistband`, `drawstring`, `drawstrings`, `bungee`, `pull-on` |
 | `Other` | `paperbag`, `paper bag`, `tie-waist`, `tie waist`, `wrap waist` |
 | `Structured` | `zip-fly`, `zip fly`, `button-fly`, `button fly`, `belt loop`, `belt loops`, `hook-and-eye`, `hook and eye`, `hook-and-bar`, `hook and bar` |
 
@@ -168,9 +158,9 @@ Elasticized: `elasticized`, `elasticised`, `elastic`, `rib knit`, `ribbed`, `rib
 
 | Wartość | Keywordy |
 | --- | --- |
-| `Short` | `short shorts`, `short-length shorts`, `short length shorts`, `hot pants`, `hotpants` |
-| `Mid-Length` | `mid-length shorts`, `mid length shorts`, `mid-thigh length`, `mid-thigh shorts` |
-| `Long` | `long shorts`, `long-length shorts`, `long length shorts`, `knee-length shorts`, `knee length shorts`, `bermuda shorts`, `bermudas` |
+| `Short` | `short shorts`, `short-length shorts`, `short length shorts`, `mini shorts`, `hot pants`, `hotpants` |
+| `Mid-Length` | `mid-length`, `mid length`, `mid-thigh`, `mid thigh` |
+| `Long` | `long shorts`, `long-length shorts`, `long length shorts`, `knee-length`, `knee length`, `bermuda`, `bermudas` |
 
 ### `rise`
 
@@ -185,8 +175,8 @@ Elasticized: `elasticized`, `elasticised`, `elastic`, `rib knit`, `ribbed`, `rib
 | Wartość | Keywordy |
 | --- | --- |
 | `Denim` | `denim`, `jean shorts` |
-| `Cargo` | `cargo shorts`, `cargo pockets`, `cargo pocket` |
-| `Sweatshorts` | `sweatshorts`, `sweat shorts`, `sweat-shorts`, `french terry shorts`, `fleece shorts` |
+| `Cargo` | `cargo` |
+| `Sweatshorts` | `sweatshorts`, `sweat shorts`, `sweat-shorts`, `terry shorts`, `terrycloth shorts`, `fleece shorts`, `lounge shorts` |
 | `Athletic` | `athletic shorts`, `running shorts`, `training shorts`, `gym shorts`, `basketball shorts`, `track shorts` |
-| `Tailored` | `tailored shorts`, `dress shorts`, `formal shorts` |
+| `Tailored` | `tailored`, `dress shorts`, `formal shorts` |
 | `Other` | Brak — rozstrzyga LLM |

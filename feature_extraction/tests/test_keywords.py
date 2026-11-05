@@ -37,7 +37,7 @@ class ExtractionTests(unittest.TestCase):
             ('Tops', 'Tank tops & Camisoles'), ('Tops', 'Bodysuits'), ('Dresses', 'Dresses'), ('Skirts', 'Skirts'),
             *[('Jackets & Coats', c) for c in ('Bombers', 'Classic Coats', 'Jackets', 'Trench Coats', 'Vests')],
             *[('Pants', c) for c in ('Cargo Pants', 'Jeans', 'Sweatpants & Lounge Pants', 'Trousers')],
-            ('Shirts & Blouses', 'Shirts'), ('Shirts & Blouses', 'Blouses')})
+            ('Shirts & Blouses', 'Shirts'), ('Shirts & Blouses', 'Blouses'), ('Shorts', 'Shorts')})
 
     def test_lining_composition(self):
         cases = [('Body: 100% wool. Lining: 100% cupro.', '', 'assigned', {'Viscose': 100.0}),
@@ -88,6 +88,12 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(self.feature('Jeans', 'distressing', description='Fading throughout.')[0], ['Faded'])
         self.assertEqual(self.feature('Jeans', 'distressing', description='Raw denim.')[0], ['Clean'])
         self.assertIsNone(self.feature('Jeans', 'distressing', description='Tonal stitching.')[0])
+
+    def test_shorts_type(self):
+        self.assertEqual(self.feature('Shorts', 'shorts_type', description='French terry lounge shorts.')[0], 'Sweatshorts')
+        self.assertEqual(self.feature('Shorts', 'shorts_type', description='Cargo-style pockets at sides.')[0], 'Cargo')
+        self.assertIsNone(self.feature('Shorts', 'shorts_type', description='Tailored denim shorts.')[0])
+        self.assertEqual(self.feature('Shorts', 'length', description='Denim bermuda shorts.')[0], 'Long')
 
     def test_exclusive_value_with_other_values_stays_undefined(self):
         self.assertEqual(self.feature('Jeans', 'distressing', description='Unwashed denim. Fading throughout.')[:2], (None, 'undefined'))

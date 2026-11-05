@@ -1,0 +1,45 @@
+section: Shorts
+category: Shorts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  fit:
+    type: single_choice
+    values:
+    - Skinny
+    - Slim
+    - Regular
+    - Relaxed
+  waistband_type:
+    type: single_choice
+    values:
+    - Elasticized
+    - Other
+    - Structured
+  length:
+    type: single_choice
+    values:
+    - Short
+    - Mid-Length
+    - Long
+  rise:
+    type: single_choice
+    values:
+    - High-Rise
+    - Mid-Rise
+    - Low-Rise
+  shorts_type:
+    type: single_choice
+    values:
+    - Denim
+    - Cargo
+    - Sweatshorts
+    - Athletic
+    - Tailored
+    - Other

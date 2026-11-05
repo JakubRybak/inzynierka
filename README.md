@@ -28,7 +28,7 @@ flag.
 
 Catalog preparation maps all 22 project categories. Keyword definitions cover
 T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts, the five Jackets &
-Coats categories, the four Pants categories, Shirts and Blouses. LLM prompts cover
+Coats categories, the four Pants categories, Shirts, Blouses and Shorts. LLM prompts cover
 the first six. The default extraction config selects the original 900-product pilot
 and uses 60 manual references across T-shirts, Dresses, and Tank tops & Camisoles.
 The reference file also includes 20 reviewed products each for Polos, Bodysuits
