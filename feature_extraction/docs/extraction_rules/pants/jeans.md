@@ -156,10 +156,9 @@ Kolumna `description`
 
 ```text
 Kolumny `name` i `description`
-├─ keyword Distressed → Distressed
-├─ keyword Faded      → Faded
-├─ keyword Clean      → Clean
-└─ else              → undefined
+├─ wykryto `Clean` i inną wartość → undefined
+├─ liczba wartości ≥ 1            → lista wykrytych wartości bez powtórzeń
+└─ else                           → undefined
 ```
 
 **Dalsze postępowanie:** `undefined` → ekstrakcja tej cechy przez LLM.
@@ -167,8 +166,8 @@ Kolumny `name` i `description`
 <!-- results:distressing -->
 | Wynik | Produkty | % |
 | --- | ---: | ---: |
-| Przypisane | 2,592 | 69,98% |
-| `undefined` | 1,112 | 30,02% |
+| Przypisane | 2,577 | 69,57% |
+| `undefined` | 1,127 | 30,43% |
 <!-- /results -->
 
 ## Keywordy

@@ -304,7 +304,7 @@
 - **`rise`**: single choice.
 - **`waistband_type`**: single choice.
 - **`cuff_style`**: single choice.
-- **`distressing`**: single choice.
+- **`distressing`**: multi choice, bez powtórzeń; `Clean` występuje samodzielnie.
 
 ---
 

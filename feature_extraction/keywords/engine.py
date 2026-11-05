@@ -16,12 +16,10 @@ OPTIONS = {
     'single': {'columns', 'keywords'},
     'single_or_other': {'columns', 'keywords', 'conflict_value'},
     'multi': {'columns', 'keywords'},
-    'priority': {'columns', 'keywords'},
 }
 OPTIONAL = {
     'composition': {'section_only', 'main_section_patterns', 'fallback', 'default_value'},
     'single': {'default_value'},
-    'priority': {'default_value'},
 }
 
 
@@ -167,10 +165,8 @@ def assign_rule(product, rule, definition):
     elif strategy in {'single', 'single_or_other'}:
         value = rule['conflict_value'] if strategy == 'single_or_other' and len(hits) >= 2 else resolve_single(hits)
     elif strategy == 'multi':
-        exclusive = [v for v in definition.get('exclusive_values', []) if v in hits]
-        value = exclusive[:1] if exclusive else list(hits) or None
-    elif strategy == 'priority':
-        value = next((v for v in rule['keywords'] if v in hits), None)
+        conflict = len(hits) > 1 and any(v in hits for v in definition.get('exclusive_values', []))
+        value = None if conflict else list(hits) or None
     else:
         raise ValueError(f'Unimplemented keyword strategy: {strategy}')
     return value, 'assigned' if value is not None else 'undefined', 'keyword', hits

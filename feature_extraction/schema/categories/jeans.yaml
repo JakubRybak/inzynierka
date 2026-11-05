@@ -49,8 +49,11 @@ features:
     - Other
     - Open Hem
   distressing:
-    type: single_choice
+    type: multi_choice
     values:
     - Distressed
     - Faded
+    - Clean
+    max_items: 2
+    exclusive_values:
     - Clean

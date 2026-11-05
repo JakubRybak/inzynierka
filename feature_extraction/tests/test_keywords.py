@@ -83,10 +83,14 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(self.feature('Jackets', 'fit', description='Oversized fit.')[:2], ('Oversized', 'assigned'))
         self.assertEqual(self.feature('Jackets', 'fit', description='Oversized lapels.')[:3], ('Regular', 'assigned', 'default'))
 
-    def test_priority(self):
-        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading and distressing throughout.')[0], 'Distressed')
-        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading throughout.')[0], 'Faded')
+    def test_distressing_multi(self):
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading and distressing throughout.')[0], ['Distressed', 'Faded'])
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Fading throughout.')[0], ['Faded'])
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Raw denim.')[0], ['Clean'])
         self.assertIsNone(self.feature('Jeans', 'distressing', description='Tonal stitching.')[0])
+
+    def test_exclusive_value_with_other_values_stays_undefined(self):
+        self.assertEqual(self.feature('Jeans', 'distressing', description='Unwashed denim. Fading throughout.')[:2], (None, 'undefined'))
 
     def test_excluded_phrases(self):
         self.assertEqual(self.feature('Shirts', 'collar_type', description='Open spread collar.')[0], 'Camp Collar')
