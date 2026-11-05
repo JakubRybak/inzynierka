@@ -1,0 +1,40 @@
+{
+  "category": "Shirts",
+  "features": {
+    "sleeve_length": {
+      "instruction": "Return one value for the garment sleeve itself, not an undershirt, gloves, or sleeves rolled up for styling. Consider the original sleeve endpoint. If the design has genuinely incompatible sleeve lengths and no single label describes it, outside_schema is permitted.",
+      "values": {
+        "Sleeveless": "No sleeve extends over the upper arm; shoulder straps are not sleeves.",
+        "Short Sleeve": "A sleeve covering part of the upper arm and ending above the elbow, including cap sleeves.",
+        "Three-Quarter Sleeve": "A sleeve ending below the elbow and before the wrist. In this project, an explicit cropped sleeve description also maps here.",
+        "Long Sleeve": "A full-length sleeve reaching the wrist or beyond."
+      }
+    },
+    "fit": {
+      "instruction": "Return one value for the intended fit of the target garment, considering torso ease and shoulder construction together. Do not infer Slim just from a slim model, or Oversized just from garment length. Explicit garment fit descriptions are useful evidence.",
+      "values": {
+        "Slim": "Close-fitting through the torso with little ease; fitted, form-fitting or body-hugging.",
+        "Regular": "Conventional ease, neither close-fitting nor deliberately loose.",
+        "Oversized": "Deliberately loose, relaxed, boxy or oversized through the torso; not merely a normal fit on a slender model."
+      }
+    },
+    "length": {
+      "instruction": "Return one value for the body length of the top, not sleeve length. Use untucked views when available. A tucked hem alone does not establish a cropped design. Judge the main hem: a curved shirt-tail or a longer back hem alone does not establish Longline.",
+      "values": {
+        "Cropped": "A deliberately shortened top ending around or above the natural waist, rather than reaching the usual hip area.",
+        "Regular": "A conventional top length reaching around the waistband or hips, without an intentionally extended body.",
+        "Longline": "An intentionally elongated body extending clearly below the usual hip length, toward the upper thigh or beyond."
+      }
+    },
+    "collar_type": {
+      "instruction": "Return one value for the collar permanently attached to the target garment, whether it is worn open or closed. A removable or decorative overlay collar does not change it: a band collar with a detachable spread collar is Stand Collar. Do not classify a separate garment worn underneath.",
+      "values": {
+        "Point Collar": "A conventional turn-down shirt collar with pointed ends, including spread, button-down and cutaway collars.",
+        "Camp Collar": "A flat open collar with a notch where it meets the front, including Cuban, resort, revere and convertible collars.",
+        "Stand Collar": "A collar standing up around the neck with no turn-down leaf, including band and mandarin collars and funnel or high necks.",
+        "Collarless": "No collar at the neckline, including crewneck, V-neck and scoop neck shirts.",
+        "Other": "A collar outside the offered labels, such as wing, tuxedo, Peter Pan, shawl, sailor, rounded or tie collars."
+      }
+    }
+  }
+}

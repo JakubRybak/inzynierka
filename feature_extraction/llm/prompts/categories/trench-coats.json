@@ -1,0 +1,52 @@
+{
+  "category": "Trench Coats",
+  "features": {
+    "hood": {
+      "instruction": "Return one value for whether the target garment itself has a hood, using the description and all available views. Do not count a hood from a sweatshirt or other separate garment worn underneath.",
+      "values": {
+        "With Hood": "The garment has a hood, including detachable, stowable or fold-away hoods.",
+        "Without Hood": "The garment has no hood of its own."
+      }
+    },
+    "closure_type": {
+      "instruction": "Return a nonempty list of distinct values for the main front closure, using the description and visible views. Ignore closures on parts of the garment, such as the collar, cuffs, hood, pockets or hem. List every main closure: a zip covered by a press-stud placket is Zip and Press-Stud, and a double-breasted button front is Button and Double-Breasted. Open Front and Other must appear alone. A front described as open but closed by a belt or tie at the waist is Belted, not Open Front. Use Other only when none of the other labels applies; a toggle or hook-eye fastening on a double-breasted front is just Double-Breasted.",
+      "values": {
+        "Zip": "A zip closing the main front, including two-way, half-zip, concealed and off-center zips.",
+        "Button": "Buttons closing the main front, including concealed button plackets.",
+        "Press-Stud": "Press-studs or snap buttons closing the main front.",
+        "Double-Breasted": "Two overlapping front panels with two parallel rows of fastenings; list it together with the fastening type when that has its own label.",
+        "Belted": "A belt, sash or tie at the waist that closes the garment, including self-tie and detachable belts. Belts at the hem, back, sides or cuffs do not count.",
+        "Open Front": "No front fastening of any kind, so the garment hangs open; must appear alone.",
+        "Other": "A main closure outside the offered labels, such as toggles, hook-eye, velcro, buckles, clasps or lace-up fastenings, or a pullover with no front opening; must appear alone."
+      }
+    },
+    "collar_type": {
+      "instruction": "Return one value for the collar of the target garment, not a shirt or sweater worn underneath. Assess the collar shape, not its fabric: a shearling or fur collar is classified by its shape. A hood is not a collar: a hood attached directly to the neckline, with no separate collar, is Other.",
+      "values": {
+        "Lapel Collar": "A fold-back collar with lapels, including notched, peak and shawl collars.",
+        "Point Collar": "A shirt-style turn-down collar with pointed ends and no lapels, including spread collars.",
+        "Stand Collar": "A collar standing up around the neck with no fold-back, including band, mandarin and funnel collars and high necks.",
+        "Other": "No collar, or a collar outside the offered labels, such as collarless, crewneck, V-neck, hood-only or Peter Pan constructions."
+      }
+    },
+    "insulation": {
+      "instruction": "Return one value for the main insulating layer of the body, not the outer fabric. If several apply, use this order: Down, Shearling Lined, Fleece Lined, Other, Synthetic Padding, Uninsulated. Count a lining only when it lines the body: shearling, fleece or fur at the collar, hood, cuffs or pockets does not count. A conventional lining is not insulation, and a heavy shell such as wool or leather is not insulation by itself. Do not assume Down from a puffy look alone.",
+      "values": {
+        "Down": "Filled with down or feathers, as stated in the name or description.",
+        "Synthetic Padding": "A padded, quilted or puffer construction with synthetic or unstated fill, including wadding, PrimaLoft and Thinsulate.",
+        "Shearling Lined": "The body is lined with genuine shearling, including shearling coats and jackets.",
+        "Fleece Lined": "The body is lined with fleece, sherpa, teddy, pile or faux shearling.",
+        "Uninsulated": "No insulating layer: unlined, or with a conventional thin lining only.",
+        "Other": "An insulating body lining outside the labels above, such as real or faux fur."
+      }
+    },
+    "length": {
+      "instruction": "Return one value for the body length of the coat, not sleeve length, judged by where the hem ends relative to the mid-thigh and the knee. Use a full-body view when available. Do not infer length from fit or from the length of garments worn underneath.",
+      "values": {
+        "Short": "A hem ending at or above mid-thigh, including waist-length and hip-length coats.",
+        "Mid-Length": "A hem ending between mid-thigh and just below the knee, including knee-length coats.",
+        "Long": "A hem ending clearly below the knee, toward the calf, ankle or floor."
+      }
+    }
+  }
+}

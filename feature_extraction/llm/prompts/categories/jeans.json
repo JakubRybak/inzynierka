@@ -1,0 +1,64 @@
+{
+  "category": "Jeans",
+  "features": {
+    "fit": {
+      "instruction": "Return one value for the intended fit through the hips and thighs. Assess fit independently of leg shape: a wide, flared or tapered leg does not by itself establish a fit. Explicit garment fit descriptions are useful evidence. If the name and description use different fit terms, prefer the more specific term when it agrees with the visible views: a garment named Skinny and described as slim-fit is Skinny. A style name such as Boyfriend does not override an explicit skinny or slim fit. Do not infer Slim or Skinny just from a slim model.",
+      "values": {
+        "Skinny": "Tight along the whole leg, closely following the body from the hips to the hem.",
+        "Slim": "Close-fitting through the hips and thighs with little ease, but not skin-tight along the whole leg.",
+        "Regular": "Conventional ease through the hips and thighs, neither close-fitting nor deliberately loose.",
+        "Relaxed": "Deliberately loose through the hips and thighs, including relaxed, baggy, slouchy, oversized or boyfriend styles; not merely a normal fit on a slender model."
+      }
+    },
+    "leg_shape": {
+      "instruction": "Return one value for the outline of the leg from the knee to the hem, comparing the leg width at the knee and at the hem. Assess leg shape independently of fit and length: a cropped hem or a rolled cuff does not change the outline. Distinctive construction takes precedence over an ordinary outline: a dropped crotch, dropped inseam or harem shape is Other even when the leg also tapers or widens.",
+      "values": {
+        "Straight": "The leg keeps roughly the same width from the knee to the hem; it need not be loose.",
+        "Tapered": "The leg clearly narrows from the knee toward the hem, including skinny legs that follow the calf to the ankle, joggers and carrot shapes.",
+        "Wide-Leg": "The leg is clearly wide from the thigh to the hem, including palazzo and culotte styles.",
+        "Flared": "The leg stays narrow through the thigh and knee and widens from the knee toward the hem, including bootcut and bell-bottom styles.",
+        "Other": "A leg outline not adequately described above, such as sarouel, harem, drop-crotch, dropped-inseam, balloon or jodhpur shapes."
+      }
+    },
+    "length": {
+      "instruction": "Return one value for the intended leg length, judged by where the hem ends relative to the ankle. Compare the available views. A hem rolled up for styling or tucked into boots or socks does not by itself establish a cropped design. Cuffs that gather the leg at the ankle do not make it Cropped. Do not infer length from fit or leg shape.",
+      "values": {
+        "Cropped": "A deliberately shortened leg ending above the ankle bone, including capri, 7/8, ankle-grazing and culotte lengths.",
+        "Full-Length": "A conventional leg length reaching the ankle bone or beyond, including legs gathered by cuffs at the ankle."
+      }
+    },
+    "rise": {
+      "instruction": "Return one value for the intended position of the waistband on the body. Compare the waistband with the natural waist and hips using the description and visible views. Do not infer rise from leg length, a dropped crotch, a tucked top, or a belt alone. Do not default to Mid-Rise merely because the description does not mention rise.",
+      "values": {
+        "High-Rise": "The waistband is intended to sit at or above the natural waist.",
+        "Mid-Rise": "The waistband is intended to sit between the natural waist and the upper hips.",
+        "Low-Rise": "The waistband is intended to sit low on the hips, clearly below a mid-rise position."
+      }
+    },
+    "waistband_type": {
+      "instruction": "Return one value for the construction of the waistband itself, not the front closure: a zip fly or button fly does not make an elasticized or drawstring waistband Structured. A waistband that is only partly elasticized, for example at the back or sides, still counts as Elasticized. A drawstring elsewhere, such as at the cuffs, does not count. Stretch fabric or a separate belt alone does not change the waistband type.",
+      "values": {
+        "Structured": "A band without elastic or a drawstring, closed by a fly, side zip, button or hook, typically with belt loops.",
+        "Elasticized": "A fully or partly elasticized or ribbed band, or one adjusted by a drawstring or bungee cord, including pull-on waistbands.",
+        "Other": "A waist construction not adequately described above, such as paperbag, tie or wrap waists."
+      }
+    },
+    "cuff_style": {
+      "instruction": "Return one value for how the bottom of the leg is finished, using the description and visible views. A zip at the hem takes precedence over other finishes: a zippered vent at a rib knit or elasticized cuff is Zippered Cuff. A gathered or fastened hem takes precedence over an open finish such as a vent or raw edge. A drawstring or zip elsewhere on the leg does not count.",
+      "values": {
+        "Open Hem": "An unfastened leg opening with no gathering, including plain, rolled, turned-up, raw, frayed, serged, vented or slit hems.",
+        "Elasticized Cuff": "A hem gathered around the ankle by rib knit, elastic or a drawstring.",
+        "Zippered Cuff": "A hem with a zip or zippered vent, whether or not the cuff is also elasticized.",
+        "Other": "Another fastened or adjustable hem, such as buttoned tabs, press-studs, velcro, cinch straps or stirrups."
+      }
+    },
+    "distressing": {
+      "instruction": "Return a nonempty list of distinct values for the denim surface, using the description and visible views. Faded and Distressed may appear together. Clean must appear alone. Wash or color names in quotes, such as 'vintage' black, are not evidence by themselves. A frayed hem, paint marks, embroidery or decorative patches alone do not establish Distressed.",
+      "values": {
+        "Clean": "An even, unworn surface with no visible fading or damage, including raw, rinsed and uniform dark washes; must appear alone.",
+        "Faded": "Visible lighter areas or wash effects, such as fading, whiskering, honeycombing, stonewashing, acid wash or bleaching.",
+        "Distressed": "Deliberate physical damage to the fabric, such as rips, holes, shredding, slashes or abrasions."
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "category": "Shorts",
+  "features": {
+    "fit": {
+      "instruction": "Return one value for the intended fit through the hips and thighs. Assess fit independently of leg shape: a wide, flared or tapered leg does not by itself establish a fit. Explicit garment fit descriptions are useful evidence. If the name and description use different fit terms, prefer the more specific term when it agrees with the visible views: a garment named Skinny and described as slim-fit is Skinny. A style name such as Boyfriend does not override an explicit skinny or slim fit. Do not infer Slim or Skinny just from a slim model.",
+      "values": {
+        "Skinny": "Tight along the whole leg, closely following the body from the hips to the hem.",
+        "Slim": "Close-fitting through the hips and thighs with little ease, but not skin-tight along the whole leg.",
+        "Regular": "Conventional ease through the hips and thighs, neither close-fitting nor deliberately loose.",
+        "Relaxed": "Deliberately loose through the hips and thighs, including relaxed, baggy, slouchy, oversized or boyfriend styles; not merely a normal fit on a slender model."
+      }
+    },
+    "waistband_type": {
+      "instruction": "Return one value for the construction of the waistband itself, not the front closure: a zip fly or button fly does not make an elasticized or drawstring waistband Structured. A waistband that is only partly elasticized, for example at the back or sides, still counts as Elasticized. A drawstring elsewhere, such as at the cuffs, does not count. Stretch fabric or a separate belt alone does not change the waistband type.",
+      "values": {
+        "Structured": "A band without elastic or a drawstring, closed by a fly, side zip, button or hook, typically with belt loops.",
+        "Elasticized": "A fully or partly elasticized or ribbed band, or one adjusted by a drawstring or bungee cord, including pull-on waistbands.",
+        "Other": "A waist construction not adequately described above, such as paperbag, tie or wrap waists."
+      }
+    },
+    "length": {
+      "instruction": "Return one value for the intended leg length of the shorts, judged by where the hem ends relative to the mid-thigh and the knee. Compare the available views. A hem rolled up for styling does not by itself establish a shorter length. Do not infer length from fit or a dropped crotch.",
+      "values": {
+        "Short": "A hem ending on the upper thigh, clearly above mid-thigh, including mini shorts and hot pants.",
+        "Mid-Length": "A hem ending between mid-thigh and just above the knee.",
+        "Long": "A hem reaching the knee or beyond, including knee-length and Bermuda shorts."
+      }
+    },
+    "rise": {
+      "instruction": "Return one value for the intended position of the waistband on the body. Compare the waistband with the natural waist and hips using the description and visible views. Do not infer rise from leg length, a dropped crotch, a tucked top, or a belt alone. Do not default to Mid-Rise merely because the description does not mention rise.",
+      "values": {
+        "High-Rise": "The waistband is intended to sit at or above the natural waist.",
+        "Mid-Rise": "The waistband is intended to sit between the natural waist and the upper hips.",
+        "Low-Rise": "The waistband is intended to sit low on the hips, clearly below a mid-rise position."
+      }
+    },
+    "shorts_type": {
+      "instruction": "Return one value for the primary shorts type, based on fabric and construction rather than a single word in the name. Denim fabric takes precedence: denim shorts are Denim even when named track or tailored. A sports name alone does not establish Athletic: French terry or fleece gym or track shorts are Sweatshorts. Pleats alone do not establish Tailored, and not all woven shorts are Tailored. Use Other when no specific type clearly applies.",
+      "values": {
+        "Denim": "Shorts made of denim fabric, including jean shorts and cut-offs.",
+        "Cargo": "Shorts with utility cargo pockets on the outer thighs.",
+        "Sweatshorts": "Soft pull-on shorts in French terry, fleece or a similar sweatshirt knit, including lounge shorts.",
+        "Athletic": "Sports shorts in lightweight performance fabric such as nylon, polyester or mesh, including running, training, basketball, track and compression styles.",
+        "Tailored": "Shorts built like tailored trousers in a woven fabric, with a structured waistband and a front crease, trouser pleats or a suiting fabric such as wool, crepe or seersucker.",
+        "Other": "Shorts not matching the offered specific types, such as casual cotton or chino shorts, leather shorts, and sarouel, drop-crotch, boxer or pyjama styles."
+      }
+    }
+  }
+}

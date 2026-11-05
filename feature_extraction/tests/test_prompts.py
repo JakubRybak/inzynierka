@@ -68,6 +68,28 @@ class PromptTests(unittest.TestCase):
         self.assertEqual(definitions['Skirts']['colors'], definitions['T-shirts']['colors'])
         self.assertEqual(definitions['Skirts']['pattern']['values'], definitions['T-shirts']['pattern']['values'])
 
+    def test_matching_features_keep_the_same_wording_across_categories(self):
+        definitions = prompt_builder.DEFINITIONS
+        for category in ['Cargo Pants', 'Sweatpants & Lounge Pants', 'Jeans']:
+            for feature in ['fit', 'leg_shape', 'length', 'rise', 'waistband_type', 'cuff_style']:
+                self.assertEqual(definitions[category][feature], definitions['Trousers'][feature])
+        for feature in ['fit', 'rise', 'waistband_type']:
+            self.assertEqual(definitions['Shorts'][feature], definitions['Trousers'][feature])
+        self.assertEqual(definitions['Trousers']['rise']['values'], definitions['Skirts']['rise']['values'])
+        for category in ['Shirts', 'Blouses']:
+            for feature in ['sleeve_length', 'fit']:
+                self.assertEqual(definitions[category][feature], definitions['T-shirts'][feature])
+        self.assertEqual(definitions['Shirts']['length'], definitions['Blouses']['length'])
+        self.assertEqual(definitions['Blouses']['neckline'], definitions['Dresses']['neckline'])
+        for feature in ['hood', 'closure_type', 'insulation']:
+            for category in ['Trench Coats', 'Jackets', 'Bombers', 'Vests']:
+                self.assertEqual(definitions[category][feature], definitions['Classic Coats'][feature])
+        for category in ['Trench Coats', 'Jackets']:
+            self.assertEqual(definitions[category]['collar_type'], definitions['Classic Coats']['collar_type'])
+        self.assertEqual(definitions['Trench Coats']['length'], definitions['Classic Coats']['length'])
+        for category in ['Bombers', 'Vests']:
+            self.assertEqual(definitions[category]['length'], definitions['Jackets']['length'])
+
     def test_common_pattern_is_used_by_every_category(self):
         common = copy.deepcopy(prompt_builder.COMMON_DEFINITIONS)
         common['pattern']['instruction'] = 'Shared pattern instruction.'
