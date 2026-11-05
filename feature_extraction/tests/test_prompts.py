@@ -16,7 +16,7 @@ KEYWORDS, _ = load_config(BASE / 'keywords/definitions', SCHEMAS)
 
 class PromptTests(unittest.TestCase):
     def category_case(self, category):
-        section = category if category in ('Dresses', 'Skirts') else 'Tops'
+        section = next(section for section, name in SCHEMAS if name == category)
         source = dict(product_id='target', name='Product', description='', brand='Brand',
                       section=section, category=category, gender='Women', composition='100% cotton',
                       original_category='SHORT SKIRTS' if category == 'Skirts' else 'SHORT DRESSES')
@@ -36,8 +36,8 @@ class PromptTests(unittest.TestCase):
             response['outside_schema_reasons'] = {}
         return record, prompt, response
 
-    def test_all_six_categories_have_complete_llm_definitions_and_valid_outputs(self):
-        for category in ['T-shirts', 'Dresses', 'Tank tops & Camisoles', 'Polos', 'Bodysuits', 'Skirts']:
+    def test_all_supported_categories_have_complete_llm_definitions_and_valid_outputs(self):
+        for category in prompt_builder.DEFINITIONS:
             with self.subTest(category=category):
                 record, prompt, response = self.category_case(category)
                 requested = set(requested_features(record))

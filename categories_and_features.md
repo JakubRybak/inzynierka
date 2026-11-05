@@ -103,7 +103,6 @@
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
-- **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
 - **`neckline`**: `Crewneck`, `V-Neck`, `High Neck`, `Collared`, `Other`
 
 ### Sweatshirts
@@ -115,7 +114,6 @@
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
-- **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
 - **`neckline`**: `Crewneck`, `High Neck`, `Other`
 
 ### Hoodies & Zipups
@@ -127,7 +125,7 @@
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
-- **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
+- **`closure_type`**: `Pullover`, `Zip`, `Half-Zip`, `Other`
 
 ### Cardigans
 - **`gender`**: `Men`, `Women`
@@ -138,7 +136,7 @@
 - **`fit`**: `Slim`, `Regular`, `Oversized`
 - **`length`**: `Cropped`, `Regular`, `Longline`
 - **`hood`**: `With Hood`, `Without Hood`
-- **`closure_type`**: `Zip`, `Half-Zip`, `Button`, `Belted`, `Open Front`, `Pullover`, `Other`
+- **`closure_type`**: `Button`, `Open Front`, `Other`
 - **`neckline`**: `Crewneck`, `V-Neck`, `High Neck`, `Collared`, `Other`
 
 ### Zasady

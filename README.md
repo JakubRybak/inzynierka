@@ -27,15 +27,16 @@ flag.
 ## Current scope
 
 Catalog preparation maps all 22 project categories. Keyword definitions cover
-T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts, the five Jackets &
-Coats categories, the four Pants categories, Shirts, Blouses and Shorts. LLM prompts cover
-the first six. The default extraction config selects the original 900-product pilot
-and uses 60 manual references across T-shirts, Dresses, and Tank tops & Camisoles.
-The reference file also includes 20 reviewed products each for Polos, Bodysuits
-and Skirts; these categories still need product selection and embeddings before
-paid runs. Other categories require LLM definitions and references as well.
-The current pipeline still needs scaling and recovery improvements before a
-full-catalog LLM run.
+T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses, Skirts, the four Sweaters
+categories, the five Jackets & Coats categories, the four Pants categories, Shirts
+Blouses and Shorts. LLM prompts and 20 reviewed references per category cover Tops,
+Dresses, Skirts and Sweaters (10 categories, 200 references). The default
+extraction config still selects the original 900-product pilot and uses 60
+references across T-shirts, Dresses, and Tank tops & Camisoles. Additional
+categories need a matching selection and embedding coverage before paid runs.
+Other categories require LLM definitions and references as well. The current
+pipeline still needs scaling and recovery improvements before a full-catalog
+LLM run.
 
 Human-readable extraction rules are in
 [feature_extraction/docs/extraction_rules/](feature_extraction/docs/extraction_rules/).

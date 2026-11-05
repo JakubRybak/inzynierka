@@ -2,13 +2,14 @@
 
 Keyword rules and Gemini complete the fixed product taxonomy. LLM definitions and
 output validation support T-shirts, Polos, Tank tops & Camisoles, Bodysuits, Dresses,
-and Skirts. Keyword rules also cover the five Jackets & Coats categories, the four
-Pants categories, Shirts, Blouses and Shorts. `config/extraction.yaml` selects the
-active scope. Its default selection still covers the original 900 products in
-T-shirts, Dresses, and Tank tops & Camisoles. The reference file contains 120
-products: 20 per supported LLM category. The default category filter uses the
-original 60 references; Polos, Bodysuits and Skirts also have reviewed references,
-but need a matching product selection and embedding coverage before paid runs.
+Skirts, Knit Sweaters, Sweatshirts, Hoodies & Zipups, and Cardigans. Keyword rules
+also cover the five Jackets & Coats categories, the four Pants categories, Shirts,
+Blouses and Shorts. `config/extraction.yaml` selects the active scope. Its default
+selection still covers the original 900 products in T-shirts, Dresses, and Tank
+tops & Camisoles. The reference file contains 200 reviewed products: 20 per
+supported LLM category. The default category filter uses the original 60
+references. Running additional categories requires a matching product selection
+and embedding coverage for their targets and references.
 
 ## Layout
 
@@ -53,6 +54,17 @@ neckline and shoulder construction/strap width to colors, pattern and sleeve
 length. Skirts has colors, pattern, skirt silhouette, skirt type and rise. Skirt
 length is assigned exclusively from `original_category`; it is never an LLM task.
 
+Sweaters reuse the existing colors, pattern, sleeve length, fit and top-length
+wording. Hood presence is defined per category. Neckline labels follow each
+category's schema; Hoodies & Zipups has no neckline feature. Closure type is
+LLM-only and single choice: Pullover/Zip/Half-Zip/Other for Hoodies & Zipups and
+Button/Open Front/Other for Cardigans. Knit Sweaters and Sweatshirts have no
+closure feature. Half-Zip includes quarter-zip; cardigan zippers map to Other.
+The 80 Sweaters references include 10 Men and 10 Women per category. Existing
+keyword assignments are preserved, and missing features were assigned by Codex
+from catalog descriptions and images, with `source: manual` metadata. These
+references are marked `user_verified: false`; they are not independent human gold.
+
 ## Shared feature schema and keyword rules
 
 `schema/common.yaml` defines shared features; `schema/categories/*.yaml` lists the
@@ -66,7 +78,8 @@ if-and-only-if relation between single-choice values, including strap width.
 
 The LLM response builder and the shared validator read this schema directly.
 They do not import keyword configurations or infer types from keyword strategies.
-For example, `closure_type` is multi choice even though no keyword rule exists for it.
+For example, `closure_type` has no keyword rule: it is multi choice in Jackets &
+Coats, but single choice in Hoodies & Zipups and Cardigans.
 
 `keywords/definitions/` contains only extraction instructions: input columns,
 phrases, source mappings, matching strategies, composition sections and fallbacks.

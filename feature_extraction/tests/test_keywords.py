@@ -37,7 +37,8 @@ class ExtractionTests(unittest.TestCase):
             ('Tops', 'Tank tops & Camisoles'), ('Tops', 'Bodysuits'), ('Dresses', 'Dresses'), ('Skirts', 'Skirts'),
             *[('Jackets & Coats', c) for c in ('Bombers', 'Classic Coats', 'Jackets', 'Trench Coats', 'Vests')],
             *[('Pants', c) for c in ('Cargo Pants', 'Jeans', 'Sweatpants & Lounge Pants', 'Trousers')],
-            ('Shirts & Blouses', 'Shirts'), ('Shirts & Blouses', 'Blouses'), ('Shorts', 'Shorts')})
+            ('Shirts & Blouses', 'Shirts'), ('Shirts & Blouses', 'Blouses'), ('Shorts', 'Shorts'),
+            *[('Sweaters', c) for c in ('Knit Sweaters', 'Sweatshirts', 'Hoodies & Zipups', 'Cardigans')]})
 
     def test_lining_composition(self):
         cases = [('Body: 100% wool. Lining: 100% cupro.', '', 'assigned', {'Viscose': 100.0}),
