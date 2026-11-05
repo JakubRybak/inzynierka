@@ -39,9 +39,9 @@
       }
     },
     "insulation": {
-      "instruction": "Return one value for the main insulating layer of the body, not the outer fabric. If several apply, use this order: Down, Shearling Lined, Fleece Lined, Other, Synthetic Padding, Uninsulated. Count a lining only when it lines the body: shearling, fleece or fur at the collar, hood, cuffs or pockets does not count. A conventional lining is not insulation, and a heavy shell such as wool or leather is not insulation by itself. Do not assume Down from a puffy look alone.",
+      "instruction": "Return one value for the main insulating layer of the body, not the outer fabric. If several apply, use this order: Down, Shearling Lined, Fleece Lined, Other, Synthetic Padding, Uninsulated. Count a lining only when it lines the body: shearling, fleece or fur at the collar, hood, cuffs or pockets does not count. A conventional lining is not insulation, and a heavy shell such as wool or leather is not insulation by itself. Do not assume Down from a puffy look alone. When a composition is provided, a Fill, Filling or Padding section states the insulating material: down or feathers mean Down, and polyester or other synthetic fibers mean Synthetic Padding. A Lining section of ordinary fabric is not insulation.",
       "values": {
-        "Down": "Filled with down or feathers, as stated in the name or description.",
+        "Down": "Filled with down or feathers, as stated in the name, description or composition.",
         "Synthetic Padding": "A padded, quilted or puffer construction with synthetic or unstated fill, including wadding, PrimaLoft and Thinsulate.",
         "Shearling Lined": "The body is lined with genuine shearling, including shearling coats and jackets.",
         "Fleece Lined": "The body is lined with fleece, sherpa, teddy, pile or faux shearling.",

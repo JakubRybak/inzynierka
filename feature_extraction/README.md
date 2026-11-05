@@ -69,6 +69,9 @@ and Shorts shares fit, rise and waistband type with Pants. Their 240 references 
 keyword assignments; missing features were assigned by Claude from catalog descriptions
 and images, with `source: manual` metadata. They are also marked `user_verified: false`.
 
+The composition is added to the target and reference payloads only when `insulation` is
+requested, because fill materials are often stated nowhere else.
+
 ## Shared feature schema and keyword rules
 
 `schema/common.yaml` defines shared features; `schema/categories/*.yaml` lists the

@@ -90,6 +90,14 @@ class PromptTests(unittest.TestCase):
         for category in ['Bombers', 'Vests']:
             self.assertEqual(definitions[category]['length'], definitions['Jackets']['length'])
 
+    def test_composition_is_sent_only_when_insulation_is_requested(self):
+        def payloads(category):
+            _, prompt, _ = self.category_case(category)
+            return [json.loads(part['text'].split('\n', 1)[1]) for part in prompt['parts']
+                    if part.get('text', '').startswith(('TARGET PRODUCT\n', 'REFERENCE 1\n', 'REFERENCE 2\n'))]
+        self.assertEqual([payload['composition'] for payload in payloads('Jackets')], ['100% cotton'] * 3)
+        self.assertTrue(all('composition' not in payload for payload in payloads('Trousers')))
+
     def test_common_pattern_is_used_by_every_category(self):
         common = copy.deepcopy(prompt_builder.COMMON_DEFINITIONS)
         common['pattern']['instruction'] = 'Shared pattern instruction.'

@@ -135,15 +135,17 @@ def build_prompt(record, source, images, examples):
         'They are not the target. Their labels are examples, not predictions for the target.'}]
     for i, example in enumerate(examples, 1):
         ref = example['record']; raw = example['source']
-        payload = {'name': raw['name'], 'description': raw['description'],
-                   'labels': {key: ref['features'][key] for key in rules}}
+        payload = {'name': raw['name'], 'description': raw['description']}
+        if 'insulation' in rules:
+            payload['composition'] = raw['composition']
+        payload['labels'] = {key: ref['features'][key] for key in rules}
         parts.append({'text': f'REFERENCE {i}\n' + json.dumps(payload, ensure_ascii=False)})
         for img in example['images']:
             parts.extend([{'text': f'REFERENCE {i} IMAGE'}, {'local_image_path': img}])
-    parts.append({'text': 'TARGET PRODUCT\n' + json.dumps({
-        'category': record['category'], 'name': source['name'],
-        'description': source['description'],
-    }, ensure_ascii=False)})
+    target = {'category': record['category'], 'name': source['name'], 'description': source['description']}
+    if 'insulation' in rules:
+        target['composition'] = source['composition']
+    parts.append({'text': 'TARGET PRODUCT\n' + json.dumps(target, ensure_ascii=False)})
     for img in images:
         parts.extend([{'text': 'TARGET IMAGE'}, {'local_image_path': img}])
     parts.append({'text': 'Classify the TARGET PRODUCT using only the requested features.'})
