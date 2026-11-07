@@ -344,7 +344,7 @@
 
 - `colors contains_any ["Black"]`
 
-**Residual** — `tank top style`
+**Residual** — `tank top`
 
 ### 035. `men's black crewneck bodysuit`
 
