@@ -23,7 +23,9 @@ def main():
     parser.add_argument('--all-categories', action='store_true',
                         help='Use all supported categories; requires --all-products')
     parser.add_argument('--all-products', action='store_true', help='Process all configured categories instead of the saved sample')
-    parser.add_argument('--execute', action='store_true', help='Authorize paid inference; default only prepares prompts')
+    parser.add_argument('--build-embeddings', action='store_true',
+                        help='Prepare the selected products and references before LLM extraction')
+    parser.add_argument('--execute', action='store_true', help='Authorize paid embedding and LLM calls')
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:
         parser.error('--limit must be positive')
@@ -31,6 +33,8 @@ def main():
         parser.error('--batch-size must be positive and requires --mode batch')
     if args.mode == 'batch' and args.stage == 'keywords':
         parser.error('--mode batch requires the LLM stage')
+    if args.build_embeddings and args.stage == 'keywords':
+        parser.error('--build-embeddings requires the LLM stage')
     if args.all_categories and not args.all_products:
         parser.error('--all-categories requires --all-products')
     settings = load_settings(args.config)
@@ -40,7 +44,7 @@ def main():
         schemas, _ = load_schemas()
         settings['categories'] = sorted({category for _, category in schemas})
     summary = run(settings, args.run_name, args.stage, args.execute, args.limit,
-                  mode=args.mode, batch_size=args.batch_size)
+                  mode=args.mode, batch_size=args.batch_size, build_embeddings=args.build_embeddings)
     print(json.dumps(summary, indent=2))
 
 

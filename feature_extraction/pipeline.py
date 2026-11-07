@@ -5,6 +5,7 @@ from collections import Counter
 from pathlib import Path
 
 from .data import load_inputs
+from .embeddings.build import build as build_embedding_export
 from .keywords.engine import extract_product
 from .validation import validate
 from .llm.batch import BatchClient
@@ -24,11 +25,14 @@ def uniform(record, origin):
             'llm_metadata': record.get('llm_metadata', {}), 'annotation_origin': origin}
 
 
-def run(settings, run_name, stage='all', execute=False, limit=None, mode='online', batch_size=None):
+def run(settings, run_name, stage='all', execute=False, limit=None, mode='online', batch_size=None,
+        *, build_embeddings=False):
     if mode not in {'online', 'batch'}:
         raise ValueError(f'Unknown extraction mode: {mode}')
     if batch_size is not None and (mode != 'batch' or batch_size < 1):
         raise ValueError('batch_size must be positive and requires batch mode')
+    if build_embeddings and stage == 'keywords':
+        raise ValueError('Embedding preparation requires the LLM stage')
     if mode == 'batch':
         if stage == 'keywords':
             raise ValueError('Batch mode requires the LLM stage')
@@ -39,11 +43,26 @@ def run(settings, run_name, stage='all', execute=False, limit=None, mode='online
     folder.mkdir(parents=True, exist_ok=True)
     with (folder / '.run.lock').open('w') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return extract(settings, folder, stage, execute, limit, mode, batch_size)
+        catalog = load_inputs(settings, limit)
+        if not build_embeddings:
+            return extract(settings, folder, stage, execute, mode, batch_size, catalog)
+
+        export_folder = folder / 'embeddings'
+        if (folder / 'config.json').exists():
+            embedding_summary = {'reused_run_export': True}
+        else:
+            embedding_summary = build_embedding_export(
+                settings, execute=execute, catalog=catalog, export_folder=export_folder)
+            if not execute and embedding_summary['missing_vectors_before_run']:
+                return {'stage': 'embeddings', 'complete': False, 'embeddings': embedding_summary}
+
+        run_settings = {**settings, 'embeddings': str(export_folder)}
+        summary = extract(run_settings, folder, stage, execute, mode, batch_size, catalog)
+        return {**summary, 'embeddings': embedding_summary}
 
 
-def extract(settings, folder, stage, execute, limit, mode, batch_size):
-    ids, source, images, seeds, configs, schemas = load_inputs(settings, limit)
+def extract(settings, folder, stage, execute, mode, batch_size, catalog):
+    ids, source, images, seeds, configs, schemas = catalog
     keywords = {pid: extract_product(source[pid], configs[(source[pid]['section'], source[pid]['category'])],
                                      schemas[(source[pid]['section'], source[pid]['category'])])
                 for pid in ids}
@@ -69,15 +88,22 @@ def extract(settings, folder, stage, execute, limit, mode, batch_size):
         provenance['mode'] = mode
     else:
         provenance['settings'] = {k: v for k, v in settings.items() if k != 'batch'}
+        provenance['settings']['api'] = {k: v for k, v in settings['api'].items() if k != 'budget_usd'}
     fingerprint = digest(json.dumps(provenance, sort_keys=True).encode())
     snapshot = folder / 'config.json'
-    if snapshot.exists() and json.loads(snapshot.read_text())['fingerprint'] != fingerprint:
+    saved_snapshot = json.loads(snapshot.read_text()) if snapshot.exists() else None
+    if saved_snapshot is not None and saved_snapshot['fingerprint'] != fingerprint:
         raise ValueError('Run inputs/configuration changed; choose a new run name')
-    write_json(snapshot, {'fingerprint': fingerprint, 'settings': settings, 'product_ids': ids,
-                          'mode': mode, 'batch_size': batch_size})
-    write_jsonl(folder / 'keywords.jsonl', keywords.values())
     records = {r['product_id']: r for r in read_jsonl(folder / 'products.jsonl')
                if r.get('annotation_origin') != 'keywords' or r['status'] != 'pending'}
+    if stage == 'keywords' and (
+            (saved_snapshot and saved_snapshot.get('stage', 'keywords') != 'keywords')
+            or (folder / 'requests').exists()
+            or any(r.get('annotation_origin') != 'keywords' for r in records.values())):
+        raise ValueError('This run already contains LLM preparation or results; use a separate keyword run name')
+    write_json(snapshot, {'fingerprint': fingerprint, 'settings': settings, 'product_ids': ids,
+                          'mode': mode, 'batch_size': batch_size, 'stage': stage})
+    write_jsonl(folder / 'keywords.jsonl', keywords.values())
     if stage == 'keywords':
         results = [uniform(keywords[pid], 'keywords') for pid in ids]
         export_products(folder, results)
@@ -204,7 +230,8 @@ def extract_batches(settings, folder, ids, source, images, keywords, records, ba
             state_path = batch_folder / 'job.json'
             if state_path.exists():
                 saved = json.loads(state_path.read_text())
-                if saved.get('retry_missing') and missing <= set(saved['missing_product_ids']):
+                if (saved.get('retry_missing') and saved.get('processed_count') is not None
+                        and missing <= set(saved['missing_product_ids'])):
                     # All available rows were saved. Retry the missing products before moving on.
                     retry_ids.update(missing)
                     number += 1

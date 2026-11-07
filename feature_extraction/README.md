@@ -154,6 +154,25 @@ Generated outputs retain `brand`, `section`, `category`, `features`,
 
 ## Commands
 
+Use one command to prepare embeddings and run feature extraction for the same
+product selection and references:
+
+```sh
+python -m feature_extraction.run --config PATH --run-name sample --build-embeddings
+python -m feature_extraction.run --config PATH --run-name sample --build-embeddings --execute
+```
+
+Without `--execute`, the command reports missing vectors and stops if any are
+needed. With a complete cache it prepares the export and inference requests
+locally. With `--execute`, it computes missing vectors and runs inference using
+their respective budget guards. Add `--mode batch --batch-size N` to use the batch
+backend with a configured bucket. The same `--limit` applies to both stages.
+
+This option keeps the shared embedding cache and writes a separate export under
+`artifacts/runs/<run_name>/embeddings/`. Use the same command to resume. Once
+the extraction configuration has been saved, the run reuses its export and
+existing inference state.
+
 Keyword-only extraction for the default sample:
 
 ```sh
@@ -214,8 +233,7 @@ The default is `feature_extraction/artifacts/runs/<run_name>/`.
 | `summary.json` | Keyword counts and statuses | Progress, bank size and estimated cost |
 
 Parquet is written when at least one result record exists. Use a distinct run
-name for keyword-only exploration: running `--stage keywords` on a completed LLM
-run currently replaces that run's product outputs with keyword-only records.
+name for keyword-only exploration once a run has prepared LLM requests.
 
 Reusing a run name resumes saved products. A completed API response saved before
 an interruption can be replayed locally. Changed source evidence, code, configuration,
@@ -224,10 +242,12 @@ files are each written through temporary files, with JSONL serving as the resume
 
 Paid inference requires `--execute` and Application Default Credentials for the
 configured GCP project. Model API credentials are obtained through google-auth.
-HTTP 429 and selected server failures have bounded retries. An uncertain transport
-outcome stops the job and keeps its cost reservation for inspection. Unresolved
-attempts are never silently repaid on resume. Costs are estimates based on the
-configured token rates; compare them with actual billing before larger runs.
+Online HTTP 429 responses have bounded retries. Confirmed HTTP rejections release
+their cost reservations and allow resuming with the same command, including
+during embedding preparation. Uncertain transport outcomes and server failures
+keep their cost reservations for inspection. A saved successful online response
+can be replayed after an interruption before parsing. Increase `api.budget_usd`
+to resume after reaching the online budget limit.
 
 Structured output requests only missing features. Existing keyword values remain
 immutable. A parsed response rejected by the local feature validator is saved as
@@ -281,13 +301,14 @@ Batch manifests, input JSONL and job IDs live under
 `artifacts/runs/<run-name>/batch/`. Re-run the same command to resume the
 current job by its saved ID. An ambiguous submission is looked up in Vertex
 before any further progress. If a unique match cannot be found, the run stops
-for inspection. After an explicit HTTP 400, 401, 403 or 404 rejection, correct
-the cause and re-run the command. Per-product errors in returned output are
+for inspection. After an explicit HTTP 400, 401, 403, 404 or 429 rejection,
+re-run the command once the cause is resolved. Per-product errors in returned output are
 saved as `needs_review`. For a partial job, the run saves the available rows
-and stops. On resume it submits only outstanding products, provided Vertex
-did not report processed requests whose output is still missing. Otherwise
-it checks the saved job again. A job with no readable results stops for
-inspection. Both modes write `products.jsonl` and `products.parquet` to the run folder.
+and stops. If Vertex confirms that the returned rows account for every processed
+request, resume submits only the outstanding products. This includes an
+unsuccessful job with zero processed requests and no output. If the count is
+missing or the output is incomplete, resume checks the saved job again. Both
+modes write `products.jsonl` and `products.parquet` to the run folder.
 
 Batch uses its own token rates and budget. Before submission, it reserves the
 configured input token allowance and maximum output tokens per request at those

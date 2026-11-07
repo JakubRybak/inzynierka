@@ -1,7 +1,11 @@
 """Single-modality embedding requests through the shared Vertex transport."""
 import base64
 
-from ..llm.client import VertexSession
+from ..llm.client import APIError, REJECTED_HTTP_STATUSES, VertexSession
+
+
+class EmbeddingRejected(APIError):
+    """Vertex explicitly rejected the embedding request."""
 
 
 class EmbeddingClient:
@@ -17,5 +21,8 @@ class EmbeddingClient:
                                         'outputDimensionality': self.config['dimension']},
                                        self.config['timeout_seconds'])
         if not response.ok:
-            raise RuntimeError(f'Embedding HTTP {response.status_code}: {response.text[:500]}')
+            error = f'Embedding HTTP {response.status_code}: {response.text[:500]}'
+            if response.status_code in REJECTED_HTTP_STATUSES:
+                raise EmbeddingRejected(error)
+            raise APIError(error)
         return response.json()

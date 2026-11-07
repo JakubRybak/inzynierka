@@ -45,7 +45,7 @@ class BatchTests(unittest.TestCase):
             client.request.assert_not_called()
 
     def test_definitive_submission_rejection_releases_reservation(self):
-        for status in (400, 403):
+        for status in (400, 403, 429):
             with self.subTest(status=status), tempfile.TemporaryDirectory() as directory:
                 folder = Path(directory) / '000001'
                 client = BatchClient(API, CONFIG, folder.parent, 'fp')
@@ -118,6 +118,26 @@ class BatchTests(unittest.TestCase):
             self.assertEqual(state['missing_product_ids'], ['2'])
             self.assertFalse(state['retry_missing'])
             self.assertAlmostEqual(client.spent(), manifest['reservation_usd'])
+            cancelled = {**JOB, 'state': 'JOB_STATE_CANCELLED'}
+            list(client.collect(folder, manifest, {'name': JOB_NAME}, cancelled))
+            state = json.loads((folder / 'job.json').read_text())
+            self.assertIsNone(state['processed_count'])
+            self.assertFalse(state['retry_missing'])
+            self.assertAlmostEqual(client.spent(), manifest['reservation_usd'])
+
+    def test_cancelled_job_with_confirmed_zero_processed_can_retry_all(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory) / '000001'
+            client = BatchClient(API, CONFIG, folder.parent, 'fp')
+            manifest = client.prepare(folder, [('1', prompt('1'), {}), ('2', prompt('2'), {})])
+            cancelled = {'state': 'JOB_STATE_CANCELLED',
+                         'completionStats': {'successfulCount': '0', 'failedCount': '0'}}
+            self.assertEqual(list(client.collect(folder, manifest, {'name': JOB_NAME}, cancelled)), [])
+            state = json.loads((folder / 'job.json').read_text())
+            self.assertEqual(state['processed_count'], 0)
+            self.assertTrue(state['retry_missing'])
+            self.assertEqual(state['missing_product_ids'], ['1', '2'])
+            self.assertEqual(client.spent(), 0)
 
     def test_parts_use_prior_results_and_finished_parts_are_not_resubmitted(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -168,7 +188,10 @@ class BatchTests(unittest.TestCase):
 
             def wait(client, batch_folder, state):
                 status = 'JOB_STATE_CANCELLED' if batch_folder.name == '000001' else JOB['state']
-                return {**JOB, 'state': status, 'name': state['name']}
+                job = {**JOB, 'state': status, 'name': state['name']}
+                if status == 'JOB_STATE_CANCELLED':
+                    job['completionStats'] = {'successfulCount': '1', 'failedCount': '0'}
+                return job
 
             def download(client, bucket, name):
                 batch_folder = client.folder / f'{len(submissions):06d}'

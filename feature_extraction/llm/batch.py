@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from ..storage import digest, write_json, write_jsonl
-from .client import APIError, VertexSession
+from .client import APIError, REJECTED_HTTP_STATUSES, VertexSession
 from .request import estimated_cost, parse_response, request_body
 
 TERMINAL_STATES = {
@@ -127,7 +127,7 @@ class BatchClient:
         response = self.request('POST', f'{self.transport.base}/batchPredictionJobs', json=spec)
         if not response.ok:
             detail = f'Batch submission HTTP {response.status_code}: {response.text[:500]}'
-            if response.status_code in {400, 401, 403, 404}:
+            if response.status_code in REJECTED_HTTP_STATUSES:
                 state_path.unlink()
                 raise APIError(f'{detail}. Correct the rejection and run the same command again')
             raise APIError(f'{detail}. Submission state is saved in {state_path}')
@@ -187,13 +187,16 @@ class BatchClient:
                         if key not in entries or key in results:
                             raise APIError(f'Unknown or duplicate request in batch output {obj["name"]}')
                         results[key] = row
-        if not results:
-            raise APIError(f'Batch {state["name"]} ended as {status} without output: {job.get("error", "")}')
         missing = [entry['product_id'] for key, entry in entries.items() if key not in results]
-        stats = job.get('completionStats', {})
-        processed_count = int(stats.get('successfulCount', 0)) + int(stats.get('failedCount', 0))
+        stats = job.get('completionStats') or {}
+        processed_count = None
+        if {'successfulCount', 'failedCount'} <= stats.keys():
+            processed_count = int(stats['successfulCount']) + int(stats['failedCount'])
         # A completed request can be billable even if its output is not visible yet.
-        retry_missing = bool(missing) and status != 'JOB_STATE_SUCCEEDED' and processed_count <= len(results)
+        retry_missing = (bool(missing) and status != 'JOB_STATE_SUCCEEDED'
+                         and processed_count == len(results))
+        if not results and not retry_missing:
+            raise APIError(f'Batch {state["name"]} ended as {status} without output: {job.get("error", "")}')
         accounted = 0 if retry_missing else self.per_request * len(missing)
         for key, entry in entries.items():
             if key not in results:
@@ -215,4 +218,5 @@ class BatchClient:
                     error = f'Invalid batch response: {exc}'
             yield pid, parsed, metadata, str(error)
         write_json(folder / 'job.json', {**state, 'state': status, 'accounted_usd': accounted,
-                                         'missing_product_ids': missing, 'retry_missing': retry_missing})
+                                         'missing_product_ids': missing, 'retry_missing': retry_missing,
+                                         'processed_count': processed_count})

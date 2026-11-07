@@ -11,11 +11,11 @@ import pyarrow.parquet as pq
 from ..data import load_inputs
 from ..settings import load_settings
 from ..storage import digest, write_json
-from .client import EmbeddingClient
+from .client import EmbeddingClient, EmbeddingRejected
 
 
-def inputs_for(settings, limit):
-    ids, source, images, references, _, _ = load_inputs(settings, limit)
+def inputs_for(catalog):
+    ids, source, images, references, _, _ = catalog
     ids = list(dict.fromkeys(ids + [r['product_id'] for r in references]))
     inputs = []
     for pid in ids:
@@ -31,17 +31,18 @@ def inputs_for(settings, limit):
     return inputs
 
 
-def build(settings, limit=None, execute=False):
+def build(settings, limit=None, execute=False, *, catalog=None, export_folder=None):
     folder = Path(settings['embeddings'])
     folder.mkdir(parents=True, exist_ok=True)
     with (folder / '.run.lock').open('w') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return encode(settings, folder, limit, execute)
+        if catalog is None:
+            catalog = load_inputs(settings, limit)
+        return encode(settings, folder, inputs_for(catalog), execute, export_folder)
 
 
-def encode(settings, folder, limit, execute):
+def encode(settings, folder, inputs, execute, export_folder):
     cfg = settings['embedding_api']
-    inputs = inputs_for(settings, limit)
     # Match the previous cache identity when using the same model and input recipe.
     recipe = {'project': settings['api']['project'], 'model': cfg['model'], 'location': settings['api']['location'],
               'output_dimensionality': cfg['dimension'], 'task_type': None,
@@ -65,7 +66,8 @@ def encode(settings, folder, limit, execute):
             missing += 1
             if not execute:
                 continue
-            if any(r['product_id'] == pid and r['modality'] == modality for r in ledger):
+            if any(r['product_id'] == pid and r['modality'] == modality and r['status'] != 'rejected'
+                   for r in ledger):
                 raise RuntimeError(f'Prior uncertain embedding for {pid}/{modality}; inspect ledger before paying again')
             rate = cfg[f'{modality}_usd_per_million'] / 1_000_000
             reservation = cfg['max_input_tokens'] * rate
@@ -91,6 +93,10 @@ def encode(settings, folder, limit, execute):
                 write_json(path, cached)
                 entry.update(status='completed', input_tokens=tokens, accounted_usd=tokens * rate)
                 write_json(ledger_path, ledger)
+            except EmbeddingRejected as error:
+                entry.update(status='rejected', error=str(error), accounted_usd=0)
+                write_json(ledger_path, ledger)
+                raise
             except Exception as error:
                 entry.update(status='failed_or_uncertain', error=str(error))
                 write_json(ledger_path, ledger)
@@ -105,10 +111,12 @@ def encode(settings, folder, limit, execute):
         rows[modality].append(row)
     summary = {'selected_products_including_references': len(inputs) // 2, 'missing_vectors_before_run': missing,
                'cached_vectors': {m: len(r) for m, r in rows.items()}, 'execute': execute}
-    if execute:
+    if execute or (export_folder is not None and missing == 0):
+        export = Path(export_folder) if export_folder is not None else folder
+        export.mkdir(parents=True, exist_ok=True)
         expected = len(inputs) // 2
         # Reject subset exports over an existing larger export.
-        old_path = folder / 'manifest.json'
+        old_path = export / 'manifest.json'
         if old_path.exists():
             old = json.loads(old_path.read_text())
             if old.get('expected_per_modality', expected) > expected:
@@ -118,9 +126,9 @@ def encode(settings, folder, limit, execute):
                       ('input_sha256', pa.string())]
             if modality == 'image':
                 fields += [('image_id', pa.string()), ('image_path', pa.string())]
-            temporary = folder / f'{modality}.parquet.tmp'
+            temporary = export / f'{modality}.parquet.tmp'
             pq.write_table(pa.Table.from_pylist(values, schema=pa.schema(fields)), temporary, compression='zstd')
-            temporary.replace(folder / f'{modality}.parquet')
+            temporary.replace(export / f'{modality}.parquet')
         write_json(old_path, {**recipe, 'settings_sha256': fingerprint, 'expected_per_modality': expected,
                               'counts': {m: len(r) for m, r in rows.items()},
                               'complete': all(len(r) == expected for r in rows.values()),
