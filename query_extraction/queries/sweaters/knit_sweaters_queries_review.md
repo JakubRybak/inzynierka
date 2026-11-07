@@ -255,7 +255,7 @@
 
 - `gender in ["Women"]`
 
-**Residual** — `petite`
+**Residual** — `petite` · `for short`
 
 ## Zapytania 026-050
 

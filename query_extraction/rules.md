@@ -4,7 +4,7 @@
 
 - Query extraction turns a shopping query into one product category, hard filters, and a list of residual concepts.
 - English is the main language, followed by Polish and Spanish. The intended weighting is 94% English, 5% Polish, and 1% Spanish.
-- Category, feature, and value names follow the [taxonomy](../categories_and_features.md). Filters reflect requirements expressed in the query. `Other` is never extracted as a filter value.
+- Category, feature, and value names follow the [taxonomy](../categories_and_features.md). Filters reflect requirements expressed in the query.
 
 ## Category
 
@@ -28,7 +28,9 @@ The parser returns one JSON object with exactly three fields.
 
 Use an empty array when there are no filters or residual concepts. When no category is found, return `{"category":null,"filters":[],"residual":[]}`.
 
-Each categorical filter has exactly `feature`, `operator`, and `values`. Use a feature key available for the selected category, or `brand`. The `values` field is a non-empty array of distinct strings using exact taxonomy labels, excluding `Other`. For `brand`, use the explicitly requested brand name. Omit features that have no filter.
+Each categorical filter has exactly `feature`, `operator`, and `values`. Use a feature key available for the selected category, or `brand`. The `values` field is a non-empty array of distinct strings using exact taxonomy labels. Exclude `Other`, `Not Applicable`, and `Unknown` from all taxonomy filters, including exclusions. For `brand`, use the explicitly requested brand name. Omit features that have no filter.
+
+A request for a strapless garment uses `strap_style = Strapless` when the category supports it.
 
 Each price filter has exactly `feature` (always `"price"`), `operator`, and `value` (a finite, nonnegative JSON number). The amount has no currency field.
 

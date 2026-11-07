@@ -56,7 +56,7 @@ class QuerySchemaTests(unittest.TestCase):
             return
 
         self.assertIn(feature, schema)
-        unknown = set(values) - (allowed_values(schema[feature]) - {"Other"})
+        unknown = set(values) - (allowed_values(schema[feature]) - {"Other", "Not Applicable", "Unknown"})
         self.assertFalse(unknown, f"Unsupported values for {feature}: {sorted(unknown)!r}")
 
 

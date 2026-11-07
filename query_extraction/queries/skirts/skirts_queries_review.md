@@ -390,7 +390,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors contains_any ["Green"]`
 - `gender in ["Women"]`
 
 **Residual** — `khaki`
