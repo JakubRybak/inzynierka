@@ -9,13 +9,25 @@ from pathlib import Path
 
 
 QUERIES = Path(__file__).resolve().parent / "queries"
+QUERY_FOLDERS = (
+    "dress",
+    "jackets-and-coats",
+    "no_category",
+    "pants",
+    "shirts-and-blouses",
+    "shorts",
+    "skirts",
+    "sweaters",
+    "tops",
+)
 FIELDS = ("query", "expected_output", "language", "source")
 NO_CATEGORY = "no_category"
 
 
 def load_queries():
     groups = {}
-    for path in sorted(QUERIES.rglob("*.csv")):
+    paths = sorted(path for folder in QUERY_FOLDERS for path in (QUERIES / folder).glob("*_queries.csv"))
+    for path in paths:
         with path.open(encoding="utf-8", newline="") as source:
             for row in csv.DictReader(source):
                 category = json.loads(row["expected_output"])["category"]
@@ -76,7 +88,10 @@ def sample_queries(groups, size, seed):
 
 def main():
     groups = load_queries()
-    parser = argparse.ArgumentParser(description="Write a stratified query benchmark sample as CSV.")
+    parser = argparse.ArgumentParser(
+        description="Write a stratified query benchmark sample as CSV.",
+        epilog="Save generated samples outside query_extraction/queries/.",
+    )
     parser.add_argument("--size", type=parse_size, required=True, help="Number of queries or 'all'")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument(
