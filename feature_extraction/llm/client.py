@@ -1,11 +1,11 @@
 """Vertex transport, durable spending reservations and bounded HTTP retries."""
-import base64
 import json
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 from ..storage import digest, write_json
+from .request import estimated_cost, parse_response, request_body
 
 
 class APIError(RuntimeError):
@@ -24,27 +24,12 @@ class VertexSession:
                                          max_refresh_attempts=0)
         location = config['location']
         host = 'aiplatform.googleapis.com' if location == 'global' else f'{location}-aiplatform.googleapis.com'
-        self.base = (f'https://{host}/v1/projects/{config["project"]}/locations/{location}'
-                     '/publishers/google/models/')
+        self.base = f'https://{host}/v1/projects/{config["project"]}/locations/{location}'
 
     def post(self, model, method, body, timeout):
-        return self.session.post(f'{self.base}{model}:{method}', json=body, timeout=timeout)
+        return self.session.post(f'{self.base}/publishers/google/models/{model}:{method}', json=body, timeout=timeout)
 
 
-def request_body(prompt, max_output_tokens):
-    parts, images = [], []
-    for part in prompt['parts']:
-        if 'text' in part:
-            parts.append(part)
-            continue
-        path = Path(part['local_image_path'])
-        content = path.read_bytes()
-        mime = 'image/jpeg' if path.suffix.lower() in {'.jpg', '.jpeg'} else 'image/png'
-        images.append({'path': str(path), 'sha256': digest(content)})
-        parts.append({'inlineData': {'mimeType': mime, 'data': base64.b64encode(content).decode()}})
-    return {'systemInstruction': {'parts': [{'text': prompt['system_instruction']}]},
-            'contents': [{'role': 'user', 'parts': parts}],
-            'generationConfig': {**prompt['generation_config'], 'maxOutputTokens': max_output_tokens}}, images
 
 
 class ExtractionClient:
@@ -116,14 +101,9 @@ class ExtractionClient:
             try:
                 data = attempt['response']
                 usage = data['usageMetadata']
-                cost = (usage['promptTokenCount'] * input_rate
-                        + (usage['candidatesTokenCount'] + usage.get('thoughtsTokenCount', 0)) * output_rate)
+                cost = estimated_cost(usage, cfg)
                 attempt.update(usage=usage, estimated_usd=cost, accounted_usd=cost)
-                candidate = data['candidates'][0]
-                if candidate.get('finishReason') != 'STOP':
-                    raise ValueError(f'Incomplete output: {candidate.get("finishReason")}')
-                text = ''.join(p.get('text', '') for p in candidate['content']['parts'] if not p.get('thought'))
-                parsed = json.loads(text)
+                parsed = parse_response(data)
                 attempt.update(status='completed', parsed_output=parsed)
                 write_json(path, attempt)
                 return parsed, attempt

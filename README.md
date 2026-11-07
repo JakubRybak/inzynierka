@@ -9,14 +9,17 @@ extraction. The product taxonomy is defined in
 1. [Dataset preparation](dataset_preparation/README.md) selects clothing products
    from Fashion-Gen HDF5, assigns project categories, and exports images and CSV
    manifests while preserving train and validation as separate source files.
+   It also exports query candidates from Amazon ESCI.
 2. [Feature extraction](feature_extraction/README.md) assigns attributes using
    keyword rules and completes missing values with Gemini structured output.
 
 ```text
-dataset_preparation/      Catalog preparation code and source-category mapping
+dataset_preparation/      Fashion-Gen catalog and Amazon ESCI query preparation
 feature_extraction/       Keyword rules, LLM prompts, embeddings and extraction
-data/raw/                 Original HDF5 files
-data/processed/           Generated catalog CSVs and images
+data/raw/fashiongen/       Original Fashion-Gen HDF5 files
+data/raw/amazon_esci/      Original Amazon ESCI query Parquet
+data/processed/fashiongen/ Generated catalog CSVs and images
+data/processed/amazon_esci/ Exported Amazon ESCI query candidates
 ```
 
 Use Python 3.10 or newer. Follow the module README files for environment setup,

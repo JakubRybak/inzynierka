@@ -245,6 +245,62 @@ stop execution. Resume after inspecting the saved state.
 A complete, valid `ready` product with the required image poses can join the bank.
 `ready` means schema and dependency validation passed; it is not a manual accuracy label.
 
+## Online and batch inference
+
+Online inference is the default and sends one product at a time. Batch inference
+uses the same prompts, structured output, keyword protection and product exports.
+Set `batch.bucket` in the extraction config to an existing private Cloud Storage
+bucket. The caller must be able to upload and read objects, and the Vertex AI
+service agent must be able to read batch inputs and write outputs there.
+
+```sh
+# Online, with the default product selection
+python -m feature_extraction.run --run-name online-pilot --mode online --execute
+
+# One Vertex job for a small sample
+python -m feature_extraction.run --run-name batch-smoke --mode batch --limit 5 --execute
+
+# Entire catalog in successive parts, after configuring embeddings and budget
+python -m feature_extraction.run --run-name batch-catalog --mode batch --batch-size 200 --all-products --all-categories --execute
+```
+
+Omit `--execute` to prepare the first outstanding part locally, without
+uploading data or calling Vertex. See `summary.json` for the planned request
+count and reservation. The full catalog requires image and text embeddings for all selected
+products and manual references. To prepare embeddings for the same scope, use a
+config with `selection: null` and all required categories with
+`python -m feature_extraction.embeddings.build --config PATH`.
+
+Without `--batch-size`, the selected requests go into one job. With
+`--batch-size N`, the limit applies to products requiring Gemini after keyword
+processing and seed reuse. The next part starts after the current part is
+collected and its eligible `ready` products enter the bank. The bank is fixed
+within a part.
+
+Batch manifests, input JSONL and job IDs live under
+`artifacts/runs/<run-name>/batch/`. Re-run the same command to resume the
+current job by its saved ID. An ambiguous submission is looked up in Vertex
+before any further progress. If a unique match cannot be found, the run stops
+for inspection. After an explicit HTTP 400, 401, 403 or 404 rejection, correct
+the cause and re-run the command. Per-product errors in returned output are
+saved as `needs_review`. For a partial job, the run saves the available rows
+and stops. On resume it submits only outstanding products, provided Vertex
+did not report processed requests whose output is still missing. Otherwise
+it checks the saved job again. A job with no readable results stops for
+inspection. Both modes write `products.jsonl` and `products.parquet` to the run folder.
+
+Batch uses its own token rates and budget. Before submission, it reserves the
+configured input token allowance and maximum output tokens per request at those
+rates. This is a planning estimate, including a conservative output allowance.
+After collection, the reservation is replaced by usage estimates where Vertex
+reports usage. A budget or polling interval change can be used to resume the
+same batch run. With the checked-in settings, 200 requests reserve about
+$8.79, above the default $5 budget. The full 900-product pilot in one job
+reserves about $36.93 for 840 requests. Check a dry run and set
+`batch.budget_usd` to cover the next reservation plus usage already recorded
+for the run, or choose a smaller part size before starting it. Cloud Storage
+charges are separate.
+
 ## Preserved data
 
 Existing embeddings are in `artifacts/embeddings/`. The original 900 annotated

@@ -29,3 +29,12 @@ embedding_api:
   max_input_tokens: 8192
   image_usd_per_million: 0.45
   text_usd_per_million: 0.20
+batch:
+  # Set to an existing private Cloud Storage bucket before using batch mode.
+  bucket: null
+  prefix: fashiongen-extraction
+  poll_seconds: 30
+  budget_usd: 5.0
+  # Batch rates are independent of the online rates. Check the selected model's SKU.
+  input_usd_per_million: 0.15
+  output_usd_per_million: 1.25
