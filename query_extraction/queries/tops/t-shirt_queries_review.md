@@ -1657,7 +1657,9 @@
 
 **Kategoria** — `T-shirts` · angielski · Amazon ESCI
 
-**Filtry** — brak
+**Filtry**
+
+- `pattern in ["Floral"]`
 
 **Residual** — `daisies`
 
@@ -1681,9 +1683,9 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `neckline in ["Crewneck"]`
+- `neckline in ["Crewneck", "Scoop Neck"]`
 
-**Residual** — brak
+**Residual** — `round neck`
 
 ### 161. `100% cotton tee for a family reunion`
 

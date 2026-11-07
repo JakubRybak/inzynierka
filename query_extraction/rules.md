@@ -11,6 +11,8 @@
 - The category describes the product the user wants to buy. `t-shirt to wear with jeans` refers to `T-shirts`. `t-shirt dress` refers to `Dresses` when that category is supported.
 - When the query identifies no supported category, the result is `category: null` and extraction stops.
 - A bare `t-shirt` gives `T-shirts` with empty filter and residual lists.
+- Use `Tank tops & Camisoles` for generic `top` queries such as `top`, `black top`, and `crop top` when the query does not identify a more specific supported garment.
+- Use `Polos` for a collared tee, such as `tee with a collar`.
 
 **Outside scope**
 
@@ -98,7 +100,7 @@ Encode `between X and Y` as two price clauses, `gte` for X and `lte` for Y.
 **Allowed values**
 
 - Brand — any explicitly requested brand name.
-- Gender — `Men` or `Women` for T-shirts, when specified in the query.
+- Gender — `Men` or `Women` for any category with a `gender` feature, when specified in the query.
 
 **Examples**
 
@@ -158,6 +160,7 @@ Encode `between X and Y` as two price clauses, `gte` for X and `lte` for Y.
 - Residual is a list with one item per independent concept. Items use the query’s language and keep the original wording or a very close variant.
 - Modifiers, negation, and alternatives stay with the concept they qualify. The category and requirements fully captured by filters are omitted.
 - `cotton tee with a mountain print for a family reunion` gives a Cotton filter and `["mountain print", "for a family reunion"]`.
+- `dress shirt` gives `Shirts` and residual `["dress"]`.
 
 ### Color Shades
 

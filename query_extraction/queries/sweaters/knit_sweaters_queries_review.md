@@ -54,11 +54,11 @@
 
 **Filtry**
 
-- `brand in ["Hot Oink"]`
+- `colors contains_any ["Pink"]`
 - `gender in ["Women"]`
 - `neckline in ["High Neck"]`
 
-**Residual** — `turtleneck`
+**Residual** — `hot pink` · `turtleneck`
 
 ### 006. `mens mock neck sweater`
 

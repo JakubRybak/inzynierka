@@ -288,7 +288,7 @@
 - `colors contains_any ["Black"]`
 - `strap_style in ["Strapless"]`
 
-**Residual** — brak
+**Residual** — `gown`
 
 ### 027. `ice blue evening gown`
 
@@ -298,7 +298,7 @@
 
 - `colors contains_any ["Blue"]`
 
-**Residual** — `ice blue` · `evening`
+**Residual** — `ice blue` · `evening gown`
 
 ### 028. `bridesmaid dresses`
 
@@ -490,7 +490,7 @@
 
 - `gender in ["Women"]`
 
-**Residual** — `formal evening`
+**Residual** — `formal` · `evening`
 
 ### 048. `fringe dress`
 
@@ -553,7 +553,7 @@
 
 - `brand in ["Halston"]`
 
-**Residual** — `evening`
+**Residual** — `evening gowns`
 
 ### 054. `homecoming dresses short tight sparkles`
 
@@ -748,8 +748,9 @@
 **Filtry**
 
 - `pattern in ["Floral"]`
+- `dress_type contains_any ["Slip"]`
 
-**Residual** — `y2k` · `lace trim` · `party` · `cami`
+**Residual** — `y2k` · `lace trim` · `party`
 
 ### 074. `women's gold knee length dress`
 

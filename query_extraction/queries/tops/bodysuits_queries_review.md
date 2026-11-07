@@ -88,7 +88,7 @@
 - `neckline in ["V-Neck"]`
 - `gender in ["Women"]`
 
-**Residual** — brak
+**Residual** — `tshirt`
 
 ### 009. `off the shoulder body suit women`
 
@@ -334,7 +334,7 @@
 
 **Filtry** — brak
 
-**Residual** — `tank top style`
+**Residual** — `tank top`
 
 ### 034. `black body suit tank top`
 

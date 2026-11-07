@@ -189,6 +189,7 @@
 **Filtry**
 
 - `colors contains_any ["Black"]`
+- `strap_style not_in ["Strapless"]`
 
 **Residual** — brak
 
@@ -590,9 +591,7 @@
 
 **Kategoria** — `Tank tops & Camisoles` · angielski · inspirowane Amazon ESCI
 
-**Filtry**
-
-- `length in ["Longline"]`
+**Filtry** — brak
 
 **Residual** — `tunic` · `plus size`
 
@@ -709,7 +708,7 @@
 
 - `gender in ["Women"]`
 
-**Residual** — `sexy` · `sequins` · `dressy` · `flowy`
+**Residual** — `sexy` · `sequins` · `dressy` · `flowy` · `sleeveless`
 
 ### 071. `womens summer tanks`
 
@@ -1026,6 +1025,7 @@
 
 - `main_composition contains_any ["Cotton"]`
 - `main_composition contains_none ["Polyester"]`
+- `strap_style not_in ["Strapless"]`
 
 **Residual** — brak
 
