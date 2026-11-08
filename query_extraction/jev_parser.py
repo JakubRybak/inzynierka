@@ -16,151 +16,38 @@ import unicodedata
 import requests
 
 from .catalog import CATEGORY_CRITERIA, load_query_catalog
+from .few_shots import (
+    CATEGORY_FEW_SHOTS,
+    PER_CATEGORY_FEW_SHOTS,
+    build_jev_feature_examples_json,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
 MODEL = "typesafe/jev-1.14"
 
-CATEGORY_FEW_SHOTS: List[Dict[str, str]] = [
-    {"query": "a green jersey T-shirt dress for summer", "answer": "Dresses"},
-    {"query": "a ribbed singlet in white", "answer": "Tank tops & Camisoles"},
-    {"query": "a black crop top for a party", "answer": "Tank tops & Camisoles"},
-    {"query": "a cotton tee with a collar", "answer": "Polos"},
-    {"query": "a tee to wear with a leather jacket", "answer": "T-shirts"},
-    {"query": "a classic white dress shirt for office", "answer": "Shirts"},
-    {"query": "a silk peasant blouse", "answer": "Blouses"},
-    {"query": "a fleece crewneck sweatshirt without hood", "answer": "Sweatshirts"},
-    {"query": "a grey zip-up hoodie", "answer": "Hoodies & Zipups"},
-    {"query": "a cotton half-zip pullover with a hood", "answer": "Hoodies & Zipups"},
-    {"query": "a chunky cable-knit wool jumper", "answer": "Knit Sweaters"},
-    {"query": "an open-front knit cardigan", "answer": "Cardigans"},
-    {"query": "a double-breasted wool peacoat", "answer": "Classic Coats"},
-    {"query": "a beige belted gabardine trench", "answer": "Trench Coats"},
-    {"query": "a black leather biker jacket", "answer": "Jackets"},
-    {"query": "an olive nylon flight bomber", "answer": "Bombers"},
-    {"query": "a quilted down gilet", "answer": "Vests"},
-    {"query": "tailored high-waisted wool slacks", "answer": "Trousers"},
-    {"query": "olive combat pants with utility cargo pockets", "answer": "Cargo Pants"},
-    {"query": "grey fleece tapered joggers", "answer": "Sweatpants & Lounge Pants"},
-    {"query": "faded bootcut denim jeans", "answer": "Jeans"},
-    {"query": "men's linen bermuda shorts", "answer": "Shorts"},
-    {"query": "a pleated midi skirt", "answer": "Skirts"},
-    {"query": "a long-sleeve snap-crotch bodysuit", "answer": "Bodysuits"},
-    {"query": "leather Chelsea ankle boots", "answer": "outside"},
-    {"query": "something warm in black under 100 dollars", "answer": "outside"},
-    {"query": "a cotton T-shirt or a linen dress", "answer": "outside"},
-]
 
-FEATURE_FEW_SHOTS: List[Dict[str, Any]] = [
-    {
-        "query": "a loose boxy T-shirt",
-        "decisions": {"fit": {"Oversized": "requested", "Slim": "not_specified", "Regular": "not_specified"}},
-        "note": "An explicit positive fit does not negate other fit values.",
-    },
-    {
-        "query": "a fitted tee, but not relaxed",
-        "decisions": {"fit": {"Slim": "requested", "Oversized": "excluded", "Regular": "not_specified"}},
-        "note": "Both positive and negative clauses are explicitly stated in the query.",
-    },
-    {
-        "query": "a sleeveless dress",
-        "decisions": {
-            "sleeve_length": {
-                "Sleeveless": "requested",
-                "Short Sleeve": "not_specified",
-                "Three-Quarter Sleeve": "not_specified",
-                "Long Sleeve": "not_specified",
-            },
-            "gender": {},
-            "strap_style": {},
-        },
-        "note": "Sleeveless names one value; Dress does not imply Women or a strap_style.",
-    },
-    {
-        "query": "all-black tank top",
-        "decisions": {"colors": {"Black": "requested"}},
-        "relations": {"colors": "EXACT"},
-        "note": "'all-black' or 'only black' requires EXACT (equals_set).",
-    },
-    {
-        "query": "green tank top, but not emerald",
-        "decisions": {"colors": {"Green": "requested"}},
-        "relations": {"colors": "ANY"},
-        "note": "Excluding a specific shade ('not emerald') does not exclude the Green color family.",
-    },
-    {
-        "query": "blue or red tanks without yellow",
-        "decisions": {"colors": {"Blue": "requested", "Red": "requested", "Yellow": "excluded"}},
-        "relations": {"colors": "ANY"},
-    },
-    {
-        "query": "black and yellow tank tops",
-        "decisions": {"colors": {"Black": "requested", "Yellow": "requested"}},
-        "relations": {"colors": "ALL"},
-    },
-    {
-        "query": "a 100% cotton T-shirt",
-        "decisions": {"main_composition": {"Cotton": "requested"}},
-        "relations": {"main_composition": "EXACT"},
-        "note": "100% material or 'only/pure' material maps to EXACT (equals_set).",
-    },
-    {
-        "query": "a 30% wool sweater with 0% polyester",
-        "decisions": {"main_composition": {"Wool": "requested", "Polyester": "excluded"}},
-        "relations": {"main_composition": "ANY"},
-        "note": "0% excludes the material; a percentage between 0% and 100% requests presence (ANY).",
-    },
-    {
-        "query": "a dress made of wool and silk",
-        "decisions": {"main_composition": {"Wool": "requested", "Silk": "requested"}, "gender": {}},
-        "relations": {"main_composition": "ALL"},
-    },
-    {
-        "query": "an unlined linen jacket",
-        "decisions": {
-            "main_composition": {"Linen": "requested"},
-            "lining_composition": {"Unlined": "requested"},
-        },
-        "relations": {"main_composition": "ANY", "lining_composition": "EXACT"},
-        "note": "'unlined' sets lining_composition=Unlined with EXACT.",
-    },
-    {
-        "query": "a bomber jacket with a silk lining",
-        "decisions": {"lining_composition": {"Silk": "requested", "Unlined": "not_specified"}},
-        "relations": {"lining_composition": "ANY"},
-        "note": "Explicit silk lining maps to lining_composition=Silk (ANY).",
-    },
-    {
-        "query": "a strapless camisole",
-        "decisions": {"strap_style": {"Strapless": "requested", "Standard": "not_specified"}, "strap_width": {}},
-        "note": "Do not infer strap_width or Sleeveless from Strapless.",
-    },
-    {
-        "query": "a fitted top with spaghetti straps",
-        "decisions": {"fit": {"Slim": "requested"}, "strap_width": {"Spaghetti": "requested"}, "strap_style": {}},
-        "note": "Generic straps with a width do not specify Standard strap_style.",
-    },
-    {
-        "query": "an oversized pullover hoodie for men",
-        "decisions": {
-            "fit": {"Oversized": "requested"},
-            "closure_type": {"Pullover": "requested"},
-            "hood": {"With Hood": "requested"},
-            "gender": {"Men": "requested"},
-        },
-        "note": "In Hoodies & Zipups, the word 'hoodie' explicitly requests hood=With Hood.",
-    },
-]
-
-JEV_RULES = (
-    "Classify direct textual evidence in CURRENT_QUERY (EN/PL/ES). Never infer unstated values. "
-    "A positive value does not exclude other values. Exclusions require explicit negation ('without', 'no', 'not', 'bez', 'sin', '0%'). "
-    "Negating a color shade ('not turquoise') does NOT exclude its color family ('Blue'). "
-    "Multi-choice/composition relation: conjunction ('and'/'i'/'y', blends) -> ALL; alternatives ('or') or single value or <100% share -> ANY; "
-    "'only', 'exclusively', 'pure', '100% <material>', 'all-<color>', or 'unlined' -> EXACT. "
-    "Faux/vegan/PU leather is NOT Leather. In outerwear, down/feathers ('down', 'puch', 'plumas') is insulation=Down, not main_composition. "
-    "Do not extract brand, price, or residual."
-)
+def build_jev_rules(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> str:
+    """Build category-scoped Jev extraction rules."""
+    cat_features = set(catalog[category].keys())
+    parts = [
+        f"Classify direct textual evidence in CURRENT_QUERY (EN/PL/ES) for category {category}. Never infer unstated values.",
+        "A positive value does NOT exclude other values (e.g. requesting 'With Hood' leaves 'Without Hood' as not_specified, NEVER excluded).",
+        "Exclusions require explicit negation ('without', 'no', 'not', 'bez', 'sin', '0%') targeting that specific value.",
+        "Negating a color shade ('not turquoise', 'not emerald') does NOT exclude its color family.",
+        "Multi-choice/composition relation: conjunction ('and'/'i'/'y', blends) -> ALL; alternatives ('or') or single value or <100% share -> ANY; 'only', 'exclusively', 'pure', '100% <material>', 'all-<color>'",
+    ]
+    if "lining_composition" in cat_features:
+        parts[-1] += ", or 'unlined' -> EXACT."
+    else:
+        parts[-1] += " -> EXACT."
+    parts.append("Faux/vegan/PU leather is NOT Leather.")
+    if "insulation" in cat_features:
+        parts.append("Down/feathers ('down', 'puch', 'plumas') is insulation=Down, not main_composition.")
+    if "leg_shape" in cat_features:
+        parts.append("Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to leg_shape=Tapered.")
+    parts.append("Do not extract brand, price, or residual.")
+    return " ".join(parts)
 
 
 def normalize_query(query: str) -> str:
@@ -176,24 +63,6 @@ def load_openrouter_key() -> str:
             if line.startswith("OPENROUTER_API_KEY="):
                 return line.split("=", 1)[1].strip()
     raise RuntimeError("Missing OPENROUTER_API_KEY in environment or .env")
-
-
-def feature_examples_json(feature: str) -> str:
-    examples = []
-    for shot in FEATURE_FEW_SHOTS:
-        if feature not in shot["decisions"]:
-            continue
-        example: Dict[str, Any] = {
-            "example_query": shot["query"],
-            "value_labels": shot["decisions"][feature],
-            "all_unlisted_value_labels": "not_specified",
-        }
-        if feature in shot.get("relations", {}):
-            example["relation"] = shot["relations"][feature]
-        if shot.get("note"):
-            example["explanation"] = shot["note"]
-        examples.append(example)
-    return json.dumps(examples, ensure_ascii=False)
 
 
 def category_payload(query: str) -> Dict[str, Any]:
@@ -236,7 +105,7 @@ def feature_payload(
     questions: Dict[str, Any] = {}
     mapping: Dict[str, Tuple[str, str]] = {}
     for feature, spec in catalog[category].items():
-        examples = feature_examples_json(feature)
+        examples = build_jev_feature_examples_json(category, feature, catalog)
         scope = ""
         if feature == "strap_style":
             scope = (
@@ -260,11 +129,16 @@ def feature_payload(
                 "does NOT specify Synthetic Padding or Down; leave insulation not_specified in that case. "
             )
         elif category == "Hoodies & Zipups" and feature == "hood":
-            scope = "The word 'hoodie'/'hoodies'/'hooded'/'z kapturem'/'con capucha' requests With Hood. "
+            scope = (
+                "The word 'hoodie'/'hoodies'/'hooded'/'z kapturem'/'con capucha' requests With Hood "
+                "(and leaves Without Hood as not_specified, NEVER excluded). "
+            )
         elif category == "Hoodies & Zipups" and feature == "closure_type":
             scope = "'zip-up'/'zip up'/'zipper'/'na suwak'/'con cremallera' -> Zip; 'half-zip'/'z krótkim zamkiem' -> Half-Zip; 'pullover' -> Pullover. "
         elif category == "Sweatpants & Lounge Pants" and feature == "leg_shape":
             scope = "'joggers'/'joggery' requests Tapered. "
+        elif feature == "leg_shape":
+            scope = "Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to Tapered. "
         elif category == "Shorts" and feature == "shorts_type":
             scope = "Running/volleyball/gym/compression/athletic shorts request Athletic. "
 
@@ -277,7 +151,7 @@ def feature_payload(
                 "instructions": (
                     f"Classify direct mention and polarity of {feature}={value!r} ({val_desc}) in CURRENT_QUERY for {category}. "
                     f"Another positive value does NOT exclude this value. {scope}{spec['instruction']}"
-                    + (f"\nExamples: {examples}" if examples != "[]" else "")
+                    + (f"\nExamples ({category}): {examples}" if examples != "[]" else "")
                 ),
                 "criteria": {
                     "not_specified": f"CURRENT_QUERY does not directly request or negate {value} for {feature}.",
@@ -289,8 +163,8 @@ def feature_payload(
             questions[f"{feature}_relation"] = {
                 "type": "choice",
                 "instructions": (
-                    f"How must the positively requested {feature} values be combined in CURRENT_QUERY? Ignore exclusions."
-                    + (f"\nExamples: {examples}" if examples != "[]" else "")
+                    f"How must the positively requested {feature} values be combined in CURRENT_QUERY for {category}? Ignore exclusions."
+                    + (f"\nExamples ({category}): {examples}" if examples != "[]" else "")
                 ),
                 "criteria": {
                     "ANY": "Alternatives ('or'), or a single value without 'only'/'100%'/'all-'/'unlined', or <100% material share, or none requested.",
@@ -303,7 +177,7 @@ def feature_payload(
         "state": {
             "CURRENT_QUERY": query,
             "category": category,
-            "rules": JEV_RULES,
+            "rules": build_jev_rules(category, catalog),
         },
         "questions": questions,
     }

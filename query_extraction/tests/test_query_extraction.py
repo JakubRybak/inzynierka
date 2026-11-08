@@ -19,15 +19,17 @@ from query_extraction.evaluate import (
     evaluate_predictions,
     summarize_latencies,
 )
+from query_extraction.few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
 from query_extraction.jev_parser import (
-    CATEGORY_FEW_SHOTS,
-    FEATURE_FEW_SHOTS,
     category_payload,
     feature_payload,
     filters_from_answers,
     normalize_query,
 )
-from query_extraction.llm_parser import FULL_FEW_SHOTS
+from query_extraction.llm_parser import (
+    build_auxiliary_system_prompt,
+    build_full_system_prompt,
+)
 from query_extraction.sample_queries import load_queries
 
 
@@ -40,10 +42,35 @@ class QueryExtractionOfflineTests(unittest.TestCase):
     def test_all_22_categories_covered_in_catalog_and_criteria(self) -> None:
         self.assertEqual(len(self.catalog), 22)
         self.assertEqual(set(self.catalog.keys()), set(CATEGORY_CRITERIA.keys()))
+        self.assertEqual(set(self.catalog.keys()), set(PER_CATEGORY_FEW_SHOTS.keys()))
         for cat, features in self.catalog.items():
             for feat, spec in features.items():
                 self.assertTrue(spec["values"], f"Empty values for {cat}.{feat}")
                 self.assertFalse(set(spec["values"]) & EXCLUDED_FILTER_VALUES)
+
+    def test_per_category_few_shots_schema_validity_and_category_isolation(self) -> None:
+        for cat, shots in PER_CATEGORY_FEW_SHOTS.items():
+            self.assertGreaterEqual(len(shots), 5, f"Category {cat} should have at least 5 few-shots")
+            for shot in shots:
+                validated = validate_response(shot["output"], cat, self.catalog, auxiliary_only=False)
+                self.assertEqual(len(validated["filters"]), len(shot["output"]["filters"]))
+
+            full_prompt = build_full_system_prompt(cat, self.catalog)
+            aux_prompt = build_auxiliary_system_prompt(cat, self.catalog)
+            jev_payload, _ = feature_payload("test query", cat, self.catalog)
+            jev_str = str(jev_payload)
+
+            # Verify all examples of this category appear in the prompts, and NO examples from other categories appear
+            for shot in shots:
+                self.assertIn(shot["query"], full_prompt)
+                self.assertIn(shot["query"], aux_prompt)
+            for other_cat, other_shots in PER_CATEGORY_FEW_SHOTS.items():
+                if other_cat == cat:
+                    continue
+                for other_shot in other_shots:
+                    self.assertNotIn(other_shot["query"], full_prompt)
+                    self.assertNotIn(other_shot["query"], aux_prompt)
+                    self.assertNotIn(other_shot["query"], jev_str)
 
     def test_zero_overlap_between_few_shots_and_all_benchmark_queries(self) -> None:
         all_bench = {
@@ -51,12 +78,18 @@ class QueryExtractionOfflineTests(unittest.TestCase):
             for rows in self.groups.values()
             for row in rows
         }
-        for group in (CATEGORY_FEW_SHOTS, FEATURE_FEW_SHOTS, FULL_FEW_SHOTS):
-            for shot in group:
+        for shot in CATEGORY_FEW_SHOTS:
+            self.assertNotIn(
+                normalize_query(shot["query"]),
+                all_bench,
+                f"Category few-shot overlaps with benchmark: {shot['query']}",
+            )
+        for cat, shots in PER_CATEGORY_FEW_SHOTS.items():
+            for shot in shots:
                 self.assertNotIn(
                     normalize_query(shot["query"]),
                     all_bench,
-                    f"Few-shot overlaps with benchmark: {shot['query']}",
+                    f"Per-category few-shot ({cat}) overlaps with benchmark: {shot['query']}",
                 )
 
     def test_schemas_and_validation(self) -> None:

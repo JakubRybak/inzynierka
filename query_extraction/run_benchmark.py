@@ -10,9 +10,8 @@ from typing import Any, Dict, List
 
 from .catalog import load_query_catalog
 from .evaluate import evaluate_predictions
+from .few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
 from .jev_parser import (
-    CATEGORY_FEW_SHOTS,
-    FEATURE_FEW_SHOTS,
     JevClient,
     category_payload,
     feature_payload,
@@ -20,7 +19,6 @@ from .jev_parser import (
     normalize_query,
 )
 from .llm_parser import (
-    FULL_FEW_SHOTS,
     GEMINI_MODEL,
     GPT_OSS_MODEL,
     QWEN_MODEL,
@@ -34,11 +32,10 @@ RESULTS_DIR = HERE / "results"
 
 
 def assert_no_data_leakage(sample_rows: List[Dict[str, str]]) -> None:
-    few_shot_queries = {
-        normalize_query(item["query"])
-        for group in (CATEGORY_FEW_SHOTS, FEATURE_FEW_SHOTS, FULL_FEW_SHOTS)
-        for item in group
-    }
+    few_shot_queries = {normalize_query(item["query"]) for item in CATEGORY_FEW_SHOTS}
+    for cat_shots in PER_CATEGORY_FEW_SHOTS.values():
+        for item in cat_shots:
+            few_shot_queries.add(normalize_query(item["query"]))
     overlaps = [
         row["query"]
         for row in sample_rows
@@ -89,14 +86,14 @@ def run_smoke_test() -> None:
     print(f"2b GPT Aux ({gpt_aux.latency_seconds:.3f}s): {gpt_aux.parsed}", flush=True)
 
 
-def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path) -> Dict[str, Any]:
+def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fresh: bool = False) -> Dict[str, Any]:
     catalog = load_query_catalog()
     groups = load_queries()
     sample_rows = sample_queries(groups, size, seed)
     assert_no_data_leakage(sample_rows)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    if output_path.exists():
+    if output_path.exists() and not fresh:
         state = json.loads(output_path.read_text(encoding="utf-8"))
         print(f"Resuming from existing checkpoint: {output_path}", flush=True)
     else:
@@ -357,13 +354,14 @@ def main() -> None:
         default=RESULTS_DIR / "benchmark_30_seed42.json",
         help="Path to output JSON file",
     )
+    parser.add_argument("--fresh", action="store_true", help="Ignore existing checkpoint and run all stages fresh")
     args = parser.parse_args()
 
     if args.smoke_test:
         run_smoke_test()
         return
 
-    run_benchmark(args.size, args.seed, args.budget_usd, args.output)
+    run_benchmark(args.size, args.seed, args.budget_usd, args.output, fresh=args.fresh)
 
 
 if __name__ == "__main__":

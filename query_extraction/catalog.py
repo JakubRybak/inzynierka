@@ -217,6 +217,12 @@ def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
                 v: prompt_def["values"].get(v, v)
                 for v in values
             }
+            if feature == "leg_shape" and "Tapered" in val_descriptions:
+                val_descriptions["Tapered"] = (
+                    "Explicitly tapered or carrot-cut leg narrowing toward the ankle, or 'joggers' / 'joggery'. "
+                    "Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to Tapered "
+                    "('skinny' maps ONLY to fit=Skinny)."
+                )
             lines = [prompt_def["instruction"]]
             for v in values:
                 lines.append(f"- {v}: {val_descriptions[v]}")
