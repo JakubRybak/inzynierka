@@ -72,9 +72,9 @@ class Benchmark(unittest.TestCase):
     def test_examples_only_dev_and_residual_first(self):
         ex = bp.examples(self.rows)
         self.assertEqual(list(ex), ["Jeans"])
-        self.assertEqual(len(ex["Jeans"]), bp.EXAMPLES_PER_CATEGORY)
+        self.assertEqual(len(ex["Jeans"]), 7)
         self.assertNotIn(self.test[0], ex["Jeans"])
-        self.assertNotIn(self.dev[6], ex["Jeans"])
+        self.assertEqual(ex["Jeans"][-1], self.dev[6])
 
 
 class AroundPrice(unittest.TestCase):

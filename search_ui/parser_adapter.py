@@ -2,8 +2,8 @@
 Query parsers and the adapter from parser output to the condition tree in conditions.py.
 A parser is a function f(query) -> dict in the QueryParser.to_dict() format of poc/scripts/query_parser.py.
 
-    --parser llm              poc/scripts/query_parser.py (Vertex AI)
-    --parser benchmark        reviewed benchmark parses of dev queries, other queries through llm (benchmark_parser.py)
+    --parser llm              benchmark parses for dev queries, poc/scripts/query_parser.py (Vertex AI) for the rest
+                              (benchmark_parser.py, the default)
     --parser mock             simple matching of query words against index values, no API calls
     --parser module:function  any function returning the same format
 """
@@ -100,10 +100,11 @@ class Parser:
 def load_parser(spec, vocabulary=None):
     if spec == "mock":
         return Parser("mock (index vocabulary)", MockParser(vocabulary))
-    spec = {"llm": "llm_parser:parse", "benchmark": "benchmark_parser:parse"}.get(spec, spec)
+    if spec == "llm":
+        spec = "benchmark_parser:parse"
     module, _, function = spec.partition(":")
     if not module or not function:
-        raise SystemExit(f"--parser: expected llm, benchmark, mock or module:function, got {spec!r}")
+        raise SystemExit(f"--parser: expected llm, mock or module:function, got {spec!r}")
     for p in (HERE.parent, HERE, Path.cwd()):
         if str(p) not in sys.path:
             sys.path.insert(0, str(p))

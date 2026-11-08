@@ -14,33 +14,33 @@ It uses the outputs of the other parts of the repository and computes nothing of
 | product features | `feature_extraction/outputs/pilot_9922/products.parquet` |
 | product embeddings | `feature_extraction/outputs/pilot_9922/embeddings/` (description and main image, 3072 dims, Git LFS) |
 | filter panel features and values | `feature_extraction/schema/` (all 22 categories) |
-| query parser | `poc/scripts/query_parser.py` with prompts and schemas in `poc/query_parsing/` |
 | benchmark parses | `query_extraction/queries/` on the `user_queries` branch (1,535 reviewed queries, 22 categories) |
+| query parser | `poc/scripts/query_parser.py` with prompts and schemas in `poc/query_parsing/` |
 
-Two parsers can be used:
+A query is parsed in one of two ways (`benchmark_parser.py`):
 
-- `--parser llm` – the two-step parser from the earlier proof of concept. It supports **T-shirts, Dresses and
-  Tank tops & Camisoles**; for other queries it returns no category, and the category and filters are picked by
-  hand in the filter panel. Its feature values were written before the current schemas, so a value that no longer
-  exists matches no product, with a warning.
-- `--parser benchmark` – the reviewed parses of the query extraction benchmark for all 22 categories, without API
-  calls, for working on the ranking while there is no parser for every category. Only queries of the **dev split**
-  are answered from the benchmark, and the examples in the page come from it; a test query or any other query goes to
-  the LLM parser. The split is the one of the ranking evaluation (a hash of the query and its category), so test
-  queries stay unseen while the ranking is tuned. The benchmark is read from `query_extraction/queries/` in the
-  working tree or, while it is not merged, from `origin/user_queries`.
+- **Benchmark** – a query of the **dev split** of the query extraction benchmark gets its reviewed parse, for all
+  22 categories and without API calls. The examples in the page are such queries. The split is the one of the
+  ranking evaluation (a hash of the query and its category), so test queries stay unseen while the ranking is
+  tuned. The benchmark is read from `query_extraction/queries/` in the working tree or, while it is not merged,
+  from `origin/user_queries`.
+- **LLM parser** – any other query, a test query included, goes to the two-step parser from the earlier proof of
+  concept. It supports **T-shirts, Dresses and Tank tops & Camisoles**; for other queries it returns no category,
+  and the category and filters are picked by hand in the filter panel. Its feature values were written before the
+  current schemas, so a value that no longer exists matches no product, with a warning.
 
 ## Quick start
 
 From the repository root, with a Python that has the requirements below:
 
 ```sh
-git lfs pull                       # the embeddings are Git LFS files
 python search_ui/prepare.py        # pilot products with status ready -> search_ui/data/
-python search_ui/server.py --parser llm
+python search_ui/server.py
 ```
 
 The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again when the features file changes.
+The embeddings are Git LFS files: with `git-lfs` installed they come with the checkout; otherwise install it and run
+`git lfs pull`.
 
 **Requirements**
 
@@ -52,13 +52,13 @@ The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again w
   export GOOGLE_CLOUD_LOCATION=global
   export GOOGLE_GENAI_USE_VERTEXAI=true
   ```
-- Without the LLM parser: `python search_ui/server.py --parser mock`. The mock matches query words against index
+- Without any parser: `python search_ui/server.py --parser mock`. The mock matches query words against index
   values. Query embeddings still need Vertex AI.
 
 ## Using the page
 
 - **Search bar and examples** – type a query (English or Polish) or click one of the examples, grouped by category
-  (with `--parser benchmark`: five dev queries per category, those with a residual first).
+  (five dev queries of the benchmark per category, those with a residual first).
 - **Parser reading** (under the search bar) – the conditions the parser extracted, one per line: the category
   outlined, included values in green, excluded ones (AND NOT) in red, then the residual phrases and where the parse
   came from (benchmark or LLM parser).
@@ -124,7 +124,7 @@ with `Cache-Control: no-store`. Only the index, the product embeddings and the A
 
 | `server.py` option | Default | |
 | --- | --- | --- |
-| `--parser` | `llm` | `llm`, `benchmark`, `mock` or `module:function` returning the parser output format |
+| `--parser` | `llm` | `llm` (benchmark, then the LLM parser), `mock` or `module:function` returning the parser output format |
 | `--ranking` | `combined` | default ranking: `combined`, `text` or `image` |
 | `--port` | `8000` | |
 | `--data` | `search_ui/data` | index built by `prepare.py` |
@@ -163,8 +163,8 @@ The search response contains `parsed` (category, filters, residual and their sou
 | `server.py` | search pipeline, ranking and HTTP server |
 | `conditions.py` | condition tree: validation, evaluation, matched features |
 | `parser_adapter.py` | parser output → condition tree, mock parser, parser loading |
-| `llm_parser.py` | wraps `poc/scripts/query_parser.py` for `--parser llm` |
-| `benchmark_parser.py` | benchmark parses of dev queries for `--parser benchmark`, the LLM parser for other queries |
+| `benchmark_parser.py` | `--parser llm`: benchmark parses of dev queries, the LLM parser for other queries |
+| `llm_parser.py` | wraps `poc/scripts/query_parser.py` |
 | `facets.py` | filter panel values per category from `feature_extraction/schema` |
 | `common.py` | paths, loaders, query embedder |
 | `static/index.html` | the page (read on every request, so edits show after a reload) |
@@ -175,7 +175,7 @@ The search response contains `parsed` (category, filters, residual and their sou
 ```sh
 python -m unittest discover -s search_ui/tests   # no API calls
 python search_ui/check_examples.py               # examples against the index, mock parser
-python search_ui/check_examples.py --parser llm  # the same with the LLM parser (paid calls)
+python search_ui/check_examples.py --parser llm  # the benchmark examples of the page, no LLM calls
 ```
 
 ## Troubleshooting
@@ -186,8 +186,8 @@ python search_ui/check_examples.py --parser llm  # the same with the LLM parser 
   hundred bytes; run `git lfs pull`.
 - **`Missing optional dependency 'pyarrow'`** – the Python on `PATH` is not the one with the requirements.
 - **`No embeddings for N indexed products`** – the features file contains products outside the embedded set.
-- **The parser returns no category** for a query in one of the other 19 categories – expected with the LLM
-  parser; pick the category in the filter panel, or use `--parser benchmark` with its examples.
+- **The parser returns no category** for a query in one of the other 19 categories – expected outside the
+  benchmark; pick the category in the filter panel.
 
 ## Latency
 

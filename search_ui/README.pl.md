@@ -14,33 +14,33 @@ Korzysta z wyników innych części repozytorium i sama niczego nie liczy offlin
 | cechy produktów | `feature_extraction/outputs/pilot_9922/products.parquet` |
 | embeddingi produktów | `feature_extraction/outputs/pilot_9922/embeddings/` (opis i główne zdjęcie, 3072 wymiary, Git LFS) |
 | cechy i wartości w panelu filtrów | `feature_extraction/schema/` (wszystkie 22 kategorie) |
-| parser zapytań | `poc/scripts/query_parser.py` z promptami i schematami w `poc/query_parsing/` |
 | wzorcowe parsowania | `query_extraction/queries/` na gałęzi `user_queries` (1 535 sprawdzonych zapytań, 22 kategorie) |
+| parser zapytań | `poc/scripts/query_parser.py` z promptami i schematami w `poc/query_parsing/` |
 
-Do wyboru są dwa parsery:
+Zapytanie jest parsowane na jeden z dwóch sposobów (`benchmark_parser.py`):
 
-- `--parser llm` – dwuetapowy parser z wcześniejszego proof of concept. Obsługuje **T-shirts, Dresses i Tank tops &
-  Camisoles**. Dla innych zapytań nie zwraca kategorii, wtedy kategorię i filtry wybiera się ręcznie w panelu
-  filtrów. Jego wartości cech powstały przed obecnymi schematami, więc wartość, której już nie ma, nie dopasowuje
-  żadnego produktu, z ostrzeżeniem.
-- `--parser benchmark` – sprawdzone parsowania z benchmarku ekstrakcji zapytań dla wszystkich 22 kategorii, bez
-  wywołań API, do pracy nad rankingiem, dopóki nie ma parsera dla wszystkich kategorii. Z benchmarku odpowiadane są
-  tylko zapytania z **podziału dev** i z niego pochodzą przykłady na stronie; zapytanie testowe albo każde inne trafia
-  do parsera LLM. Podział jest ten sam co w ewaluacji rankingu (skrót zapytania i kategorii), więc zapytania testowe
-  pozostają niewidziane podczas strojenia rankingu. Benchmark jest czytany z `query_extraction/queries/` w katalogu
-  roboczym, a dopóki nie jest scalony, z `origin/user_queries`.
+- **Benchmark** – zapytanie z **podziału dev** benchmarku ekstrakcji zapytań dostaje sprawdzone parsowanie, dla
+  wszystkich 22 kategorii i bez wywołań API. Takie zapytania są przykładami na stronie. Podział jest ten sam co w
+  ewaluacji rankingu (skrót zapytania i kategorii), więc zapytania testowe pozostają niewidziane podczas strojenia
+  rankingu. Benchmark jest czytany z `query_extraction/queries/` w katalogu roboczym, a dopóki nie jest scalony, z
+  `origin/user_queries`.
+- **Parser LLM** – każde inne zapytanie, także testowe, trafia do dwuetapowego parsera z wcześniejszego proof of
+  concept. Obsługuje **T-shirts, Dresses i Tank tops & Camisoles**. Dla innych zapytań nie zwraca kategorii, wtedy
+  kategorię i filtry wybiera się ręcznie w panelu filtrów. Jego wartości cech powstały przed obecnymi schematami,
+  więc wartość, której już nie ma, nie dopasowuje żadnego produktu, z ostrzeżeniem.
 
 ## Szybki start
 
 Z katalogu głównego repozytorium, Pythonem z wymaganiami poniżej:
 
 ```sh
-git lfs pull                       # embeddingi są plikami Git LFS
 python search_ui/prepare.py        # produkty pilotażu ze statusem ready -> search_ui/data/
-python search_ui/server.py --parser llm
+python search_ui/server.py
 ```
 
 Strona otwiera się pod http://127.0.0.1:8000. `prepare.py` trzeba uruchomić ponownie tylko po zmianie pliku cech.
+Embeddingi są plikami Git LFS: z zainstalowanym `git-lfs` przychodzą razem z checkoutem; bez niego trzeba go
+zainstalować i uruchomić `git lfs pull`.
 
 **Wymagania**
 
@@ -52,13 +52,13 @@ Strona otwiera się pod http://127.0.0.1:8000. `prepare.py` trzeba uruchomić po
   export GOOGLE_CLOUD_LOCATION=global
   export GOOGLE_GENAI_USE_VERTEXAI=true
   ```
-- Bez parsera LLM: `python search_ui/server.py --parser mock`. Mock dopasowuje słowa zapytania do wartości z
+- Bez żadnego parsera: `python search_ui/server.py --parser mock`. Mock dopasowuje słowa zapytania do wartości z
   indeksu. Embeddingi zapytań nadal wymagają Vertex AI.
 
 ## Korzystanie ze strony
 
 - **Pole wyszukiwania i przykłady** – wpisz zapytanie (po angielsku lub polsku) albo kliknij przykład; przykłady są
-  pogrupowane według kategorii (z `--parser benchmark`: pięć zapytań dev na kategorię, najpierw te z residualem).
+  pogrupowane według kategorii (pięć zapytań dev z benchmarku na kategorię, najpierw te z residualem).
 - **Odczyt parsera** (pod polem wyszukiwania) – warunki wyciągnięte przez parser, po jednym w wierszu: kategoria w
   ramce, wartości wymagane na zielono, wykluczone (AND NOT) na czerwono, a pod nimi frazy residual i źródło
   parsowania (benchmark albo parser LLM).
@@ -115,7 +115,7 @@ Nic nie jest cache'owane: powtórzone zapytanie znowu wywołuje parser i API emb
 
 | Opcja `server.py` | Domyślnie | |
 | --- | --- | --- |
-| `--parser` | `llm` | `llm`, `benchmark`, `mock` albo `moduł:funkcja` zwracająca format parsera |
+| `--parser` | `llm` | `llm` (benchmark, potem parser LLM), `mock` albo `moduł:funkcja` zwracająca format parsera |
 | `--ranking` | `combined` | domyślny ranking: `combined`, `text` albo `image` |
 | `--port` | `8000` | |
 | `--data` | `search_ui/data` | indeks zbudowany przez `prepare.py` |
@@ -154,8 +154,8 @@ Odpowiedź wyszukiwania zawiera `parsed` (kategoria, filtry, residual i ich źr�
 | `server.py` | pipeline wyszukiwania, ranking i serwer HTTP |
 | `conditions.py` | drzewo warunków: walidacja, ewaluacja, dopasowane cechy |
 | `parser_adapter.py` | wynik parsera → drzewo warunków, parser mock, ładowanie parsera |
-| `llm_parser.py` | opakowuje `poc/scripts/query_parser.py` dla `--parser llm` |
-| `benchmark_parser.py` | parsowania z benchmarku dla zapytań dev w `--parser benchmark`, parser LLM dla pozostałych |
+| `benchmark_parser.py` | `--parser llm`: parsowania z benchmarku dla zapytań dev, parser LLM dla pozostałych |
+| `llm_parser.py` | opakowuje `poc/scripts/query_parser.py` |
 | `facets.py` | wartości panelu filtrów dla kategorii z `feature_extraction/schema` |
 | `common.py` | ścieżki, wczytywanie danych, embedder zapytań |
 | `static/index.html` | strona (czytana przy każdym żądaniu, więc zmiany widać po odświeżeniu) |
@@ -166,7 +166,7 @@ Odpowiedź wyszukiwania zawiera `parsed` (kategoria, filtry, residual i ich źr�
 ```sh
 python -m unittest discover -s search_ui/tests   # bez wywołań API
 python search_ui/check_examples.py               # przykłady na indeksie, parser mock
-python search_ui/check_examples.py --parser llm  # to samo z parserem LLM (płatne wywołania)
+python search_ui/check_examples.py --parser llm  # przykłady ze strony z benchmarku, bez wywołań LLM
 ```
 
 ## Problemy
@@ -176,8 +176,8 @@ python search_ui/check_examples.py --parser llm  # to samo z parserem LLM (płat
 - **Błąd odczytu `embeddings/text.parquet` lub `image.parquet`** – pliki są jeszcze kilkusetbajtowymi wskaźnikami
   Git LFS; uruchom `git lfs pull`.
 - **`Missing optional dependency 'pyarrow'`** – Python na `PATH` nie jest tym z wymaganiami.
-- **Parser nie zwraca kategorii** dla zapytania z jednej z pozostałych 19 kategorii – tak ma być przy parserze
-  LLM; wybierz kategorię w panelu filtrów albo użyj `--parser benchmark` z jego przykładami.
+- **Parser nie zwraca kategorii** dla zapytania z jednej z pozostałych 19 kategorii – tak ma być poza
+  benchmarkiem; wybierz kategorię w panelu filtrów.
 
 ## Czasy
 

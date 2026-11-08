@@ -2,8 +2,7 @@
 Search demo: query -> parser -> feature filtering -> embedding ranking -> results with per-stage timings.
 Filters can also be set by hand in the page; the parser is then skipped.
 
-    python search_ui/server.py --parser llm
-    python search_ui/server.py --parser benchmark
+    python search_ui/server.py
     python search_ui/server.py --parser mock --ranking combined --port 8000
 
 Ranking compares the query embedding with the description and main image embeddings of the candidates.
@@ -33,6 +32,7 @@ import parser_adapter
 RANKINGS = ("combined", "text", "image")
 PAGE = common.HERE / "static" / "index.html"
 EXAMPLES = common.HERE / "example_queries.yaml"
+EXAMPLES_SHOWN = 5
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
 
 
@@ -75,6 +75,8 @@ class SearchEngine:
         self.facets = facets.load(self.products)
         self.by_id = {p["product_id"]: p for p in self.products}
         self.pool = ThreadPoolExecutor(2)
+        self.examples = pick_examples(parser.examples, parser, self.products, self.vocabulary) \
+            if getattr(parser, "examples", None) else None
 
     def rank(self, q, ranking, cand, timings):
         """-> (score, text similarity, image similarity) for the candidates. combined is the mean of the z-scores of
@@ -188,6 +190,26 @@ class SearchEngine:
                     features={k: _show_value(v) for k, v in sorted(p["features"].items())})
 
 
+def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
+    """The first n queries of every group that find at least one product or get no category on purpose. The pool
+    comes from the parser module and is parsed here, so it must not need API calls."""
+    out = {}
+    for group, queries in pool.items():
+        keep = []
+        for q in queries:
+            try:
+                tree, _ = conditions.canonicalize(parser_adapter.to_condition(parser(q)), vocabulary)
+            except parser_adapter.OutOfCatalog:
+                keep.append(q)
+            else:
+                if conditions.filter_products(tree, products)["candidates"]:
+                    keep.append(q)
+            if len(keep) == n:
+                break
+        out[group] = keep
+    return out
+
+
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
 
@@ -210,8 +232,8 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                 if u.path == "/":
                     return self.send(200, Path(page).read_bytes(), "text/html; charset=utf-8")
                 if u.path == "/api/info":
-                    ex = engine.parser.examples or (yaml.safe_load(Path(examples).read_text(encoding="utf-8"))
-                                                    if Path(examples).exists() else {})
+                    ex = engine.examples or (yaml.safe_load(Path(examples).read_text(encoding="utf-8"))
+                                             if Path(examples).exists() else {})
                     ex = {k: [x if isinstance(x, str) else x["q"] for x in v or []] for k, v in (ex or {}).items()}
                     return self.send(200, dict(parser=engine.parser.name, ranking=ranking, rankings=engine.rankings,
                                                parser_categories=engine.parser.categories,
@@ -258,7 +280,7 @@ def load_product_embeddings(products, meta):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--parser", default="llm", help="llm, benchmark, mock or module:function")
+    ap.add_argument("--parser", default="llm", help="llm, mock or module:function")
     ap.add_argument("--ranking", choices=RANKINGS, default="combined")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)

@@ -1,6 +1,6 @@
 """
-Benchmark parser (--parser benchmark): the reviewed parses of the query extraction benchmark, looked up by query
-text, for all 22 categories and without API calls. Only queries of the dev split are answered from the benchmark;
+Query parser of the search UI (--parser llm, the default): the reviewed parses of the query extraction benchmark,
+looked up by query text, for all 22 categories and without API calls. Only queries of the dev split are answered from the benchmark;
 a test query or any other query goes to the LLM parser (llm_parser.py, three categories, paid calls).
 
 The split is the one of the ranking evaluation: dev or test by a hash of the query and its category, so test
@@ -19,7 +19,6 @@ from parser_adapter import normalize_text
 
 BENCHMARK_DIR = "query_extraction/queries"
 BENCHMARK_REF = "origin/user_queries"
-EXAMPLES_PER_CATEGORY = 5
 NO_CATEGORY = "No category"
 
 
@@ -56,14 +55,13 @@ def load(files):
     return list(rows.values())
 
 
-def examples(rows, n=EXAMPLES_PER_CATEGORY):
-    """Up to n dev queries per category, those with a residual first, in a fixed pseudo-random order."""
+def examples(rows):
+    """Dev queries per category in order of preference: those with a residual first, then a fixed pseudo-random
+    order. The server shows the first ones that find products."""
     groups = {}
     for r in sorted(rows, key=lambda r: (not r["residual"], r["id"])):
         if r["split"] == "dev":
-            group = groups.setdefault(r["category"] or NO_CATEGORY, [])
-            if len(group) < n:
-                group.append(r["query"])
+            groups.setdefault(r["category"] or NO_CATEGORY, []).append(r["query"])
     return {k: groups[k] for k in sorted(groups, key=lambda k: (k == NO_CATEGORY, k))}
 
 

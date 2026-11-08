@@ -1,10 +1,10 @@
 """
 Checks example_queries.yaml against the index: parser + filtering, no ranking.
 
-    python search_ui/check_examples.py               # mock parser, no API calls
-    python search_ui/check_examples.py --parser llm  # LLM parser (paid calls)
+    python search_ui/check_examples.py               # mock parser, example_queries.yaml, no API calls
+    python search_ui/check_examples.py --parser llm  # benchmark dev examples shown with the default parser
 
-Queries outside the categories of the parser are expected to get no category.
+Groups that are not an indexed category, and categories the parser does not support, expect no category.
 """
 import argparse
 import sys
@@ -14,7 +14,7 @@ import yaml
 import common
 import conditions
 import parser_adapter
-from server import EXAMPLES
+from server import EXAMPLES, pick_examples
 
 
 def main():
@@ -26,9 +26,12 @@ def main():
     products = [conditions.prepare_product(p) for p in products]
     vocabulary = conditions.Vocabulary(products)
     parser = parser_adapter.load_parser(args.parser, vocabulary)
+    indexed = {p["category"] for p in products}
     print(f"Index: {len(products)} products · parser: {parser.name}")
     failures = 0
-    for group, queries in yaml.safe_load(EXAMPLES.read_text(encoding="utf-8")).items():
+    shown = pick_examples(parser.examples, parser, products, vocabulary) if parser.examples else \
+        yaml.safe_load(EXAMPLES.read_text(encoding="utf-8"))
+    for group, queries in shown.items():
         print(f"\n{group}")
         for x in queries:
             q, empty = (x, False) if isinstance(x, str) else (x["q"], bool(x.get("empty")))
@@ -40,8 +43,10 @@ def main():
             except parser_adapter.OutOfCatalog:
                 tree, warnings, found = None, [], None
             problems += warnings
-            if found is None and group in (parser.categories or [group]):
-                problems.append("parser returned no category")
+            if found is None:
+                # a group named after an indexed category expects one, unless the parser does not support it
+                if group in indexed and group in (parser.categories or [group]):
+                    problems.append("parser returned no category")
             elif empty and found:
                 problems.append(f"expected no results, got {found}")
             elif not empty and not found:
