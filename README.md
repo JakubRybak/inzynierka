@@ -1,7 +1,5 @@
 # Project documents
 
-[Wersja polska](README.pl.md)
-
 Documents of the engineering project kept apart from the code.
 
 | File | |
