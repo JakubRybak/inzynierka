@@ -1,0 +1,21 @@
+{
+  "type": "OBJECT",
+  "properties": {
+    "category": {
+      "type": "STRING",
+      "enum": [
+        "T-shirts",
+        "Tank tops & Camisoles",
+        "Dresses"
+      ],
+      "nullable": true,
+      "description": "Exactly one supported category, or null when none can be selected."
+    }
+  },
+  "required": [
+    "category"
+  ],
+  "propertyOrdering": [
+    "category"
+  ]
+}
