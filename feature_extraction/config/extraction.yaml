@@ -25,6 +25,9 @@ embedding_api:
   model: gemini-embedding-2
   dimension: 3072
   timeout_seconds: 90
+  concurrency: 10
+  max_rate_limit_retries: 5
+  max_auth_retries: 2
   budget_usd: 0.25
   max_input_tokens: 8192
   image_usd_per_million: 0.45

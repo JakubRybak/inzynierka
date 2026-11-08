@@ -89,6 +89,11 @@ def extract(settings, folder, stage, execute, mode, batch_size, catalog):
     else:
         provenance['settings'] = {k: v for k, v in settings.items() if k != 'batch'}
         provenance['settings']['api'] = {k: v for k, v in settings['api'].items() if k != 'budget_usd'}
+    if 'embedding_api' in provenance['settings']:
+        provenance['settings']['embedding_api'] = {
+            k: v for k, v in settings['embedding_api'].items()
+            if k not in {'budget_usd', 'concurrency', 'max_rate_limit_retries', 'max_auth_retries'}
+        }
     fingerprint = digest(json.dumps(provenance, sort_keys=True).encode())
     snapshot = folder / 'config.json'
     saved_snapshot = json.loads(snapshot.read_text()) if snapshot.exists() else None

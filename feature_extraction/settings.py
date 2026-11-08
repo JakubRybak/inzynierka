@@ -12,6 +12,21 @@ def resolve_path(value):
     return path if path.is_absolute() else ROOT / path
 
 
+def validate_embedding_settings(cfg):
+    cfg = cfg.copy() if cfg else {}
+    cfg.setdefault('concurrency', 1)
+    cfg.setdefault('max_rate_limit_retries', 5)
+    cfg.setdefault('max_auth_retries', 2)
+    concurrency = cfg['concurrency']
+    if isinstance(concurrency, bool) or not isinstance(concurrency, int) or concurrency < 1:
+        raise ValueError('embedding_api.concurrency must be an integer >= 1')
+    for key in ('max_rate_limit_retries', 'max_auth_retries'):
+        value = cfg[key]
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise ValueError(f'embedding_api.{key} must be an integer >= 0')
+    return cfg
+
+
 def load_settings(path=None):
     settings = read_yaml(path or BASE / 'config/extraction.yaml')
     for field in ['dataset', 'selection', 'references', 'embeddings', 'artifacts']:
@@ -22,6 +37,8 @@ def load_settings(path=None):
         raise ValueError('Budget, output limit and timeout must be positive')
     if not 1 <= api['max_attempts'] <= 3:
         raise ValueError('max_attempts must be between 1 and 3')
+    if 'embedding_api' in settings:
+        settings['embedding_api'] = validate_embedding_settings(settings['embedding_api'])
     return settings
 
 

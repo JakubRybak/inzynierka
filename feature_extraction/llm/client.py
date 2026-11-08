@@ -22,12 +22,16 @@ class VertexSession:
         credentials, _ = google.auth.default(
             scopes=['https://www.googleapis.com/auth/cloud-platform'],
             quota_project_id=config['project'])
-        credentials.refresh(Request())
-        self.session = AuthorizedSession(credentials.with_quota_project(config['project']),
-                                         max_refresh_attempts=0)
+        self._request_factory = Request
+        self.credentials = credentials.with_quota_project(config['project'])
+        self.refresh()
+        self.session = AuthorizedSession(self.credentials, max_refresh_attempts=0)
         location = config['location']
         host = 'aiplatform.googleapis.com' if location == 'global' else f'{location}-aiplatform.googleapis.com'
         self.base = f'https://{host}/v1/projects/{config["project"]}/locations/{location}'
+
+    def refresh(self):
+        self.credentials.refresh(self._request_factory())
 
     def post(self, model, method, body, timeout):
         return self.session.post(f'{self.base}/publishers/google/models/{model}:{method}', json=body, timeout=timeout)
