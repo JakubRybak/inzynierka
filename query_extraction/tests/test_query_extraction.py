@@ -1,0 +1,114 @@
+"""Offline unit tests for query extraction catalog, schemas, validators, and evaluation metrics."""
+
+from __future__ import annotations
+
+import unittest
+
+from query_extraction.catalog import (
+    CATEGORY_CRITERIA,
+    EXCLUDED_FILTER_VALUES,
+    build_cerebras_auxiliary_schema,
+    build_cerebras_full_schema,
+    build_vertex_full_schema,
+    load_query_catalog,
+    validate_response,
+)
+from query_extraction.evaluate import (
+    canonicalize_clause,
+    canonicalize_filters,
+    evaluate_predictions,
+    summarize_latencies,
+)
+from query_extraction.jev_parser import (
+    CATEGORY_FEW_SHOTS,
+    FEATURE_FEW_SHOTS,
+    category_payload,
+    feature_payload,
+    filters_from_answers,
+    normalize_query,
+)
+from query_extraction.llm_parser import FULL_FEW_SHOTS
+from query_extraction.sample_queries import load_queries
+
+
+class QueryExtractionOfflineTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.catalog = load_query_catalog()
+        cls.groups = load_queries()
+
+    def test_all_22_categories_covered_in_catalog_and_criteria(self) -> None:
+        self.assertEqual(len(self.catalog), 22)
+        self.assertEqual(set(self.catalog.keys()), set(CATEGORY_CRITERIA.keys()))
+        for cat, features in self.catalog.items():
+            for feat, spec in features.items():
+                self.assertTrue(spec["values"], f"Empty values for {cat}.{feat}")
+                self.assertFalse(set(spec["values"]) & EXCLUDED_FILTER_VALUES)
+
+    def test_zero_overlap_between_few_shots_and_all_benchmark_queries(self) -> None:
+        all_bench = {
+            normalize_query(row["query"])
+            for rows in self.groups.values()
+            for row in rows
+        }
+        for group in (CATEGORY_FEW_SHOTS, FEATURE_FEW_SHOTS, FULL_FEW_SHOTS):
+            for shot in group:
+                self.assertNotIn(
+                    normalize_query(shot["query"]),
+                    all_bench,
+                    f"Few-shot overlaps with benchmark: {shot['query']}",
+                )
+
+    def test_schemas_and_validation(self) -> None:
+        for cat in self.catalog:
+            c_schema = build_cerebras_full_schema(cat, self.catalog)
+            v_schema = build_vertex_full_schema(cat, self.catalog)
+            self.assertEqual(c_schema["type"], "object")
+            self.assertEqual(v_schema["type"], "OBJECT")
+        aux_schema = build_cerebras_auxiliary_schema()
+        self.assertEqual(len(aux_schema["properties"]["filters"]["items"]["anyOf"]), 2)
+
+        valid_full = validate_response(
+            {
+                "filters": [
+                    {"feature": "colors", "operator": "contains_all", "values": ["Black"]},
+                    {"feature": "brand", "operator": "in", "values": ["Nike"]},
+                    {"feature": "price", "operator": "around", "value": 99.5},
+                ],
+                "residual": ["for running"],
+            },
+            "T-shirts",
+            self.catalog,
+        )
+        # 1-item contains_all normalizes to contains_any
+        self.assertEqual(valid_full["filters"][0]["operator"], "contains_any")
+
+    def test_jev_payloads_and_answer_conversion(self) -> None:
+        cp = category_payload("black tee")
+        self.assertEqual(len(cp["questions"]["category"]["criteria"]), 23)
+        fp, fmap = feature_payload("all-black cotton tee", "T-shirts", self.catalog)
+        fake_answers = {qid: {"choice": "not_specified"} for qid in fp["questions"]}
+        for qid, (feat, val) in fmap.items():
+            if (feat, val) == ("colors", "Black"):
+                fake_answers[qid] = {"choice": "requested"}
+        fake_answers["colors_relation"] = {"choice": "EXACT"}
+        fake_answers["main_composition_relation"] = {"choice": "ANY"}
+        filters = filters_from_answers(fake_answers, "T-shirts", self.catalog, fmap)
+        self.assertEqual(filters, [{"feature": "colors", "operator": "equals_set", "values": ["Black"]}])
+
+    def test_evaluation_equivalence_and_metrics(self) -> None:
+        c1 = canonicalize_clause({"feature": "colors", "operator": "contains_all", "values": ["Black"]})
+        c2 = canonicalize_clause({"feature": "colors", "operator": "contains_any", "values": ["Black"]})
+        self.assertEqual(c1, c2)
+
+        b1 = canonicalize_filters([{"feature": "brand", "operator": "in", "values": ["adidas"]}])
+        b2 = canonicalize_filters([{"feature": "brand", "operator": "in", "values": ["Adidas"]}])
+        self.assertEqual(b1, b2)
+
+        lat = summarize_latencies([0.5, 0.6, 0.8, 1.1])
+        self.assertEqual(lat["under_0_7s"], 2)
+        self.assertEqual(lat["under_1_0s"], 3)
+
+
+if __name__ == "__main__":
+    unittest.main()
