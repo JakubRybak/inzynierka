@@ -1,0 +1,18 @@
+{
+  "project": "project-3a86f100-1aae-4780-84b",
+  "model": "gemini-embedding-2",
+  "location": "global",
+  "output_dimensionality": 3072,
+  "task_type": null,
+  "text_input": "description only, verbatim, no instruction prefix",
+  "image_input": "first source CSV image, original PNG bytes",
+  "normalization": "L2 float32 before Parquet export",
+  "settings_sha256": "76e3ad90c7372e409f10db95e1115b53e056e0e89529d6424272473cb76c9deb",
+  "expected_per_modality": 10134,
+  "counts": {
+    "image": 10134,
+    "text": 10134
+  },
+  "complete": true,
+  "estimated_cost_usd": 1.2703511999999704
+}
