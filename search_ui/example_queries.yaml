@@ -1,0 +1,29 @@
+# Example queries shown in the UI. The parser supports the first three categories; the queries cover several
+# features, OR, exclusion, "and" for colors, Polish, price and a residual that only the ranking sees. For the other
+# categories the parser returns no category, and the category is picked in the filter panel.
+
+T-shirts:
+  - black oversized cotton t-shirt for men
+  - floral or striped t-shirt
+  - long sleeve t-shirt without polyester
+  - biała koszulka z długim rękawem
+  - black cotton t-shirt under 200 dollars
+  - t-shirt with a skull print
+Dresses:
+  - wrap or shirt dress
+  - maxi dress not black
+  - red dress with ruffles
+  - black midi dress up to 500 PLN
+  - czarna sukienka na wesele
+  - flowy summer dress for the beach
+Tank tops & Camisoles:
+  - black and white striped tank top
+  - black or white racerback tank top
+  - men's tank top not black
+  - silk camisole over 100 euros
+  - ribbed tank top for summer
+Other categories:
+  - black slim jeans
+  - beige trench coat
+  - grey hoodie with a zip
+  - pleated midi skirt
