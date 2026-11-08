@@ -65,6 +65,17 @@ def build(settings, limit=None, execute=False, *, catalog=None, export_folder=No
         return encode(settings, folder, inputs_for(catalog), execute, export_folder)
 
 
+def write_ledger(path, ledger, serialized_lines):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    if serialized_lines:
+        temporary.write_text('[\n' + ',\n'.join(serialized_lines) + '\n]\n')
+    else:
+        temporary.write_text('[]\n')
+    temporary.replace(path)
+
+
 def validate_cached_vector(cached, dimension, pid):
     vector = np.asarray(cached['values'], dtype=np.float32)
     if vector.shape != (dimension,) or not np.isfinite(vector).all() or np.linalg.norm(vector) <= 0:
@@ -84,7 +95,8 @@ def encode(settings, folder, inputs, execute, export_folder):
     fingerprint = digest(json.dumps(recipe, sort_keys=True).encode())
     ledger_path = folder / 'cost_ledger.json'
     ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else []
-    cached_by_key = {}
+    uncertain_keys = {(r['product_id'], r['modality']) for r in ledger if r['status'] != 'rejected'}
+    normalized_by_key = {}
     pending_tasks = deque()
     missing = 0
 
@@ -95,14 +107,12 @@ def encode(settings, folder, inputs, execute, export_folder):
             cached = json.loads(path.read_text())
             if cached['settings_sha256'] != fingerprint or cached['input_sha256'] != item['input_sha256']:
                 raise ValueError(f'Stale embedding cache for {pid}/{modality}; choose a new embedding folder')
-            validate_cached_vector(cached, cfg['dimension'], pid)
-            cached_by_key[(pid, modality)] = cached
+            normalized_by_key[(pid, modality)] = validate_cached_vector(cached, cfg['dimension'], pid)
         else:
             missing += 1
             if not execute:
                 continue
-            if any(r['product_id'] == pid and r['modality'] == modality and r['status'] != 'rejected'
-                   for r in ledger):
+            if (pid, modality) in uncertain_keys:
                 raise RuntimeError(f'Prior uncertain embedding for {pid}/{modality}; inspect ledger before paying again')
             pending_tasks.append({
                 'item': item,
@@ -113,15 +123,14 @@ def encode(settings, folder, inputs, execute, export_folder):
             })
 
     if execute and pending_tasks:
-        run_online_embeddings(settings['api'], cfg, fingerprint, ledger_path, ledger, pending_tasks, cached_by_key)
+        run_online_embeddings(settings['api'], cfg, fingerprint, ledger_path, ledger, pending_tasks, normalized_by_key)
 
     rows = {'image': [], 'text': []}
     for item in inputs:
         pid, modality = item['product_id'], item['modality']
-        cached = cached_by_key.get((pid, modality))
-        if cached is None:
+        vector = normalized_by_key.get((pid, modality))
+        if vector is None:
             continue
-        vector = validate_cached_vector(cached, cfg['dimension'], pid)
         row = {'product_id': pid, 'embedding': vector, 'input_sha256': item['input_sha256']}
         if modality == 'image':
             row.update(image_id=item['image_id'], image_path=item['image_path'])
@@ -154,7 +163,7 @@ def encode(settings, folder, inputs, execute, export_folder):
     return summary
 
 
-def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pending_tasks, cached_by_key):
+def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pending_tasks, normalized_by_key):
     active_limit = cfg['concurrency']
     max_rate_retries = cfg['max_rate_limit_retries']
     max_auth_retries = cfg['max_auth_retries']
@@ -163,6 +172,10 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
     auth_epoch = 0
     auth_lock = threading.Lock()
     thread_local = threading.local()
+    total_missing = len(pending_tasks)
+    completed_this_run = 0
+    accounted_total = sum(r['accounted_usd'] for r in ledger)
+    serialized_ledger = [json.dumps(r, ensure_ascii=False) for r in ledger]
 
     stop_signal = None
     terminal_error = None
@@ -222,7 +235,7 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
                     pid, modality = item['product_id'], item['modality']
                     rate = cfg[f'{modality}_usd_per_million'] / 1_000_000
                     reservation = cfg['max_input_tokens'] * rate
-                    if sum(r['accounted_usd'] for r in ledger) + reservation > cfg['budget_usd']:
+                    if accounted_total + reservation > cfg['budget_usd']:
                         pending_tasks.popleft()
                         terminal_error = RuntimeError('Persistent embedding budget guard reached')
                         stop_reason = 'budget guard reached'
@@ -233,11 +246,14 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
                     entry = {'product_id': pid, 'modality': modality, 'status': 'reserved',
                              'settings_sha256': fingerprint, 'input_sha256': item['input_sha256'],
                              'accounted_usd': reservation}
+                    entry_idx = len(ledger)
                     ledger.append(entry)
-                    write_json(ledger_path, ledger)
+                    serialized_ledger.append(json.dumps(entry, ensure_ascii=False))
+                    accounted_total += reservation
+                    write_ledger(ledger_path, ledger, serialized_ledger)
                     target_auth = (auth_epoch + 1) if task.pop('needs_refresh', False) else None
                     future = executor.submit(worker_call, item['content'], modality, target_auth)
-                    in_flight[future] = (task, entry, rate, reduction_epoch)
+                    in_flight[future] = (task, entry, entry_idx, reservation, rate, reduction_epoch)
 
                 if not in_flight:
                     break
@@ -249,7 +265,7 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
 
                 done, _ = wait(list(in_flight), timeout=timeout, return_when=FIRST_COMPLETED)
                 for future in done:
-                    task, entry, rate, sent_epoch = in_flight.pop(future)
+                    task, entry, entry_idx, reservation, rate, sent_epoch = in_flight.pop(future)
                     item = task['item']
                     pid, modality = item['product_id'], item['modality']
                     try:
@@ -264,12 +280,21 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
                         cached = {'settings_sha256': fingerprint, 'input_sha256': item['input_sha256'],
                                   'values': values, 'usage': data['usageMetadata']}
                         write_json(task['path'], cached)
-                        entry.update(status='completed', input_tokens=tokens, accounted_usd=tokens * rate)
-                        write_json(ledger_path, ledger)
-                        cached_by_key[(pid, modality)] = cached
+                        actual_cost = tokens * rate
+                        entry.update(status='completed', input_tokens=tokens, accounted_usd=actual_cost)
+                        serialized_ledger[entry_idx] = json.dumps(entry, ensure_ascii=False)
+                        accounted_total += actual_cost - reservation
+                        write_ledger(ledger_path, ledger, serialized_ledger)
+                        normalized_by_key[(pid, modality)] = (vector / np.linalg.norm(vector)).tolist()
+                        completed_this_run += 1
+                        if completed_this_run % 250 == 0 or completed_this_run == total_missing:
+                            log_event(f'Progress: {completed_this_run}/{total_missing} missing vectors saved '
+                                      f'(concurrency={active_limit}, accounted_usd=${accounted_total:.4f})')
                     except EmbeddingRejected as error:
                         entry.update(status='rejected', error=str(error), accounted_usd=0)
-                        write_json(ledger_path, ledger)
+                        serialized_ledger[entry_idx] = json.dumps(entry, ensure_ascii=False)
+                        accounted_total -= reservation
+                        write_ledger(ledger_path, ledger, serialized_ledger)
                         status_code = getattr(error, 'status_code', None)
                         if status_code is None:
                             if 'HTTP 429' in str(error):
@@ -323,7 +348,8 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
                                 log_event(f'Stopping embedding run: {stop_reason}')
                     except Exception as error:
                         entry.update(status='failed_or_uncertain', error=str(error))
-                        write_json(ledger_path, ledger)
+                        serialized_ledger[entry_idx] = json.dumps(entry, ensure_ascii=False)
+                        write_ledger(ledger_path, ledger, serialized_ledger)
                         if terminal_error is None:
                             terminal_error = error
                             stop_reason = f'uncertain or failed call for {pid}/{modality} ({error})'

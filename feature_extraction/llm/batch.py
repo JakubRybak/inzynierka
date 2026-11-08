@@ -1,5 +1,7 @@
 """Submit and recover Vertex Gemini batch jobs backed by Cloud Storage."""
+from concurrent.futures import ThreadPoolExecutor
 import json
+import threading
 import time
 from pathlib import Path
 from urllib.parse import quote
@@ -12,6 +14,8 @@ TERMINAL_STATES = {
     'JOB_STATE_SUCCEEDED', 'JOB_STATE_PARTIALLY_SUCCEEDED', 'JOB_STATE_FAILED',
     'JOB_STATE_CANCELLED', 'JOB_STATE_EXPIRED', 'JOB_STATE_PAUSED',
 }
+RETRYABLE_HTTP_STATUSES = {429, 500, 502, 503, 504}
+UPLOAD_WORKERS = 8
 
 
 def request_key(request):
@@ -30,6 +34,10 @@ class BatchClient:
         self.rates = {key: config[key] for key in ('input_usd_per_million', 'output_usd_per_million')}
         self.transport = None
         self.uploaded = set()
+        self._upload_lock = threading.Lock()
+        self._auth_lock = threading.Lock()
+        self._auth_epoch = 0
+        self._thread_local = threading.local()
         self.per_request = estimated_cost({'promptTokenCount': api['max_input_tokens'],
                                            'candidatesTokenCount': api['max_output_tokens']}, self.rates)
 
@@ -61,40 +69,127 @@ class BatchClient:
     def spent(self):
         return sum(json.loads(path.read_text())['accounted_usd'] for path in self.folder.glob('*/job.json'))
 
+    def _refresh_transport(self, transport, expected_epoch):
+        with self._auth_lock:
+            if self._auth_epoch == expected_epoch:
+                if hasattr(transport, 'refresh'):
+                    transport.refresh()
+                if self.transport is not None and self.transport is not transport and hasattr(self.transport, 'refresh'):
+                    self.transport.refresh()
+                self._auth_epoch += 1
+
     def request(self, method, url, **kwargs):
         if self.transport is None:
             self.transport = VertexSession(self.api)
-        return self.transport.session.request(method, url, timeout=self.api['timeout_seconds'], **kwargs)
+        auth_retries = 0
+        while True:
+            epoch = self._auth_epoch
+            response = self.transport.session.request(method, url, timeout=self.api['timeout_seconds'], **kwargs)
+            if getattr(response, 'status_code', None) == 401 and auth_retries < 2 and hasattr(self.transport, 'refresh'):
+                auth_retries += 1
+                self._refresh_transport(self.transport, epoch)
+                continue
+            return response
 
-    def upload(self, name, data, mime):
-        if name in self.uploaded:
-            return
+    def _retryable_request(self, method, url, *, session_transport=None, **kwargs):
+        auth_retries = 0
+        transient_retries = 0
+        while True:
+            epoch = self._auth_epoch
+            try:
+                if session_transport is None:
+                    response = self.request(method, url, **kwargs)
+                else:
+                    if getattr(self._thread_local, 'auth_epoch', -1) < epoch and hasattr(session_transport, 'refresh'):
+                        session_transport.refresh()
+                        self._thread_local.auth_epoch = epoch
+                    response = session_transport.session.request(
+                        method, url, timeout=self.api['timeout_seconds'], **kwargs)
+            except (ConnectionError, OSError) as exc:
+                if isinstance(exc, TimeoutError) or transient_retries >= 4:
+                    raise
+                transient_retries += 1
+                time.sleep(min(2 ** transient_retries, 16))
+                continue
+
+            status = getattr(response, 'status_code', None)
+            if status == 401 and auth_retries < 2 and session_transport is not None and hasattr(session_transport, 'refresh'):
+                auth_retries += 1
+                self._refresh_transport(session_transport, epoch)
+                self._thread_local.auth_epoch = self._auth_epoch
+                continue
+            if status in RETRYABLE_HTTP_STATUSES and transient_retries < 4:
+                transient_retries += 1
+                time.sleep(min(2 ** transient_retries, 16))
+                continue
+            return response
+
+    def _upload_with_transport(self, transport, name, data, mime):
+        with self._upload_lock:
+            if name in self.uploaded:
+                return
         url = f'https://storage.googleapis.com/upload/storage/v1/b/{self.bucket}/o'
-        response = self.request('POST', url, data=data, headers={'Content-Type': mime},
-                                params={'uploadType': 'media', 'name': name, 'ifGenerationMatch': '0'})
+        response = self._retryable_request(
+            'POST', url, session_transport=transport, data=data, headers={'Content-Type': mime},
+            params={'uploadType': 'media', 'name': name, 'ifGenerationMatch': '0'})
         if response.status_code == 412:
-            with self.download(self.bucket, name) as existing:
+            with self.download(self.bucket, name, session_transport=transport) as existing:
                 if existing.content != data:
                     raise APIError(f'Existing Cloud Storage object differs: {name}')
         else:
             response.raise_for_status()
-        self.uploaded.add(name)
+        with self._upload_lock:
+            self.uploaded.add(name)
 
-    def download(self, bucket, name):
+    def upload(self, name, data, mime):
+        self._upload_with_transport(None, name, data, mime)
+
+    def download(self, bucket, name, *, session_transport=None):
         url = f'https://storage.googleapis.com/storage/v1/b/{bucket}/o/{quote(name, safe="")}'
-        response = self.request('GET', url, params={'alt': 'media'}, stream=True)
+        response = self._retryable_request(
+            'GET', url, session_transport=session_transport, params={'alt': 'media'}, stream=True)
         response.raise_for_status()
         return response
 
     def pages(self, url, field, **params):
         while True:
-            response = self.request('GET', url, params=params)
+            response = self._retryable_request('GET', url, params=params)
             response.raise_for_status()
             page = response.json()
             yield from page.get(field, [])
             if not page.get('nextPageToken'):
                 return
             params['pageToken'] = page['nextPageToken']
+
+    def _upload_images(self, images):
+        pending = []
+        for name, image in images.items():
+            if name in self.uploaded:
+                continue
+            content = Path(image['path']).read_bytes()
+            if digest(content) != image['sha256']:
+                raise ValueError(f'Batch image changed: {image["path"]}')
+            pending.append((name, content, image['mime']))
+        if not pending:
+            return
+        # If self.upload was patched or overridden in tests, or only a single file is pending, call self.upload directly.
+        if type(self).upload is not BatchClient.upload or 'upload' in self.__dict__ or len(pending) == 1:
+            for name, content, mime in pending:
+                self.upload(name, content, mime)
+            return
+
+        def worker(item):
+            name, content, mime = item
+            transport = getattr(self._thread_local, 'transport', None)
+            if transport is None:
+                transport = VertexSession(self.api)
+                self._thread_local.transport = transport
+                self._thread_local.auth_epoch = self._auth_epoch
+            self._upload_with_transport(transport, name, content, mime)
+
+        with ThreadPoolExecutor(max_workers=min(UPLOAD_WORKERS, len(pending))) as executor:
+            for _ in executor.map(worker, pending):
+                pass
 
     def start(self, folder, manifest):
         state_path = folder / 'job.json'
@@ -106,11 +201,7 @@ class BatchClient:
         data = (folder / 'input.jsonl').read_bytes()
         if digest(data) != manifest['input_sha256']:
             raise ValueError(f'Batch input changed: {folder}')
-        for name, image in manifest['images'].items():
-            content = Path(image['path']).read_bytes()
-            if digest(content) != image['sha256']:
-                raise ValueError(f'Batch image changed: {image["path"]}')
-            self.upload(name, content, image['mime'])
+        self._upload_images(manifest['images'])
         root = f'{self.prefix}/{folder.name}'
         self.upload(f'{root}/input.jsonl', data, 'application/jsonl')
         spec = {
@@ -154,7 +245,7 @@ class BatchClient:
         print(f'{folder.name} {state["name"]}', flush=True)
         last_status = None
         while True:
-            response = self.request('GET', f'{base.split("/v1/", 1)[0]}/v1/{state["name"]}')
+            response = self._retryable_request('GET', f'{base.split("/v1/", 1)[0]}/v1/{state["name"]}')
             response.raise_for_status()
             job = response.json()
             status = job['state']

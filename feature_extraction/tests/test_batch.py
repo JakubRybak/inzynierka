@@ -232,3 +232,59 @@ class BatchTests(unittest.TestCase):
                 self.assertEqual(set(saved), {'a'})
                 self.assertTrue(run_part(saved)['complete'])
                 self.assertEqual(submissions, [['a', 'b'], ['b'], ['c']])
+
+    def test_batch_request_refreshes_on_401_and_parallel_upload_retries_transient_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory) / '000001'
+            img1 = Path(directory) / 'img1.png'
+            img2 = Path(directory) / 'img2.png'
+            img1.write_bytes(b'image-one')
+            img2.write_bytes(b'image-two')
+            client = BatchClient({**API, 'project': 'test', 'location': 'global', 'timeout_seconds': 10},
+                                 CONFIG, folder.parent, 'fp')
+
+            refreshes = 0
+            post_calls = 0
+
+            class FakeHTTPResp:
+                def __init__(self, status=200, data=None, content=b''):
+                    self.status_code = status
+                    self.ok = status == 200
+                    self._data = data or {}
+                    self.content = content
+                    self.text = json.dumps(self._data)
+
+                def json(self):
+                    return self._data
+
+                def raise_for_status(self):
+                    if self.status_code >= 400:
+                        raise RuntimeError(f'HTTP {self.status_code}')
+
+            class FakeVertexSession:
+                def __init__(self, api_cfg):
+                    self.base = 'https://aiplatform.googleapis.com/v1/projects/test/locations/global'
+                    self.session = self
+
+                def refresh(self):
+                    nonlocal refreshes
+                    refreshes += 1
+
+                def request(self, method, url, timeout=None, **kwargs):
+                    nonlocal post_calls
+                    post_calls += 1
+                    if post_calls == 1:
+                        return FakeHTTPResp(401)
+                    if post_calls == 2:
+                        return FakeHTTPResp(503)
+                    return FakeHTTPResp(200, JOB)
+
+            p1 = {**prompt('1'), 'parts': [{'text': '1'}, {'local_image_path': str(img1)}]}
+            p2 = {**prompt('2'), 'parts': [{'text': '2'}, {'local_image_path': str(img2)}]}
+            manifest = client.prepare(folder, [('1', p1, {}), ('2', p2, {})])
+            with patch('feature_extraction.llm.batch.VertexSession', FakeVertexSession), \
+                 patch('feature_extraction.llm.batch.time.sleep'):
+                state = client.start(folder, manifest)
+            self.assertEqual(state['name'], JOB_NAME)
+            self.assertGreaterEqual(refreshes, 1)
+            self.assertEqual(len(client.uploaded), 3)
