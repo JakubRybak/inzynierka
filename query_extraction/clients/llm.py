@@ -15,17 +15,17 @@ from google.auth.transport.requests import AuthorizedSession, Request
 import requests
 
 from ..core.catalog import (
-    build_cerebras_auxiliary_schema,
     build_cerebras_full_schema,
+    build_cerebras_open_schema,
     build_vertex_full_schema,
     validate_response,
 )
 from ..core.few_shots import PER_CATEGORY_FEW_SHOTS
 from ..core.prompts_loader import (
     load_category_prompt_configs,
-    load_common_features_prompt,
-    load_step2a_full_prompt,
-    load_step2b_auxiliary_prompt,
+    load_feature_definitions_prompt,
+    load_full_extraction_prompt,
+    load_open_extraction_prompt,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -47,13 +47,12 @@ PRICING = {
 
 def _category_narrow_substyle_rules(category: str, cat_features: Dict[str, Dict[str, Any]]) -> List[str]:
     """Return narrow sub-style residual rules strictly applicable to `category` from YAML."""
-    sub_cfg = load_common_features_prompt()["substyle_rules"]
+    sub_cfg = load_feature_definitions_prompt()["substyle_rules"]
     cat_sub_rules = load_category_prompt_configs().get(category, {}).get("substyle_rules", [])
 
     rules: List[str] = list(sub_cfg.get("always", []))
     by_feat = sub_cfg.get("by_feature_value", [])
 
-    # Preserve original ordering: neckline -> Shirts/Classic Coats -> insulation -> leg_shape=Flared -> Sweatpants/Shorts/Skirts
     for cond in by_feat:
         feat = cond["feature"]
         val = cond["value"]
@@ -79,8 +78,8 @@ def build_full_system_prompt(
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
 ) -> str:
-    """Build a Step 2a full-extraction system prompt strictly scoped to `category` from YAML."""
-    step2a_cfg = load_step2a_full_prompt()
+    """Build a full_extraction system prompt strictly scoped to `category` from YAML."""
+    full_cfg = load_full_extraction_prompt()
     cat_spec = catalog[category]
     single_feats = [f for f, s in cat_spec.items() if not s["multi"]]
     multi_feats = [f for f, s in cat_spec.items() if s["multi"]]
@@ -91,9 +90,9 @@ def build_full_system_prompt(
         defs.append(f"### {feature} ({op_kind}; operators: {', '.join(spec['operators'])})\n{spec['definition']}")
     defs_text = "\n\n".join(defs)
 
-    equals_set_examples = step2a_cfg["equals_set_base"]
+    equals_set_examples = full_cfg["equals_set_base"]
     if "lining_composition" in cat_spec:
-        equals_set_examples += step2a_cfg["equals_set_lining_suffix"]
+        equals_set_examples += full_cfg["equals_set_lining_suffix"]
 
     substyle_lines = "\n".join(_category_narrow_substyle_rules(category, cat_spec))
     shots = PER_CATEGORY_FEW_SHOTS[category]
@@ -102,7 +101,7 @@ def build_full_system_prompt(
         for ex in shots
     )
 
-    return step2a_cfg["system_template"].format(
+    return full_cfg["system_template"].format(
         category=category,
         category_upper=category.upper(),
         single_feats=", ".join(single_feats),
@@ -114,12 +113,12 @@ def build_full_system_prompt(
     )
 
 
-def build_auxiliary_system_prompt(
+def build_open_system_prompt(
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
 ) -> str:
-    """Build a Step 2b.2 auxiliary system prompt strictly scoped to `category` from YAML."""
-    step2b_aux_cfg = load_step2b_auxiliary_prompt()
+    """Build an open_extraction system prompt (brand, price, residual) strictly scoped to `category` from YAML."""
+    open_cfg = load_open_extraction_prompt()
     cat_spec = catalog[category]
     vocab = {feat: spec["values"] for feat, spec in cat_spec.items()}
     substyle_lines = "\n".join(_category_narrow_substyle_rules(category, cat_spec))
@@ -132,13 +131,16 @@ def build_auxiliary_system_prompt(
         for ex in shots
     )
 
-    return step2b_aux_cfg["system_template"].format(
+    return open_cfg["system_template"].format(
         category=category,
         category_upper=category.upper(),
         vocab_json=json.dumps(vocab, ensure_ascii=False),
         substyle_lines=substyle_lines,
         examples_text=examples_text,
     )
+
+
+build_auxiliary_system_prompt = build_open_system_prompt
 
 
 def load_cerebras_key() -> str:
@@ -157,20 +159,23 @@ def build_full_user_message(
     category: str,
     catalog: Optional[Dict[str, Dict[str, Dict[str, Any]]]] = None,
 ) -> str:
-    return load_step2a_full_prompt()["user_template"].format(category=category, query=query)
+    return load_full_extraction_prompt()["user_template"].format(category=category, query=query)
 
 
-def build_auxiliary_user_message(
+def build_open_user_message(
     query: str,
     category: str,
-    jev_filters: List[Dict[str, Any]],
+    closed_filters: List[Dict[str, Any]],
     catalog: Optional[Dict[str, Dict[str, Dict[str, Any]]]] = None,
 ) -> str:
-    return load_step2b_auxiliary_prompt()["user_template"].format(
+    return load_open_extraction_prompt()["user_template"].format(
         category=category,
-        jev_filters_json=json.dumps(jev_filters, ensure_ascii=False),
+        jev_filters_json=json.dumps(closed_filters, ensure_ascii=False),
         query=query,
     )
+
+
+build_auxiliary_user_message = build_open_user_message
 
 
 @dataclass
@@ -259,7 +264,7 @@ class VertexGeminiClient:
         parts = candidates[0].get("content", {}).get("parts", [])
         text = "".join(part.get("text", "") for part in parts if not part.get("thought"))
         parsed_raw = json.loads(text)
-        validated = validate_response(parsed_raw, category, catalog, auxiliary_only=False)
+        validated = validate_response(parsed_raw, category, catalog, open_only=False)
 
         usage = raw.get("usageMetadata", {})
         in_tok = usage.get("promptTokenCount", 0)
@@ -361,7 +366,7 @@ class CerebrasClient:
         parsed_raw, elapsed, usage = self._post_structured(
             sys_prompt, user_msg, "query_full_extraction", schema
         )
-        validated = validate_response(parsed_raw, category, catalog, auxiliary_only=False)
+        validated = validate_response(parsed_raw, category, catalog, open_only=False)
         in_rate, out_rate = PRICING.get(self.model, (0.0, 0.0))
         cost = usage.get("prompt_tokens", 0) * in_rate + usage.get("completion_tokens", 0) * out_rate
         self.total_cost_usd += cost
@@ -373,20 +378,20 @@ class CerebrasClient:
             usage=usage,
         )
 
-    def extract_auxiliary(
+    def extract_open(
         self,
         query: str,
         category: str,
-        jev_filters: List[Dict[str, Any]],
+        closed_filters: List[Dict[str, Any]],
         catalog: Dict[str, Dict[str, Dict[str, Any]]],
     ) -> LLMCallResult:
-        schema = build_cerebras_auxiliary_schema()
-        sys_prompt = build_auxiliary_system_prompt(category, catalog)
-        user_msg = build_auxiliary_user_message(query, category, jev_filters, catalog)
+        schema = build_cerebras_open_schema()
+        sys_prompt = build_open_system_prompt(category, catalog)
+        user_msg = build_open_user_message(query, category, closed_filters, catalog)
         parsed_raw, elapsed, usage = self._post_structured(
-            sys_prompt, user_msg, "query_auxiliary_extraction", schema
+            sys_prompt, user_msg, "query_open_extraction", schema
         )
-        validated = validate_response(parsed_raw, category, catalog, auxiliary_only=True)
+        validated = validate_response(parsed_raw, category, catalog, open_only=True)
         in_rate, out_rate = PRICING.get(self.model, (0.0, 0.0))
         cost = usage.get("prompt_tokens", 0) * in_rate + usage.get("completion_tokens", 0) * out_rate
         self.total_cost_usd += cost
@@ -397,16 +402,20 @@ class CerebrasClient:
             model=self.model,
             usage=usage,
         )
+
+    extract_auxiliary = extract_open
 
     def warmup_full(self, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> float:
         res = self.extract_full("black t-shirt", "T-shirts", catalog)
         return res.latency_seconds
 
-    def warmup_auxiliary(self, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> float:
-        res = self.extract_auxiliary(
+    def warmup_open(self, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> float:
+        res = self.extract_open(
             "black t-shirt",
             "T-shirts",
             [{"feature": "colors", "operator": "contains_any", "values": ["Black"]}],
             catalog,
         )
         return res.latency_seconds
+
+    warmup_auxiliary = warmup_open

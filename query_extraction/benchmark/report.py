@@ -7,13 +7,13 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-from .evaluate import canonicalize_filters, canonicalize_residual
 from ..parser import (
     CONFIGS,
     assemble_stage_prediction,
     resolve_config_list,
     resolve_config_name,
 )
+from .evaluate import canonicalize_filters, canonicalize_residual
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_INPUT = HERE / "results" / "benchmark_30_seed42.json"
@@ -53,7 +53,7 @@ def generate_markdown(
     queries = data.get("queries", [])
     n = len(queries)
     seed = data.get("seed")
-    dataset_label = data.get("dataset", "query_extraction/queries")
+    dataset_label = data.get("dataset", "query_extraction/benchmark/queries")
 
     active = _resolve_active_summaries(summaries, configs=configs)
     if not active:
@@ -64,7 +64,6 @@ def generate_markdown(
     expected_closed = first_summary["closed_clauses"]["tp"] + first_summary["closed_clauses"]["fn_missing"]
     expected_aux = first_summary["aux_clauses"]["tp"] + first_summary["aux_clauses"]["fn_missing"]
 
-    # Identify top configurations for executive summary
     best_f1_cfg = max(active, key=lambda item: (item[2]["all_clauses"]["f1_pct"], item[2]["full_query_exact_pct"]))
     best_exact_cfg = max(active, key=lambda item: (item[2]["full_query_exact_pct"], item[2]["all_clauses"]["f1_pct"]))
     fastest_cfg = min(active, key=lambda item: item[2]["latency"]["total_all_queries"]["p50"])
@@ -114,7 +113,7 @@ def generate_markdown(
         "",
         f"1. **Zbiór testowy:** `{dataset_label}` — **{n} zapytań**"
         + (f" (losowanie stratyfikowane `--seed {seed}`)." if seed is not None else " (pełny zbiór)."),
-        "2. **Prompty i few-shoty per kategoria:** Po klasyfikacji kategorii w Kroku 1 każdy kolejny etap (`2a Full`, `2b.1 Jev Features`, `2b.2 Aux`) otrzymuje wyłącznie definicje cech, reguły oraz 5 przykładów *few-shot* należących do tej konkretnej kategorii ([few_shots.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/core/few_shots.py)).",
+        "2. **Prompty i few-shoty per kategoria:** Po klasyfikacji kategorii (`category_classification.yaml`) każdy kolejny etap (`full_extraction.yaml`, `closed_features.yaml`, `open_extraction.yaml`) otrzymuje wyłącznie definicje cech, reguły oraz 5 przykładów *few-shot* należących do tej konkretnej kategorii (`prompts/categories/<category>.yaml`).",
         "3. **Równoważność semantyczna w ewaluacji:** Pojedyncza wartość w `contains_all` i `contains_any` jest traktowana jako równoważna (`contains_all ['Cotton'] == contains_any ['Cotton']`), a nazwy marek (`brand`) są porównywane bezwielkościowo ([evaluate.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/benchmark/evaluate.py)).",
         "4. **Pomiar czasu:** Minimalny thinking (`temperature = 0`), ścisły Structured Output (`responseSchema` / `json_schema`).",
         "",
@@ -124,7 +123,7 @@ def generate_markdown(
         "",
         "Cel projektowy: **< 1,0 s obowiązkowo**, **< 0,7 s idealnie**.",
         "",
-        "| Konfiguracja | Podejście / Wariant | Średnia | **p50** | **p80** | **p90** | **p95** | Max | **< 0,7 s** | **< 1,0 s (Obowiązkowe)** |",
+        "| Scenariusz | Opis przepływu | Średnia | **p50** | **p80** | **p90** | **p95** | Max | **< 0,7 s** | **< 1,0 s (Obowiązkowe)** |",
         "| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ])
 
@@ -141,24 +140,24 @@ def generate_markdown(
         "",
         "---",
         "",
-        "## 2. Czas poszczególnych etapów (Stage-by-Stage Latency Breakdown)",
+        "## 2. Czas poszczególnych części (Stage-by-Stage Latency Breakdown)",
         "",
-        "| Etap | Model / API | Liczba wywołań | Średnia | **p50** | **p80** | **p90** | **p95** | Max |",
+        "| Część (Etap) | Model / API | Liczba wywołań | Średnia | **p50** | **p80** | **p90** | **p95** | Max |",
         "| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ])
 
     s1_lat = first_summary["latency"]["step1_jev_category"]
     lines.append(
-        f"| **Krok 1: Wybór kategorii** *(wspólny)* | `typesafe/jev-1.14` (OpenRouter) | {s1_lat['count']} | "
+        f"| **`category` (Klasyfikacja kategorii)** *(wspólna)* | `typesafe/jev-1.14` (OpenRouter) | {s1_lat['count']} | "
         f"{fmt_s(s1_lat['mean'])} | **{fmt_s(s1_lat['p50'])}** | **{fmt_s(s1_lat['p80'])}** | "
         f"**{fmt_s(s1_lat['p90'])}** | **{fmt_s(s1_lat['p95'])}** | {fmt_s(s1_lat['max'])} |"
     )
 
-    any_2b = next((s for _, spec, s in active if spec["approach"] == "2b"), None)
-    if any_2b is not None:
-        s21_lat = any_2b["latency"]["step2_1_jev_features"]
+    any_split = next((s for _, spec, s in active if spec["architecture"] == "split"), None)
+    if any_split is not None:
+        s21_lat = any_split["latency"]["step2_1_jev_features"]
         lines.append(
-            f"| **Krok 2b.1: Cechy zamknięte** *(per-cat Jev)* | `typesafe/jev-1.14` (OpenRouter) | {s21_lat['count']} | "
+            f"| **`closed_features` (Cechy zamknięte ze schematu)** | `typesafe/jev-1.14` (OpenRouter) | {s21_lat['count']} | "
             f"{fmt_s(s21_lat['mean'])} | **{fmt_s(s21_lat['p50'])}** | **{fmt_s(s21_lat['p80'])}** | "
             f"**{fmt_s(s21_lat['p90'])}** | **{fmt_s(s21_lat['p95'])}** | {fmt_s(s21_lat['max'])} |"
         )
@@ -166,7 +165,7 @@ def generate_markdown(
     for _, spec, s in active:
         st_lat = s["latency"]["step2_llm"]
         lines.append(
-            f"| **{spec['stage_description']}** | {spec['model_description']} | {st_lat['count']} | "
+            f"| **`{spec['stage_key']}` ({spec['stage_description']})** | {spec['model_description']} | {st_lat['count']} | "
             f"{fmt_s(st_lat['mean'])} | **{fmt_s(st_lat['p50'])}** | **{fmt_s(st_lat['p80'])}** | "
             f"**{fmt_s(st_lat['p90'])}** | **{fmt_s(st_lat['p95'])}** | {fmt_s(st_lat['max'])} |"
         )
@@ -179,7 +178,7 @@ def generate_markdown(
         "",
         "### 3.1. Accuracy na poziomie całego zapytania i kompletów filtrów (Exact Set Match)",
         "",
-        "| Konfiguracja | Podejście / Wariant | Kategoria (Accuracy) | **Komplet wszystkich filtrów** (Accuracy kompletów cech) | Komplet cech zamkniętych (bez brand/price) | Komplet `brand` + `price` | Residual (Exact Set) | **Całe zapytanie 100% Exact** (Cat+Filters+Residual) |",
+        "| Scenariusz | Opis przepływu | Kategoria (Accuracy) | **Komplet wszystkich filtrów** (Accuracy kompletów cech) | Komplet cech zamkniętych (bez brand/price) | Komplet `brand` + `price` | Residual (Exact Set) | **Całe zapytanie 100% Exact** (Cat+Filters+Residual) |",
         "| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ])
 
@@ -200,7 +199,7 @@ def generate_markdown(
         f"W całej próbce {n} zapytań oczekiwanych było łącznie **{expected_clauses} klauzul filtrów** "
         f"({expected_closed} klauzul cech zamkniętych + {expected_aux} klauzul `brand`/`price`).",
         "",
-        "| Konfiguracja | Podejście / Wariant | Poprawne filtry (TP) | **Ilość nadmiarowych cech (FP)** | Nadmiarowe / zapytanie | Brakujące cechy (FN) | Brakujące / zapytanie | Precision | Recall | **F1 cech (Accuracy cech)** |",
+        "| Scenariusz | Opis przepływu | Poprawne filtry (TP) | **Ilość nadmiarowych cech (FP)** | Nadmiarowe / zapytanie | Brakujące cechy (FN) | Brakujące / zapytanie | Precision | Recall | **F1 cech (Accuracy cech)** |",
         "| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ])
 
@@ -216,7 +215,7 @@ def generate_markdown(
         "",
         "### 3.3. Metryki `residual` oraz koszty API",
         "",
-        f"| Konfiguracja | Podejście / Wariant | Residual F1 (koncepty) | Residual Precision | Residual Recall | Pusty residual poprawny (`[]`) | Koszt na {n} zapytań (USD) | Średni koszt / 1000 zapytań (USD) |",
+        f"| Scenariusz | Opis przepływu | Residual F1 (koncepty) | Residual Precision | Residual Recall | Pusty residual poprawny (`[]`) | Koszt na {n} zapytań (USD) | Średni koszt / 1000 zapytań (USD) |",
         "| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ])
 

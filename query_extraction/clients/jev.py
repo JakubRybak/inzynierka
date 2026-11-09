@@ -1,4 +1,4 @@
-"""Jev 1.14 (OpenRouter Decisions API) client and payloads for Step 1 (category) and Step 2b-1 (features)."""
+"""Jev 1.14 (OpenRouter Decisions API) client and payloads for category_classification and closed_features."""
 
 from __future__ import annotations
 
@@ -17,12 +17,12 @@ import requests
 from ..core.catalog import CATEGORY_CRITERIA
 from ..core.few_shots import (
     CATEGORY_FEW_SHOTS,
-     build_jev_feature_examples_json,
+    build_jev_feature_examples_json,
 )
 from ..core.prompts_loader import (
+    load_category_classification_prompt,
     load_category_prompt_configs,
-    load_step1_category_prompt,
-    load_step2b_jev_features_prompt,
+    load_closed_features_prompt,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,9 +30,9 @@ ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
 MODEL = "typesafe/jev-1.14"
 
 
-def build_jev_rules(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> str:
-    """Build category-scoped Jev extraction rules from YAML configuration."""
-    rules_cfg = load_step2b_jev_features_prompt()["rules"]
+def build_closed_features_rules(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> str:
+    """Build category-scoped Jev closed-feature extraction rules from YAML configuration."""
+    rules_cfg = load_closed_features_prompt()["rules"]
     cat_features = set(catalog[category].keys())
     parts = [
         rules_cfg["intro_template"].format(category=category),
@@ -52,6 +52,9 @@ def build_jev_rules(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]
     return " ".join(parts)
 
 
+build_jev_rules = build_closed_features_rules
+
+
 def normalize_query(query: str) -> str:
     return " ".join(re.findall(r"\w+", unicodedata.normalize("NFKC", query).casefold()))
 
@@ -68,7 +71,7 @@ def load_openrouter_key() -> str:
 
 
 def category_payload(query: str) -> Dict[str, Any]:
-    step1_cfg = load_step1_category_prompt()
+    step1_cfg = load_category_classification_prompt()
     criteria = dict(CATEGORY_CRITERIA)
     criteria["outside"] = step1_cfg["outside_description"]
     return {
@@ -87,12 +90,12 @@ def category_payload(query: str) -> Dict[str, Any]:
     }
 
 
-def feature_payload(
+def closed_features_payload(
     query: str,
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
 ) -> Tuple[Dict[str, Any], Dict[str, Tuple[str, str]]]:
-    jev_cfg = load_step2b_jev_features_prompt()
+    jev_cfg = load_closed_features_prompt()
     common_scopes: Dict[str, str] = jev_cfg.get("feature_scopes", {})
     val_q_cfg = jev_cfg["value_question"]
     rel_q_cfg = jev_cfg["relation_question"]
@@ -136,11 +139,14 @@ def feature_payload(
         "state": {
             "CURRENT_QUERY": query,
             "category": category,
-            "rules": build_jev_rules(category, catalog),
+            "rules": build_closed_features_rules(category, catalog),
         },
         "questions": questions,
     }
     return payload, mapping
+
+
+feature_payload = closed_features_payload
 
 
 def filters_from_answers(

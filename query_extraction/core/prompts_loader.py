@@ -21,28 +21,28 @@ def _read_yaml(path: Path) -> Dict[str, Any]:
 
 
 @lru_cache(maxsize=1)
-def load_step1_category_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "step1_category.yaml")
+def load_category_classification_prompt() -> Dict[str, Any]:
+    return _read_yaml(PROMPTS_DIR / "category_classification.yaml")
 
 
 @lru_cache(maxsize=1)
-def load_common_features_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "common_features.yaml")
+def load_feature_definitions_prompt() -> Dict[str, Any]:
+    return _read_yaml(PROMPTS_DIR / "feature_definitions.yaml")
 
 
 @lru_cache(maxsize=1)
-def load_step2a_full_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "step2a_full.yaml")
+def load_full_extraction_prompt() -> Dict[str, Any]:
+    return _read_yaml(PROMPTS_DIR / "full_extraction.yaml")
 
 
 @lru_cache(maxsize=1)
-def load_step2b_jev_features_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "step2b_jev_features.yaml")
+def load_closed_features_prompt() -> Dict[str, Any]:
+    return _read_yaml(PROMPTS_DIR / "closed_features.yaml")
 
 
 @lru_cache(maxsize=1)
-def load_step2b_auxiliary_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "step2b_auxiliary.yaml")
+def load_open_extraction_prompt() -> Dict[str, Any]:
+    return _read_yaml(PROMPTS_DIR / "open_extraction.yaml")
 
 
 @lru_cache(maxsize=1)

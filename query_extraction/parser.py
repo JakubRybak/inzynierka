@@ -9,75 +9,80 @@ if TYPE_CHECKING:
     from .clients.jev import JevClient
     from .clients.llm import CerebrasClient, VertexGeminiClient
 
-DEFAULT_CONFIG = "2a_qwen"
+DEFAULT_CONFIG = "full_qwen"
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 QWEN_MODEL = "qwen-3.8-27b"
 GPT_OSS_MODEL = "gpt-oss-120b"
 
 CONFIGS: Dict[str, Dict[str, Any]] = {
-    "2a_qwen": {
-        "name": "2a_qwen",
-        "legacy_key": "2a_qwen_3_8_27b",
-        "approach": "2a",
+    "full_qwen": {
+        "name": "full_qwen",
+        "aliases": ("2a_qwen", "2a_qwen_3_8_27b", "llm_qwen"),
+        "architecture": "full",
         "provider": "cerebras",
         "model": QWEN_MODEL,
         "reasoning_effort": "none",
-        "stage_key": "2a_qwen",
-        "required_stages": ("jev_category", "2a_qwen"),
-        "label": "2a · Jev Cat → Qwen 3.8 27B (Cerebras)",
-        "stage_description": "Krok 2a: Pełna ekstrakcja (cechy+brand+price+residual)",
+        "stage_key": "full_qwen",
+        "legacy_stage_key": "2a_qwen",
+        "required_stages": ("category", "full_qwen"),
+        "label": "Full · Jev (Category) → Qwen 3.8 27B (Full Extraction)",
+        "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
         "model_description": "`qwen-3.8-27b` (Cerebras, `none`)",
     },
-    "2a_gpt_oss": {
-        "name": "2a_gpt_oss",
-        "legacy_key": "2a_gpt_oss_120b",
-        "approach": "2a",
+    "full_gpt_oss": {
+        "name": "full_gpt_oss",
+        "aliases": ("2a_gpt_oss", "2a_gpt_oss_120b", "llm_gpt_oss"),
+        "architecture": "full",
         "provider": "cerebras",
         "model": GPT_OSS_MODEL,
         "reasoning_effort": "low",
-        "stage_key": "2a_gpt_oss",
-        "required_stages": ("jev_category", "2a_gpt_oss"),
-        "label": "2a · Jev Cat → GPT-OSS-120B (Cerebras)",
-        "stage_description": "Krok 2a: Pełna ekstrakcja (cechy+brand+price+residual)",
+        "stage_key": "full_gpt_oss",
+        "legacy_stage_key": "2a_gpt_oss",
+        "required_stages": ("category", "full_gpt_oss"),
+        "label": "Full · Jev (Category) → GPT-OSS-120B (Full Extraction)",
+        "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
         "model_description": "`gpt-oss-120b` (Cerebras, `low`)",
     },
-    "2a_gemini": {
-        "name": "2a_gemini",
-        "legacy_key": "2a_gemini_flash_lite",
-        "approach": "2a",
+    "full_gemini": {
+        "name": "full_gemini",
+        "aliases": ("2a_gemini", "2a_gemini_flash_lite", "llm_gemini"),
+        "architecture": "full",
         "provider": "vertex",
         "model": GEMINI_MODEL,
         "reasoning_effort": "none",
-        "stage_key": "2a_gemini",
-        "required_stages": ("jev_category", "2a_gemini"),
-        "label": "2a · Jev Cat → Gemini 3.5 Flash-Lite (Vertex AI)",
-        "stage_description": "Krok 2a: Pełna ekstrakcja (cechy+brand+price+residual)",
+        "stage_key": "full_gemini",
+        "legacy_stage_key": "2a_gemini",
+        "required_stages": ("category", "full_gemini"),
+        "label": "Full · Jev (Category) → Gemini 3.5 Flash-Lite (Full Extraction)",
+        "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
         "model_description": "`gemini-3.5-flash-lite` (Vertex AI)",
     },
-    "2b_qwen": {
-        "name": "2b_qwen",
-        "legacy_key": "2b_jev_qwen_3_8_27b",
-        "approach": "2b",
+    "split_qwen": {
+        "name": "split_qwen",
+        "aliases": ("2b_qwen", "2b_jev_qwen_3_8_27b", "hybrid_qwen"),
+        "architecture": "split",
         "provider": "cerebras",
         "model": QWEN_MODEL,
         "reasoning_effort": "none",
-        "stage_key": "2b_qwen_aux",
-        "required_stages": ("jev_category", "jev_features", "2b_qwen_aux"),
-        "label": "2b · Jev Cat → Jev Feat → Qwen 3.8 27B Aux (Cerebras)",
-        "stage_description": "Krok 2b.2: Ekstrakcja Aux (brand+price+residual po Jev)",
+        "stage_key": "open_qwen",
+        "legacy_stage_key": "2b_qwen_aux",
+        "required_stages": ("category", "closed_features", "open_qwen"),
+        "label": "Split · Jev (Category) → Jev (Closed Features) → Qwen 3.8 27B (Open Extraction)",
+        "stage_description": "Open Extraction (brand + price + residual po Jev Closed Features)",
         "model_description": "`qwen-3.8-27b` (Cerebras, `none`)",
     },
-    "2b_gpt_oss": {
-        "name": "2b_gpt_oss",
-        "legacy_key": "2b_jev_gpt_oss_120b",
-        "approach": "2b",
+    "split_gpt_oss": {
+        "name": "split_gpt_oss",
+        "aliases": ("2b_gpt_oss", "2b_jev_gpt_oss_120b", "hybrid_gpt_oss"),
+        "architecture": "split",
         "provider": "cerebras",
         "model": GPT_OSS_MODEL,
         "reasoning_effort": "low",
-        "stage_key": "2b_gpt_oss_aux",
-        "required_stages": ("jev_category", "jev_features", "2b_gpt_oss_aux"),
-        "label": "2b · Jev Cat → Jev Feat → GPT-OSS-120B Aux (Cerebras)",
-        "stage_description": "Krok 2b.2: Ekstrakcja Aux (brand+price+residual po Jev)",
+        "stage_key": "open_gpt_oss",
+        "legacy_stage_key": "2b_gpt_oss_aux",
+        "required_stages": ("category", "closed_features", "open_gpt_oss"),
+        "label": "Split · Jev (Category) → Jev (Closed Features) → GPT-OSS-120B (Open Extraction)",
+        "stage_description": "Open Extraction (brand + price + residual po Jev Closed Features)",
         "model_description": "`gpt-oss-120b` (Cerebras, `low`)",
     },
 }
@@ -85,14 +90,35 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
 CONFIG_ALIASES: Dict[str, str] = {}
 for _canonical, _spec in CONFIGS.items():
     CONFIG_ALIASES[_canonical] = _canonical
-    CONFIG_ALIASES[_spec["legacy_key"]] = _canonical
+    for _alias in _spec["aliases"]:
+        CONFIG_ALIASES[_alias] = _canonical
+
+STAGE_KEY_ALIASES: Dict[str, str] = {
+    "jev_category": "category",
+    "jev_features": "closed_features",
+    "2a_qwen": "full_qwen",
+    "2a_gpt_oss": "full_gpt_oss",
+    "2a_gemini": "full_gemini",
+    "2b_qwen_aux": "open_qwen",
+    "2b_gpt_oss_aux": "open_gpt_oss",
+}
+
+
+def normalize_stage_keys(stages: Dict[str, Any]) -> Dict[str, Any]:
+    """Ensure canonical stage keys exist in `stages`, migrating any legacy keys in-place."""
+    for legacy_key, canon_key in STAGE_KEY_ALIASES.items():
+        if legacy_key in stages and canon_key not in stages:
+            stages[canon_key] = stages[legacy_key]
+        if legacy_key in stages:
+            del stages[legacy_key]
+    return stages
 
 
 def resolve_config_name(config: str) -> str:
-    """Resolve a configuration name or legacy alias to its canonical key in CONFIGS."""
+    """Resolve a configuration name or alias to its canonical key in CONFIGS."""
     key = config.strip()
     if key not in CONFIG_ALIASES:
-        valid = ", ".join(sorted(CONFIGS.keys()))
+        valid = ", ".join(CONFIGS.keys())
         raise ValueError(f"Unknown configuration {config!r}. Available configurations: {valid}")
     return CONFIG_ALIASES[key]
 
@@ -117,7 +143,7 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
     """Assemble predicted output and stage latencies/costs for a single query from recorded stages."""
     canon = resolve_config_name(config)
     spec = CONFIGS[canon]
-    s_cat = stages["jev_category"]
+    s_cat = stages.get("category") or stages["jev_category"]
     cat = s_cat["category"]
     t1 = float(s_cat["latency_seconds"])
     c1 = float(s_cat["cost_usd"])
@@ -133,8 +159,8 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
         }
 
     stage_key = spec["stage_key"]
-    if spec["approach"] == "2a":
-        s_llm = stages[stage_key]
+    s_llm = stages.get(stage_key) or stages[spec["legacy_stage_key"]]
+    if spec["architecture"] == "full":
         t_llm = float(s_llm["latency_seconds"])
         c_llm = float(s_llm["cost_usd"])
         return {
@@ -150,23 +176,22 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
             "total_cost_usd": round(c1 + c_llm, 6),
         }
 
-    s_feat = stages["jev_features"]
-    s_aux = stages[stage_key]
+    s_feat = stages.get("closed_features") or stages["jev_features"]
     t2_1 = float(s_feat["latency_seconds"])
     c2_1 = float(s_feat["cost_usd"])
-    t_aux = float(s_aux["latency_seconds"])
-    c_aux = float(s_aux["cost_usd"])
+    t_open = float(s_llm["latency_seconds"])
+    c_open = float(s_llm["cost_usd"])
     return {
         "predicted": {
             "category": cat,
-            "filters": list(s_feat["filters"]) + list(s_aux["filters"]),
-            "residual": list(s_aux["residual"]),
+            "filters": list(s_feat["filters"]) + list(s_llm["filters"]),
+            "residual": list(s_llm["residual"]),
         },
         "step1_latency_seconds": t1,
         "step2_1_latency_seconds": t2_1,
-        "step2_llm_latency_seconds": t_aux,
-        "total_latency_seconds": round(t1 + t2_1 + t_aux, 4),
-        "total_cost_usd": round(c1 + c2_1 + c_aux, 6),
+        "step2_llm_latency_seconds": t_open,
+        "total_latency_seconds": round(t1 + t2_1 + t_open, 4),
+        "total_cost_usd": round(c1 + c2_1 + c_open, 6),
     }
 
 
@@ -246,7 +271,7 @@ class QueryExtractor:
         """Extract category, filters, and residual concepts from a user query using `config`."""
         from .clients.jev import (
             category_payload,
-            feature_payload,
+            closed_features_payload,
             filters_from_answers,
         )
 
@@ -259,7 +284,7 @@ class QueryExtractor:
         category = None if choice == "outside" else choice
 
         stages: Dict[str, Any] = {
-            "jev_category": {
+            "category": {
                 "category": category,
                 "latency_seconds": round(cat_res.latency_seconds, 4),
                 "cost_usd": round(cat_res.cost_usd, 6),
@@ -267,7 +292,7 @@ class QueryExtractor:
         }
 
         if category is not None:
-            if spec["approach"] == "2a":
+            if spec["architecture"] == "full":
                 if spec["provider"] == "vertex":
                     llm_res = self._get_gemini().extract_full(query, category, self.catalog)
                 else:
@@ -279,22 +304,22 @@ class QueryExtractor:
                     "cost_usd": round(llm_res.cost_usd, 6),
                 }
             else:
-                fp, fmap = feature_payload(query, category, self.catalog)
+                fp, fmap = closed_features_payload(query, category, self.catalog)
                 feat_res = jev.call(fp)
-                jev_filters = filters_from_answers(feat_res.answers, category, self.catalog, fmap)
-                stages["jev_features"] = {
-                    "filters": jev_filters,
+                closed_filters = filters_from_answers(feat_res.answers, category, self.catalog, fmap)
+                stages["closed_features"] = {
+                    "filters": closed_filters,
                     "latency_seconds": round(feat_res.latency_seconds, 4),
                     "cost_usd": round(feat_res.cost_usd, 6),
                 }
-                aux_res = self._get_cerebras(spec).extract_auxiliary(
-                    query, category, jev_filters, self.catalog
+                open_res = self._get_cerebras(spec).extract_open(
+                    query, category, closed_filters, self.catalog
                 )
                 stages[spec["stage_key"]] = {
-                    "filters": aux_res.parsed["filters"],
-                    "residual": aux_res.parsed["residual"],
-                    "latency_seconds": round(aux_res.latency_seconds, 4),
-                    "cost_usd": round(aux_res.cost_usd, 6),
+                    "filters": open_res.parsed["filters"],
+                    "residual": open_res.parsed["residual"],
+                    "latency_seconds": round(open_res.latency_seconds, 4),
+                    "cost_usd": round(open_res.cost_usd, 6),
                 }
 
         assembled = assemble_stage_prediction(stages, canon)
@@ -303,9 +328,9 @@ class QueryExtractor:
             result["_meta"] = {
                 "config": canon,
                 "label": spec["label"],
-                "step1_latency_seconds": assembled["step1_latency_seconds"],
-                "step2_1_latency_seconds": assembled["step2_1_latency_seconds"],
-                "step2_llm_latency_seconds": assembled["step2_llm_latency_seconds"],
+                "category_latency_seconds": assembled["step1_latency_seconds"],
+                "closed_features_latency_seconds": assembled["step2_1_latency_seconds"],
+                "llm_latency_seconds": assembled["step2_llm_latency_seconds"],
                 "total_latency_seconds": assembled["total_latency_seconds"],
                 "total_cost_usd": assembled["total_cost_usd"],
             }

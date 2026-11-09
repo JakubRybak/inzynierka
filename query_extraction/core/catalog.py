@@ -10,9 +10,9 @@ from typing import Any, Dict, List
 from feature_extraction.schema import allowed_values, load_schemas
 
 from .prompts_loader import (
+    load_category_classification_prompt,
     load_category_prompt_configs,
-    load_common_features_prompt,
-    load_step1_category_prompt,
+    load_feature_definitions_prompt,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -23,9 +23,9 @@ SINGLE_OPERATORS = ["in", "not_in"]
 MULTI_OPERATORS = ["contains_any", "contains_all", "contains_none", "equals_set"]
 PRICE_OPERATORS = ["lte", "gte", "around"]
 
-CATEGORY_CRITERIA: Dict[str, str] = dict(load_step1_category_prompt()["categories"])
+CATEGORY_CRITERIA: Dict[str, str] = dict(load_category_classification_prompt()["categories"])
 EXTRA_FEATURE_DEFINITIONS: Dict[str, Dict[str, Any]] = dict(
-    load_common_features_prompt()["extra_definitions"]
+    load_feature_definitions_prompt()["extra_definitions"]
 )
 
 
@@ -38,7 +38,7 @@ def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
         data = json.loads(path.read_text(encoding="utf-8"))
         cat_prompts[data["category"]] = data["features"]
 
-    common_feat_cfg = load_common_features_prompt()
+    common_feat_cfg = load_feature_definitions_prompt()
     value_overrides: Dict[str, Dict[str, str]] = common_feat_cfg.get("value_overrides", {})
     common_notes: Dict[str, str] = common_feat_cfg.get("feature_notes", {})
     per_cat_cfgs = load_category_prompt_configs()
@@ -78,7 +78,6 @@ def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
             for v in values:
                 lines.append(f"- {v}: {val_descriptions[v]}")
 
-            # Add category-specific or common query extraction notes from YAML
             if feature in cat_notes:
                 lines.append(cat_notes[feature])
             elif feature == "insulation" and "insulation" in common_notes:
@@ -103,7 +102,7 @@ def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
 
 
 def build_cerebras_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> Dict[str, Any]:
-    """Build strict JSON schema (draft-07/OpenAI style) for full Step 2a extraction."""
+    """Build strict JSON schema (draft-07/OpenAI style) for full LLM extraction."""
     branches: List[Dict[str, Any]] = [
         {
             "type": "object",
@@ -151,7 +150,7 @@ def build_cerebras_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[
 
 
 def build_vertex_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> Dict[str, Any]:
-    """Build Vertex AI responseSchema for full Step 2a extraction."""
+    """Build Vertex AI responseSchema for full LLM extraction."""
     branches: List[Dict[str, Any]] = [
         {
             "type": "OBJECT",
@@ -202,8 +201,8 @@ def build_vertex_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[st
     }
 
 
-def build_cerebras_auxiliary_schema() -> Dict[str, Any]:
-    """Build strict JSON schema for Step 2b-2 auxiliary extraction (brand, price, residual only)."""
+def build_cerebras_open_schema() -> Dict[str, Any]:
+    """Build strict JSON schema for split open-field extraction (brand, price, residual only)."""
     return {
         "type": "object",
         "properties": {
@@ -241,14 +240,19 @@ def build_cerebras_auxiliary_schema() -> Dict[str, Any]:
     }
 
 
+build_cerebras_auxiliary_schema = build_cerebras_open_schema
+
+
 def validate_response(
     data: Any,
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
     *,
+    open_only: bool = False,
     auxiliary_only: bool = False,
 ) -> Dict[str, Any]:
     """Validate and normalize structured LLM output."""
+    restrict_open = open_only or auxiliary_only
     if not isinstance(data, dict) or set(data.keys()) != {"filters", "residual"}:
         raise ValueError(f"Expected root keys {{'filters', 'residual'}}, got {list(data) if isinstance(data, dict) else type(data)}")
     if not isinstance(data["filters"], list):
@@ -287,8 +291,8 @@ def validate_response(
             dedup = list(dict.fromkeys(v.strip() for v in vals))
             cleaned_filters.append({"feature": "brand", "operator": op, "values": dedup})
         else:
-            if auxiliary_only:
-                raise ValueError(f"Auxiliary parser returned non-auxiliary feature: {feat!r}")
+            if restrict_open:
+                raise ValueError(f"Open-field parser returned closed-vocabulary feature: {feat!r}")
             if feat not in cat_spec:
                 raise ValueError(f"Unsupported feature {feat!r} for category {category!r}")
             spec = cat_spec[feat]
