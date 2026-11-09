@@ -326,3 +326,56 @@ def parse_query(
     """Extract category, filters, and residual from `query` using the specified `config`."""
     active_extractor = extractor if extractor is not None else get_default_extractor()
     return active_extractor.parse(query, config=config, include_meta=include_meta)
+
+
+def main() -> None:
+    import argparse
+    import json
+
+    parser = argparse.ArgumentParser(description="Extract category, filters, and residual from shopping queries.")
+    parser.add_argument("query", nargs="?", help="Shopping query to parse")
+    parser.add_argument(
+        "--config",
+        default=DEFAULT_CONFIG,
+        choices=list(CONFIGS.keys()),
+        help=f"Pipeline configuration to use (default: {DEFAULT_CONFIG})",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="output_json",
+        help="Output raw JSON including latency and cost metadata",
+    )
+    args = parser.parse_args()
+    if not args.query:
+        parser.print_help()
+        return
+
+    result = parse_query(args.query, config=args.config, include_meta=True)
+    if args.output_json:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    else:
+        meta = result.get("_meta", {})
+        print(f"Query:     {result['query']!r}")
+        print(f"Config:    {meta.get('config')} ({meta.get('label')})")
+        print(f"Category:  {result.get('category') or 'None (outside catalog)'}")
+        print("Filters:")
+        if result.get("filters"):
+            for f in result["filters"]:
+                val = f.get("value") if f.get("feature") == "price" else f.get("values")
+                print(f"  • {f['feature']} {f['operator']} {val}")
+        else:
+            print("  (brak)")
+        print(f"Residual:  {result.get('residual') or '[]'}")
+        print(
+            f"Latency:   {meta.get('total_latency_seconds', 0):.3f}s "
+            f"(cat: {meta.get('category_latency_seconds', 0):.3f}s, "
+            f"closed: {meta.get('closed_features_latency_seconds', 0):.3f}s, "
+            f"llm: {meta.get('llm_latency_seconds', 0):.3f}s)"
+        )
+        print(f"Cost:      ${meta.get('total_cost_usd', 0):.6f}")
+
+
+if __name__ == "__main__":
+    main()
+
