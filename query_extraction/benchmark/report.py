@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .evaluate import canonicalize_filters, canonicalize_residual
-from .parser import (
+from ..parser import (
     CONFIGS,
     assemble_stage_prediction,
     resolve_config_list,
@@ -17,7 +17,7 @@ from .parser import (
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_INPUT = HERE / "results" / "benchmark_30_seed42.json"
-DEFAULT_OUTPUT = HERE / "benchmark_report.md"
+DEFAULT_OUTPUT = HERE / "results" / "benchmark_report.md"
 
 
 def fmt_s(val: float) -> str:
@@ -114,8 +114,8 @@ def generate_markdown(
         "",
         f"1. **Zbiór testowy:** `{dataset_label}` — **{n} zapytań**"
         + (f" (losowanie stratyfikowane `--seed {seed}`)." if seed is not None else " (pełny zbiór)."),
-        "2. **Prompty i few-shoty per kategoria:** Po klasyfikacji kategorii w Kroku 1 każdy kolejny etap (`2a Full`, `2b.1 Jev Features`, `2b.2 Aux`) otrzymuje wyłącznie definicje cech, reguły oraz 5 przykładów *few-shot* należących do tej konkretnej kategorii ([few_shots.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/few_shots.py)).",
-        "3. **Równoważność semantyczna w ewaluacji:** Pojedyncza wartość w `contains_all` i `contains_any` jest traktowana jako równoważna (`contains_all ['Cotton'] == contains_any ['Cotton']`), a nazwy marek (`brand`) są porównywane bezwielkościowo ([evaluate.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/evaluate.py)).",
+        "2. **Prompty i few-shoty per kategoria:** Po klasyfikacji kategorii w Kroku 1 każdy kolejny etap (`2a Full`, `2b.1 Jev Features`, `2b.2 Aux`) otrzymuje wyłącznie definicje cech, reguły oraz 5 przykładów *few-shot* należących do tej konkretnej kategorii ([few_shots.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/core/few_shots.py)).",
+        "3. **Równoważność semantyczna w ewaluacji:** Pojedyncza wartość w `contains_all` i `contains_any` jest traktowana jako równoważna (`contains_all ['Cotton'] == contains_any ['Cotton']`), a nazwy marek (`brand`) są porównywane bezwielkościowo ([evaluate.py](file:///Users/jakubrybak/Projekty/Test/query_extraction/benchmark/evaluate.py)).",
         "4. **Pomiar czasu:** Minimalny thinking (`temperature = 0`), ścisły Structured Output (`responseSchema` / `json_schema`).",
         "",
         "---",

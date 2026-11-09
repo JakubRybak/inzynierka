@@ -8,29 +8,29 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
-from .catalog import load_query_catalog
+from ..core.catalog import load_query_catalog
 from .evaluate import evaluate_predictions
-from .few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
-from .generate_report import DEFAULT_OUTPUT as DEFAULT_REPORT_OUTPUT, generate_markdown
-from .jev_parser import (
+from ..core.few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
+from .report import DEFAULT_OUTPUT as DEFAULT_REPORT_OUTPUT, generate_markdown
+from ..clients.jev import (
     JevClient,
     category_payload,
     feature_payload,
     filters_from_answers,
     normalize_query,
 )
-from .llm_parser import (
+from ..clients.llm import (
     GPT_OSS_MODEL,
     QWEN_MODEL,
     CerebrasClient,
     VertexGeminiClient,
 )
-from .parser import (
+from ..parser import (
     CONFIGS,
     assemble_stage_prediction,
     resolve_config_list,
 )
-from .sample_queries import QUERIES, load_dataset_rows, parse_size
+from .dataset import QUERIES, load_dataset_rows, parse_size
 
 HERE = Path(__file__).resolve().parent
 RESULTS_DIR = HERE / "results"
@@ -86,7 +86,7 @@ def run_benchmark(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
-        dataset_rel = str(target_dataset.relative_to(HERE.parent))
+        dataset_rel = str(target_dataset.relative_to(HERE.parents[1]))
     except ValueError:
         dataset_rel = str(target_dataset)
 

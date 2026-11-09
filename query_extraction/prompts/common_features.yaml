@@ -1,0 +1,102 @@
+extra_definitions:
+  gender:
+    instruction: Explicitly requested target gender only. Do not infer Women from dresses, skirts, blouses, or camisoles.
+      Do not map 'unisex', 'boys', 'girls', or 'kids' to Men or Women (keep those in residual).
+    values:
+      Men: Explicitly for men (men, men's, mens, man, male, męski, męskie, hombre).
+      Women: Explicitly for women (women, women's, womens, woman, female, ladies, damski, damska, damskie, mujer).
+  main_composition:
+    instruction: Main garment fabric composition. '100% X' or 'only X' or 'pure X' uses equals_set ['X']. '0% X'
+      or 'without X' / 'no X' / 'bez X' uses contains_none ['X']. Any share between 0% and 100% (e.g. '30% wool')
+      or an unqualified material mention ('cotton', 'wool blend') uses contains_any. Two required materials ('cotton
+      and elastane') use contains_all; alternatives ('cotton or linen') use contains_any. Do NOT map faux/vegan/PU/patent
+      leather to Leather (keep 'faux leather' in residual). In Jackets & Coats, 'down' / 'puch' / 'plumas' refers
+      to insulation=Down, not main_composition=Down.
+    values:
+      Cotton: Cotton, bawełna, algodón (excluding brand names like Cotton Citizen).
+      Polyester: Polyester, poliester, poliéster.
+      Acrylic: Acrylic, modacrylic, akryl, acrílico.
+      Wool: Wool, merino, lambswool, mohair, alpaca, angora, camel, wełna, lana.
+      Viscose: Viscose, rayon, cupro, modal, lyocell, tencel, bamboo, wiskoza, viscosa.
+      Elastane: 'Elastane, spandex, lycra, elastan, elastano (note: generic word ''stretch'' alone stays in residual).'
+      Nylon: Nylon, polyamide, poliamid, nailon.
+      Silk: Silk, jedwab, seda.
+      Leather: Real leather, genuine leather, suede, nubuck, lambskin, calfskin, skóra, cuero (NOT faux/vegan/patent
+        leather).
+      Cashmere: Cashmere, kaszmir, cachemira.
+      Linen: Linen, flax, hemp, ramie, len, lniany, lino.
+      Down: Down/feathers as main composition (rare outside fill; in outerwear use insulation=Down instead).
+      Fur: Real fur, shearling fur exterior, pelo/futro (faux fur stays in residual unless main_composition Fur
+        is explicitly meant).
+  lining_composition:
+    instruction: 'Lining material or unlined state for Jackets & Coats ONLY when lining is explicitly mentioned.
+      ''unlined'' / ''bez podszewki'' / ''sin forro'' -> equals_set [''Unlined'']. ''with lining'' / ''lined'' /
+      ''with inner warming lining'' (without naming a supported lining material) -> contains_none [''Unlined''].
+      ''with silk lining'' -> contains_any [''Silk'']. ''with 100% silk lining'' -> equals_set [''Silk'']. ''with
+      cotton and viscose lining'' -> contains_all [''Cotton'', ''Viscose'']. Note: ''fleece-lined'' and ''shearling-lined''
+      map to insulation (Fleece Lined / Shearling Lined), NOT lining_composition.'
+    values:
+      Cotton: Cotton lining.
+      Polyester: Polyester lining.
+      Acrylic: Acrylic lining.
+      Wool: Wool lining.
+      Viscose: Viscose, cupro, rayon, acetate, modal, or lyocell lining.
+      Elastane: Elastane/spandex lining.
+      Nylon: Nylon or polyamide lining.
+      Silk: Silk lining.
+      Leather: Leather lining.
+      Cashmere: Cashmere lining.
+      Linen: Linen lining.
+      Down: Down lining.
+      Fur: Fur lining.
+      Unlined: Explicitly unlined (equals_set ['Unlined']), or negated when a lining is required (contains_none
+        ['Unlined']).
+  outerwear_fit:
+    instruction: 'Intended fit for Jackets & Coats. Only Oversized and Regular exist in schema. Note: ''slim-fitting''
+      or ''fitted'' on a jacket/coat is NOT in schema and goes to residual.'
+    values:
+      Oversized: Oversized, loose, boxy, relaxed fit (luźny, oversize, holgado).
+      Regular: Explicitly regular, standard, or classic fit (only when fit itself is described as regularfit/standard
+        fit).
+  skirt_dress_length:
+    instruction: Skirt or dress hemline length. Do not confuse sleeve length with garment length.
+    values:
+      Mini: Mini, short skirt/dress ending above the knee (mini, krótka, corta/corto).
+      Midi: Midi, knee-length or calf-length skirt/dress (midi, do kolan, do połowy łydki).
+      Maxi: Maxi, long, ankle-length or floor-length skirt/dress or gown (maxi, długa, largo/larga).
+value_overrides:
+  leg_shape:
+    Tapered: Explicitly tapered or carrot-cut leg narrowing toward the ankle, or 'joggers' / 'joggery'. Do NOT map
+      'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to Tapered ('skinny' maps ONLY to fit=Skinny).
+feature_notes:
+  insulation: 'IMPORTANT: ''down'' / ''down-filled'' / ''goose down'' / ''puchowa'' / ''plumas'' maps to Down (keep
+    specific ''goose down'' in residual). ''synthetic padding'' / ''synthetic insulation'' / ''synthetically padded''
+    maps to Synthetic Padding (note: ''quilted'' / ''puffer'' / ''acolchado'' alone without stating down or synthetic
+    stays in residual). ''shearling-lined'' -> Shearling Lined; ''fleece-lined'' -> Fleece Lined; ''uninsulated''
+    / ''unpadded'' -> Uninsulated.'
+  leg_shape_flared: 'IMPORTANT: ''bootcut'' and ''bell bottom'' map to leg_shape = Flared AND keep ''bootcut'' /
+    ''bell bottom'' in residual.'
+  neckline_high_neck: 'IMPORTANT: ''turtleneck'', ''mock neck'', ''funnel neck'', ''golf'', ''półgolf'' map to neckline
+    = High Neck AND keep specific ''turtleneck'' / ''mock neck'' in residual.'
+  colors: 'IMPORTANT: Named color shades (e.g. ''navy'', ''turquoise'', ''burgundy'', ''maroon'', ''olive'', ''khaki'',
+    ''emerald'', ''coral'', ''fuchsia'', ''hot pink'', ''lavender'', ''lilac'', ''mustard'', ''rust'', ''charcoal'',
+    ''heather grey'', ''forest green'', ''off-white'', ''cream'', ''ivory'', ''camel'', ''azul marino'', ''azul
+    celeste'', ''jasnoniebieski'', ''granatowy'', ''bordowy'') map to their parent color family in filters AND MUST
+    ALSO be kept in residual! However, an excluded shade (''not turquoise'') stays ONLY in residual (''not turquoise'')
+    with NO color family exclusion filter. ''all-black'' / ''only black'' uses equals_set [''Black''].'
+substyle_rules:
+  always:
+  - '   - Specific pattern sub-styles that map to a broader pattern filter stay in residual: e.g. ''leopard print''
+    (maps to pattern=Animal Print AND stays in residual).'
+  by_feature_value:
+  - feature: neckline
+    value: High Neck
+    rule: '   - Specific high-neck styles (''turtleneck'', ''mock neck'', ''funnel neck'') map to neckline=High
+      Neck AND stay in residual.'
+  - feature: insulation
+    value: null
+    rule: '   - In Jackets & Coats: ''goose down'' maps to insulation=Down AND stays in residual; ''quilted'' /
+      ''puffer'' without stating down or synthetic stays in residual.'
+  - feature: leg_shape
+    value: Flared
+    rule: '   - ''bootcut'' and ''bell bottom'' map to leg_shape=Flared AND stay in residual.'

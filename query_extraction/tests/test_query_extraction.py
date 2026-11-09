@@ -14,36 +14,40 @@ from query_extraction import (
     resolve_config_list,
     resolve_config_name,
 )
-from query_extraction.catalog import (
-    CATEGORY_CRITERIA,
-    EXCLUDED_FILTER_VALUES,
-    build_cerebras_auxiliary_schema,
-    build_cerebras_full_schema,
-    build_vertex_full_schema,
-    load_query_catalog,
-    validate_response,
-)
-from query_extraction.evaluate import (
+from query_extraction.benchmark import (
+    DEFAULT_INPUT,
     canonicalize_clause,
     canonicalize_filters,
+    generate_markdown,
+    load_dataset_rows,
+    load_queries,
+    required_stages_for_configs,
     summarize_latencies,
 )
-from query_extraction.few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
-from query_extraction.generate_report import DEFAULT_INPUT, generate_markdown
-from query_extraction.jev_parser import (
+from query_extraction.clients import (
     JevCallResult,
+    LLMCallResult,
+    build_auxiliary_system_prompt,
+    build_full_system_prompt,
     category_payload,
     feature_payload,
     filters_from_answers,
     normalize_query,
 )
-from query_extraction.llm_parser import (
-    LLMCallResult,
-    build_auxiliary_system_prompt,
-    build_full_system_prompt,
+from query_extraction.core import (
+    CATEGORIES_PROMPTS_DIR,
+    CATEGORY_CRITERIA,
+    CATEGORY_FEW_SHOTS,
+    EXCLUDED_FILTER_VALUES,
+    PER_CATEGORY_FEW_SHOTS,
+    PROMPTS_DIR,
+    build_cerebras_auxiliary_schema,
+    build_cerebras_full_schema,
+    build_vertex_full_schema,
+    load_category_prompt_configs,
+    load_query_catalog,
+    validate_response,
 )
-from query_extraction.run_benchmark import required_stages_for_configs
-from query_extraction.sample_queries import load_dataset_rows, load_queries
 
 
 class _FakeJevClient:
@@ -113,8 +117,15 @@ class QueryExtractionOfflineTests(unittest.TestCase):
 
     def test_all_22_categories_covered_in_catalog_and_criteria(self) -> None:
         self.assertEqual(len(self.catalog), 22)
+        self.assertEqual(len(list(CATEGORIES_PROMPTS_DIR.glob("*.yaml"))), 22)
+        self.assertTrue((PROMPTS_DIR / "step1_category.yaml").exists())
+        self.assertTrue((PROMPTS_DIR / "common_features.yaml").exists())
+        self.assertTrue((PROMPTS_DIR / "step2a_full.yaml").exists())
+        self.assertTrue((PROMPTS_DIR / "step2b_jev_features.yaml").exists())
+        self.assertTrue((PROMPTS_DIR / "step2b_auxiliary.yaml").exists())
         self.assertEqual(set(self.catalog.keys()), set(CATEGORY_CRITERIA.keys()))
         self.assertEqual(set(self.catalog.keys()), set(PER_CATEGORY_FEW_SHOTS.keys()))
+        self.assertEqual(set(self.catalog.keys()), set(load_category_prompt_configs().keys()))
         for cat, features in self.catalog.items():
             for feat, spec in features.items():
                 self.assertTrue(spec["values"], f"Empty values for {cat}.{feat}")

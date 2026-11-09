@@ -1,0 +1,117 @@
+category: Tank tops & Camisoles
+category_criterion: Tank top, camisole, cami, singlet, sleeveless strap top, top na ramiączkach, or generic 'top'
+  / 'crop top' / 'black top' when no more specific supported garment category is named.
+feature_notes: {}
+jev_scopes: {}
+substyle_rules: []
+few_shots:
+- query: green tank top, but not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    residual:
+    - not emerald
+  note: Excluding a shade ('not emerald') does not exclude the Green family; generic tank top does not set strap_style.
+- query: women's fitted silk camisole with spaghetti straps and V-neck under $90
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Silk
+    - feature: strap_width
+      operator: in
+      values:
+      - Spaghetti
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: price
+      operator: lte
+      value: 90
+    residual: []
+  note: '''spaghetti straps'' sets strap_width=Spaghetti without implying strap_style=Standard.'
+- query: all-black racerback cropped tank in cotton and elastane for yoga
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: strap_style
+      operator: in
+      values:
+      - Racerback
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    residual:
+    - for yoga
+  note: '''all-black'' -> equals_set; ''cotton and elastane'' -> contains_all.'
+- query: strapless burgundy tube top without polyester, around 70 PLN
+  output:
+    filters:
+    - feature: strap_style
+      operator: in
+      values:
+      - Strapless
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: around
+      value: 70
+    residual:
+    - burgundy
+  note: Do not infer strap_width from Strapless; 'burgundy' maps to Red and stays in residual.
+- query: pink and white floral halter cami by Zara between 40 and 90 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Pink
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Floral
+    - feature: strap_style
+      operator: in
+      values:
+      - Halter
+    - feature: brand
+      operator: in
+      values:
+      - Zara
+    - feature: price
+      operator: gte
+      value: 40
+    - feature: price
+      operator: lte
+      value: 90
+    residual: []
+  note: '''pink and white'' uses contains_all.'

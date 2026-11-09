@@ -8,7 +8,7 @@ from pathlib import Path
 from feature_extraction.schema import allowed_values, load_schemas
 
 
-QUERIES = Path(__file__).resolve().parents[1] / "queries"
+QUERIES = Path(__file__).resolve().parents[1] / "benchmark" / "queries"
 
 
 class QuerySchemaTests(unittest.TestCase):

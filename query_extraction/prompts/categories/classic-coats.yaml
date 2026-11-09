@@ -1,0 +1,174 @@
+category: Classic Coats
+category_criterion: Coat, classic coat, overcoat, topcoat, peacoat, pea coat, parka, duffle coat, wool coat, winter
+  coat, fur coat, down coat, płaszcz, parka, abrigo. Excludes trench coats (Trench Coats) and jackets (Jackets).
+feature_notes:
+  coat_style: 'IMPORTANT: ''classic coat'', ''overcoat'', ''topcoat'', ''pea coat'', ''peacoat'', ''chesterfield'',
+    ''car coat'' map to Standard (and specific sub-styles like ''pea coat''/''peacoat'' also stay in residual).
+    ''parka'' maps to Parka. A generic ''coat'' / ''płaszcz'' / ''abrigo'' alone does NOT set coat_style.'
+jev_scopes: {}
+substyle_rules:
+- '   - In Classic Coats: ''pea coat'' / ''peacoat'' maps to coat_style=Standard AND stays in residual.'
+few_shots:
+- query: women's camel double-breasted wool pea coat with lapel collar and silk lining under 900 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: colors
+      operator: contains_any
+      values:
+      - Brown
+    - feature: closure_type
+      operator: contains_any
+      values:
+      - Double-Breasted
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Wool
+    - feature: coat_style
+      operator: in
+      values:
+      - Standard
+    - feature: collar_type
+      operator: in
+      values:
+      - Lapel Collar
+    - feature: lining_composition
+      operator: contains_any
+      values:
+      - Silk
+    - feature: price
+      operator: lte
+      value: 900
+    residual:
+    - camel
+    - pea coat
+  note: '''pea coat'' maps to coat_style=Standard AND stays in residual; ''camel'' maps to Brown AND stays in residual.'
+- query: men's olive hooded down parka with zip and press-stud closure, between 400 and 800 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: insulation
+      operator: in
+      values:
+      - Down
+    - feature: coat_style
+      operator: in
+      values:
+      - Parka
+    - feature: closure_type
+      operator: contains_all
+      values:
+      - Press-Stud
+      - Zip
+    - feature: price
+      operator: gte
+      value: 400
+    - feature: price
+      operator: lte
+      value: 800
+    residual:
+    - olive
+  note: In outerwear, 'down' maps to insulation=Down (not main_composition); combined closures use contains_all.
+- query: unlined all-black oversized long coat in 100% wool without a hood, around $250
+  output:
+    filters:
+    - feature: lining_composition
+      operator: equals_set
+      values:
+      - Unlined
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Long
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Wool
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: around
+      value: 250
+    residual: []
+  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; bare ''coat'' does NOT set coat_style=Standard.'
+- query: black and white plaid mid-length coat by Max Mara with belt, not oversized
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Plaid
+    - feature: length
+      operator: in
+      values:
+      - Mid-Length
+    - feature: brand
+      operator: in
+      values:
+      - Max Mara
+    - feature: closure_type
+      operator: contains_any
+      values:
+      - Belted
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    residual: []
+  note: '''black and white'' -> contains_all; ''with belt'' -> closure_type contains_any [''Belted''].'
+- query: green shearling-lined short coat with stand collar, without polyester, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: insulation
+      operator: in
+      values:
+      - Shearling Lined
+    - feature: length
+      operator: in
+      values:
+      - Short
+    - feature: collar_type
+      operator: in
+      values:
+      - Stand Collar
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual:
+    - not emerald
+  note: '''shearling-lined'' maps to insulation=Shearling Lined (not lining_composition).'

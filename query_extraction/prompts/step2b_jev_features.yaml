@@ -1,0 +1,42 @@
+rules:
+  intro_template: Classify direct textual evidence in CURRENT_QUERY (EN/PL/ES) for category {category}. Never infer
+    unstated values.
+  base_rules:
+  - A positive value does NOT exclude other values (e.g. requesting 'With Hood' leaves 'Without Hood' as not_specified,
+    NEVER excluded).
+  - Exclusions require explicit negation ('without', 'no', 'not', 'bez', 'sin', '0%') targeting that specific value.
+  - Negating a color shade ('not turquoise', 'not emerald') does NOT exclude its color family.
+  relation_rule_base: 'Multi-choice/composition relation: conjunction (''and''/''i''/''y'', blends) -> ALL; alternatives
+    (''or'') or single value or <100% share -> ANY; ''only'', ''exclusively'', ''pure'', ''100% <material>'', ''all-<color>'''
+  relation_rule_lining_suffix: ', or ''unlined'' -> EXACT.'
+  relation_rule_default_suffix: ' -> EXACT.'
+  faux_leather_rule: Faux/vegan/PU leather is NOT Leather.
+  insulation_rule: Down/feathers ('down', 'puch', 'plumas') is insulation=Down, not main_composition.
+  leg_shape_rule: Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to leg_shape=Tapered.
+  closing_rule: Do not extract brand, price, or residual.
+feature_scopes:
+  strap_style: 'Generic ''top'', ''tank'', ''camisole'', ''straps'', ''na ramiączkach'', strap width, or fit are
+    NOT evidence of Standard strap_style. Standard requires an explicit ordinary/standard strap description. '
+  lining_composition: 'Only mark a lining_composition value when the query explicitly mentions a lining or unlined
+    state (''lining'', ''lined'', ''unlined'', ''podszewka'', ''bez podszewki'', ''forro'', ''sin forro''). Outer
+    shell materials belong to main_composition, and ''fleece-lined''/''shearling-lined'' belong to insulation. '
+  coat_style: 'A bare ''coat'', ''płaszcz'', or ''abrigo'' does NOT request Standard coat_style; Standard requires
+    ''classic coat'', ''overcoat'', ''topcoat'', ''pea coat'', ''peacoat'', ''chesterfield'', or ''car coat''. '
+  insulation: '''quilted'', ''puffer'', or ''acolchado'' alone without stating down/feathers or synthetic padding
+    does NOT specify Synthetic Padding or Down; leave insulation not_specified in that case. '
+  leg_shape: 'Do NOT map ''skinny'', ''slim fit'', or ''elasticized waistband'' (''z gumką w pasie'') to Tapered. '
+value_question:
+  instructions_template: Classify direct mention and polarity of {feature}={value_repr} ({val_desc}) in CURRENT_QUERY
+    for {category}. Another positive value does NOT exclude this value. {scope}{instruction}
+  criteria:
+    not_specified: CURRENT_QUERY does not directly request or negate {value} for {feature}.
+    requested: CURRENT_QUERY directly requests {value} (or a synonym/shade) for {feature}.
+    excluded: CURRENT_QUERY explicitly negates {value} ('without', 'no', 'not', 'bez', 'sin', '0%') for {feature}.
+relation_question:
+  instructions_template: How must the positively requested {feature} values be combined in CURRENT_QUERY for {category}?
+    Ignore exclusions.
+  criteria:
+    ANY: Alternatives ('or'), or a single value without 'only'/'100%'/'all-'/'unlined', or <100% material share,
+      or none requested.
+    ALL: Multiple requested values that must all occur together ('and', blends, multi-color, combined closures).
+    EXACT: Explicit 'only', 'exclusively', 'pure', '100% <material>', 'all-<color>' ('all-black'), or 'unlined'.

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import json
 import math
 import os
 from pathlib import Path
@@ -15,38 +14,41 @@ import unicodedata
 
 import requests
 
-from .catalog import CATEGORY_CRITERIA, load_query_catalog
-from .few_shots import (
+from ..core.catalog import CATEGORY_CRITERIA
+from ..core.few_shots import (
     CATEGORY_FEW_SHOTS,
-    PER_CATEGORY_FEW_SHOTS,
-    build_jev_feature_examples_json,
+     build_jev_feature_examples_json,
+)
+from ..core.prompts_loader import (
+    load_category_prompt_configs,
+    load_step1_category_prompt,
+    load_step2b_jev_features_prompt,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
 MODEL = "typesafe/jev-1.14"
 
 
 def build_jev_rules(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> str:
-    """Build category-scoped Jev extraction rules."""
+    """Build category-scoped Jev extraction rules from YAML configuration."""
+    rules_cfg = load_step2b_jev_features_prompt()["rules"]
     cat_features = set(catalog[category].keys())
     parts = [
-        f"Classify direct textual evidence in CURRENT_QUERY (EN/PL/ES) for category {category}. Never infer unstated values.",
-        "A positive value does NOT exclude other values (e.g. requesting 'With Hood' leaves 'Without Hood' as not_specified, NEVER excluded).",
-        "Exclusions require explicit negation ('without', 'no', 'not', 'bez', 'sin', '0%') targeting that specific value.",
-        "Negating a color shade ('not turquoise', 'not emerald') does NOT exclude its color family.",
-        "Multi-choice/composition relation: conjunction ('and'/'i'/'y', blends) -> ALL; alternatives ('or') or single value or <100% share -> ANY; 'only', 'exclusively', 'pure', '100% <material>', 'all-<color>'",
+        rules_cfg["intro_template"].format(category=category),
+        *rules_cfg["base_rules"],
+        rules_cfg["relation_rule_base"],
     ]
     if "lining_composition" in cat_features:
-        parts[-1] += ", or 'unlined' -> EXACT."
+        parts[-1] += rules_cfg["relation_rule_lining_suffix"]
     else:
-        parts[-1] += " -> EXACT."
-    parts.append("Faux/vegan/PU leather is NOT Leather.")
+        parts[-1] += rules_cfg["relation_rule_default_suffix"]
+    parts.append(rules_cfg["faux_leather_rule"])
     if "insulation" in cat_features:
-        parts.append("Down/feathers ('down', 'puch', 'plumas') is insulation=Down, not main_composition.")
+        parts.append(rules_cfg["insulation_rule"])
     if "leg_shape" in cat_features:
-        parts.append("Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to leg_shape=Tapered.")
-    parts.append("Do not extract brand, price, or residual.")
+        parts.append(rules_cfg["leg_shape_rule"])
+    parts.append(rules_cfg["closing_rule"])
     return " ".join(parts)
 
 
@@ -66,12 +68,9 @@ def load_openrouter_key() -> str:
 
 
 def category_payload(query: str) -> Dict[str, Any]:
+    step1_cfg = load_step1_category_prompt()
     criteria = dict(CATEGORY_CRITERIA)
-    criteria["outside"] = (
-        "No supported garment category is requested (e.g. shoes, sneakers, boots, bags, belts, hats, scarves, "
-        "socks, jewelry, bras, swimsuits, pajamas, full two-piece suits, replacement parts/accessories, "
-        "queries with no garment type like 'something black under $50', or alternative categories like 't-shirt or dress')."
-    )
+    criteria["outside"] = step1_cfg["outside_description"]
     return {
         "model": MODEL,
         "state": {
@@ -81,16 +80,7 @@ def category_payload(query: str) -> Dict[str, Any]:
         "questions": {
             "category": {
                 "type": "choice",
-                "instructions": (
-                    "Select the single product category that the user wants to buy in CURRENT_QUERY across English, "
-                    "Polish, and Spanish. Classify the target garment being bought, NOT clothing mentioned only as "
-                    "styling context (e.g. 't-shirt to wear with jeans' -> T-shirts; 'belt to wear with jeans' -> outside; "
-                    "'buttons for a wool coat' -> outside). A 'T-shirt dress', 'shirt dress', 'sweater dress', or "
-                    "'sweatshirt dress' is Dresses. A generic 'top' or 'crop top' without a more specific category is "
-                    "Tank tops & Camisoles. A collared tee ('tee with a collar') is Polos. A 'dress shirt' is Shirts. "
-                    "If no supported category or multiple alternative categories ('t-shirt or dress') are requested, "
-                    "choose outside."
-                ),
+                "instructions": step1_cfg["instructions"],
                 "criteria": criteria,
             }
         },
@@ -102,75 +92,44 @@ def feature_payload(
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
 ) -> Tuple[Dict[str, Any], Dict[str, Tuple[str, str]]]:
+    jev_cfg = load_step2b_jev_features_prompt()
+    common_scopes: Dict[str, str] = jev_cfg.get("feature_scopes", {})
+    val_q_cfg = jev_cfg["value_question"]
+    rel_q_cfg = jev_cfg["relation_question"]
+    cat_scopes: Dict[str, str] = load_category_prompt_configs().get(category, {}).get("jev_scopes", {})
+
     questions: Dict[str, Any] = {}
     mapping: Dict[str, Tuple[str, str]] = {}
     for feature, spec in catalog[category].items():
         examples = build_jev_feature_examples_json(category, feature, catalog)
-        scope = ""
-        if feature == "strap_style":
-            scope = (
-                "Generic 'top', 'tank', 'camisole', 'straps', 'na ramiączkach', strap width, or fit are NOT "
-                "evidence of Standard strap_style. Standard requires an explicit ordinary/standard strap description. "
-            )
-        elif feature == "lining_composition":
-            scope = (
-                "Only mark a lining_composition value when the query explicitly mentions a lining or unlined state "
-                "('lining', 'lined', 'unlined', 'podszewka', 'bez podszewki', 'forro', 'sin forro'). Outer shell "
-                "materials belong to main_composition, and 'fleece-lined'/'shearling-lined' belong to insulation. "
-            )
-        elif feature == "coat_style":
-            scope = (
-                "A bare 'coat', 'płaszcz', or 'abrigo' does NOT request Standard coat_style; Standard requires "
-                "'classic coat', 'overcoat', 'topcoat', 'pea coat', 'peacoat', 'chesterfield', or 'car coat'. "
-            )
-        elif feature == "insulation":
-            scope = (
-                "'quilted', 'puffer', or 'acolchado' alone without stating down/feathers or synthetic padding "
-                "does NOT specify Synthetic Padding or Down; leave insulation not_specified in that case. "
-            )
-        elif category == "Hoodies & Zipups" and feature == "hood":
-            scope = (
-                "The word 'hoodie'/'hoodies'/'hooded'/'z kapturem'/'con capucha' requests With Hood "
-                "(and leaves Without Hood as not_specified, NEVER excluded). "
-            )
-        elif category == "Hoodies & Zipups" and feature == "closure_type":
-            scope = "'zip-up'/'zip up'/'zipper'/'na suwak'/'con cremallera' -> Zip; 'half-zip'/'z krótkim zamkiem' -> Half-Zip; 'pullover' -> Pullover. "
-        elif category == "Sweatpants & Lounge Pants" and feature == "leg_shape":
-            scope = "'joggers'/'joggery' requests Tapered. "
-        elif feature == "leg_shape":
-            scope = "Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to Tapered. "
-        elif category == "Shorts" and feature == "shorts_type":
-            scope = "Running/volleyball/gym/compression/athletic shorts request Athletic. "
+        scope = cat_scopes.get(feature, common_scopes.get(feature, ""))
 
         for index, value in enumerate(spec["values"]):
             qid = f"{feature}_{index}"
             mapping[qid] = (feature, value)
             val_desc = spec["value_descriptions"].get(value, value)
+            base_instr = val_q_cfg["instructions_template"].format(
+                feature=feature,
+                value_repr=repr(value),
+                val_desc=val_desc,
+                category=category,
+                scope=scope,
+                instruction=spec["instruction"],
+            )
             questions[qid] = {
                 "type": "choice",
-                "instructions": (
-                    f"Classify direct mention and polarity of {feature}={value!r} ({val_desc}) in CURRENT_QUERY for {category}. "
-                    f"Another positive value does NOT exclude this value. {scope}{spec['instruction']}"
-                    + (f"\nExamples ({category}): {examples}" if examples != "[]" else "")
-                ),
+                "instructions": base_instr + (f"\nExamples ({category}): {examples}" if examples != "[]" else ""),
                 "criteria": {
-                    "not_specified": f"CURRENT_QUERY does not directly request or negate {value} for {feature}.",
-                    "requested": f"CURRENT_QUERY directly requests {value} (or a synonym/shade) for {feature}.",
-                    "excluded": f"CURRENT_QUERY explicitly negates {value} ('without', 'no', 'not', 'bez', 'sin', '0%') for {feature}.",
+                    k: tmpl.format(value=value, feature=feature)
+                    for k, tmpl in val_q_cfg["criteria"].items()
                 },
             }
         if spec["multi"]:
+            rel_instr = rel_q_cfg["instructions_template"].format(feature=feature, category=category)
             questions[f"{feature}_relation"] = {
                 "type": "choice",
-                "instructions": (
-                    f"How must the positively requested {feature} values be combined in CURRENT_QUERY for {category}? Ignore exclusions."
-                    + (f"\nExamples ({category}): {examples}" if examples != "[]" else "")
-                ),
-                "criteria": {
-                    "ANY": "Alternatives ('or'), or a single value without 'only'/'100%'/'all-'/'unlined', or <100% material share, or none requested.",
-                    "ALL": "Multiple requested values that must all occur together ('and', blends, multi-color, combined closures).",
-                    "EXACT": "Explicit 'only', 'exclusively', 'pure', '100% <material>', 'all-<color>' ('all-black'), or 'unlined'.",
-                },
+                "instructions": rel_instr + (f"\nExamples ({category}): {examples}" if examples != "[]" else ""),
+                "criteria": dict(rel_q_cfg["criteria"]),
             }
     payload = {
         "model": MODEL,

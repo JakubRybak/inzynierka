@@ -6,8 +6,8 @@ import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
 if TYPE_CHECKING:
-    from .jev_parser import JevClient
-    from .llm_parser import CerebrasClient, VertexGeminiClient
+    from .clients.jev import JevClient
+    from .clients.llm import CerebrasClient, VertexGeminiClient
 
 DEFAULT_CONFIG = "2a_qwen"
 GEMINI_MODEL = "gemini-3.5-flash-lite"
@@ -183,7 +183,7 @@ class QueryExtractor:
         cerebras_clients: Optional[Dict[str, CerebrasClient]] = None,
     ) -> None:
         if catalog is None:
-            from .catalog import load_query_catalog
+            from .core.catalog import load_query_catalog
 
             catalog = load_query_catalog()
         self.catalog = catalog
@@ -196,7 +196,7 @@ class QueryExtractor:
     def _get_jev(self) -> JevClient:
         with self._lock:
             if self._jev_client is None:
-                from .jev_parser import JevClient
+                from .clients.jev import JevClient
 
                 self._jev_client = JevClient(budget_usd=self.jev_budget_usd)
             return self._jev_client
@@ -204,7 +204,7 @@ class QueryExtractor:
     def _get_gemini(self) -> VertexGeminiClient:
         with self._lock:
             if self._gemini_client is None:
-                from .llm_parser import VertexGeminiClient
+                from .clients.llm import VertexGeminiClient
 
                 self._gemini_client = VertexGeminiClient()
             return self._gemini_client
@@ -213,7 +213,7 @@ class QueryExtractor:
         model = spec["model"]
         with self._lock:
             if model not in self._cerebras_clients:
-                from .llm_parser import CerebrasClient
+                from .clients.llm import CerebrasClient
 
                 self._cerebras_clients[model] = CerebrasClient(
                     model=model,
@@ -244,7 +244,7 @@ class QueryExtractor:
         include_meta: bool = False,
     ) -> Dict[str, Any]:
         """Extract category, filters, and residual concepts from a user query using `config`."""
-        from .jev_parser import (
+        from .clients.jev import (
             category_payload,
             feature_payload,
             filters_from_answers,
