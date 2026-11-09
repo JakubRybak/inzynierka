@@ -1,4 +1,4 @@
-"""End-to-end benchmark runner comparing all 5 query extraction pipelines (2a and 2b)."""
+"""Configurable benchmark runner for query extraction pipelines (2a and 2b)."""
 
 from __future__ import annotations
 
@@ -6,11 +6,12 @@ import argparse
 from datetime import datetime, timezone
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from .catalog import load_query_catalog
 from .evaluate import evaluate_predictions
 from .few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
+from .generate_report import DEFAULT_OUTPUT as DEFAULT_REPORT_OUTPUT, generate_markdown
 from .jev_parser import (
     JevClient,
     category_payload,
@@ -19,19 +20,23 @@ from .jev_parser import (
     normalize_query,
 )
 from .llm_parser import (
-    GEMINI_MODEL,
     GPT_OSS_MODEL,
     QWEN_MODEL,
     CerebrasClient,
     VertexGeminiClient,
 )
-from .sample_queries import load_queries, sample_queries
+from .parser import (
+    CONFIGS,
+    assemble_stage_prediction,
+    resolve_config_list,
+)
+from .sample_queries import QUERIES, load_dataset_rows, parse_size
 
 HERE = Path(__file__).resolve().parent
 RESULTS_DIR = HERE / "results"
 
 
-def assert_no_data_leakage(sample_rows: List[Dict[str, str]]) -> None:
+def assert_no_data_leakage(sample_rows: Sequence[Dict[str, Any]]) -> None:
     few_shot_queries = {normalize_query(item["query"]) for item in CATEGORY_FEW_SHOTS}
     for cat_shots in PER_CATEGORY_FEW_SHOTS.values():
         for item in cat_shots:
@@ -45,69 +50,75 @@ def assert_no_data_leakage(sample_rows: List[Dict[str, str]]) -> None:
         raise ValueError(f"Data leakage detected! Test queries overlap with few-shots: {overlaps}")
 
 
-def run_smoke_test() -> None:
+def required_stages_for_configs(selected_configs: Sequence[str]) -> Set[str]:
+    """Return the set of stage keys required to evaluate `selected_configs`."""
+    stages: Set[str] = set()
+    for cfg in selected_configs:
+        stages.update(CONFIGS[cfg]["required_stages"])
+    return stages
+
+
+def run_benchmark(
+    *,
+    configs: Optional[Sequence[str]] = None,
+    dataset_path: Optional[Path] = None,
+    size: Optional[int] = 30,
+    seed: int = 42,
+    categories: Optional[Sequence[str]] = None,
+    budget_usd: float = 0.15,
+    output_path: Path = RESULTS_DIR / "benchmark_30_seed42.json",
+    report_output_path: Optional[Path] = DEFAULT_REPORT_OUTPUT,
+    fresh: bool = False,
+) -> Tuple[Dict[str, Any], str]:
+    """Run benchmark on `configs` over the selected test dataset and generate a Markdown report."""
+    selected_configs = resolve_config_list(configs)
+    needed_stages = required_stages_for_configs(selected_configs)
+
     catalog = load_query_catalog()
-    jev = JevClient(budget_usd=0.05)
-    gemini = VertexGeminiClient()
-    qwen = CerebrasClient(model=QWEN_MODEL, reasoning_effort="none")
-    gpt = CerebrasClient(model=GPT_OSS_MODEL, reasoning_effort="low", min_interval_seconds=12.5)
-
-    print("Warming up clients...", flush=True)
-    print(f"  Jev warmup:    {jev.warmup():.3f}s", flush=True)
-    print(f"  Gemini warmup: {gemini.warmup(catalog):.3f}s", flush=True)
-    print(f"  Qwen warmup:   {qwen.warmup_full(catalog):.3f}s", flush=True)
-    print(f"  GPT warmup:    {gpt.warmup_full(catalog):.3f}s", flush=True)
-
-    q = "navy wool overcoat with buttons under $250 for winter"
-    cat_res = jev.call(category_payload(q))
-    cat = cat_res.answers["category"]["choice"]
-    cat = None if cat == "outside" else cat
-    print(f"\nSmoke Query: {q}", flush=True)
-    print(f"Step 1 Jev Category: {cat} ({cat_res.latency_seconds:.3f}s, ${cat_res.cost_usd:.6f})", flush=True)
-
-    fp, fmap = feature_payload(q, cat, catalog)
-    feat_res = jev.call(fp)
-    jev_filters = filters_from_answers(feat_res.answers, cat, catalog, fmap)
-    print(f"Step 2b-1 Jev Features ({feat_res.latency_seconds:.3f}s, ${feat_res.cost_usd:.6f}): {jev_filters}", flush=True)
-
-    g_res = gemini.extract_full(q, cat, catalog)
-    print(f"2a Gemini Full ({g_res.latency_seconds:.3f}s): {g_res.parsed}", flush=True)
-
-    qw_full = qwen.extract_full(q, cat, catalog)
-    print(f"2a Qwen Full ({qw_full.latency_seconds:.3f}s): {qw_full.parsed}", flush=True)
-
-    qw_aux = qwen.extract_auxiliary(q, cat, jev_filters, catalog)
-    print(f"2b Qwen Aux ({qw_aux.latency_seconds:.3f}s): {qw_aux.parsed}", flush=True)
-
-    gpt_full = gpt.extract_full(q, cat, catalog)
-    print(f"2a GPT Full ({gpt_full.latency_seconds:.3f}s): {gpt_full.parsed}", flush=True)
-
-    gpt_aux = gpt.extract_auxiliary(q, cat, jev_filters, catalog)
-    print(f"2b GPT Aux ({gpt_aux.latency_seconds:.3f}s): {gpt_aux.parsed}", flush=True)
-
-
-def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fresh: bool = False) -> Dict[str, Any]:
-    catalog = load_query_catalog()
-    groups = load_queries()
-    sample_rows = sample_queries(groups, size, seed)
+    target_dataset = (dataset_path or QUERIES).resolve()
+    sample_rows = load_dataset_rows(
+        dataset_path=target_dataset,
+        size=size,
+        seed=seed,
+        categories=categories,
+    )
     assert_no_data_leakage(sample_rows)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        dataset_rel = str(target_dataset.relative_to(HERE.parent))
+    except ValueError:
+        dataset_rel = str(target_dataset)
+
+    state: Optional[Dict[str, Any]] = None
     if output_path.exists() and not fresh:
-        state = json.loads(output_path.read_text(encoding="utf-8"))
-        print(f"Resuming from existing checkpoint: {output_path}", flush=True)
-    else:
+        loaded = json.loads(output_path.read_text(encoding="utf-8"))
+        loaded_queries = loaded.get("queries", [])
+        if [q["query"] for q in loaded_queries] == [r["query"] for r in sample_rows]:
+            state = loaded
+            state["dataset"] = dataset_rel
+            state["selected_configs"] = selected_configs
+            print(f"Resuming from existing checkpoint: {output_path}", flush=True)
+        else:
+            print(
+                f"Existing file {output_path} has a different query set; initializing new state.",
+                flush=True,
+            )
+
+    if state is None:
         state = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "sample_size": size,
-            "seed": seed,
+            "dataset": dataset_rel,
+            "sample_size": len(sample_rows),
+            "seed": seed if size is not None else None,
+            "selected_configs": selected_configs,
             "queries": [
                 {
                     "index": idx,
                     "query": row["query"],
                     "language": row["language"],
                     "source": row["source"],
-                    "expected": json.loads(row["expected_output"]),
+                    "expected": row["expected"],
                     "stages": {},
                 }
                 for idx, row in enumerate(sample_rows)
@@ -120,10 +131,15 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
 
     queries = state["queries"]
 
-    # 1. Jev Stage 1 (Category) & Stage 2b-1 (Closed-Vocabulary Features)
+    # 1. Jev Stage 1 (Category) & Stage 2b-1 (Closed-Vocabulary Features, only if a 2b config is selected)
+    run_jev_features = "jev_features" in needed_stages
     needs_jev = any(
         "jev_category" not in q["stages"]
-        or (q["stages"]["jev_category"]["category"] is not None and "jev_features" not in q["stages"])
+        or (
+            run_jev_features
+            and q["stages"]["jev_category"]["category"] is not None
+            and "jev_features" not in q["stages"]
+        )
         for q in queries
     )
     if needs_jev:
@@ -142,7 +158,7 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
                 }
                 save_state()
             cat = q["stages"]["jev_category"]["category"]
-            if cat is not None and "jev_features" not in q["stages"]:
+            if run_jev_features and cat is not None and "jev_features" not in q["stages"]:
                 fp, fmap = feature_payload(q["query"], cat, catalog)
                 f_res = jev.call(fp)
                 j_filters = filters_from_answers(f_res.answers, cat, catalog, fmap)
@@ -160,7 +176,10 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
             )
 
     # 2. Variant 2a: Gemini 3.5 Flash-Lite (Vertex AI)
-    if any(q["stages"]["jev_category"]["category"] is not None and "2a_gemini" not in q["stages"] for q in queries):
+    if "2a_gemini" in needed_stages and any(
+        q["stages"]["jev_category"]["category"] is not None and "2a_gemini" not in q["stages"]
+        for q in queries
+    ):
         gemini = VertexGeminiClient()
         w = gemini.warmup(catalog)
         print(f"[2a Gemini 3.5 Flash-Lite] Warmup completed in {w:.3f}s", flush=True)
@@ -182,9 +201,14 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
             )
 
     # 3. Variant 2a & 2b: Qwen 3.8 27B (Cerebras, thinking=none)
-    needs_qwen = any(
+    run_2a_qwen = "2a_qwen" in needed_stages
+    run_2b_qwen = "2b_qwen_aux" in needed_stages
+    needs_qwen = (run_2a_qwen or run_2b_qwen) and any(
         q["stages"]["jev_category"]["category"] is not None
-        and ("2a_qwen" not in q["stages"] or "2b_qwen_aux" not in q["stages"])
+        and (
+            (run_2a_qwen and "2a_qwen" not in q["stages"])
+            or (run_2b_qwen and "2b_qwen_aux" not in q["stages"])
+        )
         for q in queries
     )
     if needs_qwen:
@@ -195,7 +219,7 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
             cat = q["stages"]["jev_category"]["category"]
             if cat is None:
                 continue
-            if "2a_qwen" not in q["stages"]:
+            if run_2a_qwen and "2a_qwen" not in q["stages"]:
                 res_full = qwen.extract_full(q["query"], cat, catalog)
                 q["stages"]["2a_qwen"] = {
                     "filters": res_full.parsed["filters"],
@@ -204,7 +228,7 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
                     "cost_usd": round(res_full.cost_usd, 6),
                 }
                 save_state()
-            if "2b_qwen_aux" not in q["stages"]:
+            if run_2b_qwen and "2b_qwen_aux" not in q["stages"]:
                 j_filters = q["stages"]["jev_features"]["filters"]
                 res_aux = qwen.extract_auxiliary(q["query"], cat, j_filters, catalog)
                 q["stages"]["2b_qwen_aux"] = {
@@ -214,28 +238,34 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
                     "cost_usd": round(res_aux.cost_usd, 6),
                 }
                 save_state()
-            print(
-                f"  [Qwen 3.8 27B] {q['index']+1}/{len(queries)} "
-                f"2a={q['stages']['2a_qwen']['latency_seconds']:.3f}s "
-                f"2b_aux={q['stages']['2b_qwen_aux']['latency_seconds']:.3f}s | {q['query']}",
-                flush=True,
-            )
+            msg_parts = [f"  [Qwen 3.8 27B] {q['index']+1}/{len(queries)}"]
+            if run_2a_qwen:
+                msg_parts.append(f"2a={q['stages']['2a_qwen']['latency_seconds']:.3f}s")
+            if run_2b_qwen:
+                msg_parts.append(f"2b_aux={q['stages']['2b_qwen_aux']['latency_seconds']:.3f}s")
+            msg_parts.append(f"| {q['query']}")
+            print(" ".join(msg_parts), flush=True)
 
-    # 4. Variant 2a & 2b: GPT-OSS-120B (Cerebras, thinking=low, 5 req/min rate limit paced outside timer)
-    needs_gpt = any(
+    # 4. Variant 2a & 2b: GPT-OSS-120B (Cerebras, thinking=low)
+    run_2a_gpt = "2a_gpt_oss" in needed_stages
+    run_2b_gpt = "2b_gpt_oss_aux" in needed_stages
+    needs_gpt = (run_2a_gpt or run_2b_gpt) and any(
         q["stages"]["jev_category"]["category"] is not None
-        and ("2a_gpt_oss" not in q["stages"] or "2b_gpt_oss_aux" not in q["stages"])
+        and (
+            (run_2a_gpt and "2a_gpt_oss" not in q["stages"])
+            or (run_2b_gpt and "2b_gpt_oss_aux" not in q["stages"])
+        )
         for q in queries
     )
     if needs_gpt:
-        gpt = CerebrasClient(model=GPT_OSS_MODEL, reasoning_effort="low", min_interval_seconds=12.2)
+        gpt = CerebrasClient(model=GPT_OSS_MODEL, reasoning_effort="low")
         w = gpt.warmup_full(catalog)
         print(f"[GPT-OSS-120B · Cerebras] Warmup completed in {w:.3f}s", flush=True)
         for q in queries:
             cat = q["stages"]["jev_category"]["category"]
             if cat is None:
                 continue
-            if "2a_gpt_oss" not in q["stages"]:
+            if run_2a_gpt and "2a_gpt_oss" not in q["stages"]:
                 res_full = gpt.extract_full(q["query"], cat, catalog)
                 q["stages"]["2a_gpt_oss"] = {
                     "filters": res_full.parsed["filters"],
@@ -244,7 +274,7 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
                     "cost_usd": round(res_full.cost_usd, 6),
                 }
                 save_state()
-            if "2b_gpt_oss_aux" not in q["stages"]:
+            if run_2b_gpt and "2b_gpt_oss_aux" not in q["stages"]:
                 j_filters = q["stages"]["jev_features"]["filters"]
                 res_aux = gpt.extract_auxiliary(q["query"], cat, j_filters, catalog)
                 q["stages"]["2b_gpt_oss_aux"] = {
@@ -254,114 +284,120 @@ def run_benchmark(size: int, seed: int, budget_usd: float, output_path: Path, fr
                     "cost_usd": round(res_aux.cost_usd, 6),
                 }
                 save_state()
-            print(
-                f"  [GPT-OSS-120B] {q['index']+1}/{len(queries)} "
-                f"2a={q['stages']['2a_gpt_oss']['latency_seconds']:.3f}s "
-                f"2b_aux={q['stages']['2b_gpt_oss_aux']['latency_seconds']:.3f}s | {q['query']}",
-                flush=True,
-            )
+            msg_parts = [f"  [GPT-OSS-120B] {q['index']+1}/{len(queries)}"]
+            if run_2a_gpt:
+                msg_parts.append(f"2a={q['stages']['2a_gpt_oss']['latency_seconds']:.3f}s")
+            if run_2b_gpt:
+                msg_parts.append(f"2b_aux={q['stages']['2b_gpt_oss_aux']['latency_seconds']:.3f}s")
+            msg_parts.append(f"| {q['query']}")
+            print(" ".join(msg_parts), flush=True)
 
-    # 5. Assemble end-to-end predictions and evaluate all 5 pipelines
-    pipelines = {
-        "2a_gemini_flash_lite": ("2a", "2a_gemini"),
-        "2a_qwen_3_8_27b": ("2a", "2a_qwen"),
-        "2a_gpt_oss_120b": ("2a", "2a_gpt_oss"),
-        "2b_jev_qwen_3_8_27b": ("2b", "2b_qwen_aux"),
-        "2b_jev_gpt_oss_120b": ("2b", "2b_gpt_oss_aux"),
-    }
-
-    summaries: Dict[str, Any] = {}
-    for name, (kind, stage_key) in pipelines.items():
+    # 5. Assemble end-to-end predictions and evaluate selected configurations
+    summaries: Dict[str, Any] = dict(state.get("summaries", {}))
+    for canon in selected_configs:
         cases: List[Dict[str, Any]] = []
         for q in queries:
-            s_cat = q["stages"]["jev_category"]
-            cat = s_cat["category"]
-            t1 = s_cat["latency_seconds"]
-            c1 = s_cat["cost_usd"]
-
-            if cat is None:
-                cases.append(
-                    {
-                        "query": q["query"],
-                        "expected": q["expected"],
-                        "predicted": {"category": None, "filters": [], "residual": []},
-                        "step1_latency_seconds": t1,
-                        "step2_1_latency_seconds": 0.0,
-                        "step2_llm_latency_seconds": 0.0,
-                        "total_latency_seconds": t1,
-                        "total_cost_usd": c1,
-                    }
-                )
-            elif kind == "2a":
-                s_llm = q["stages"][stage_key]
-                t_llm = s_llm["latency_seconds"]
-                c_llm = s_llm["cost_usd"]
-                cases.append(
-                    {
-                        "query": q["query"],
-                        "expected": q["expected"],
-                        "predicted": {
-                            "category": cat,
-                            "filters": s_llm["filters"],
-                            "residual": s_llm["residual"],
-                        },
-                        "step1_latency_seconds": t1,
-                        "step2_1_latency_seconds": 0.0,
-                        "step2_llm_latency_seconds": t_llm,
-                        "total_latency_seconds": round(t1 + t_llm, 4),
-                        "total_cost_usd": round(c1 + c_llm, 6),
-                    }
-                )
-            else:
-                s_feat = q["stages"]["jev_features"]
-                s_aux = q["stages"][stage_key]
-                t2_1 = s_feat["latency_seconds"]
-                c2_1 = s_feat["cost_usd"]
-                t_aux = s_aux["latency_seconds"]
-                c_aux = s_aux["cost_usd"]
-                cases.append(
-                    {
-                        "query": q["query"],
-                        "expected": q["expected"],
-                        "predicted": {
-                            "category": cat,
-                            "filters": s_feat["filters"] + s_aux["filters"],
-                            "residual": s_aux["residual"],
-                        },
-                        "step1_latency_seconds": t1,
-                        "step2_1_latency_seconds": t2_1,
-                        "step2_llm_latency_seconds": t_aux,
-                        "total_latency_seconds": round(t1 + t2_1 + t_aux, 4),
-                        "total_cost_usd": round(c1 + c2_1 + c_aux, 6),
-                    }
-                )
-        summaries[name] = evaluate_predictions(cases)
+            assembled = assemble_stage_prediction(q["stages"], canon)
+            cases.append(
+                {
+                    "query": q["query"],
+                    "expected": q["expected"],
+                    "predicted": assembled["predicted"],
+                    "step1_latency_seconds": assembled["step1_latency_seconds"],
+                    "step2_1_latency_seconds": assembled["step2_1_latency_seconds"],
+                    "step2_llm_latency_seconds": assembled["step2_llm_latency_seconds"],
+                    "total_latency_seconds": assembled["total_latency_seconds"],
+                    "total_cost_usd": assembled["total_cost_usd"],
+                }
+            )
+        eval_res = evaluate_predictions(cases)
+        summaries[canon] = eval_res
+        # Also keep legacy key updated if it was already present in checkpoint
+        legacy_key = CONFIGS[canon]["legacy_key"]
+        if legacy_key in summaries:
+            summaries[legacy_key] = eval_res
 
     state["summaries"] = summaries
     save_state()
-    return state
+
+    report_md = generate_markdown(state, configs=selected_configs)
+    if report_output_path is not None:
+        report_output_path.parent.mkdir(parents=True, exist_ok=True)
+        report_output_path.write_text(report_md + "\n", encoding="utf-8")
+        print(f"Markdown report written to {report_output_path}", flush=True)
+
+    return state, report_md
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--smoke-test", action="store_true", help="Run 1-query smoke test across all 5 pipelines")
-    parser.add_argument("--size", type=int, default=30, help="Stratified sample size (default: 30)")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
+    parser.add_argument(
+        "--configs",
+        nargs="+",
+        default=["all"],
+        help=(
+            "Configurations to benchmark (default: all). "
+            f"Choices: {', '.join(CONFIGS.keys())} (or legacy aliases)"
+        ),
+    )
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=QUERIES,
+        help="Path to test dataset directory or .csv/.jsonl/.json file (default: query_extraction/queries)",
+    )
+    parser.add_argument(
+        "--size",
+        type=parse_size,
+        default=30,
+        help="Stratified sample size or 'all' (default: 30)",
+    )
+    parser.add_argument(
+        "--all-queries",
+        action="store_true",
+        help="Run all queries from --dataset without sampling (equivalent to --size all)",
+    )
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for sampling (default: 42)")
+    parser.add_argument(
+        "--category",
+        action="append",
+        default=None,
+        help="Restrict benchmark to specific category(ies). Can be repeated.",
+    )
     parser.add_argument("--budget-usd", type=float, default=0.15, help="Max Jev budget in USD (default: 0.15)")
     parser.add_argument(
         "--output",
+        "--json-output",
+        dest="output",
         type=Path,
         default=RESULTS_DIR / "benchmark_30_seed42.json",
-        help="Path to output JSON file",
+        help="Path to output JSON checkpoint/results file",
     )
-    parser.add_argument("--fresh", action="store_true", help="Ignore existing checkpoint and run all stages fresh")
+    parser.add_argument(
+        "--report-output",
+        type=Path,
+        default=DEFAULT_REPORT_OUTPUT,
+        help="Path to output Markdown report file (default: query_extraction/benchmark_report.md)",
+    )
+    parser.add_argument(
+        "--fresh",
+        action="store_true",
+        help="Ignore existing checkpoint and run selected stages fresh",
+    )
     args = parser.parse_args()
 
-    if args.smoke_test:
-        run_smoke_test()
-        return
-
-    run_benchmark(args.size, args.seed, args.budget_usd, args.output, fresh=args.fresh)
+    effective_size = None if args.all_queries else args.size
+    run_benchmark(
+        configs=args.configs,
+        dataset_path=args.dataset,
+        size=effective_size,
+        seed=args.seed,
+        categories=args.category,
+        budget_usd=args.budget_usd,
+        output_path=args.output,
+        report_output_path=args.report_output,
+        fresh=args.fresh,
+    )
 
 
 if __name__ == "__main__":

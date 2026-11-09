@@ -346,20 +346,18 @@ class VertexGeminiClient:
 
 
 class CerebrasClient:
-    """Direct Cerebras API client supporting Qwen 3.8 27B and GPT-OSS-120B with rate-limit pacing outside timing."""
+    """Direct Cerebras API client supporting Qwen 3.8 27B and GPT-OSS-120B."""
 
     def __init__(
         self,
         model: str,
         reasoning_effort: str,
         api_key: Optional[str] = None,
-        min_interval_seconds: float = 0.0,
         timeout: float = 30.0,
     ):
         self.model = model
         self.reasoning_effort = reasoning_effort
         self.api_key = api_key or load_cerebras_key()
-        self.min_interval_seconds = min_interval_seconds
         self.timeout = timeout
         self.session = requests.Session()
         self.session.headers.update(
@@ -369,22 +367,7 @@ class CerebrasClient:
             }
         )
         self.lock = threading.Lock()
-        self._last_call_end = 0.0
-        self._remaining_req_min: Optional[int] = None
         self.total_cost_usd = 0.0
-
-    def _pace_before_call(self) -> None:
-        """Wait outside the latency timer when rate-limited (e.g. 5 req/min on free GPT-OSS-120B)."""
-        now = time.perf_counter()
-        wait_s = 0.0
-        if self.min_interval_seconds > 0 and self._last_call_end > 0:
-            elapsed_since_last = now - self._last_call_end
-            if elapsed_since_last < self.min_interval_seconds:
-                wait_s = max(wait_s, self.min_interval_seconds - elapsed_since_last)
-        if self._remaining_req_min is not None and self._remaining_req_min <= 1:
-            wait_s = max(wait_s, 12.5)
-        if wait_s > 0:
-            time.sleep(wait_s)
 
     def _post_structured(self, system_prompt: str, user_msg: str, schema_name: str, schema: Dict[str, Any]) -> tuple[Dict[str, Any], float, Dict[str, Any]]:
         payload = {
@@ -407,7 +390,6 @@ class CerebrasClient:
         }
         with self.lock:
             for attempt in range(3):
-                self._pace_before_call()
                 t0 = time.perf_counter()
                 response = self.session.post(
                     CEREBRAS_ENDPOINT,
@@ -416,13 +398,9 @@ class CerebrasClient:
                     allow_redirects=False,
                 )
                 elapsed = time.perf_counter() - t0
-                self._last_call_end = time.perf_counter()
-                rem_header = response.headers.get("x-ratelimit-remaining-requests-minute")
-                if rem_header is not None and rem_header.isdigit():
-                    self._remaining_req_min = int(rem_header)
 
                 if response.status_code == 429 and attempt < 2:
-                    time.sleep(13.0)
+                    time.sleep(1.5 * (attempt + 1))
                     continue
                 if not response.ok:
                     safe_text = response.text.replace(self.api_key, "[REDACTED]")
