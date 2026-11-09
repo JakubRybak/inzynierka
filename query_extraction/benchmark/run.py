@@ -26,7 +26,6 @@ from ..core.few_shots import CATEGORY_FEW_SHOTS, PER_CATEGORY_FEW_SHOTS
 from ..parser import (
     CONFIGS,
     assemble_stage_prediction,
-    normalize_stage_keys,
     resolve_config_list,
     resolve_config_name,
 )
@@ -97,8 +96,6 @@ def run_benchmark(
         loaded = json.loads(output_path.read_text(encoding="utf-8"))
         loaded_queries = loaded.get("queries", [])
         if [q["query"] for q in loaded_queries] == [r["query"] for r in sample_rows]:
-            for q in loaded_queries:
-                normalize_stage_keys(q.get("stages", {}))
             state = loaded
             state["dataset"] = dataset_rel
             state["selected_configs"] = selected_configs

@@ -225,13 +225,11 @@ class QueryExtractionOfflineTests(unittest.TestCase):
 
     def test_config_resolution_and_required_stages(self) -> None:
         self.assertEqual(resolve_config_name("full_qwen"), "full_qwen")
-        self.assertEqual(resolve_config_name("2a_qwen"), "full_qwen")
         self.assertEqual(resolve_config_name("split_qwen"), "split_qwen")
-        self.assertEqual(resolve_config_name("2b_qwen"), "split_qwen")
         self.assertEqual(resolve_config_list(["all"]), list(CONFIGS.keys()))
         self.assertEqual(
-            resolve_config_list(["full_qwen,split_qwen", "2a_qwen"]),
-            ["full_qwen", "split_qwen"],
+            resolve_config_list(["full_qwen,split_qwen", "split_gpt_oss"]),
+            ["full_qwen", "split_qwen", "split_gpt_oss"],
         )
         self.assertEqual(
             required_stages_for_configs(["full_qwen"]),

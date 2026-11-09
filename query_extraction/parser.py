@@ -17,13 +17,11 @@ GPT_OSS_MODEL = "gpt-oss-120b"
 CONFIGS: Dict[str, Dict[str, Any]] = {
     "full_qwen": {
         "name": "full_qwen",
-        "aliases": ("2a_qwen", "2a_qwen_3_8_27b", "llm_qwen"),
         "architecture": "full",
         "provider": "cerebras",
         "model": QWEN_MODEL,
         "reasoning_effort": "none",
         "stage_key": "full_qwen",
-        "legacy_stage_key": "2a_qwen",
         "required_stages": ("category", "full_qwen"),
         "label": "Full · Jev (Category) → Qwen 3.8 27B (Full Extraction)",
         "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
@@ -31,13 +29,11 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
     },
     "full_gpt_oss": {
         "name": "full_gpt_oss",
-        "aliases": ("2a_gpt_oss", "2a_gpt_oss_120b", "llm_gpt_oss"),
         "architecture": "full",
         "provider": "cerebras",
         "model": GPT_OSS_MODEL,
         "reasoning_effort": "low",
         "stage_key": "full_gpt_oss",
-        "legacy_stage_key": "2a_gpt_oss",
         "required_stages": ("category", "full_gpt_oss"),
         "label": "Full · Jev (Category) → GPT-OSS-120B (Full Extraction)",
         "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
@@ -45,13 +41,11 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
     },
     "full_gemini": {
         "name": "full_gemini",
-        "aliases": ("2a_gemini", "2a_gemini_flash_lite", "llm_gemini"),
         "architecture": "full",
         "provider": "vertex",
         "model": GEMINI_MODEL,
         "reasoning_effort": "none",
         "stage_key": "full_gemini",
-        "legacy_stage_key": "2a_gemini",
         "required_stages": ("category", "full_gemini"),
         "label": "Full · Jev (Category) → Gemini 3.5 Flash-Lite (Full Extraction)",
         "stage_description": "Full Extraction (cechy zamknięte + brand + price + residual)",
@@ -59,13 +53,11 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
     },
     "split_qwen": {
         "name": "split_qwen",
-        "aliases": ("2b_qwen", "2b_jev_qwen_3_8_27b", "hybrid_qwen"),
         "architecture": "split",
         "provider": "cerebras",
         "model": QWEN_MODEL,
         "reasoning_effort": "none",
         "stage_key": "open_qwen",
-        "legacy_stage_key": "2b_qwen_aux",
         "required_stages": ("category", "closed_features", "open_qwen"),
         "label": "Split · Jev (Category) → Jev (Closed Features) → Qwen 3.8 27B (Open Extraction)",
         "stage_description": "Open Extraction (brand + price + residual po Jev Closed Features)",
@@ -73,13 +65,11 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
     },
     "split_gpt_oss": {
         "name": "split_gpt_oss",
-        "aliases": ("2b_gpt_oss", "2b_jev_gpt_oss_120b", "hybrid_gpt_oss"),
         "architecture": "split",
         "provider": "cerebras",
         "model": GPT_OSS_MODEL,
         "reasoning_effort": "low",
         "stage_key": "open_gpt_oss",
-        "legacy_stage_key": "2b_gpt_oss_aux",
         "required_stages": ("category", "closed_features", "open_gpt_oss"),
         "label": "Split · Jev (Category) → Jev (Closed Features) → GPT-OSS-120B (Open Extraction)",
         "stage_description": "Open Extraction (brand + price + residual po Jev Closed Features)",
@@ -87,40 +77,16 @@ CONFIGS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-CONFIG_ALIASES: Dict[str, str] = {}
-for _canonical, _spec in CONFIGS.items():
-    CONFIG_ALIASES[_canonical] = _canonical
-    for _alias in _spec["aliases"]:
-        CONFIG_ALIASES[_alias] = _canonical
-
-STAGE_KEY_ALIASES: Dict[str, str] = {
-    "jev_category": "category",
-    "jev_features": "closed_features",
-    "2a_qwen": "full_qwen",
-    "2a_gpt_oss": "full_gpt_oss",
-    "2a_gemini": "full_gemini",
-    "2b_qwen_aux": "open_qwen",
-    "2b_gpt_oss_aux": "open_gpt_oss",
-}
-
-
-def normalize_stage_keys(stages: Dict[str, Any]) -> Dict[str, Any]:
-    """Ensure canonical stage keys exist in `stages`, migrating any legacy keys in-place."""
-    for legacy_key, canon_key in STAGE_KEY_ALIASES.items():
-        if legacy_key in stages and canon_key not in stages:
-            stages[canon_key] = stages[legacy_key]
-        if legacy_key in stages:
-            del stages[legacy_key]
-    return stages
+CONFIG_ALIASES: Dict[str, str] = {k: k for k in CONFIGS}
 
 
 def resolve_config_name(config: str) -> str:
-    """Resolve a configuration name or alias to its canonical key in CONFIGS."""
+    """Resolve a configuration name to its canonical key in CONFIGS."""
     key = config.strip()
-    if key not in CONFIG_ALIASES:
+    if key not in CONFIGS:
         valid = ", ".join(CONFIGS.keys())
         raise ValueError(f"Unknown configuration {config!r}. Available configurations: {valid}")
-    return CONFIG_ALIASES[key]
+    return key
 
 
 def resolve_config_list(configs: Optional[Sequence[str]] = None) -> List[str]:
@@ -143,7 +109,7 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
     """Assemble predicted output and stage latencies/costs for a single query from recorded stages."""
     canon = resolve_config_name(config)
     spec = CONFIGS[canon]
-    s_cat = stages.get("category") or stages["jev_category"]
+    s_cat = stages["category"]
     cat = s_cat["category"]
     t1 = float(s_cat["latency_seconds"])
     c1 = float(s_cat["cost_usd"])
@@ -159,7 +125,7 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
         }
 
     stage_key = spec["stage_key"]
-    s_llm = stages.get(stage_key) or stages[spec["legacy_stage_key"]]
+    s_llm = stages[stage_key]
     if spec["architecture"] == "full":
         t_llm = float(s_llm["latency_seconds"])
         c_llm = float(s_llm["cost_usd"])
@@ -176,7 +142,7 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
             "total_cost_usd": round(c1 + c_llm, 6),
         }
 
-    s_feat = stages.get("closed_features") or stages["jev_features"]
+    s_feat = stages["closed_features"]
     t2_1 = float(s_feat["latency_seconds"])
     c2_1 = float(s_feat["cost_usd"])
     t_open = float(s_llm["latency_seconds"])
