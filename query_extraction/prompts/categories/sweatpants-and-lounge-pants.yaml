@@ -1,0 +1,139 @@
+category: Sweatpants & Lounge Pants
+category_criterion: Sweatpants, sweat pants, joggers, track pants, lounge pants, athletic fleece pants, spodnie
+  dresowe, dresy, joggery, pantalones de chándal.
+feature_notes:
+  leg_shape: 'IMPORTANT: ''joggers'' / ''joggery'' maps to leg_shape = Tapered AND keeps ''joggers'' in residual.'
+jev_scopes:
+  leg_shape: '''joggers''/''joggery'' requests Tapered. '
+substyle_rules:
+- '   - In Sweatpants & Lounge Pants: ''joggers'' / ''joggery'' maps to leg_shape=Tapered AND stays in residual.'
+few_shots:
+- query: 2x grey Adidas joggers for men with zippered cuffs under 180 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Grey
+    - feature: brand
+      operator: in
+      values:
+      - Adidas
+    - feature: leg_shape
+      operator: in
+      values:
+      - Tapered
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: cuff_style
+      operator: in
+      values:
+      - Zippered Cuff
+    - feature: price
+      operator: lte
+      value: 180
+    residual:
+    - 2x
+    - joggers
+  note: In Sweatpants & Lounge Pants, 'joggers' maps to leg_shape=Tapered AND stays in residual; '2x' is not a price.
+- query: women's high-rise wide-leg fleece sweatpants in cotton without polyester, around $50
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: leg_shape
+      operator: in
+      values:
+      - Wide-Leg
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Cotton
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: around
+      value: 50
+    residual:
+    - fleece
+  note: '''fleece'' stays in residual.'
+- query: 100% cotton all-black relaxed fit lounge pants with open hem, not skinny
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: fit
+      operator: in
+      values:
+      - Relaxed
+    - feature: fit
+      operator: not_in
+      values:
+      - Skinny
+    - feature: cuff_style
+      operator: in
+      values:
+      - Open Hem
+    residual: []
+  note: '''100% cotton'' and ''all-black'' use equals_set.'
+- query: navy and white striped track pants in cotton and elastane between 90 and 190 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Blue
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    - feature: price
+      operator: gte
+      value: 90
+    - feature: price
+      operator: lte
+      value: 190
+    residual:
+    - navy
+    - track pants
+  note: '''navy and white'' and ''cotton and elastane'' both use contains_all.'
+- query: cropped green sweatpants with elasticized cuffs, not emerald
+  output:
+    filters:
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: cuff_style
+      operator: in
+      values:
+      - Elasticized Cuff
+    residual:
+    - not emerald
+  note: Excluded shade stays only in residual.
