@@ -101,7 +101,7 @@ def load_parser(spec, vocabulary=None):
     if spec == "mock":
         return Parser("mock (index vocabulary)", MockParser(vocabulary))
     if spec == "llm":
-        spec = "benchmark_parser:parse"
+        spec = "llm_parser:parse"
     module, _, function = spec.partition(":")
     if not module or not function:
         raise SystemExit(f"--parser: expected llm, mock or module:function, got {spec!r}")
