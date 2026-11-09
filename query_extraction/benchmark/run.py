@@ -31,7 +31,6 @@ from ..parser import (
 )
 from .dataset import QUERIES, load_dataset_rows, parse_size
 from .evaluate import evaluate_predictions
-from .report import DEFAULT_OUTPUT as DEFAULT_REPORT_OUTPUT, generate_markdown
 
 HERE = Path(__file__).resolve().parent
 RESULTS_DIR = HERE / "results"
@@ -68,10 +67,9 @@ def run_benchmark(
     categories: Optional[Sequence[str]] = None,
     budget_usd: float = 0.15,
     output_path: Path = RESULTS_DIR / "benchmark_30_seed42.json",
-    report_output_path: Optional[Path] = DEFAULT_REPORT_OUTPUT,
     fresh: bool = False,
-) -> Tuple[Dict[str, Any], str]:
-    """Run benchmark on `configs` over the selected test dataset and generate a Markdown report."""
+) -> Dict[str, Any]:
+    """Run benchmark on `configs` over the selected test dataset and save JSON results."""
     selected_configs = resolve_config_list(configs)
     needed_stages = required_stages_for_configs(selected_configs)
 
@@ -321,14 +319,7 @@ def run_benchmark(
 
     state["summaries"] = clean_summaries
     save_state()
-
-    report_md = generate_markdown(state, configs=selected_configs)
-    if report_output_path is not None:
-        report_output_path.parent.mkdir(parents=True, exist_ok=True)
-        report_output_path.write_text(report_md + "\n", encoding="utf-8")
-        print(f"Markdown report written to {report_output_path}", flush=True)
-
-    return state, report_md
+    return state
 
 
 def main() -> None:
@@ -376,12 +367,6 @@ def main() -> None:
         help="Path to output JSON checkpoint/results file",
     )
     parser.add_argument(
-        "--report-output",
-        type=Path,
-        default=DEFAULT_REPORT_OUTPUT,
-        help="Path to output Markdown report file (default: query_extraction/benchmark/results/benchmark_report.md)",
-    )
-    parser.add_argument(
         "--fresh",
         action="store_true",
         help="Ignore existing checkpoint and run selected stages fresh",
@@ -397,7 +382,6 @@ def main() -> None:
         categories=args.category,
         budget_usd=args.budget_usd,
         output_path=args.output,
-        report_output_path=args.report_output,
         fresh=args.fresh,
     )
 

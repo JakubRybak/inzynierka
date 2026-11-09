@@ -15,10 +15,8 @@ from query_extraction import (
     resolve_config_name,
 )
 from query_extraction.benchmark import (
-    DEFAULT_INPUT,
     canonicalize_clause,
     canonicalize_filters,
-    generate_markdown,
     load_dataset_rows,
     load_queries,
     required_stages_for_configs,
@@ -277,7 +275,7 @@ class QueryExtractionOfflineTests(unittest.TestCase):
         res_out = parse_query("iphone 16 charger", config="full_qwen", extractor=outside_extractor)
         self.assertEqual(res_out, {"category": None, "filters": [], "residual": []})
 
-    def test_dataset_loader_and_dynamic_report_generation(self) -> None:
+    def test_dataset_loader(self) -> None:
         rows_30 = load_dataset_rows(size=30, seed=42)
         self.assertEqual(len(rows_30), 30)
 
@@ -289,17 +287,6 @@ class QueryExtractionOfflineTests(unittest.TestCase):
             )
             loaded_custom = load_dataset_rows(dataset_path=tmp_json, size=None)
             self.assertEqual(len(loaded_custom), 5)
-
-        if DEFAULT_INPUT.exists():
-            data = json.loads(DEFAULT_INPUT.read_text(encoding="utf-8"))
-            md_all = generate_markdown(data)
-            self.assertIn("`full_qwen`", md_all)
-            self.assertIn("`split_qwen`", md_all)
-
-            md_subset = generate_markdown(data, configs=["full_qwen", "split_qwen"])
-            self.assertIn("`full_qwen`", md_subset)
-            self.assertIn("`split_qwen`", md_subset)
-            self.assertNotIn("`full_gemini`", md_subset)
 
 
 if __name__ == "__main__":
