@@ -31,12 +31,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Shirts",
           "latency_seconds": 0.2356,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -56,7 +56,7 @@
           "latency_seconds": 0.4036,
           "cost_usd": 0.001021
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -79,7 +79,7 @@
           "latency_seconds": 0.8898,
           "cost_usd": 0.001896
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -102,7 +102,7 @@
           "latency_seconds": 0.6086,
           "cost_usd": 0.001587
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "leopard-print"
@@ -110,7 +110,7 @@
           "latency_seconds": 0.4042,
           "cost_usd": 0.000678
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -133,7 +133,7 @@
           "latency_seconds": 0.3865,
           "cost_usd": 0.001345
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "leopard-print"
@@ -154,7 +154,7 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": null,
           "latency_seconds": 0.2125,
           "cost_usd": 0.000106
@@ -189,12 +189,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Jeans",
           "latency_seconds": 0.3071,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -214,7 +214,7 @@
           "latency_seconds": 0.4039,
           "cost_usd": 0.001264
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -237,7 +237,7 @@
           "latency_seconds": 0.7468,
           "cost_usd": 0.002149
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -260,7 +260,7 @@
           "latency_seconds": 0.5529,
           "cost_usd": 0.00193
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "biker"
@@ -268,7 +268,7 @@
           "latency_seconds": 0.329,
           "cost_usd": 0.000713
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -291,7 +291,7 @@
           "latency_seconds": 0.392,
           "cost_usd": 0.001583
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "biker"
@@ -321,12 +321,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "T-shirts",
           "latency_seconds": 0.2247,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -340,7 +340,7 @@
           "latency_seconds": 0.3272,
           "cost_usd": 0.001069
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -355,7 +355,7 @@
           "latency_seconds": 0.8535,
           "cost_usd": 0.001788
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -370,13 +370,13 @@
           "latency_seconds": 0.5324,
           "cost_usd": 0.001554
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3368,
           "cost_usd": 0.000669
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -391,7 +391,7 @@
           "latency_seconds": 0.3566,
           "cost_usd": 0.001344
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3706,
@@ -425,12 +425,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Cardigans",
           "latency_seconds": 0.3017,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "closure_type",
@@ -450,7 +450,7 @@
           "latency_seconds": 0.3512,
           "cost_usd": 0.001181
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "neckline",
@@ -466,7 +466,7 @@
           "latency_seconds": 0.947,
           "cost_usd": 0.001983
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "neckline",
@@ -487,13 +487,13 @@
           "latency_seconds": 0.5732,
           "cost_usd": 0.001736
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3117,
           "cost_usd": 0.0007
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "neckline",
@@ -514,7 +514,7 @@
           "latency_seconds": 0.5463,
           "cost_usd": 0.001473
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.5969,
@@ -553,12 +553,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Cargo Pants",
           "latency_seconds": 0.2128,
           "cost_usd": 0.000107
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -578,7 +578,7 @@
           "latency_seconds": 0.3494,
           "cost_usd": 0.00121
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -604,7 +604,7 @@
           "latency_seconds": 0.8855,
           "cost_usd": 0.002238
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -630,7 +630,7 @@
           "latency_seconds": 0.5481,
           "cost_usd": 0.001852
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "price",
@@ -642,7 +642,7 @@
           "latency_seconds": 0.4073,
           "cost_usd": 0.000716
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -668,7 +668,7 @@
           "latency_seconds": 0.5933,
           "cost_usd": 0.001546
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "price",
@@ -708,12 +708,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Bodysuits",
           "latency_seconds": 0.2101,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "neckline",
@@ -733,7 +733,7 @@
           "latency_seconds": 0.3423,
           "cost_usd": 0.001165
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "strap_width",
@@ -754,7 +754,7 @@
           "latency_seconds": 0.9031,
           "cost_usd": 0.001912
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "strap_width",
@@ -775,13 +775,13 @@
           "latency_seconds": 0.5159,
           "cost_usd": 0.00162
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.5305,
           "cost_usd": 0.000689
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "strap_width",
@@ -802,7 +802,7 @@
           "latency_seconds": 0.5068,
           "cost_usd": 0.001341
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.2607,
@@ -836,12 +836,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Bodysuits",
           "latency_seconds": 0.2159,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "main_composition",
@@ -861,7 +861,7 @@
           "latency_seconds": 0.4093,
           "cost_usd": 0.001165
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "main_composition",
@@ -884,7 +884,7 @@
           "latency_seconds": 1.1189,
           "cost_usd": 0.001934
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "main_composition",
@@ -905,13 +905,13 @@
           "latency_seconds": 0.7568,
           "cost_usd": 0.001621
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.2925,
           "cost_usd": 0.000689
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "main_composition",
@@ -934,7 +934,7 @@
           "latency_seconds": 0.7052,
           "cost_usd": 0.001392
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "tops"
@@ -965,12 +965,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Skirts",
           "latency_seconds": 0.2908,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "skirt_silhouette",
@@ -983,7 +983,7 @@
           "latency_seconds": 0.5196,
           "cost_usd": 0.001307
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "skirt_silhouette",
@@ -999,7 +999,7 @@
           "latency_seconds": 1.0198,
           "cost_usd": 0.001852
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "skirt_silhouette",
@@ -1015,7 +1015,7 @@
           "latency_seconds": 0.493,
           "cost_usd": 0.001612
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "jean"
@@ -1023,7 +1023,7 @@
           "latency_seconds": 0.5157,
           "cost_usd": 0.0007
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "main_composition",
@@ -1044,7 +1044,7 @@
           "latency_seconds": 0.4181,
           "cost_usd": 0.001445
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "jean"
@@ -1083,12 +1083,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Jackets",
           "latency_seconds": 0.3077,
           "cost_usd": 0.000107
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -1101,7 +1101,7 @@
           "latency_seconds": 0.4188,
           "cost_usd": 0.001825
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -1125,7 +1125,7 @@
           "latency_seconds": 0.9186,
           "cost_usd": 0.002517
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -1149,7 +1149,7 @@
           "latency_seconds": 0.6771,
           "cost_usd": 0.002147
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -1166,7 +1166,7 @@
           "latency_seconds": 0.3602,
           "cost_usd": 0.000773
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -1190,7 +1190,7 @@
           "latency_seconds": 0.5043,
           "cost_usd": 0.001786
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -1242,12 +1242,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Skirts",
           "latency_seconds": 0.31,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -1274,7 +1274,7 @@
           "latency_seconds": 0.3594,
           "cost_usd": 0.001307
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -1302,7 +1302,7 @@
           "latency_seconds": 0.8845,
           "cost_usd": 0.00202
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -1330,13 +1330,13 @@
           "latency_seconds": 0.5487,
           "cost_usd": 0.001651
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.2988,
           "cost_usd": 0.000712
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -1364,7 +1364,7 @@
           "latency_seconds": 0.2958,
           "cost_usd": 0.001377
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.4646,
@@ -1407,12 +1407,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Tank tops & Camisoles",
           "latency_seconds": 0.2018,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -1439,7 +1439,7 @@
           "latency_seconds": 0.3502,
           "cost_usd": 0.00115
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -1469,7 +1469,7 @@
           "latency_seconds": 1.0206,
           "cost_usd": 0.002068
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -1499,7 +1499,7 @@
           "latency_seconds": 0.7087,
           "cost_usd": 0.001679
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "long",
@@ -1509,7 +1509,7 @@
           "latency_seconds": 0.4076,
           "cost_usd": 0.000689
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -1539,7 +1539,7 @@
           "latency_seconds": 0.496,
           "cost_usd": 0.001491
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "workout"
@@ -1575,12 +1575,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Vests",
           "latency_seconds": 0.2075,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -1600,7 +1600,7 @@
           "latency_seconds": 0.4815,
           "cost_usd": 0.001643
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -1621,7 +1621,7 @@
           "latency_seconds": 0.8425,
           "cost_usd": 0.002266
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -1642,13 +1642,13 @@
           "latency_seconds": 1.028,
           "cost_usd": 0.001956
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3904,
           "cost_usd": 0.000735
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -1669,7 +1669,7 @@
           "latency_seconds": 0.3928,
           "cost_usd": 0.001627
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.4931,
@@ -1703,12 +1703,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Bombers",
           "latency_seconds": 0.2037,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "main_composition",
@@ -1728,7 +1728,7 @@
           "latency_seconds": 0.4195,
           "cost_usd": 0.001631
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "pattern",
@@ -1749,7 +1749,7 @@
           "latency_seconds": 0.9215,
           "cost_usd": 0.002254
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "pattern",
@@ -1770,13 +1770,13 @@
           "latency_seconds": 0.6155,
           "cost_usd": 0.001941
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3965,
           "cost_usd": 0.00072
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "pattern",
@@ -1799,7 +1799,7 @@
           "latency_seconds": 0.5945,
           "cost_usd": 0.00162
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3621,
@@ -1835,12 +1835,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Dresses",
           "latency_seconds": 0.2019,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -1860,7 +1860,7 @@
           "latency_seconds": 0.3968,
           "cost_usd": 0.001565
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -1883,7 +1883,7 @@
           "latency_seconds": 0.9145,
           "cost_usd": 0.00228
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -1906,7 +1906,7 @@
           "latency_seconds": 0.5262,
           "cost_usd": 0.00193
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "casual"
@@ -1914,7 +1914,7 @@
           "latency_seconds": 0.3346,
           "cost_usd": 0.000772
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -1937,7 +1937,7 @@
           "latency_seconds": 0.5537,
           "cost_usd": 0.001613
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "casual"
@@ -1974,12 +1974,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Tank tops & Camisoles",
           "latency_seconds": 0.2835,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -2000,7 +2000,7 @@
           "latency_seconds": 0.3493,
           "cost_usd": 0.00115
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -2022,7 +2022,7 @@
           "latency_seconds": 0.7565,
           "cost_usd": 0.001857
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -2044,13 +2044,13 @@
           "latency_seconds": 0.3431,
           "cost_usd": 0.001654
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.5038,
           "cost_usd": 0.000678
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -2072,7 +2072,7 @@
           "latency_seconds": 0.3784,
           "cost_usd": 0.001396
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3002,
@@ -2113,12 +2113,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Hoodies & Zipups",
           "latency_seconds": 0.2164,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -2138,7 +2138,7 @@
           "latency_seconds": 0.3239,
           "cost_usd": 0.001194
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -2168,7 +2168,7 @@
           "latency_seconds": 0.8656,
           "cost_usd": 0.00194
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -2196,7 +2196,7 @@
           "latency_seconds": 0.625,
           "cost_usd": 0.001727
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -2210,7 +2210,7 @@
           "latency_seconds": 0.3808,
           "cost_usd": 0.000721
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -2233,7 +2233,7 @@
           "latency_seconds": 0.5086,
           "cost_usd": 0.001425
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -2275,12 +2275,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Shorts",
           "latency_seconds": 0.2121,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -2307,7 +2307,7 @@
           "latency_seconds": 0.3473,
           "cost_usd": 0.001231
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "main_composition",
@@ -2328,7 +2328,7 @@
           "latency_seconds": 0.9219,
           "cost_usd": 0.002049
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -2349,13 +2349,13 @@
           "latency_seconds": 0.4923,
           "cost_usd": 0.001747
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3159,
           "cost_usd": 0.00071
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -2376,7 +2376,7 @@
           "latency_seconds": 0.5931,
           "cost_usd": 0.001438
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.2866,
@@ -2405,12 +2405,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Sweatshirts",
           "latency_seconds": 0.3464,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "main_composition",
@@ -2423,7 +2423,7 @@
           "latency_seconds": 0.328,
           "cost_usd": 0.001079
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "main_composition",
@@ -2439,7 +2439,7 @@
           "latency_seconds": 1.0331,
           "cost_usd": 0.001861
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "main_composition",
@@ -2455,7 +2455,7 @@
           "latency_seconds": 0.4857,
           "cost_usd": 0.001613
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "for sublimation"
@@ -2463,7 +2463,7 @@
           "latency_seconds": 0.3905,
           "cost_usd": 0.000677
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "main_composition",
@@ -2479,7 +2479,7 @@
           "latency_seconds": 0.4868,
           "cost_usd": 0.001339
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "sublimation"
@@ -2510,12 +2510,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Blouses",
           "latency_seconds": 0.1933,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -2528,7 +2528,7 @@
           "latency_seconds": 0.3367,
           "cost_usd": 0.001142
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -2544,7 +2544,7 @@
           "latency_seconds": 0.665,
           "cost_usd": 0.001736
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -2567,7 +2567,7 @@
           "latency_seconds": 0.5428,
           "cost_usd": 0.001612
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "azul celeste"
@@ -2575,7 +2575,7 @@
           "latency_seconds": 0.506,
           "cost_usd": 0.000687
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -2591,7 +2591,7 @@
           "latency_seconds": 0.5116,
           "cost_usd": 0.001328
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "azul celeste"
@@ -2627,12 +2627,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Classic Coats",
           "latency_seconds": 0.2097,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -2652,7 +2652,7 @@
           "latency_seconds": 0.5706,
           "cost_usd": 0.001907
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -2673,7 +2673,7 @@
           "latency_seconds": 0.9424,
           "cost_usd": 0.002413
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -2694,13 +2694,13 @@
           "latency_seconds": 0.8153,
           "cost_usd": 0.002182
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.3931,
           "cost_usd": 0.000799
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -2721,7 +2721,7 @@
           "latency_seconds": 0.406,
           "cost_usd": 0.001805
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.7008,
@@ -2762,12 +2762,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Polos",
           "latency_seconds": 0.2307,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -2787,7 +2787,7 @@
           "latency_seconds": 0.3763,
           "cost_usd": 0.000894
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -2815,7 +2815,7 @@
           "latency_seconds": 1.0206,
           "cost_usd": 0.001722
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -2843,7 +2843,7 @@
           "latency_seconds": 0.6148,
           "cost_usd": 0.001395
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -2857,7 +2857,7 @@
           "latency_seconds": 0.3076,
           "cost_usd": 0.000628
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -2885,7 +2885,7 @@
           "latency_seconds": 0.56,
           "cost_usd": 0.00116
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -2937,12 +2937,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Shirts",
           "latency_seconds": 0.3015,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -2970,7 +2970,7 @@
           "latency_seconds": 0.3182,
           "cost_usd": 0.001021
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -3001,7 +3001,7 @@
           "latency_seconds": 1.0139,
           "cost_usd": 0.001991
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -3032,7 +3032,7 @@
           "latency_seconds": 0.8049,
           "cost_usd": 0.001612
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "dress"
@@ -3040,7 +3040,7 @@
           "latency_seconds": 0.2613,
           "cost_usd": 0.000684
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -3071,7 +3071,7 @@
           "latency_seconds": 0.2698,
           "cost_usd": 0.00132
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "dress"
@@ -3102,17 +3102,17 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Polos",
           "latency_seconds": 0.2911,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [],
           "latency_seconds": 0.2955,
           "cost_usd": 0.000894
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "brand",
@@ -3128,7 +3128,7 @@
           "latency_seconds": 0.7506,
           "cost_usd": 0.001554
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -3144,7 +3144,7 @@
           "latency_seconds": 0.4408,
           "cost_usd": 0.001355
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -3160,7 +3160,7 @@
           "latency_seconds": 0.3032,
           "cost_usd": 0.000617
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -3176,7 +3176,7 @@
           "latency_seconds": 0.5529,
           "cost_usd": 0.001124
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -3215,12 +3215,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Knit Sweaters",
           "latency_seconds": 0.2125,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -3233,7 +3233,7 @@
           "latency_seconds": 0.3444,
           "cost_usd": 0.001123
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -3249,7 +3249,7 @@
           "latency_seconds": 0.8738,
           "cost_usd": 0.001879
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -3265,7 +3265,7 @@
           "latency_seconds": 0.6111,
           "cost_usd": 0.001637
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "open back"
@@ -3273,7 +3273,7 @@
           "latency_seconds": 0.5005,
           "cost_usd": 0.000687
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -3289,7 +3289,7 @@
           "latency_seconds": 0.5257,
           "cost_usd": 0.00136
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "open back"
@@ -3320,12 +3320,12 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "T-shirts",
           "latency_seconds": 0.2504,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -3338,7 +3338,7 @@
           "latency_seconds": 0.3494,
           "cost_usd": 0.001069
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -3354,7 +3354,7 @@
           "latency_seconds": 0.7205,
           "cost_usd": 0.001795
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -3370,7 +3370,7 @@
           "latency_seconds": 0.4088,
           "cost_usd": 0.001556
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "with thumb holes"
@@ -3378,7 +3378,7 @@
           "latency_seconds": 0.2722,
           "cost_usd": 0.000669
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -3394,7 +3394,7 @@
           "latency_seconds": 0.2937,
           "cost_usd": 0.001321
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "thumb holes"
@@ -3423,12 +3423,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Trench Coats",
           "latency_seconds": 0.3072,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "colors",
@@ -3441,7 +3441,7 @@
           "latency_seconds": 0.5186,
           "cost_usd": 0.001752
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "colors",
@@ -3455,7 +3455,7 @@
           "latency_seconds": 0.8755,
           "cost_usd": 0.002273
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "colors",
@@ -3469,13 +3469,13 @@
           "latency_seconds": 0.5542,
           "cost_usd": 0.002023
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.4859,
           "cost_usd": 0.00075
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "colors",
@@ -3489,7 +3489,7 @@
           "latency_seconds": 0.4791,
           "cost_usd": 0.001667
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "cout"
@@ -3525,12 +3525,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Sweatpants & Lounge Pants",
           "latency_seconds": 0.1909,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -3550,7 +3550,7 @@
           "latency_seconds": 0.406,
           "cost_usd": 0.001228
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "rise",
@@ -3571,7 +3571,7 @@
           "latency_seconds": 0.9319,
           "cost_usd": 0.002165
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "gender",
@@ -3592,13 +3592,13 @@
           "latency_seconds": 0.777,
           "cost_usd": 0.001852
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [],
           "latency_seconds": 0.534,
           "cost_usd": 0.000725
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "gender",
@@ -3619,7 +3619,7 @@
           "latency_seconds": 0.6006,
           "cost_usd": 0.001553
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "high waist"
@@ -3642,17 +3642,17 @@
         ]
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Dresses",
           "latency_seconds": 0.2197,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [],
           "latency_seconds": 0.4593,
           "cost_usd": 0.001564
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [],
           "residual": [
             "coctail"
@@ -3660,7 +3660,7 @@
           "latency_seconds": 0.8164,
           "cost_usd": 0.002065
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [],
           "residual": [
             "coctail"
@@ -3668,7 +3668,7 @@
           "latency_seconds": 0.4093,
           "cost_usd": 0.001885
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [],
           "residual": [
             "coctail"
@@ -3676,7 +3676,7 @@
           "latency_seconds": 0.3486,
           "cost_usd": 0.00076
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [],
           "residual": [
             "coctail"
@@ -3684,7 +3684,7 @@
           "latency_seconds": 0.6961,
           "cost_usd": 0.00157
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [],
           "residual": [
             "coctail"
@@ -3727,12 +3727,12 @@
         "residual": []
       },
       "stages": {
-        "jev_category": {
+        "category": {
           "category": "Trousers",
           "latency_seconds": 0.2692,
           "cost_usd": 0.000106
         },
-        "jev_features": {
+        "closed_features": {
           "filters": [
             {
               "feature": "gender",
@@ -3752,7 +3752,7 @@
           "latency_seconds": 0.3565,
           "cost_usd": 0.001226
         },
-        "2a_gemini": {
+        "full_gemini": {
           "filters": [
             {
               "feature": "gender",
@@ -3782,7 +3782,7 @@
           "latency_seconds": 1.0186,
           "cost_usd": 0.002264
         },
-        "2a_qwen": {
+        "full_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -3812,7 +3812,7 @@
           "latency_seconds": 0.5596,
           "cost_usd": 0.001865
         },
-        "2b_qwen_aux": {
+        "open_qwen": {
           "filters": [
             {
               "feature": "brand",
@@ -3828,7 +3828,7 @@
           "latency_seconds": 0.4107,
           "cost_usd": 0.000723
         },
-        "2a_gpt_oss": {
+        "full_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -3858,7 +3858,7 @@
           "latency_seconds": 0.9056,
           "cost_usd": 0.001548
         },
-        "2b_gpt_oss_aux": {
+        "open_gpt_oss": {
           "filters": [
             {
               "feature": "brand",
@@ -3876,7 +3876,7 @@
     }
   ],
   "summaries": {
-    "2a_gemini_flash_lite": {
+    "full_gemini": {
       "num_queries": 30,
       "category_accuracy_pct": 100.0,
       "category_correct": 30,
@@ -4007,7 +4007,7 @@
         }
       }
     },
-    "2a_qwen_3_8_27b": {
+    "full_qwen": {
       "num_queries": 30,
       "category_accuracy_pct": 100.0,
       "category_correct": 30,
@@ -4138,7 +4138,7 @@
         }
       }
     },
-    "2a_gpt_oss_120b": {
+    "full_gpt_oss": {
       "num_queries": 30,
       "category_accuracy_pct": 100.0,
       "category_correct": 30,
@@ -4269,7 +4269,7 @@
         }
       }
     },
-    "2b_jev_qwen_3_8_27b": {
+    "split_qwen": {
       "num_queries": 30,
       "category_accuracy_pct": 100.0,
       "category_correct": 30,
@@ -4400,662 +4400,7 @@
         }
       }
     },
-    "2b_jev_gpt_oss_120b": {
-      "num_queries": 30,
-      "category_accuracy_pct": 100.0,
-      "category_correct": 30,
-      "complete_filter_set_accuracy_pct": 93.3,
-      "complete_filter_set_correct": 28,
-      "closed_filter_set_accuracy_pct": 96.7,
-      "closed_filter_set_correct": 29,
-      "aux_filter_set_accuracy_pct": 96.7,
-      "aux_filter_set_correct": 29,
-      "all_clauses": {
-        "tp": 54,
-        "fp_redundant": 2,
-        "fn_missing": 1,
-        "redundant_per_query": 0.067,
-        "missing_per_query": 0.033,
-        "precision_pct": 96.4,
-        "recall_pct": 98.2,
-        "f1_pct": 97.3
-      },
-      "closed_clauses": {
-        "tp": 49,
-        "fp_redundant": 1,
-        "fn_missing": 0,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.0,
-        "precision_pct": 98.0,
-        "recall_pct": 100.0,
-        "f1_pct": 99.0
-      },
-      "aux_clauses": {
-        "tp": 5,
-        "fp_redundant": 1,
-        "fn_missing": 1,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.033,
-        "precision_pct": 83.3,
-        "recall_pct": 83.3,
-        "f1_pct": 83.3
-      },
-      "residual_exact_order_pct": 80.0,
-      "residual_set_accuracy_pct": 80.0,
-      "residual_set_correct": 24,
-      "empty_residual_accuracy_pct": 82.4,
-      "residual_concepts": {
-        "tp": 10,
-        "fp_redundant": 6,
-        "fn_missing": 3,
-        "redundant_per_query": 0.2,
-        "missing_per_query": 0.1,
-        "precision_pct": 62.5,
-        "recall_pct": 76.9,
-        "f1_pct": 69.0
-      },
-      "full_query_exact_pct": 73.3,
-      "full_query_exact": 22,
-      "total_cost_usd": 0.0586,
-      "avg_cost_per_query_usd": 0.001953,
-      "latency": {
-        "total_all_queries": {
-          "count": 30,
-          "mean": 1.0479,
-          "min": 0.2125,
-          "p50": 1.036,
-          "p80": 1.2146,
-          "p90": 1.2613,
-          "p95": 1.2803,
-          "max": 1.4811,
-          "under_0_7s": 1,
-          "under_0_7s_pct": 3.3,
-          "under_1_0s": 12,
-          "under_1_0s_pct": 40.0
-        },
-        "total_supported_queries": {
-          "count": 29,
-          "mean": 1.0767,
-          "min": 0.8131,
-          "p50": 1.0609,
-          "p80": 1.218,
-          "p90": 1.2632,
-          "p95": 1.2804,
-          "max": 1.4811,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 11,
-          "under_1_0s_pct": 37.9
-        },
-        "step1_jev_category": {
-          "count": 30,
-          "mean": 0.2459,
-          "min": 0.1909,
-          "p50": 0.2222,
-          "p80": 0.3015,
-          "p90": 0.3073,
-          "p95": 0.309,
-          "max": 0.3464,
-          "under_0_7s": 30,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 30,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_1_jev_features": {
-          "count": 29,
-          "mean": 0.3866,
-          "min": 0.2955,
-          "p50": 0.3565,
-          "p80": 0.4191,
-          "p90": 0.4889,
-          "p95": 0.5192,
-          "max": 0.5706,
-          "under_0_7s": 29,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_llm": {
-          "count": 29,
-          "mean": 0.443,
-          "min": 0.2607,
-          "p50": 0.3877,
-          "p80": 0.5979,
-          "p90": 0.6956,
-          "p95": 0.6979,
-          "max": 0.7008,
-          "under_0_7s": 28,
-          "under_0_7s_pct": 96.6,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 100.0
-        }
-      }
-    },
-    "2a_qwen": {
-      "num_queries": 30,
-      "category_accuracy_pct": 100.0,
-      "category_correct": 30,
-      "complete_filter_set_accuracy_pct": 93.3,
-      "complete_filter_set_correct": 28,
-      "closed_filter_set_accuracy_pct": 93.3,
-      "closed_filter_set_correct": 28,
-      "aux_filter_set_accuracy_pct": 100.0,
-      "aux_filter_set_correct": 30,
-      "all_clauses": {
-        "tp": 54,
-        "fp_redundant": 2,
-        "fn_missing": 1,
-        "redundant_per_query": 0.067,
-        "missing_per_query": 0.033,
-        "precision_pct": 96.4,
-        "recall_pct": 98.2,
-        "f1_pct": 97.3
-      },
-      "closed_clauses": {
-        "tp": 48,
-        "fp_redundant": 2,
-        "fn_missing": 1,
-        "redundant_per_query": 0.067,
-        "missing_per_query": 0.033,
-        "precision_pct": 96.0,
-        "recall_pct": 98.0,
-        "f1_pct": 97.0
-      },
-      "aux_clauses": {
-        "tp": 6,
-        "fp_redundant": 0,
-        "fn_missing": 0,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.0,
-        "precision_pct": 100.0,
-        "recall_pct": 100.0,
-        "f1_pct": 100.0
-      },
-      "residual_exact_order_pct": 93.3,
-      "residual_set_accuracy_pct": 93.3,
-      "residual_set_correct": 28,
-      "empty_residual_accuracy_pct": 94.1,
-      "residual_concepts": {
-        "tp": 12,
-        "fp_redundant": 2,
-        "fn_missing": 1,
-        "redundant_per_query": 0.067,
-        "missing_per_query": 0.033,
-        "precision_pct": 85.7,
-        "recall_pct": 92.3,
-        "f1_pct": 88.9
-      },
-      "full_query_exact_pct": 86.7,
-      "full_query_exact": 26,
-      "total_cost_usd": 0.053713,
-      "avg_cost_per_query_usd": 0.00179,
-      "latency": {
-        "total_all_queries": {
-          "count": 30,
-          "mean": 0.8183,
-          "min": 0.2125,
-          "p50": 0.8304,
-          "p80": 0.922,
-          "p90": 0.9888,
-          "p95": 1.0698,
-          "max": 1.2355,
-          "under_0_7s": 4,
-          "under_0_7s_pct": 13.3,
-          "under_1_0s": 27,
-          "under_1_0s_pct": 90.0
-        },
-        "total_supported_queries": {
-          "count": 29,
-          "mean": 0.8392,
-          "min": 0.6266,
-          "p50": 0.8321,
-          "p80": 0.9335,
-          "p90": 0.9928,
-          "p95": 1.0738,
-          "max": 1.2355,
-          "under_0_7s": 3,
-          "under_0_7s_pct": 10.3,
-          "under_1_0s": 26,
-          "under_1_0s_pct": 89.7
-        },
-        "step1_jev_category": {
-          "count": 30,
-          "mean": 0.2459,
-          "min": 0.1909,
-          "p50": 0.2222,
-          "p80": 0.3015,
-          "p90": 0.3073,
-          "p95": 0.309,
-          "max": 0.3464,
-          "under_0_7s": 30,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 30,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_1_jev_features": {
-          "count": 0,
-          "mean": 0.0,
-          "min": 0.0,
-          "p50": 0.0,
-          "p80": 0.0,
-          "p90": 0.0,
-          "p95": 0.0,
-          "max": 0.0,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 0,
-          "under_1_0s_pct": 0.0
-        },
-        "step2_llm": {
-          "count": 29,
-          "mean": 0.5921,
-          "min": 0.3431,
-          "p50": 0.5542,
-          "p80": 0.6897,
-          "p90": 0.7826,
-          "p95": 0.8111,
-          "max": 1.028,
-          "under_0_7s": 23,
-          "under_0_7s_pct": 79.3,
-          "under_1_0s": 28,
-          "under_1_0s_pct": 96.6
-        }
-      }
-    },
-    "2a_gpt_oss": {
-      "num_queries": 30,
-      "category_accuracy_pct": 100.0,
-      "category_correct": 30,
-      "complete_filter_set_accuracy_pct": 93.3,
-      "complete_filter_set_correct": 28,
-      "closed_filter_set_accuracy_pct": 96.7,
-      "closed_filter_set_correct": 29,
-      "aux_filter_set_accuracy_pct": 96.7,
-      "aux_filter_set_correct": 29,
-      "all_clauses": {
-        "tp": 54,
-        "fp_redundant": 1,
-        "fn_missing": 1,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.033,
-        "precision_pct": 98.2,
-        "recall_pct": 98.2,
-        "f1_pct": 98.2
-      },
-      "closed_clauses": {
-        "tp": 49,
-        "fp_redundant": 1,
-        "fn_missing": 0,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.0,
-        "precision_pct": 98.0,
-        "recall_pct": 100.0,
-        "f1_pct": 99.0
-      },
-      "aux_clauses": {
-        "tp": 5,
-        "fp_redundant": 0,
-        "fn_missing": 1,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.033,
-        "precision_pct": 100.0,
-        "recall_pct": 83.3,
-        "f1_pct": 90.9
-      },
-      "residual_exact_order_pct": 73.3,
-      "residual_set_accuracy_pct": 73.3,
-      "residual_set_correct": 22,
-      "empty_residual_accuracy_pct": 76.5,
-      "residual_concepts": {
-        "tp": 9,
-        "fp_redundant": 7,
-        "fn_missing": 4,
-        "redundant_per_query": 0.233,
-        "missing_per_query": 0.133,
-        "precision_pct": 56.2,
-        "recall_pct": 69.2,
-        "f1_pct": 62.1
-      },
-      "full_query_exact_pct": 73.3,
-      "full_query_exact": 22,
-      "total_cost_usd": 0.045519,
-      "avg_cost_per_query_usd": 0.001517,
-      "latency": {
-        "total_all_queries": {
-          "count": 30,
-          "mean": 0.7296,
-          "min": 0.2125,
-          "p50": 0.7316,
-          "p80": 0.8162,
-          "p90": 0.8548,
-          "p95": 0.9187,
-          "max": 1.1748,
-          "under_0_7s": 11,
-          "under_0_7s_pct": 36.7,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 96.7
-        },
-        "total_supported_queries": {
-          "count": 29,
-          "mean": 0.7474,
-          "min": 0.5441,
-          "p50": 0.7382,
-          "p80": 0.8205,
-          "p90": 0.8616,
-          "p95": 0.919,
-          "max": 1.1748,
-          "under_0_7s": 10,
-          "under_0_7s_pct": 34.5,
-          "under_1_0s": 28,
-          "under_1_0s_pct": 96.6
-        },
-        "step1_jev_category": {
-          "count": 30,
-          "mean": 0.2459,
-          "min": 0.1909,
-          "p50": 0.2222,
-          "p80": 0.3015,
-          "p90": 0.3073,
-          "p95": 0.309,
-          "max": 0.3464,
-          "under_0_7s": 30,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 30,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_1_jev_features": {
-          "count": 0,
-          "mean": 0.0,
-          "min": 0.0,
-          "p50": 0.0,
-          "p80": 0.0,
-          "p90": 0.0,
-          "p95": 0.0,
-          "max": 0.0,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 0,
-          "under_1_0s_pct": 0.0
-        },
-        "step2_llm": {
-          "count": 29,
-          "mean": 0.5003,
-          "min": 0.2698,
-          "p50": 0.5068,
-          "p80": 0.5932,
-          "p90": 0.6197,
-          "p95": 0.7016,
-          "max": 0.9056,
-          "under_0_7s": 27,
-          "under_0_7s_pct": 93.1,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 100.0
-        }
-      }
-    },
-    "2a_gemini": {
-      "num_queries": 30,
-      "category_accuracy_pct": 100.0,
-      "category_correct": 30,
-      "complete_filter_set_accuracy_pct": 96.7,
-      "complete_filter_set_correct": 29,
-      "closed_filter_set_accuracy_pct": 96.7,
-      "closed_filter_set_correct": 29,
-      "aux_filter_set_accuracy_pct": 100.0,
-      "aux_filter_set_correct": 30,
-      "all_clauses": {
-        "tp": 54,
-        "fp_redundant": 0,
-        "fn_missing": 1,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.033,
-        "precision_pct": 100.0,
-        "recall_pct": 98.2,
-        "f1_pct": 99.1
-      },
-      "closed_clauses": {
-        "tp": 48,
-        "fp_redundant": 0,
-        "fn_missing": 1,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.033,
-        "precision_pct": 100.0,
-        "recall_pct": 98.0,
-        "f1_pct": 99.0
-      },
-      "aux_clauses": {
-        "tp": 6,
-        "fp_redundant": 0,
-        "fn_missing": 0,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.0,
-        "precision_pct": 100.0,
-        "recall_pct": 100.0,
-        "f1_pct": 100.0
-      },
-      "residual_exact_order_pct": 86.7,
-      "residual_set_accuracy_pct": 86.7,
-      "residual_set_correct": 26,
-      "empty_residual_accuracy_pct": 76.5,
-      "residual_concepts": {
-        "tp": 13,
-        "fp_redundant": 4,
-        "fn_missing": 0,
-        "redundant_per_query": 0.133,
-        "missing_per_query": 0.0,
-        "precision_pct": 76.5,
-        "recall_pct": 100.0,
-        "f1_pct": 86.7
-      },
-      "full_query_exact_pct": 86.7,
-      "full_query_exact": 26,
-      "total_cost_usd": 0.061903,
-      "avg_cost_per_query_usd": 0.002063,
-      "latency": {
-        "total_all_queries": {
-          "count": 30,
-          "mean": 1.115,
-          "min": 0.2125,
-          "p50": 1.124,
-          "p80": 1.2492,
-          "p90": 1.3111,
-          "p95": 1.3261,
-          "max": 1.3795,
-          "under_0_7s": 1,
-          "under_0_7s_pct": 3.3,
-          "under_1_0s": 3,
-          "under_1_0s_pct": 10.0
-        },
-        "total_supported_queries": {
-          "count": 29,
-          "mean": 1.1462,
-          "min": 0.8583,
-          "p50": 1.1252,
-          "p80": 1.2497,
-          "p90": 1.3116,
-          "p95": 1.327,
-          "max": 1.3795,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 2,
-          "under_1_0s_pct": 6.9
-        },
-        "step1_jev_category": {
-          "count": 30,
-          "mean": 0.2459,
-          "min": 0.1909,
-          "p50": 0.2222,
-          "p80": 0.3015,
-          "p90": 0.3073,
-          "p95": 0.309,
-          "max": 0.3464,
-          "under_0_7s": 30,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 30,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_1_jev_features": {
-          "count": 0,
-          "mean": 0.0,
-          "min": 0.0,
-          "p50": 0.0,
-          "p80": 0.0,
-          "p90": 0.0,
-          "p95": 0.0,
-          "max": 0.0,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 0,
-          "under_1_0s_pct": 0.0
-        },
-        "step2_llm": {
-          "count": 29,
-          "mean": 0.8991,
-          "min": 0.665,
-          "p50": 0.9031,
-          "p80": 1.0158,
-          "p90": 1.0206,
-          "p95": 1.0281,
-          "max": 1.1189,
-          "under_0_7s": 1,
-          "under_0_7s_pct": 3.4,
-          "under_1_0s": 22,
-          "under_1_0s_pct": 75.9
-        }
-      }
-    },
-    "2b_qwen": {
-      "num_queries": 30,
-      "category_accuracy_pct": 100.0,
-      "category_correct": 30,
-      "complete_filter_set_accuracy_pct": 96.7,
-      "complete_filter_set_correct": 29,
-      "closed_filter_set_accuracy_pct": 96.7,
-      "closed_filter_set_correct": 29,
-      "aux_filter_set_accuracy_pct": 100.0,
-      "aux_filter_set_correct": 30,
-      "all_clauses": {
-        "tp": 55,
-        "fp_redundant": 1,
-        "fn_missing": 0,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.0,
-        "precision_pct": 98.2,
-        "recall_pct": 100.0,
-        "f1_pct": 99.1
-      },
-      "closed_clauses": {
-        "tp": 49,
-        "fp_redundant": 1,
-        "fn_missing": 0,
-        "redundant_per_query": 0.033,
-        "missing_per_query": 0.0,
-        "precision_pct": 98.0,
-        "recall_pct": 100.0,
-        "f1_pct": 99.0
-      },
-      "aux_clauses": {
-        "tp": 6,
-        "fp_redundant": 0,
-        "fn_missing": 0,
-        "redundant_per_query": 0.0,
-        "missing_per_query": 0.0,
-        "precision_pct": 100.0,
-        "recall_pct": 100.0,
-        "f1_pct": 100.0
-      },
-      "residual_exact_order_pct": 93.3,
-      "residual_set_accuracy_pct": 93.3,
-      "residual_set_correct": 28,
-      "empty_residual_accuracy_pct": 94.1,
-      "residual_concepts": {
-        "tp": 12,
-        "fp_redundant": 4,
-        "fn_missing": 1,
-        "redundant_per_query": 0.133,
-        "missing_per_query": 0.033,
-        "precision_pct": 75.0,
-        "recall_pct": 92.3,
-        "f1_pct": 82.8
-      },
-      "full_query_exact_pct": 90.0,
-      "full_query_exact": 27,
-      "total_cost_usd": 0.060629,
-      "avg_cost_per_query_usd": 0.002021,
-      "latency": {
-        "total_all_queries": {
-          "count": 30,
-          "mean": 0.994,
-          "min": 0.2125,
-          "p50": 1.0236,
-          "p80": 1.0837,
-          "p90": 1.1403,
-          "p95": 1.2495,
-          "max": 1.3261,
-          "under_0_7s": 1,
-          "under_0_7s_pct": 3.3,
-          "under_1_0s": 14,
-          "under_1_0s_pct": 46.7
-        },
-        "total_supported_queries": {
-          "count": 29,
-          "mean": 1.021,
-          "min": 0.872,
-          "p50": 1.0276,
-          "p80": 1.0844,
-          "p90": 1.144,
-          "p95": 1.2564,
-          "max": 1.3261,
-          "under_0_7s": 0,
-          "under_0_7s_pct": 0.0,
-          "under_1_0s": 13,
-          "under_1_0s_pct": 44.8
-        },
-        "step1_jev_category": {
-          "count": 30,
-          "mean": 0.2459,
-          "min": 0.1909,
-          "p50": 0.2222,
-          "p80": 0.3015,
-          "p90": 0.3073,
-          "p95": 0.309,
-          "max": 0.3464,
-          "under_0_7s": 30,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 30,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_1_jev_features": {
-          "count": 29,
-          "mean": 0.3866,
-          "min": 0.2955,
-          "p50": 0.3565,
-          "p80": 0.4191,
-          "p90": 0.4889,
-          "p95": 0.5192,
-          "max": 0.5706,
-          "under_0_7s": 29,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 100.0
-        },
-        "step2_llm": {
-          "count": 29,
-          "mean": 0.3872,
-          "min": 0.2613,
-          "p50": 0.3904,
-          "p80": 0.4917,
-          "p90": 0.5079,
-          "p95": 0.5246,
-          "max": 0.534,
-          "under_0_7s": 29,
-          "under_0_7s_pct": 100.0,
-          "under_1_0s": 29,
-          "under_1_0s_pct": 100.0
-        }
-      }
-    },
-    "2b_gpt_oss": {
+    "split_gpt_oss": {
       "num_queries": 30,
       "category_accuracy_pct": 100.0,
       "category_correct": 30,
@@ -5189,10 +4534,10 @@
   },
   "dataset": "query_extraction/queries",
   "selected_configs": [
-    "2a_qwen",
-    "2a_gpt_oss",
-    "2a_gemini",
-    "2b_qwen",
-    "2b_gpt_oss"
+    "full_qwen",
+    "full_gpt_oss",
+    "full_gemini",
+    "split_qwen",
+    "split_gpt_oss"
   ]
 }
