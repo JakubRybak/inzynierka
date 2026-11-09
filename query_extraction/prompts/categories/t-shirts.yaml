@@ -1,0 +1,128 @@
+category: T-shirts
+category_criterion: T-shirt, tee, tee shirt, koszulka, t-shirt, camiseta. Includes long-sleeve, short-sleeve, and
+  sleeveless tees. Excludes collared tees/polos (Polos) and T-shirt dresses (Dresses).
+feature_notes: {}
+jev_scopes: {}
+substyle_rules: []
+few_shots:
+- query: women’s turquoise Nike T-shirt, cotton without polyester, between 50 and 100 PLN, for hiking
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: brand
+      operator: in
+      values:
+      - Nike
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Cotton
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: gte
+      value: 50
+    - feature: price
+      operator: lte
+      value: 100
+    residual:
+    - turquoise
+    - for hiking
+  note: Shade 'turquoise' maps to Blue AND stays in residual; range uses gte + lte.
+- query: slim or regular T-shirt, but not oversized, around $30
+  output:
+    filters:
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+      - Regular
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    - feature: price
+      operator: around
+      value: 30
+    residual: []
+  note: Positive and negative clauses on a single-choice feature are separate filters.
+- query: 100% cotton all-black longline V-neck tee with long sleeves
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: length
+      operator: in
+      values:
+      - Longline
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    residual: []
+  note: '''100% cotton'' and ''all-black'' both require equals_set (EXACT).'
+- query: black and white striped cropped T-shirt, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    residual:
+    - not emerald
+  note: Color conjunction uses contains_all (ALL); excluded shade 'not emerald' stays only in residual.
+- query: 2x men's burgundy turtleneck T-shirt by Adidas up to 140 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: brand
+      operator: in
+      values:
+      - Adidas
+    - feature: price
+      operator: lte
+      value: 140
+    residual:
+    - 2x
+    - burgundy
+    - turtleneck
+  note: '''2x'' is a size/pack (not price); ''burgundy'' and ''turtleneck'' map to Red/High Neck and stay in residual.'

@@ -1,0 +1,136 @@
+category: Bombers
+category_criterion: Bomber jacket, bomber, flight jacket, varsity/letterman bomber, bomberka, cazadora bomber.
+feature_notes: {}
+jev_scopes: {}
+substyle_rules: []
+few_shots:
+- query: unlined olive bomber jacket with leopard print for spring
+  output:
+    filters:
+    - feature: lining_composition
+      operator: equals_set
+      values:
+      - Unlined
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: pattern
+      operator: in
+      values:
+      - Animal Print
+    residual:
+    - olive
+    - leopard print
+    - for spring
+  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; ''olive'' and ''leopard print'' stay in residual.'
+- query: men's all-black leather bomber by Alpha Industries with down insulation under 800 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Leather
+    - feature: brand
+      operator: in
+      values:
+      - Alpha Industries
+    - feature: insulation
+      operator: in
+      values:
+      - Down
+    - feature: price
+      operator: lte
+      value: 800
+    residual: []
+  note: '''all-black'' -> equals_set [''Black'']; ''down insulation'' -> insulation=Down.'
+- query: women's oversized cropped nylon bomber with zip and press-stud closure, around $95
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Nylon
+    - feature: closure_type
+      operator: contains_all
+      values:
+      - Press-Stud
+      - Zip
+    - feature: price
+      operator: around
+      value: 95
+    residual: []
+  note: Combined closures in Bombers use contains_all.
+- query: navy and white varsity bomber jacket with wool and polyester, without a hood, between 200 and 450 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Blue
+      - White
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Polyester
+      - Wool
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: gte
+      value: 200
+    - feature: price
+      operator: lte
+      value: 450
+    residual:
+    - navy
+    - varsity
+  note: '''navy'' and ''varsity'' stay in residual.'
+- query: green hooded bomber with silk lining, without acrylic, not emerald, not oversized
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: lining_composition
+      operator: contains_any
+      values:
+      - Silk
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Acrylic
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    residual:
+    - not emerald
+  note: '''with silk lining'' -> lining_composition contains_any [''Silk''].'
