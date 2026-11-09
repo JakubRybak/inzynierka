@@ -246,17 +246,28 @@ class VertexGeminiClient:
             },
         }
         with self.lock:
-            t0 = time.perf_counter()
-            response = self.session.post(
-                self.endpoint,
-                json=payload,
-                timeout=(10.0, self.timeout),
-                allow_redirects=False,
-            )
-            elapsed = time.perf_counter() - t0
-            if not response.ok:
-                raise RuntimeError(f"Vertex Gemini HTTP {response.status_code}: {response.text[:400]}")
-            raw = response.json()
+            for attempt in range(3):
+                t0 = time.perf_counter()
+                try:
+                    response = self.session.post(
+                        self.endpoint,
+                        json=payload,
+                        timeout=(10.0, self.timeout),
+                        allow_redirects=False,
+                    )
+                    elapsed = time.perf_counter() - t0
+                    if response.status_code in (429, 500, 502, 503, 504) and attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    if not response.ok:
+                        raise RuntimeError(f"Vertex Gemini HTTP {response.status_code}: {response.text[:400]}")
+                    raw = response.json()
+                    break
+                except requests.RequestException as e:
+                    if attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    raise RuntimeError(f"Vertex Gemini network error: {e}") from e
 
         candidates = raw.get("candidates", [])
         if not candidates:
@@ -332,22 +343,28 @@ class CerebrasClient:
         with self.lock:
             for attempt in range(3):
                 t0 = time.perf_counter()
-                response = self.session.post(
-                    CEREBRAS_ENDPOINT,
-                    json=payload,
-                    timeout=(10.0, self.timeout),
-                    allow_redirects=False,
-                )
-                elapsed = time.perf_counter() - t0
+                try:
+                    response = self.session.post(
+                        CEREBRAS_ENDPOINT,
+                        json=payload,
+                        timeout=(10.0, self.timeout),
+                        allow_redirects=False,
+                    )
+                    elapsed = time.perf_counter() - t0
 
-                if response.status_code == 429 and attempt < 2:
-                    time.sleep(1.5 * (attempt + 1))
-                    continue
-                if not response.ok:
-                    safe_text = response.text.replace(self.api_key, "[REDACTED]")
-                    raise RuntimeError(f"Cerebras ({self.model}) HTTP {response.status_code}: {safe_text[:400]}")
-                raw = response.json()
-                break
+                    if response.status_code in (429, 500, 502, 503, 504) and attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    if not response.ok:
+                        safe_text = response.text.replace(self.api_key, "[REDACTED]")
+                        raise RuntimeError(f"Cerebras ({self.model}) HTTP {response.status_code}: {safe_text[:400]}")
+                    raw = response.json()
+                    break
+                except requests.RequestException as e:
+                    if attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    raise RuntimeError(f"Cerebras ({self.model}) network error: {e}") from e
 
         content = raw["choices"][0]["message"]["content"]
         parsed_raw = json.loads(content)

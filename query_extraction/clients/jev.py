@@ -216,18 +216,29 @@ class JevClient:
         with self.lock:
             if self.total_cost_usd >= self.budget_usd:
                 raise RuntimeError(f"Jev budget exceeded: ${self.total_cost_usd:.6f} >= ${self.budget_usd:.6f}")
-            t0 = time.perf_counter()
-            response = self.session.post(
-                ENDPOINT,
-                json=payload,
-                timeout=(10.0, self.timeout),
-                allow_redirects=False,
-            )
-            elapsed = time.perf_counter() - t0
-            if not response.ok:
-                safe_text = response.text.replace(self.api_key, "[REDACTED]")
-                raise RuntimeError(f"Jev HTTP {response.status_code}: {safe_text[:400]}")
-            data = response.json()
+            for attempt in range(3):
+                t0 = time.perf_counter()
+                try:
+                    response = self.session.post(
+                        ENDPOINT,
+                        json=payload,
+                        timeout=(10.0, self.timeout),
+                        allow_redirects=False,
+                    )
+                    elapsed = time.perf_counter() - t0
+                    if response.status_code in (429, 500, 502, 503, 504) and attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    if not response.ok:
+                        safe_text = response.text.replace(self.api_key, "[REDACTED]")
+                        raise RuntimeError(f"Jev HTTP {response.status_code}: {safe_text[:400]}")
+                    data = response.json()
+                    break
+                except requests.RequestException as e:
+                    if attempt < 2:
+                        time.sleep(2.0 * (attempt + 1))
+                        continue
+                    raise RuntimeError(f"Jev network error: {e}") from e
 
             answers = data.get("answers", {})
             if set(answers.keys()) != set(payload["questions"].keys()):

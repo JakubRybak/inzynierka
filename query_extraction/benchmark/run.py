@@ -65,8 +65,8 @@ def run_benchmark(
     size: Optional[int] = 30,
     seed: int = 42,
     categories: Optional[Sequence[str]] = None,
-    budget_usd: float = 0.15,
-    output_path: Path = RESULTS_DIR / "benchmark_30_seed42.json",
+    budget_usd: Optional[float] = None,
+    output_path: Optional[Path] = None,
     fresh: bool = False,
 ) -> Dict[str, Any]:
     """Run benchmark on `configs` over the selected test dataset and save JSON results."""
@@ -82,6 +82,16 @@ def run_benchmark(
         categories=categories,
     )
     assert_no_data_leakage(sample_rows)
+
+    if output_path is None:
+        size_label = "all" if size is None else str(size)
+        output_path = RESULTS_DIR / f"benchmark_{size_label}_seed{seed}.json"
+
+    effective_budget = (
+        budget_usd
+        if budget_usd is not None
+        else max(0.20, round(len(sample_rows) * 0.0035, 3))
+    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -142,7 +152,7 @@ def run_benchmark(
         for q in queries
     )
     if needs_jev:
-        jev = JevClient(budget_usd=budget_usd)
+        jev = JevClient(budget_usd=effective_budget)
         w = jev.warmup()
         print(f"[Jev 1.14] Warmup completed in {w:.3f}s", flush=True)
         for q in queries:
@@ -328,10 +338,7 @@ def main() -> None:
         "--configs",
         nargs="+",
         default=["all"],
-        help=(
-            "Configurations to benchmark (default: all). "
-            f"Choices: {', '.join(CONFIGS.keys())} (or aliases)"
-        ),
+        help=f"Configurations to benchmark (default: all). Choices: {', '.join(CONFIGS.keys())}",
     )
     parser.add_argument(
         "--dataset",
@@ -357,14 +364,19 @@ def main() -> None:
         default=None,
         help="Restrict benchmark to specific category(ies). Can be repeated.",
     )
-    parser.add_argument("--budget-usd", type=float, default=0.15, help="Max Jev budget in USD (default: 0.15)")
+    parser.add_argument(
+        "--budget-usd",
+        type=float,
+        default=None,
+        help="Max Jev budget in USD (default: auto-scaled based on sample size)",
+    )
     parser.add_argument(
         "--output",
         "--json-output",
         dest="output",
         type=Path,
-        default=RESULTS_DIR / "benchmark_30_seed42.json",
-        help="Path to output JSON checkpoint/results file",
+        default=None,
+        help="Path to output JSON checkpoint/results file (default: results/benchmark_<size>_seed<seed>.json)",
     )
     parser.add_argument(
         "--fresh",
