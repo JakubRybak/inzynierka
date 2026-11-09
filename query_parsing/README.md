@@ -1,4 +1,4 @@
-# Query Extraction Engine
+# Query Parsing Engine
 
 Kompleksowy moduł semantycznej ekstrakcji intencji, kategorii, cech katalogowych (zamkniętych i otwartych) oraz pojęć residualnych z zapytań wyszukiwarkowych dla platformy e-commerce modowej.
 
@@ -37,10 +37,10 @@ Moduł przetwarza surowe zapytanie użytkownika (np. *"czarna dopasowana sukienk
 ## 📁 Struktura modułu (Co gdzie jest)
 
 ```
-query_extraction/
+query_parsing/
 ├── README.md                  # Niniejsza dokumentacja
-├── __init__.py                # Eksport publicznego API (parse_query, QueryExtractor, CONFIGS)
-├── parser.py                  # Główny rejestr konfiguracji, assembler wyników, klasa QueryExtractor i CLI
+├── __init__.py                # Eksport publicznego API (parse_query, QueryParser, CONFIGS)
+├── parser.py                  # Główny rejestr konfiguracji, assembler wyników, klasa QueryParser i CLI
 │
 ├── core/                      # Rdzeń domeny, schematy i logika promptów
 │   ├── catalog.py             # Definicje 22 kategorii, cech, wartości, reguł walidacji i schematów JSON
@@ -71,7 +71,7 @@ query_extraction/
 │   └── results/               # Pliki JSON z wynikami benchmarków (np. benchmark_250_seed42.json)
 │
 └── tests/                     # Testy jednostkowe offline
-    ├── test_query_extraction.py # 9 testów offline (schematy, pokrycie 22 kategorii, walidacja, brak wycieku)
+    ├── test_query_parsing.py    # 9 testów offline (schematy, pokrycie 22 kategorii, walidacja, brak wycieku)
     └── test_query_schema.py     # Walidacja poprawności wartości etykiet w zapytaniach benchmarkowych
 ```
 
@@ -79,7 +79,7 @@ query_extraction/
 
 ## ⚙️ Dostępne konfiguracje pipeline'u
 
-Wszystkie konfiguracje są zdefiniowane w słowniku `CONFIGS` w [`parser.py`](file:///Users/jakubrybak/Projekty/Test/query_extraction/parser.py):
+Wszystkie konfiguracje są zdefiniowane w słowniku `CONFIGS` w [`parser.py`](file:///Users/jakubrybak/Projekty/Test/query_parsing/parser.py):
 
 | Klucz konfiguracji | Architektura | Model LLM / Dostawca | Etapy pipeline'u | Typowa latencja p50 | Rekomendacja |
 | :--- | :---: | :--- | :--- | :---: | :--- |
@@ -99,13 +99,13 @@ Umożliwia szybkie przetestowanie parsowania zapytania bezpośrednio z wiersza p
 
 ```bash
 # Podstawowe parsowanie (używa domyślnej konfiguracji full_qwen)
-.venv/bin/python -m query_extraction.parser "czarna skórzana kurtka z zamkiem do 300 zł"
+.venv/bin/python -m query_parsing.parser "czarna skórzana kurtka z zamkiem do 300 zł"
 
 # Parsowanie inną konfiguracją (np. full_gemini lub split_qwen)
-.venv/bin/python -m query_extraction.parser "orange trench coat with hood" --config full_gemini
+.venv/bin/python -m query_parsing.parser "orange trench coat with hood" --config full_gemini
 
 # Wyświetlenie pełnego JSON-a z metadanymi czasów i kosztu
-.venv/bin/python -m query_extraction.parser "damska koszula w paski zara" --json
+.venv/bin/python -m query_parsing.parser "damska koszula w paski zara" --json
 ```
 
 **Dostępne opcje:**
@@ -115,25 +115,25 @@ Umożliwia szybkie przetestowanie parsowania zapytania bezpośrednio z wiersza p
 
 ---
 
-### 2. Uruchamianie benchmarku (`benchmark/run.py`)
+## 2. Uruchamianie benchmarku (`benchmark/run.py`)
 
 Uruchamia wsadową ewaluację modeli na wybranym zbiorze danych testowych:
 
 ```bash
 # Szybki benchmark dla N=30 zapytań (wszystkie 5 konfiguracji)
-.venv/bin/python -m query_extraction.benchmark.run --size 30
+.venv/bin/python -m query_parsing.benchmark.run --size 30
 
 # Większy benchmark dla N=250 zapytań z losowaniem warstwowym
-.venv/bin/python -m query_extraction.benchmark.run --size 250 --seed 42
+.venv/bin/python -m query_parsing.benchmark.run --size 250 --seed 42
 
 # Benchmark tylko dla wybranej konfiguracji (np. full_qwen)
-.venv/bin/python -m query_extraction.benchmark.run --configs full_qwen --size 100
+.venv/bin/python -m query_parsing.benchmark.run --configs full_qwen --size 100
 
 # Pełny benchmark na całym dostępnym zbiorze (1535 zapytań)
-.venv/bin/python -m query_extraction.benchmark.run --all-queries
+.venv/bin/python -m query_parsing.benchmark.run --all-queries
 
 # Ograniczenie benchmarku tylko do wybranych kategorii
-.venv/bin/python -m query_extraction.benchmark.run --category Dresses --category Shirts --size 50
+.venv/bin/python -m query_parsing.benchmark.run --category Dresses --category Shirts --size 50
 ```
 
 **Dostępne opcje:**
@@ -143,7 +143,7 @@ Uruchamia wsadową ewaluację modeli na wybranym zbiorze danych testowych:
 - `--seed`: Ziarno losowości dla powtarzalnego próbkowania. Domyślnie: `42`.
 - `--category`: Ograniczenie benchmarku do określonej kategorii (można powtarzać flagę).
 - `--budget-usd`: Limit budżetu API Jev w USD (domyślnie skalowany automatycznie na podstawie wielkości próby).
-- `--output`: Własna ścieżka do pliku wynikowego JSON. Domyślnie: `query_extraction/benchmark/results/benchmark_<size>_seed<seed>.json`.
+- `--output`: Własna ścieżka do pliku wynikowego JSON. Domyślnie: `query_parsing/benchmark/results/benchmark_<size>_seed<seed>.json`.
 - `--fresh`: Wymuszenie ponownego przeliczenia zapytań od zera (ignoruje istniejący checkpoint).
 
 > [!TIP]
@@ -157,7 +157,7 @@ Narzędzie pomocnicze do inspekcji i eksportu próbek zapytań testowych:
 
 ```bash
 # Wygenerowanie losowej próby 50 zapytań do pliku CSV
-.venv/bin/python -m query_extraction.benchmark.dataset --size 50 --seed 42 > sample_50.csv
+.venv/bin/python -m query_parsing.benchmark.dataset --size 50 --seed 42 > sample_50.csv
 ```
 
 **Dostępne opcje:**
@@ -169,10 +169,10 @@ Narzędzie pomocnicze do inspekcji i eksportu próbek zapytań testowych:
 
 ### 4. Uruchamianie testów jednostkowych
 
-Wszystkie testy w `query_extraction/tests/` są testami offline – wykonują się błyskawicznie bez konieczności połączenia z płatnymi API:
+Wszystkie testy w `query_parsing/tests/` są testami offline – wykonują się błyskawicznie bez konieczności połączenia z płatnymi API:
 
 ```bash
-.venv/bin/python -m unittest discover -s query_extraction/tests -v
+.venv/bin/python -m unittest discover -s query_parsing/tests -v
 ```
 
 Testy sprawdzają m.in.:
@@ -191,7 +191,7 @@ Testy sprawdzają m.in.:
 Najprostszy sposób na sparsowanie zapytania w aplikacji:
 
 ```python
-from query_extraction import parse_query
+from query_parsing import parse_query
 
 # Podstawowe parsowanie (domyślnie full_qwen)
 result = parse_query("czarna sukienka na wesele do 200 zł")
@@ -212,22 +212,22 @@ print(result_with_meta["_meta"]["total_latency_seconds"])  # np. 0.684
 print(result_with_meta["_meta"]["total_cost_usd"])        # np. 0.0017
 ```
 
-### Zaawansowane: Klasa `QueryExtractor` (Thread-safe singleton)
+### Zaawansowane: Klasa `QueryParser` (Thread-safe singleton)
 
-Dla serwisów webowych, mikroserwisów FastAPI/Flask i workerów zaleca się użycie instancji `QueryExtractor`, która utrzymuje pulę połączeń HTTP i sesje autoryzacyjne:
+Dla serwisów webowych, mikroserwisów FastAPI/Flask i workerów zaleca się użycie instancji `QueryParser`, która utrzymuje pulę połączeń HTTP i sesje autoryzacyjne:
 
 ```python
-from query_extraction import QueryExtractor
+from query_parsing import QueryParser
 
-# Inicjalizacja ekstraktora (wczytuje katalog i przygotowuje klientów)
-extractor = QueryExtractor()
+# Inicjalizacja parsera (wczytuje katalog i przygotowuje klientów)
+parser = QueryParser()
 
 # Opcjonalny warmup połączeń sieciowych przy starcie aplikacji
-warmup_times = extractor.warmup(["full_qwen"])
+warmup_times = parser.warmup(["full_qwen"])
 print("Połączenia rozgrzane:", warmup_times)
 
 # Wydajne parsowanie zapytań w pętli obsługi żądań
-res = extractor.parse("white silk blouse with long sleeves", config="full_qwen")
+res = parser.parse("white silk blouse with long sleeves", config="full_qwen")
 ```
 
 ---

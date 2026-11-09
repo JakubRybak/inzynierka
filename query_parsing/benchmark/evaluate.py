@@ -1,4 +1,4 @@
-"""Evaluation metrics (latency percentiles, filter accuracy, redundant/missing filters, residual F1) for query extraction."""
+"""Evaluation metrics (latency percentiles, filter accuracy, redundant/missing filters, residual F1) for query parsing."""
 
 from __future__ import annotations
 

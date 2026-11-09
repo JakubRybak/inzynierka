@@ -1,4 +1,4 @@
-"""Public query extraction API and pipeline configuration registry."""
+"""Public query parsing API and pipeline configuration registry."""
 
 from __future__ import annotations
 
@@ -161,8 +161,8 @@ def assemble_stage_prediction(stages: Dict[str, Any], config: str) -> Dict[str, 
     }
 
 
-class QueryExtractor:
-    """Reusable, thread-safe query extractor supporting all 5 pipeline configurations."""
+class QueryParser:
+    """Reusable, thread-safe query parser supporting all 5 pipeline configurations."""
 
     def __init__(
         self,
@@ -303,17 +303,25 @@ class QueryExtractor:
         return result
 
 
-_DEFAULT_EXTRACTOR: Optional[QueryExtractor] = None
+# Backward compatibility alias
+QueryExtractor = QueryParser
+
+_DEFAULT_PARSER: Optional[QueryParser] = None
 _DEFAULT_LOCK = threading.Lock()
 
 
-def get_default_extractor() -> QueryExtractor:
-    """Return the lazily initialized singleton QueryExtractor."""
-    global _DEFAULT_EXTRACTOR
+def get_default_parser() -> QueryParser:
+    """Return the lazily initialized singleton QueryParser."""
+    global _DEFAULT_PARSER
     with _DEFAULT_LOCK:
-        if _DEFAULT_EXTRACTOR is None:
-            _DEFAULT_EXTRACTOR = QueryExtractor()
-        return _DEFAULT_EXTRACTOR
+        if _DEFAULT_PARSER is None:
+            _DEFAULT_PARSER = QueryParser()
+        return _DEFAULT_PARSER
+
+
+# Backward compatibility alias
+get_default_extractor = get_default_parser
+_DEFAULT_EXTRACTOR = _DEFAULT_PARSER
 
 
 def parse_query(
@@ -321,34 +329,35 @@ def parse_query(
     config: str = DEFAULT_CONFIG,
     *,
     include_meta: bool = False,
-    extractor: Optional[QueryExtractor] = None,
+    parser: Optional[QueryParser] = None,
+    extractor: Optional[QueryParser] = None,
 ) -> Dict[str, Any]:
-    """Extract category, filters, and residual from `query` using the specified `config`."""
-    active_extractor = extractor if extractor is not None else get_default_extractor()
-    return active_extractor.parse(query, config=config, include_meta=include_meta)
+    """Parse category, filters, and residual from `query` using the specified `config`."""
+    active_parser = parser if parser is not None else (extractor if extractor is not None else get_default_parser())
+    return active_parser.parse(query, config=config, include_meta=include_meta)
 
 
 def main() -> None:
     import argparse
     import json
 
-    parser = argparse.ArgumentParser(description="Extract category, filters, and residual from shopping queries.")
-    parser.add_argument("query", nargs="?", help="Shopping query to parse")
-    parser.add_argument(
+    arg_parser = argparse.ArgumentParser(description="Parse category, filters, and residual from shopping queries.")
+    arg_parser.add_argument("query", nargs="?", help="Shopping query to parse")
+    arg_parser.add_argument(
         "--config",
         default=DEFAULT_CONFIG,
         choices=list(CONFIGS.keys()),
         help=f"Pipeline configuration to use (default: {DEFAULT_CONFIG})",
     )
-    parser.add_argument(
+    arg_parser.add_argument(
         "--json",
         action="store_true",
         dest="output_json",
         help="Output raw JSON including latency and cost metadata",
     )
-    args = parser.parse_args()
+    args = arg_parser.parse_args()
     if not args.query:
-        parser.print_help()
+        arg_parser.print_help()
         return
 
     result = parse_query(args.query, config=args.config, include_meta=True)

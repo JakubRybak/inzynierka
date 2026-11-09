@@ -1,15 +1,15 @@
-# Query Extraction Rules
+# Query Parsing Rules
 
 ## Purpose and Language
 
-- Query extraction turns a shopping query into one product category, hard filters, and a list of residual concepts.
+- Query parsing turns a shopping query into one product category, hard filters, and a list of residual concepts.
 - English is the main language, followed by Polish and Spanish. The intended weighting is 94% English, 5% Polish, and 1% Spanish.
 - Category, feature, and value names follow the [taxonomy](../categories_and_features.md). Filters reflect requirements expressed in the query.
 
 ## Category
 
 - The category describes the product the user wants to buy. `t-shirt to wear with jeans` refers to `T-shirts`. `t-shirt dress` refers to `Dresses` when that category is supported.
-- When the query identifies no supported category, the result is `category: null` and extraction stops.
+- When the query identifies no supported category, the result is `category: null` and parsing stops.
 - A bare `t-shirt` gives `T-shirts` with empty filter and residual lists.
 - Use `Tank tops & Camisoles` for generic `top` queries such as `top`, `black top`, and `crop top` when the query does not identify a more specific supported garment.
 - Use `Polos` for a collared tee, such as `tee with a collar`.

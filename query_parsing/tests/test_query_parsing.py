@@ -1,4 +1,4 @@
-"""Offline unit tests for query extraction API, catalog, schemas, validators, dataset loader, and reporting."""
+"""Offline unit tests for query parsing API, catalog, schemas, validators, dataset loader, and reporting."""
 
 from __future__ import annotations
 
@@ -7,14 +7,15 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from query_extraction import (
+from query_parsing import (
     CONFIGS,
+    QueryParser,
     QueryExtractor,
     parse_query,
     resolve_config_list,
     resolve_config_name,
 )
-from query_extraction.benchmark import (
+from query_parsing.benchmark import (
     canonicalize_clause,
     canonicalize_filters,
     load_dataset_rows,
@@ -22,7 +23,7 @@ from query_extraction.benchmark import (
     required_stages_for_configs,
     summarize_latencies,
 )
-from query_extraction.clients import (
+from query_parsing.clients import (
     JevCallResult,
     LLMCallResult,
     build_full_system_prompt,
@@ -32,7 +33,7 @@ from query_extraction.clients import (
     filters_from_answers,
     normalize_query,
 )
-from query_extraction.core import (
+from query_parsing.core import (
     CATEGORIES_PROMPTS_DIR,
     CATEGORY_CRITERIA,
     CATEGORY_FEW_SHOTS,
@@ -107,7 +108,7 @@ class _FakeLLMClient:
         )
 
 
-class QueryExtractionOfflineTests(unittest.TestCase):
+class QueryParsingOfflineTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.catalog = load_query_catalog()
@@ -242,21 +243,21 @@ class QueryExtractionOfflineTests(unittest.TestCase):
 
     def test_parse_query_full_split_and_outside_category(self) -> None:
         fake_llm = _FakeLLMClient()
-        extractor = QueryExtractor(
+        parser_inst = QueryParser(
             catalog=self.catalog,
             jev_client=_FakeJevClient("T-shirts"),
             gemini_client=fake_llm,
             cerebras_clients={"qwen-3.8-27b": fake_llm, "gpt-oss-120b": fake_llm},
         )
 
-        res_full = parse_query("black nike tee for gym", config="full_qwen", include_meta=True, extractor=extractor)
+        res_full = parse_query("black nike tee for gym", config="full_qwen", include_meta=True, parser=parser_inst)
         self.assertEqual(res_full["category"], "T-shirts")
         self.assertEqual(len(res_full["filters"]), 2)
         self.assertEqual(res_full["residual"], ["for gym"])
         self.assertEqual(res_full["_meta"]["config"], "full_qwen")
         self.assertAlmostEqual(res_full["_meta"]["total_latency_seconds"], 0.66, places=2)
 
-        res_split = parse_query("black nike tee for gym", config="split_qwen", include_meta=True, extractor=extractor)
+        res_split = parse_query("black nike tee for gym", config="split_qwen", include_meta=True, extractor=parser_inst)
         self.assertEqual(res_split["category"], "T-shirts")
         self.assertEqual(
             res_split["filters"],
@@ -268,11 +269,11 @@ class QueryExtractionOfflineTests(unittest.TestCase):
         self.assertEqual(res_split["_meta"]["config"], "split_qwen")
         self.assertAlmostEqual(res_split["_meta"]["total_latency_seconds"], 0.90, places=2)
 
-        outside_extractor = QueryExtractor(
+        outside_parser = QueryParser(
             catalog=self.catalog,
             jev_client=_FakeJevClient("outside"),
         )
-        res_out = parse_query("iphone 16 charger", config="full_qwen", extractor=outside_extractor)
+        res_out = parse_query("iphone 16 charger", config="full_qwen", parser=outside_parser)
         self.assertEqual(res_out, {"category": None, "filters": [], "residual": []})
 
     def test_dataset_loader(self) -> None:

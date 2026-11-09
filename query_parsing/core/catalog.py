@@ -1,4 +1,4 @@
-"""Category catalog, feature definitions, structured output schemas, and validation for query extraction."""
+"""Category catalog, feature definitions, structured output schemas, and validation for query parsing."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ EXTRA_FEATURE_DEFINITIONS: Dict[str, Dict[str, Any]] = dict(
 
 
 def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
-    """Build the query-extraction catalog for all 22 categories from YAML prompt definitions."""
+    """Build the query-parsing catalog for all 22 categories from YAML prompt definitions."""
     schemas, _ = load_schemas()
     common_prompts = json.loads((LLM_PROMPTS_DIR / "common.json").read_text(encoding="utf-8"))
     cat_prompts: Dict[str, Dict[str, Any]] = {}

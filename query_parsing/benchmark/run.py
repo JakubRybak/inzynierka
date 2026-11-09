@@ -1,4 +1,4 @@
-"""Configurable benchmark runner for query extraction pipelines (full_* and split_*)."""
+"""Configurable benchmark runner for query parsing pipelines (full_* and split_*)."""
 
 from __future__ import annotations
 
@@ -344,7 +344,7 @@ def main() -> None:
         "--dataset",
         type=Path,
         default=QUERIES,
-        help="Path to test dataset directory or .csv/.jsonl/.json file (default: query_extraction/benchmark/queries)",
+        help="Path to test dataset directory or .csv/.jsonl/.json file (default: query_parsing/benchmark/queries)",
     )
     parser.add_argument(
         "--size",

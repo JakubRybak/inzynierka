@@ -1,4 +1,4 @@
-"""YAML prompt and few-shot loader for query_extraction."""
+"""YAML prompt and few-shot loader for query_parsing."""
 
 from __future__ import annotations
 
