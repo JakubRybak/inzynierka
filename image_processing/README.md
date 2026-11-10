@@ -17,18 +17,18 @@ W bezpośrednim porównaniu na próbce 15 ubrań z 15 różnych kategorii katalo
 
 ---
 
-## 📁 Czysta struktura katalogu `image_processing/`
+## 📁 Czysta struktura katalogu `image_processing/` (wszystko potrzebne od zera)
 
 ```
 image_processing/
-├── README.md                          # Niniejszy opis
+├── README.md                          # Dokumentacja i instrukcja uruchomienia
 ├── .gitignore                         # Ignorowanie wag *.pth (>100MB)
-├── benchmark.py                       # Skrypt silnika upscalingu (PyTorch MPS + Spandrel)
-├── generate_all_methods_master.py     # Skrypt generujący kompletny interaktywny raport HTML
-├── models/                            # Wagi pobranych modeli (.pth: DAT-2, UltraSharp, Real-ESRGAN)
+├── benchmark.py                       # Silnik upscalingu: automatyczne pobieranie wag, inferencja PyTorch MPS i generowanie raportu
+├── generate_all_methods_master.py     # Generator raportu HTML (tylko biblioteka standardowa Pythona)
+├── models/                            # Wagi modeli (.pth: DAT-2, UltraSharp, Real-ESRGAN)
 ├── sample_images/                     # 15 oryginalnych zdjęć produktów (256x256 px)
 └── outputs/
-    ├── master_comparison_all_methods.html # Główny i jedyny kompletny raport porównawczy
+    ├── master_comparison_all_methods.html # Kompletny raport porównawczy
     ├── realwebphoto_dat2/             # Obrazy 1024px WebP wygenerowane modelem DAT-2
     ├── ultrasharp_x4/                 # Obrazy 1024px WebP wygenerowane modelem 4x-UltraSharp
     ├── realesrgan_x4plus/             # Obrazy 1024px WebP wygenerowane modelem Real-ESRGAN
@@ -39,11 +39,17 @@ image_processing/
 
 ## 🛠️ Uruchomienie
 
-1. **Ponowne wygenerowanie raportu HTML**:
+### 1. Przetworzenie wszystkiego od zera (inferencja AI + raport):
+Pobiera brakujące wagi modeli, przeprowadza upscaling na GPU MPS i tworzy raport:
+```bash
+.venv/bin/python image_processing/benchmark.py
+```
+
+### 2. Szybkie przebudowanie samego raportu HTML (błyskawiczne, bez GPU):
 ```bash
 python3 image_processing/generate_all_methods_master.py
 ```
 
-2. **Podgląd raportu**:
+### 3. Podgląd raportu:
 Otwórz w przeglądarce:
 👉 `image_processing/outputs/master_comparison_all_methods.html`
