@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Storefront: Zbiorcze porównanie jakości zdjęć</title>
+    <style>
+        :root {
+            --bg-body: #090d16;
+            --bg-card: #131b2e;
+            --border: #223049;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-orange: #fb923c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-bottom: 80px;
+        }
+
+        /* Sticky top navigation */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-title span {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            background: rgba(56, 189, 248, 0.12);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: #1e293b;
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+
+        .nav-btn.active {
+            background: var(--accent-blue);
+            color: #090d16;
+            border-color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        .mode-toggle {
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .mode-toggle:hover {
+            border-color: #94a3b8;
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Section Header */
+        .section-box {
+            margin-bottom: 60px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #131b2e 0%, #1e293b 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-header.orig-header {
+            border-left: 5px solid var(--accent-orange);
+        }
+        .section-header.ultra-header {
+            border-left: 5px solid var(--accent-blue);
+        }
+        .section-header.dat2-header {
+            border-left: 5px solid var(--accent-green);
+        }
+
+        .section-title-wrap h2 {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title-wrap p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .section-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+        }
+        .stat-badge {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .stat-badge b {
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        /* Product Grid */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+        }
+
+        @media (max-width: 1200px) {
+            .store-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .store-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .store-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .product-media {
+            position: relative;
+            background: #090d16;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .product-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .orig-section .product-media img {
+            image-rendering: pixelated;
+        }
+
+        .product-card:hover .product-media img {
+            transform: scale(1.05);
+        }
+
+        .media-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(9, 13, 22, 0.75);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .product-info {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-grow: 1;
+        }
+
+        .product-brand {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-blue);
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .product-category {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .product-price {
+            margin-top: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* In-place tab switcher styles */
+        .tab-content {
+            display: block;
+        }
+        body.tab-mode .section-box {
+            display: none;
+            margin-bottom: 0;
+        }
+        body.tab-mode .section-box.active-tab {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="brand-title">
+            FASHION STORE <span>SUPER-RESOLUTION DEMO</span>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#sec-orig" class="nav-btn" id="btn-orig" onclick="selectTab('sec-orig')">
+                <b>1.</b> Oryginały (256px)
+            </a>
+            <a href="#sec-ultra" class="nav-btn" id="btn-ultra" onclick="selectTab('sec-ultra')">
+                <b>2.</b> 4x-UltraSharp (1024px)
+            </a>
+            <a href="#sec-dat2" class="nav-btn" id="btn-dat2" onclick="selectTab('sec-dat2')">
+                <b>3.</b> 4xRealWebPhoto DAT-2 (1024px)
+            </a>
+        </div>
+
+        <div>
+            <button class="mode-toggle" id="toggle-mode-btn" onclick="toggleViewMode()">
+                🔄 Przełącz tryb: Zakładki w miejscu
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <!-- ==================== SEKCJA 1: ORYGINAŁY ==================== -->
+        <section class="section-box orig-section active-tab" id="sec-orig">
+            <div class="section-header orig-header">
+                <div class="section-title-wrap">
+                    <h2>1. Zdjęcia oryginalne (Stan obecny w repozytorium)</h2>
+                    <p>Rozdzielczość 256&times;256 px rozciągnięta w kartach produktów. Zwróć uwagę na efekt rozmycia, brak ostrości materiałów i niewyraźne napisy/detale.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość:</span>
+                        <b>256 &times; 256 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar pliku:</span>
+                        <b>~45 KB (PNG)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Jakość wizualna:</span>
+                        <b style="color: var(--accent-orange)">Niska (rozmyta)</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                
+        <div class="product-card" data-pid="86605">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/01_jacket_86605.png" alt="Leather Biker Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Diesel</div>
+                <div class="product-title">Leather Biker Jacket</div>
+                <div class="product-category">Jackets</div>
+                <div class="product-price">$335</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86933">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/02_knit_sweater_86933.png" alt="Wool Knit Sweater" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Thom Browne</div>
+                <div class="product-title">Wool Knit Sweater</div>
+                <div class="product-category">Knit Sweaters</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87389">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/03_tshirt_87389.png" alt="Graphic Print T-Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Givenchy</div>
+                <div class="product-title">Graphic Print T-Shirt</div>
+                <div class="product-category">T-shirts</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86877">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/04_dress_86877.png" alt="Silk Sleeveless Dress" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Rag & Bone</div>
+                <div class="product-title">Silk Sleeveless Dress</div>
+                <div class="product-category">Dresses</div>
+                <div class="product-price">$595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86779">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/05_shirt_86779.png" alt="Tailored Check Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Check Shirt</div>
+                <div class="product-category">Shirts</div>
+                <div class="product-price">$645</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86773">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/06_jeans_86773.png" alt="Distressed Denim Jeans" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Distressed Denim Jeans</div>
+                <div class="product-category">Jeans</div>
+                <div class="product-price">$630</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="99750">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/07_coat_99750.png" alt="Classic Wool Coat" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Comme des Garçons</div>
+                <div class="product-title">Classic Wool Coat</div>
+                <div class="product-category">Classic Coats</div>
+                <div class="product-price">$2,615</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="88112">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/08_hoodie_88112.png" alt="Oversized Cotton Hoodie" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MM6 Maison Margiela</div>
+                <div class="product-title">Oversized Cotton Hoodie</div>
+                <div class="product-category">Hoodies & Zipups</div>
+                <div class="product-price">$385</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="91440">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/09_sweatshirt_91440.png" alt="Crewneck Fleece Sweatshirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MSGM</div>
+                <div class="product-title">Crewneck Fleece Sweatshirt</div>
+                <div class="product-category">Sweatshirts</div>
+                <div class="product-price">$245</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87053">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/10_bomber_87053.png" alt="Satin Bomber Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Lanvin</div>
+                <div class="product-title">Satin Bomber Jacket</div>
+                <div class="product-category">Bombers</div>
+                <div class="product-price">$1,595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86810">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/11_trousers_86810.png" alt="Tailored Slim Trousers" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Slim Trousers</div>
+                <div class="product-category">Trousers</div>
+                <div class="product-price">$495</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="89767">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/12_skirt_89767.png" alt="Pleated A-Line Skirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Carven</div>
+                <div class="product-title">Pleated A-Line Skirt</div>
+                <div class="product-category">Skirts</div>
+                <div class="product-price">$530</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="90103">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/13_cardigan_90103.png" alt="Draped Open Cardigan" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">D.Gnak by Kang.D</div>
+                <div class="product-title">Draped Open Cardigan</div>
+                <div class="product-category">Cardigans</div>
+                <div class="product-price">$455</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87937">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/14_blouse_87937.png" alt="Silk V-Neck Blouse" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">T by Alexander Wang</div>
+                <div class="product-title">Silk V-Neck Blouse</div>
+                <div class="product-category">Blouses</div>
+                <div class="product-price">$225</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87953">
+            <div class="product-media">
+                <span class="media-badge">256 &times; 256 px</span>
+                <img src="../sample_images/15_polo_87953.png" alt="Pique Cotton Polo Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Band of Outsiders</div>
+                <div class="product-title">Pique Cotton Polo Shirt</div>
+                <div class="product-category">Polos</div>
+                <div class="product-price">$145</div>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 2: 4x-ULTRASHARP ==================== -->
+        <section class="section-box ultra-section" id="sec-ultra">
+            <div class="section-header ultra-header">
+                <div class="section-title-wrap">
+                    <h2>2. Metoda 1: 4x-UltraSharp (ESRGAN)</h2>
+                    <p>Skalowanie 4x modelem ESRGAN dostrojonym pod kątem mikro-tekstur. Wyraźne, twarde krawędzie, guziki i zamki. Najszybsza z metod neuronowych.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość wyjściowa:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie (M1 Pro):</span>
+                        <b>681 ms</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: var(--accent-blue)">1h 53m (Szybki)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>46.8 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                
+        <div class="product-card" data-pid="86605">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/01_jacket_86605.webp" alt="Leather Biker Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Diesel</div>
+                <div class="product-title">Leather Biker Jacket</div>
+                <div class="product-category">Jackets</div>
+                <div class="product-price">$335</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86933">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/02_knit_sweater_86933.webp" alt="Wool Knit Sweater" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Thom Browne</div>
+                <div class="product-title">Wool Knit Sweater</div>
+                <div class="product-category">Knit Sweaters</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87389">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/03_tshirt_87389.webp" alt="Graphic Print T-Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Givenchy</div>
+                <div class="product-title">Graphic Print T-Shirt</div>
+                <div class="product-category">T-shirts</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86877">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/04_dress_86877.webp" alt="Silk Sleeveless Dress" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Rag & Bone</div>
+                <div class="product-title">Silk Sleeveless Dress</div>
+                <div class="product-category">Dresses</div>
+                <div class="product-price">$595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86779">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/05_shirt_86779.webp" alt="Tailored Check Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Check Shirt</div>
+                <div class="product-category">Shirts</div>
+                <div class="product-price">$645</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86773">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/06_jeans_86773.webp" alt="Distressed Denim Jeans" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Distressed Denim Jeans</div>
+                <div class="product-category">Jeans</div>
+                <div class="product-price">$630</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="99750">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/07_coat_99750.webp" alt="Classic Wool Coat" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Comme des Garçons</div>
+                <div class="product-title">Classic Wool Coat</div>
+                <div class="product-category">Classic Coats</div>
+                <div class="product-price">$2,615</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="88112">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/08_hoodie_88112.webp" alt="Oversized Cotton Hoodie" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MM6 Maison Margiela</div>
+                <div class="product-title">Oversized Cotton Hoodie</div>
+                <div class="product-category">Hoodies & Zipups</div>
+                <div class="product-price">$385</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="91440">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/09_sweatshirt_91440.webp" alt="Crewneck Fleece Sweatshirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MSGM</div>
+                <div class="product-title">Crewneck Fleece Sweatshirt</div>
+                <div class="product-category">Sweatshirts</div>
+                <div class="product-price">$245</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87053">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/10_bomber_87053.webp" alt="Satin Bomber Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Lanvin</div>
+                <div class="product-title">Satin Bomber Jacket</div>
+                <div class="product-category">Bombers</div>
+                <div class="product-price">$1,595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86810">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/11_trousers_86810.webp" alt="Tailored Slim Trousers" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Slim Trousers</div>
+                <div class="product-category">Trousers</div>
+                <div class="product-price">$495</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="89767">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/12_skirt_89767.webp" alt="Pleated A-Line Skirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Carven</div>
+                <div class="product-title">Pleated A-Line Skirt</div>
+                <div class="product-category">Skirts</div>
+                <div class="product-price">$530</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="90103">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/13_cardigan_90103.webp" alt="Draped Open Cardigan" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">D.Gnak by Kang.D</div>
+                <div class="product-title">Draped Open Cardigan</div>
+                <div class="product-category">Cardigans</div>
+                <div class="product-price">$455</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87937">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/14_blouse_87937.webp" alt="Silk V-Neck Blouse" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">T by Alexander Wang</div>
+                <div class="product-title">Silk V-Neck Blouse</div>
+                <div class="product-category">Blouses</div>
+                <div class="product-price">$225</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87953">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="ultrasharp_x4/15_polo_87953.webp" alt="Pique Cotton Polo Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Band of Outsiders</div>
+                <div class="product-title">Pique Cotton Polo Shirt</div>
+                <div class="product-category">Polos</div>
+                <div class="product-price">$145</div>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 3: 4xREALWEBPHOTO (DAT-2) ==================== -->
+        <section class="section-box dat2-section" id="sec-dat2">
+            <div class="section-header dat2-header">
+                <div class="section-title-wrap">
+                    <h2>3. Metoda 2: 4xRealWebPhoto (DAT-2 Transformer) 🏆</h2>
+                    <p>Skalowanie 4x architekturą Dual Aggregation Transformer (2024/2025). Naturalne sploty wełny i tkanin, płynne przejścia tonalne, naturalna skóra, zero plastiku.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość wyjściowa:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie (M1 Pro):</span>
+                        <b>3 157 ms (3.1s)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: var(--accent-green)">8h 46m (Najwyższa jakość)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>41.7 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                
+        <div class="product-card" data-pid="86605">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/01_jacket_86605.webp" alt="Leather Biker Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Diesel</div>
+                <div class="product-title">Leather Biker Jacket</div>
+                <div class="product-category">Jackets</div>
+                <div class="product-price">$335</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86933">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/02_knit_sweater_86933.webp" alt="Wool Knit Sweater" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Thom Browne</div>
+                <div class="product-title">Wool Knit Sweater</div>
+                <div class="product-category">Knit Sweaters</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87389">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/03_tshirt_87389.webp" alt="Graphic Print T-Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Givenchy</div>
+                <div class="product-title">Graphic Print T-Shirt</div>
+                <div class="product-category">T-shirts</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86877">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/04_dress_86877.webp" alt="Silk Sleeveless Dress" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Rag & Bone</div>
+                <div class="product-title">Silk Sleeveless Dress</div>
+                <div class="product-category">Dresses</div>
+                <div class="product-price">$595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86779">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/05_shirt_86779.webp" alt="Tailored Check Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Check Shirt</div>
+                <div class="product-category">Shirts</div>
+                <div class="product-price">$645</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86773">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/06_jeans_86773.webp" alt="Distressed Denim Jeans" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Distressed Denim Jeans</div>
+                <div class="product-category">Jeans</div>
+                <div class="product-price">$630</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="99750">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/07_coat_99750.webp" alt="Classic Wool Coat" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Comme des Garçons</div>
+                <div class="product-title">Classic Wool Coat</div>
+                <div class="product-category">Classic Coats</div>
+                <div class="product-price">$2,615</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="88112">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/08_hoodie_88112.webp" alt="Oversized Cotton Hoodie" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MM6 Maison Margiela</div>
+                <div class="product-title">Oversized Cotton Hoodie</div>
+                <div class="product-category">Hoodies & Zipups</div>
+                <div class="product-price">$385</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="91440">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/09_sweatshirt_91440.webp" alt="Crewneck Fleece Sweatshirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MSGM</div>
+                <div class="product-title">Crewneck Fleece Sweatshirt</div>
+                <div class="product-category">Sweatshirts</div>
+                <div class="product-price">$245</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87053">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/10_bomber_87053.webp" alt="Satin Bomber Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Lanvin</div>
+                <div class="product-title">Satin Bomber Jacket</div>
+                <div class="product-category">Bombers</div>
+                <div class="product-price">$1,595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86810">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/11_trousers_86810.webp" alt="Tailored Slim Trousers" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Slim Trousers</div>
+                <div class="product-category">Trousers</div>
+                <div class="product-price">$495</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="89767">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/12_skirt_89767.webp" alt="Pleated A-Line Skirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Carven</div>
+                <div class="product-title">Pleated A-Line Skirt</div>
+                <div class="product-category">Skirts</div>
+                <div class="product-price">$530</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="90103">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/13_cardigan_90103.webp" alt="Draped Open Cardigan" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">D.Gnak by Kang.D</div>
+                <div class="product-title">Draped Open Cardigan</div>
+                <div class="product-category">Cardigans</div>
+                <div class="product-price">$455</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87937">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/14_blouse_87937.webp" alt="Silk V-Neck Blouse" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">T by Alexander Wang</div>
+                <div class="product-title">Silk V-Neck Blouse</div>
+                <div class="product-category">Blouses</div>
+                <div class="product-price">$225</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87953">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realwebphoto_dat2/15_polo_87953.webp" alt="Pique Cotton Polo Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Band of Outsiders</div>
+                <div class="product-title">Pique Cotton Polo Shirt</div>
+                <div class="product-category">Polos</div>
+                <div class="product-price">$145</div>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        let isTabMode = false;
+
+        function toggleViewMode() {
+            isTabMode = !isTabMode;
+            document.body.classList.toggle('tab-mode', isTabMode);
+            const btn = document.getElementById('toggle-mode-btn');
+            if (isTabMode) {
+                btn.innerHTML = '📜 Przełącz tryb: Sekcje jedna pod drugą';
+                selectTab('sec-dat2');
+            } else {
+                btn.innerHTML = '🔄 Przełącz tryb: Zakładki w miejscu';
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            }
+        }
+
+        function selectTab(secId) {
+            if (!isTabMode) {
+                return; // Normal anchor scrolling
+            }
+            document.querySelectorAll('.section-box').forEach(s => s.classList.remove('active-tab'));
+            document.getElementById(secId).classList.add('active-tab');
+
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if (secId === 'sec-orig') document.getElementById('btn-orig').classList.add('active');
+            if (secId === 'sec-ultra') document.getElementById('btn-ultra').classList.add('active');
+            if (secId === 'sec-dat2') document.getElementById('btn-dat2').classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+    </script>
+</body>
+</html>
