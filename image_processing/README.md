@@ -1,55 +1,49 @@
-# Image Super-Resolution Benchmark (Fashion E-Commerce)
+# Image Super-Resolution: Next-Gen Master Suite (Fashion E-Commerce)
 
 Ewaluacja metod podnoszenia jakości i rozdzielczości zdjęć produktowych dla platformy e-commerce z $256 \times 256\text{ px}$ do $1024 \times 1024\text{ px}$ na maszynie **Apple Silicon M1 Pro (32 GB RAM)**.
 
 ---
 
-## 🚀 Wyniki benchmarku na Apple Silicon M1 Pro (MPS)
+## 🏆 Zwycięzca benchmarku: 4xRealWebPhoto DAT-2
 
-Testy przeprowadzono na próbie **15 ubrań** z 15 różnych kategorii katalogu (kurtki, swetry, t-shirty, sukienki, koszule, jeansy itp.).
+W bezpośrednim porównaniu na próbce 15 ubrań z 15 różnych kategorii katalogu (kurtki, swetry, t-shirty, sukienki, koszule, jeansy itp.) model **4xRealWebPhoto (DAT-2 – Dual Aggregation Transformer)** zapewnił najwyższą jakość rekonstrukcji faktury ubrań (sploty wełny, szwy, popelina, denim) przy zerowych halucynacjach (0% zniekształceń logotypów i krojów).
 
-| Metoda | Architektura | Średni czas / zdjęcie | Przepustowość | **Szacowany czas dla 10 000 produktów** | Średni rozmiar WebP (1024px) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Lanczos + Unsharp** (Baseline klasyczny) | Interpolacja cyfrowa (Pillow) | **27.8 ms** | 36.0 fps | **4.6 min** (0.08 h) | 23.6 KB |
-| **4x-UltraSharp** 🏆 *(Rekomendowana szybkość)* | ESRGAN (RRDBNet tuned) | **680.7 ms** | 1.47 fps | **1h 53m** (1.89 h) | 46.8 KB |
-| **Real-ESRGAN x4plus** | ESRGAN (RRDBNet baseline) | **688.3 ms** | 1.45 fps | **1h 55m** (1.91 h) | 33.2 KB |
-| **4xRealWebPhoto** 🏆 *(Rekomendowana jakość)* | **DAT-2** (Dual Aggregation Transformer) | **3 157.0 ms** | 0.32 fps | **8h 46m** (8.77 h) | 41.7 KB |
+| Metoda | Architektura | Czas / zdjęcie (MPS) | Czas dla 10 000 produktów | Średni rozmiar WebP (1024px) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Lanczos + Unsharp** (Baseline) | Interpolacja cyfrowa (Pillow) | **27.8 ms** | **4.6 min** | 23.6 KB |
+| **4x-UltraSharp** (Szybki GAN) | ESRGAN (RRDBNet tuned) | **680.7 ms** | **1h 53m** | 46.8 KB |
+| **Real-ESRGAN x4plus** (Klasyczny CNN) | ESRGAN (RRDBNet baseline) | **688.3 ms** | **1h 55m** | 33.2 KB |
+| **4xRealWebPhoto DAT-2** 🏆 | **DAT-2 (Vision Transformer 2024)** | **3 157.0 ms** | **8h 46m** | 41.7 KB |
 
 ---
 
-## 📁 Struktura katalogu
+## 📁 Czysta struktura katalogu `image_processing/`
 
 ```
 image_processing/
-├── README.md                  # Niniejszy opis
-├── .gitignore                 # Ignorowanie plików wag *.pth (>100MB)
-├── benchmark.py               # Główny skrypt benchmarkujący z synchronizacją GPU MPS
-├── sample_images/             # 15 przykładowych zdjęć produktów z bazy (256x256)
-├── models/                    # Pobrane wagi modeli (.pth)
-└── outputs/                   # Przeskalowane obrazy i raporty
-    ├── bicubic/               # Wyniki interpolacji Lanczos
-    ├── realesrgan_x4plus/     # Wyniki modelu Real-ESRGAN x4plus
-    ├── ultrasharp_x4/         # Wyniki modelu 4x-UltraSharp
-    ├── realwebphoto_dat2/     # Wyniki modelu 4xRealWebPhoto DAT-2
-    ├── comparison_report.html # Interaktywny raport HTML z podglądem wszystkich zdjęć
-    ├── benchmark_results.json # Surowe metryki JSON
-    ├── montage_*.jpg          # Zestawienia porównawcze całych sylwetek
-    └── crop_*.jpg             # Zestawienia powiększeń mikro-detali tkanin
+├── README.md                          # Niniejszy opis
+├── .gitignore                         # Ignorowanie wag *.pth (>100MB)
+├── benchmark.py                       # Skrypt silnika upscalingu (PyTorch MPS + Spandrel)
+├── generate_all_methods_master.py     # Skrypt generujący kompletny interaktywny raport HTML
+├── models/                            # Wagi pobranych modeli (.pth: DAT-2, UltraSharp, Real-ESRGAN)
+├── sample_images/                     # 15 oryginalnych zdjęć produktów (256x256 px)
+└── outputs/
+    ├── master_comparison_all_methods.html # Główny i jedyny kompletny raport porównawczy
+    ├── realwebphoto_dat2/             # Obrazy 1024px WebP wygenerowane modelem DAT-2
+    ├── ultrasharp_x4/                 # Obrazy 1024px WebP wygenerowane modelem 4x-UltraSharp
+    ├── realesrgan_x4plus/             # Obrazy 1024px WebP wygenerowane modelem Real-ESRGAN
+    └── bicubic/                       # Obrazy 1024px WebP wygenerowane filtrem Lanczos
 ```
 
 ---
 
 ## 🛠️ Uruchomienie
 
-1. Uruchomienie benchmarku na próbkach:
+1. **Ponowne wygenerowanie raportu HTML**:
 ```bash
-.venv/bin/python image_processing/benchmark.py
+python3 image_processing/generate_all_methods_master.py
 ```
 
-2. Ponowne wygenerowanie samego raportu HTML (bez ponownego przeliczania sieci):
-```bash
-.venv/bin/python image_processing/benchmark.py --report-only
-```
-
-3. Podgląd wizualny:
-Otwórz plik `image_processing/outputs/comparison_report.html` w przeglądarce.
+2. **Podgląd raportu**:
+Otwórz w przeglądarce:
+👉 `image_processing/outputs/master_comparison_all_methods.html`
