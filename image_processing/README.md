@@ -28,11 +28,11 @@ Wszystkie metody zostały **fizycznie przeliczone** na próbce 15 ubrań z 15 r�
 - **Optymalizacja M1 Pro:** Uruchamiany w trybie `upscale_4x_overlapped` z dynamicznym łagodzeniem szwów kafelkowania na GPU MPS.
 
 ### 2. DAT-2 + GFPGAN Face Restoration (Hybryda E-Commerce) 👔✨
-- **Architektura:** Połączenie Vision Transformera (DAT-2) z generatywnym modelem twarzy StyleGAN2 (`GFPGANv1.4.pth`) oraz detektorem RetinaFace (`facexlib`).
+- **Architektura:** Połączenie Vision Transformera (DAT-2) z generatywnym modelem twarzy StyleGAN2 (`GFPGANv1.4.pth`), detektorem RetinaFace (`facexlib`) oraz segmentatorem ParseNet/BiSeNet.
 - **Działanie:** 
   1. Krój i tkanina ubrania są powiększane przez DAT-2 (gwarancja 0% halucynacji guzików czy szwów).
   2. RetinaFace automatycznie wykrywa obecność modela w kadrze.
-  3. Wykryta twarz jest wyostrzana przez GFPGAN i miękko wtapiana z zachowaniem karnacji i mimiki.
+  3. Wykryta twarz jest wyostrzana przez GFPGAN i precyzyjnie maskowana z erozją krawędzi, eliminując białe poświaty.
   4. Jeśli zdjęcie przedstawia samo ubranie (spodnie, spódnice), pozostaje czysty, nieskazitelny DAT-2.
 
 ### 3. Stable Diffusion x4 Upscaler (Stability AI) 🌪️
@@ -42,47 +42,107 @@ Wszystkie metody zostały **fizycznie przeliczone** na próbce 15 ubrań z 15 r�
 
 ---
 
-## 📁 Czysta struktura katalogu `image_processing/`
+## 📁 Architektura i Struktura Modułów
+
+Projekt został podzielony na czyste, wyspecjalizowane moduły w pakiecie `superres`:
 
 ```
 image_processing/
-├── README.md                          # Dokumentacja i instrukcja uruchomienia
-├── .gitignore                         # Ignorowanie wag *.pth (>100MB)
-├── benchmark.py                       # Silnik AI: automatyczne pobieranie wag i upscaling
-├── run_sd_x4.py                       # Skrypt produkcyjny Stable Diffusion x4 (MPS + VAE tiling)
-├── run_dat2_gfpgan.py                 # Skrypt produkcyjny hybrydy DAT-2 + GFPGAN Face Restoration
-├── generate_all_methods_master.py     # Generator raportu HTML (działa natychmiastowo)
-├── models/                            # Wagi modeli (.pth: DAT-2, UltraSharp, Real-ESRGAN, GFPGAN)
-├── sample_images/                     # 15 oryginalnych zdjęć produktów (256x256 px)
+├── README.md                      # Pełna dokumentacja projektu
+├── .gitignore                     # Ignorowanie wag *.pth (>100MB)
+├── upscale.py                     # Prosty CLI do uruchamiania upscalingu
+├── generate_report.py             # Prosty CLI do budowania raportu HTML
+│
+├── superres/                      # Główny pakiet Python
+│   ├── paths.py                   # Centralna definicja ścieżek
+│   │
+│   ├── upscaling/                 # Silnik 4x Super-Resolution
+│   │   ├── device.py              # Wykrywanie i obsługa GPU (MPS/CUDA/CPU)
+│   │   ├── weights.py             # Automatyczne pobieranie wag modeli (.pth)
+│   │   ├── runner.py              # Wsadowe przetwarzanie i metryki latencji
+│   │   └── methods/               # Implementacje poszczególnych modeli
+│   │       ├── base.py            # Abstrakcyjna klasa bazowa Upscaler
+│   │       ├── lanczos.py         # Baseline klasyczny (Pillow)
+│   │       ├── spandrel_model.py  # Modele PyTorch / Spandrel (DAT-2, UltraSharp, ESRGAN)
+│   │       ├── dat2_gfpgan.py     # Hybryda: DAT-2 + RetinaFace + GFPGAN
+│   │       ├── aurasr.py          # Model GigaGAN (fal.ai AuraSR-v2)
+│   │       └── stable_diffusion.py # Model Latent Diffusion (Stability AI)
+│   │
+│   └── report/                    # Moduł raportu HTML
+│       ├── builder.py             # Renderowanie raportu z szablonu Jinja2
+│       ├── methods.py             # Metadane architektur i wyniki benchmarku
+│       ├── products.py            # Metadane produktów z katalogu FashionGen
+│       └── templates/             # Szablony i assety
+│           ├── report.html.j2     # Szablon raportu Jinja2 (semantyczny HTML)
+│           ├── styles.css         # Dedykowany, czysty arkusz CSS (wyłącznie Light Theme)
+│           └── app.js             # Skrypt obsługi widoków, filtrów i modala 1024px
+│
+├── data/
+│   └── sample_images/             # 15 oryginalnych zdjęć produktów (256x256 px PNG)
+│
+├── models/                        # Wagi modeli (.pth: DAT-2, UltraSharp, Real-ESRGAN, GFPGAN)
+│
 └── outputs/
-    ├── master_comparison_all_methods.html # Główny interaktywny raport porównawczy (8 realnych metod)
-    ├── realwebphoto_dat2/             # Obrazy 1024px WebP wygenerowane modelem DAT-2 🏆
-    ├── dat2_gfpgan/                   # Obrazy 1024px WebP wygenerowane hybrydą DAT-2 + GFPGAN 👔✨
-    ├── aurasr_v2/                     # Obrazy 1024px WebP wygenerowane modelem AuraSR-v2 ⚡
-    ├── sd_x4/                         # Obrazy 1024px WebP wygenerowane modelem Stable Diffusion x4 🌪️
-    ├── ultrasharp_x4/                 # Obrazy 1024px WebP wygenerowane modelem 4x-UltraSharp
-    ├── realesrgan_x4plus/             # Obrazy 1024px WebP wygenerowane modelem Real-ESRGAN
-    └── bicubic/                       # Obrazy 1024px WebP wygenerowane filtrem Lanczos
+    ├── report.html                # Interaktywny raport porównawczy (wyłącznie Light Theme)
+    └── images/                    # Obrazy 1024x1024 WebP per metoda
+        ├── lanczos/
+        ├── realesrgan/
+        ├── ultrasharp/
+        ├── dat2/
+        ├── dat2_gfpgan/
+        ├── aurasr/
+        └── sd_x4/
 ```
 
 ---
 
-## 🛠️ Uruchomienie
+## 🚀 Uruchomienie i Obsługa (CLI)
 
-### 1. Uruchomienie poszczególnych potoków:
+### 1. Regeneracja Raportu HTML
+Jeśli chcesz przebudować plik HTML z aktualnych obrazów na dysku:
 ```bash
-# Hybryda DAT-2 + GFPGAN (0.6s / zdjęcie):
-.venv/bin/python image_processing/run_dat2_gfpgan.py
+python generate_report.py
+```
+Raport zostanie zapisany w `outputs/report.html`.
 
-# Prawdziwa dyfuzja Stable Diffusion x4 (~24s / zdjęcie):
-.venv/bin/python image_processing/run_sd_x4.py
+### 2. Uruchomienie Upscalera dla Wybranej Metody
+Możesz uruchomić dowolną metodę pojedynczo lub w grupie:
+```bash
+# Wyświetl listę dostępnych metod
+python upscale.py --list
+
+# Uruchom tylko zwycięską hybrydę DAT-2 + GFPGAN
+python upscale.py dat2_gfpgan
+
+# Uruchom kilka wybranych metod i zaktualizuj raport
+python upscale.py dat2 aurasr sd_x4 --report
+
+# Przelicz wszystkie brakujące metody
+python upscale.py
+
+# Wymuś przeliczenie od nowa (nawet jeśli pliki już istnieją)
+python upscale.py --force
 ```
 
-### 2. Szybkie przebudowanie raportu HTML:
-```bash
-python3 image_processing/generate_all_methods_master.py
-```
+---
 
-### 3. Podgląd raportu:
-Otwórz w dowolnej przeglądarce:
-👉 `image_processing/outputs/master_comparison_all_methods.html`
+## 🎨 Cechy Interfejsu Raportu (`outputs/report.html`)
+
+1. **Stały, czysty Styl Jasny:**
+   - Wygląd profesjonalnego e-commerce (brak przełączników ciemnego motywu, pełna czytelność).
+2. **Dynamiczne odcienie tła studyjnego:**
+   - Tło każdego zdjęcia można płynnie przełączać pomiędzy:
+     - `Szare (#ededf0)` (chłodny odcień Zara/Mango)
+     - `Średnie (#e2e4e8)` (neutralna szarość SSENSE)
+     - `Ciepłe (#edeae4)` (kremowy odcień marek luksusowych)
+     - `Białe 100% (#ffffff)` (oryginalna czysta biel)
+   - Realizowane przez `mix-blend-mode: multiply` w wyizolowanych kontenerach.
+3. **Elastyczne kadrowanie (Aspect Ratio):**
+   - 3:5 (~40% wycięte po bokach)
+   - 9:16 (pionowy format mobilny)
+   - 3:4 (klasyczny format katalogowy)
+   - 1:1 (pełny kadr kwadratowy)
+4. **Powiększenie HD (Lightbox 1024px):**
+   - Kliknięcie dowolnego zdjęcia otwiera pełnowymiarowy podgląd 1024×1024 px.
+   - Klawisze numeryczne `1`–`8` natychmiast przełączają metody w locie.
+   - Klawisz `Esc` zamyka podgląd.

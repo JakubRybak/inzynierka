@@ -1,0 +1,117 @@
+"""Hybrid e-commerce upscaler: DAT-2 for the garment + GFPGAN for the model's face.
+
+Pipeline:
+    1. DAT-2 upscales the whole photo 4x (faithful fabric, no hallucinated details).
+    2. RetinaFace finds faces; each one is aligned to a 512x512 crop.
+    3. GFPGAN v1.4 restores the crop (eyes, lips, skin).
+    4. BiSeNet face parsing builds a mask of skin + facial features only
+       (background, hair and clothes excluded), slightly eroded and feathered.
+    5. The restored face is warped back and alpha-blended into the DAT-2 image.
+Photos without a detectable face are returned exactly as DAT-2 produced them.
+"""
+
+import cv2
+import numpy as np
+import torch
+import torchvision.transforms.functional as TF
+from PIL import Image
+
+from ..weights import GFPGAN_V1_4, REALWEBPHOTO_DAT2
+from .base import Upscaler
+from .spandrel_model import SpandrelUpscaler
+
+FACE_CROP_SIZE = 512
+
+# BiSeNet classes kept in the blend mask (1) vs. excluded (0):
+# 0 bg, 1 skin, 2-3 brows, 4-5 eyes, 6 glasses, 7-9 ears, 10 nose, 11 mouth, 12-13 lips,
+# 14 neck, 15 necklace, 16 cloth, 17 hair, 18 hat
+FACE_MASK_CLASSES = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0]
+
+# Erode then blur the mask: tight enough to never bleed into hair/background (no halo),
+# soft enough to hide the seam.
+MASK_ERODE_KERNEL = np.ones((5, 5), np.uint8)
+MASK_BLUR_KERNEL = (19, 19)
+MASK_BLUR_SIGMA = 4
+
+
+class FaceRestorer:
+    """Detects faces in a BGR image and replaces them with GFPGAN-restored versions."""
+
+    def load(self, device: torch.device) -> None:
+        import spandrel
+        from facexlib.utils.face_restoration_helper import FaceRestoreHelper
+
+        self.device = device
+        model_path = GFPGAN_V1_4.ensure_downloaded()
+        self.gfpgan = spandrel.ModelLoader().load_from_file(str(model_path)).to(device).eval()
+        self.helper = FaceRestoreHelper(
+            upscale_factor=1,
+            face_size=FACE_CROP_SIZE,
+            crop_ratio=(1, 1),
+            det_model="retinaface_resnet50",
+            save_ext="png",
+            use_parse=True,
+            device=str(device),
+        )
+
+    def restore(self, image_bgr: np.ndarray) -> np.ndarray:
+        self.helper.clean_all()
+        self.helper.read_image(image_bgr)
+        self.helper.get_face_landmarks_5(only_center_face=False, eye_dist_threshold=5)
+        if not self.helper.all_landmarks_5:
+            return image_bgr
+
+        self.helper.align_warp_face()
+        self.helper.get_inverse_affine(None)
+
+        height, width = image_bgr.shape[:2]
+        result = image_bgr.astype(np.float32)
+        for face_crop, inverse_affine in zip(self.helper.cropped_faces, self.helper.inverse_affine_matrices):
+            restored_face = self._restore_face(face_crop)
+            mask = self._face_mask(restored_face)
+
+            face_in_image = cv2.warpAffine(restored_face, inverse_affine, (width, height))
+            mask_in_image = cv2.warpAffine(mask, inverse_affine, (width, height), flags=cv2.INTER_LINEAR)[:, :, None]
+            result = mask_in_image * face_in_image + (1.0 - mask_in_image) * result
+
+        return result.astype(np.uint8)
+
+    def _restore_face(self, face_bgr: np.ndarray) -> np.ndarray:
+        """Run GFPGAN on an aligned 512x512 face crop. Spandrel works in [0, 1] RGB."""
+        tensor = TF.to_tensor(cv2.cvtColor(face_bgr, cv2.COLOR_BGR2RGB)).unsqueeze(0).to(self.device)
+        with torch.inference_mode():
+            output = self.gfpgan(tensor).clamp(0, 1)
+        restored_rgb = (output[0].permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
+        return cv2.cvtColor(restored_rgb, cv2.COLOR_RGB2BGR)
+
+    def _face_mask(self, face_bgr: np.ndarray) -> np.ndarray:
+        """Soft float mask (0..1) covering skin and facial features of a 512x512 face crop."""
+        face_rgb = cv2.cvtColor(cv2.resize(face_bgr, (FACE_CROP_SIZE, FACE_CROP_SIZE)), cv2.COLOR_BGR2RGB)
+        tensor = TF.normalize(TF.to_tensor(face_rgb), (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)).to(self.device)
+        with torch.inference_mode():
+            parsing = self.helper.face_parse(tensor.unsqueeze(0))[0]
+        labels = parsing.argmax(dim=1).squeeze().cpu().numpy()
+
+        mask = np.isin(labels, np.flatnonzero(FACE_MASK_CLASSES)).astype(np.float32)
+        mask = cv2.erode(mask, MASK_ERODE_KERNEL)
+        return cv2.GaussianBlur(mask, MASK_BLUR_KERNEL, MASK_BLUR_SIGMA)
+
+
+class Dat2GfpganUpscaler(Upscaler):
+    id = "dat2_gfpgan"
+    name = "DAT-2 + GFPGAN face restoration"
+
+    def __init__(self):
+        self.garment_upscaler = SpandrelUpscaler("dat2", "4xRealWebPhoto DAT-2", REALWEBPHOTO_DAT2)
+        self.face_restorer = FaceRestorer()
+
+    def load(self, device: torch.device) -> None:
+        super().load(device)
+        self.garment_upscaler.load(device)
+        self.face_restorer.load(device)
+
+    def upscale(self, image: Image.Image) -> Image.Image:
+        upscaled = self.garment_upscaler.upscale(image)
+        image_bgr = cv2.cvtColor(np.asarray(upscaled), cv2.COLOR_RGB2BGR)
+        restored_bgr = self.face_restorer.restore(image_bgr)
+        return Image.fromarray(cv2.cvtColor(restored_bgr, cv2.COLOR_BGR2RGB))
