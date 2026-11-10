@@ -485,22 +485,12 @@ def build_all_methods_report():
                 """
                 click_action = f"onclick=\"openModal('{stem}', '{m_id}', '{meta['brand']} — {meta['title']}')\""
             else:
-                # Advanced model proxy showcase card
+                # Advanced model showcase card (using DAT-2 base without any darkening overlays)
                 proxy_src = f"realwebphoto_dat2/{stem}.webp"
                 media_content = f"""
-                    <img src="{proxy_src}" alt="{m['name']}" loading="lazy" style="filter: brightness(0.96) contrast(1.02);">
-                    <div class="ai-method-overlay">
-                        <span class="method-chip" style="background: {m['color']}; color: #000;">{m['tag']}</span>
-                        <div class="ai-spec-box">
-                            <b>Rekonstrukcja {meta['category']}:</b>
-                            <p>{meta['material']}</p>
-                            <div class="mini-stats">
-                                <span>Wierność: <b>{m['fidelity']}/10</b></span>
-                                <span>Realizm: <b>{m['realism']}/10</b></span>
-                                <span>Czas: <b>{m['time_per_img']}</b></span>
-                            </div>
-                        </div>
-                    </div>
+                    <img src="{proxy_src}" alt="{m['name']}" loading="lazy">
+                    <span class="media-badge" style="background: rgba(15, 23, 42, 0.9); border: 1px solid {m['color']}; color: {m['color']}; font-weight: 700;">{m['tag']}</span>
+                    <div class="zoom-hint">🔍 Podgląd HD (Baza DAT-2)</div>
                 """
                 click_action = f"onclick=\"openModal('{stem}', 'dat2', '{meta['brand']} — {meta['title']} ({m['name']})')\""
 
@@ -514,8 +504,14 @@ def build_all_methods_report():
                     {media_content}
                 </div>
                 <div class="thumb-footer-spec">
-                    <div class="tf-risk">Halucynacje: <b>{m['hallucination_risk']}</b></div>
-                    <div class="tf-rec">{m['tag']}</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span style="font-size: 10px; color: var(--text-muted);">Halucynacje: <b style="color: #ffffff;">{m['hallucination_risk']}</b></span>
+                        <span style="font-size: 10px; font-weight: 700; color: {m['color']};">{m['time_per_img']}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted);">
+                        <span>Wierność: <b style="color: #38bdf8;">{m['fidelity']}/10</b></span>
+                        <span>Realizm: <b style="color: #34d399;">{m['realism']}/10</b></span>
+                    </div>
                 </div>
             </div>
             """
@@ -1010,52 +1006,18 @@ def build_all_methods_report():
         }}
         .thumb:hover .zoom-hint, .sf-product-card:hover .zoom-hint {{ opacity: 1; }}
 
-        /* AI Specification overlay card for advanced models */
-        .ai-method-overlay {{
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 8px;
-            background: linear-gradient(180deg, rgba(9, 13, 22, 0.6) 0%, rgba(9, 13, 22, 0.2) 40%, rgba(9, 13, 22, 0.88) 100%);
-            z-index: 4;
-            pointer-events: none;
-        }}
-        .method-chip {{
-            font-size: 9px;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 3px;
-            align-self: flex-start;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }}
-        .ai-spec-box {{
-            background: rgba(15, 23, 42, 0.92);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-size: 10px;
-            line-height: 1.3;
-        }}
-        .ai-spec-box b {{ color: var(--accent-blue); display: block; margin-bottom: 2px; }}
-        .ai-spec-box p {{ color: #e2e8f0; font-size: 10px; margin-bottom: 4px; }}
-        .mini-stats {{ display: flex; gap: 6px; color: #94a3b8; font-size: 9px; flex-wrap: wrap; }}
-        .mini-stats b {{ display: inline; color: #ffffff; }}
-
         .thumb-footer-spec {{
-            padding: 6px 8px;
+            padding: 8px 10px;
             background: #0f172a;
             border-top: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 10px;
-            color: var(--text-muted);
+            flex-direction: column;
+            gap: 4px;
         }}
-        .tf-risk b {{ color: #ffffff; }}
-        .tf-rec {{ font-weight: 700; font-size: 9px; color: var(--accent-blue); }}
+        body.theme-light .thumb-footer-spec {{
+            background: #f8fafc;
+            border-top-color: #e2e8f0;
+        }}
 
         /* Storefront */
         .sf-section-box {{ margin-bottom: 50px; scroll-margin-top: 115px; }}
