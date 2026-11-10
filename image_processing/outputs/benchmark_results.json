@@ -1,0 +1,62 @@
+{
+  "device": "mps",
+  "num_sample_images": 15,
+  "methods": {
+    "bicubic": {
+      "name": "Lanczos + Unsharp (Classical Baseline)",
+      "architecture": "Bicubic/Lanczos Interpolation",
+      "type": "classical",
+      "total_time_seconds": 0.416,
+      "avg_ms_per_image": 27.8,
+      "p50_ms": 27.8,
+      "p90_ms": 28.1,
+      "throughput_fps": 36.0,
+      "extrapolated_10k_minutes": 4.6,
+      "extrapolated_10k_hours": 0.08,
+      "avg_png_size_kb": 264.4,
+      "avg_webp_size_kb": 23.6
+    },
+    "realesrgan_x4plus": {
+      "name": "Real-ESRGAN x4plus",
+      "architecture": "ESRGAN / RRDBNet",
+      "type": "neural",
+      "total_time_seconds": 10.324,
+      "avg_ms_per_image": 688.3,
+      "p50_ms": 687.8,
+      "p90_ms": 704.3,
+      "throughput_fps": 1.5,
+      "extrapolated_10k_minutes": 114.7,
+      "extrapolated_10k_hours": 1.91,
+      "avg_png_size_kb": 375.3,
+      "avg_webp_size_kb": 33.2
+    },
+    "ultrasharp_x4": {
+      "name": "4x-UltraSharp",
+      "architecture": "ESRGAN (Micro-texture tuned)",
+      "type": "neural",
+      "total_time_seconds": 10.21,
+      "avg_ms_per_image": 680.7,
+      "p50_ms": 676.6,
+      "p90_ms": 695.9,
+      "throughput_fps": 1.5,
+      "extrapolated_10k_minutes": 113.4,
+      "extrapolated_10k_hours": 1.89,
+      "avg_png_size_kb": 477.4,
+      "avg_webp_size_kb": 46.8
+    },
+    "realwebphoto_dat2": {
+      "name": "4xRealWebPhoto (DAT-2)",
+      "architecture": "DAT-2 (Dual Aggregation Transformer, 2024)",
+      "type": "neural",
+      "total_time_seconds": 47.356,
+      "avg_ms_per_image": 3157.0,
+      "p50_ms": 3146.1,
+      "p90_ms": 3199.6,
+      "throughput_fps": 0.3,
+      "extrapolated_10k_minutes": 526.2,
+      "extrapolated_10k_hours": 8.77,
+      "avg_png_size_kb": 536.1,
+      "avg_webp_size_kb": 41.7
+    }
+  }
+}
