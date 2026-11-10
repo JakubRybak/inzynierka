@@ -398,17 +398,17 @@ def build_all_methods_report():
     <title>E-commerce Super-Resolution: 8 Fizycznych Metod AI (Apple Silicon M1 Pro)</title>
     <style>
         :root {{
-            --bg-body: #090d16;
-            --bg-card: #131b2e;
-            --border: #223049;
-            --border-hover: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #34d399;
-            --accent-orange: #fb923c;
-            --accent-purple: #c084fc;
-            --accent-red: #f43f5e;
+            --bg-body: #ededf0;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --border-hover: #0284c7;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-blue: #0284c7;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
             --crop-ratio: 3 / 5;
             --photo-bg: #ededf0;
         }}
@@ -420,16 +420,10 @@ def build_all_methods_report():
         body.crop-1-1 {{ --crop-ratio: 1 / 1; }}
 
         /* Photo background tones */
-        body.pbg-grey-soft {{ --photo-bg: #ededf0; }}
-        body.pbg-grey-medium {{ --photo-bg: #e2e4e8; }}
-        body.pbg-grey-warm {{ --photo-bg: #edeae4; }}
-        body.pbg-white {{ --photo-bg: #ffffff; }}
-
-        /* Synchronize Light Theme page background with chosen tone */
-        body.theme-light.pbg-grey-soft {{ --bg-body: #ededf0; }}
-        body.theme-light.pbg-grey-medium {{ --bg-body: #e2e4e8; }}
-        body.theme-light.pbg-grey-warm {{ --bg-body: #edeae4; }}
-        body.theme-light.pbg-white {{ --bg-body: #f8fafc; }}
+        body.pbg-grey-soft {{ --photo-bg: #ededf0; --bg-body: #ededf0; }}
+        body.pbg-grey-medium {{ --photo-bg: #e2e4e8; --bg-body: #e2e4e8; }}
+        body.pbg-grey-warm {{ --photo-bg: #edeae4; --bg-body: #edeae4; }}
+        body.pbg-white {{ --photo-bg: #ffffff; --bg-body: #f8fafc; }}
 
         /* Light Theme */
         body.theme-light {{
@@ -1118,12 +1112,6 @@ def build_all_methods_report():
                 <button class="btn-toggle" id="btn-cols-3" onclick="setCols(3)">3</button>
                 <button class="btn-toggle" id="btn-cols-2" onclick="setCols(2)">2 (HD)</button>
             </div>
-
-            <div class="ctrl-section">
-                <span class="ctrl-label">🌓 Motyw:</span>
-                <button class="btn-toggle" id="btn-theme-dark" onclick="setTheme('dark')">🌙 Ciemny</button>
-                <button class="btn-toggle active" id="btn-theme-light" onclick="setTheme('light')">☀️ Jasny</button>
-            </div>
         </div>
     </div>
 
@@ -1324,18 +1312,6 @@ def build_all_methods_report():
             document.querySelectorAll('[id^="btn-cols-"]').forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById('btn-cols-' + n);
             if (activeBtn) activeBtn.classList.add('active');
-        }}
-
-        function setTheme(theme) {{
-            if (theme === 'light') {{
-                document.body.classList.add('theme-light');
-                document.getElementById('btn-theme-light').classList.add('active');
-                document.getElementById('btn-theme-dark').classList.remove('active');
-            }} else {{
-                document.body.classList.remove('theme-light');
-                document.getElementById('btn-theme-dark').classList.add('active');
-                document.getElementById('btn-theme-light').classList.remove('active');
-            }}
         }}
 
         function filterColGroup(group) {{
