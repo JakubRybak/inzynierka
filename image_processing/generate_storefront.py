@@ -1,9 +1,11 @@
-"""Generate an e-commerce storefront gallery comparison HTML.
+"""Generate an e-commerce storefront gallery comparison HTML for ALL evaluated methods.
 
-Displays all 15 sample products across 3 distinct sections:
+Displays all 15 sample products across 5 distinct sections:
 1. Section 1: Original 256x256 images (current repo state)
-2. Section 2: Method 1 - 4x-UltraSharp (1024x1024 WebP)
-3. Section 3: Method 2 - 4xRealWebPhoto DAT-2 (1024x1024 WebP)
+2. Section 2: Lanczos + Unsharp (Classical interpolation baseline)
+3. Section 3: Real-ESRGAN x4plus (Classic CNN ESRGAN/RRDBNet)
+4. Section 4: 4x-UltraSharp (Micro-texture tuned ESRGAN)
+5. Section 5: 4xRealWebPhoto DAT-2 (Vision Transformer SOTA 2024/2025)
 
 Includes a sticky header and a live in-place tab-switch mode to flip the whole store view instantly.
 """
@@ -53,19 +55,21 @@ def build_cards(images: list[Path], method_key: str) -> str:
         if method_key == "original":
             img_src = f"../sample_images/{img_path.name}"
             res_label = "256 &times; 256 px"
-            size_badge = "Oryginał"
+        elif method_key == "lanczos":
+            img_src = f"bicubic/{stem}.webp"
+            res_label = "1024 &times; 1024 px"
+        elif method_key == "realesrgan":
+            img_src = f"realesrgan_x4plus/{stem}.webp"
+            res_label = "1024 &times; 1024 px"
         elif method_key == "ultrasharp":
             img_src = f"ultrasharp_x4/{stem}.webp"
             res_label = "1024 &times; 1024 px"
-            size_badge = "4x-UltraSharp · WebP"
         elif method_key == "dat2":
             img_src = f"realwebphoto_dat2/{stem}.webp"
             res_label = "1024 &times; 1024 px"
-            size_badge = "4xRealWebPhoto DAT-2 · WebP"
         else:
             img_src = f"bicubic/{stem}.webp"
             res_label = "1024 &times; 1024 px"
-            size_badge = "Lanczos · WebP"
 
         card = f"""
         <div class="product-card" data-pid="{pid}">
@@ -91,6 +95,8 @@ def main():
         raise RuntimeError(f"No sample images found in {SAMPLE_DIR}")
 
     cards_orig = build_cards(images, "original")
+    cards_lanczos = build_cards(images, "lanczos")
+    cards_realesrgan = build_cards(images, "realesrgan")
     cards_ultra = build_cards(images, "ultrasharp")
     cards_dat2 = build_cards(images, "dat2")
 
@@ -99,7 +105,7 @@ def main():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Storefront: Zbiorcze porównanie jakości zdjęć</title>
+    <title>E-commerce Storefront: Zbiorcze porównanie WSZYSTKICH metod</title>
     <style>
         :root {{
             --bg-body: #090d16;
@@ -110,6 +116,8 @@ def main():
             --accent-blue: #38bdf8;
             --accent-green: #34d399;
             --accent-orange: #fb923c;
+            --accent-purple: #c084fc;
+            --accent-yellow: #facc15;
         }}
 
         * {{
@@ -130,7 +138,7 @@ def main():
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(9, 13, 22, 0.92);
+            background: rgba(9, 13, 22, 0.94);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 12px 24px;
@@ -150,9 +158,9 @@ def main():
             gap: 8px;
         }}
         .brand-title span {{
-            font-size: 12px;
+            font-size: 11px;
             color: var(--accent-blue);
-            font-weight: 500;
+            font-weight: 600;
             background: rgba(56, 189, 248, 0.12);
             padding: 3px 8px;
             border-radius: 4px;
@@ -161,7 +169,7 @@ def main():
 
         .nav-buttons {{
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }}
 
@@ -169,9 +177,9 @@ def main():
             background: var(--bg-card);
             color: var(--text-muted);
             border: 1px solid var(--border);
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
@@ -203,9 +211,11 @@ def main():
             font-size: 12px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.15s ease;
         }}
         .mode-toggle:hover {{
             border-color: #94a3b8;
+            background: #273549;
         }}
 
         .main-container {{
@@ -224,8 +234,8 @@ def main():
             background: linear-gradient(135deg, #131b2e 0%, #1e293b 100%);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -236,6 +246,12 @@ def main():
         .section-header.orig-header {{
             border-left: 5px solid var(--accent-orange);
         }}
+        .section-header.lanczos-header {{
+            border-left: 5px solid #64748b;
+        }}
+        .section-header.realesrgan-header {{
+            border-left: 5px solid var(--accent-purple);
+        }}
         .section-header.ultra-header {{
             border-left: 5px solid var(--accent-blue);
         }}
@@ -244,7 +260,7 @@ def main():
         }}
 
         .section-title-wrap h2 {{
-            font-size: 20px;
+            font-size: 19px;
             color: #ffffff;
             margin-bottom: 4px;
             display: flex;
@@ -258,11 +274,12 @@ def main():
 
         .section-stats {{
             display: flex;
-            gap: 16px;
+            gap: 12px;
             font-size: 12px;
+            flex-wrap: wrap;
         }}
         .stat-badge {{
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.75);
             border: 1px solid #334155;
             padding: 6px 12px;
             border-radius: 6px;
@@ -304,7 +321,7 @@ def main():
 
         .product-card:hover {{
             transform: translateY(-3px);
-            border-color: #3b82f6;
+            border-color: #38bdf8;
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
         }}
 
@@ -336,9 +353,9 @@ def main():
             position: absolute;
             bottom: 8px;
             right: 8px;
-            background: rgba(9, 13, 22, 0.75);
+            background: rgba(9, 13, 22, 0.8);
             backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #cbd5e1;
             font-size: 10px;
             padding: 3px 6px;
@@ -382,9 +399,6 @@ def main():
         }}
 
         /* In-place tab switcher styles */
-        .tab-content {{
-            display: block;
-        }}
         body.tab-mode .section-box {{
             display: none;
             margin-bottom: 0;
@@ -404,11 +418,17 @@ def main():
             <a href="#sec-orig" class="nav-btn" id="btn-orig" onclick="selectTab('sec-orig')">
                 <b>1.</b> Oryginały (256px)
             </a>
+            <a href="#sec-lanczos" class="nav-btn" id="btn-lanczos" onclick="selectTab('sec-lanczos')">
+                <b>2.</b> Lanczos (1024px)
+            </a>
+            <a href="#sec-realesrgan" class="nav-btn" id="btn-realesrgan" onclick="selectTab('sec-realesrgan')">
+                <b>3.</b> Real-ESRGAN (1024px)
+            </a>
             <a href="#sec-ultra" class="nav-btn" id="btn-ultra" onclick="selectTab('sec-ultra')">
-                <b>2.</b> 4x-UltraSharp (1024px)
+                <b>4.</b> 4x-UltraSharp (1024px)
             </a>
             <a href="#sec-dat2" class="nav-btn" id="btn-dat2" onclick="selectTab('sec-dat2')">
-                <b>3.</b> 4xRealWebPhoto DAT-2 (1024px)
+                <b>5.</b> DAT-2 (1024px) 🏆
             </a>
         </div>
 
@@ -449,12 +469,76 @@ def main():
             </div>
         </section>
 
-        <!-- ==================== SEKCJA 2: 4x-ULTRASHARP ==================== -->
+        <!-- ==================== SEKCJA 2: LANCZOS (KLASYCZNY BASELINE) ==================== -->
+        <section class="section-box lanczos-section" id="sec-lanczos">
+            <div class="section-header lanczos-header">
+                <div class="section-title-wrap">
+                    <h2>2. Lanczos + Unsharp (Interpolacja cyfrowa bez AI)</h2>
+                    <p>Tradycyjne powiększenie w bibliotece graficznej z filtrem wyostrzającym. Szybkie, ale powoduje efekt „mydła” i uwypukla pikselozę bez rekonstrukcji prawdziwych detali.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie:</span>
+                        <b>28 ms (36 fps)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: #94a3b8">4.6 min</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>23.6 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                {cards_lanczos}
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 3: REAL-ESRGAN X4PLUS ==================== -->
+        <section class="section-box realesrgan-section" id="sec-realesrgan">
+            <div class="section-header realesrgan-header">
+                <div class="section-title-wrap">
+                    <h2>3. Real-ESRGAN x4plus (Klasyczny model splotowy CNN)</h2>
+                    <p>Bazowy model ESRGAN (RRDBNet). Sprawdzony, stabilny model produkcyjny – zauważalnie wyostrza krawędzie, choć czasami wygładza fakturę materiałów.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość wyjściowa:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie (M1 Pro):</span>
+                        <b>688 ms</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: var(--accent-purple)">1h 55m</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>33.2 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                {cards_realesrgan}
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 4: 4x-ULTRASHARP ==================== -->
         <section class="section-box ultra-section" id="sec-ultra">
             <div class="section-header ultra-header">
                 <div class="section-title-wrap">
-                    <h2>2. Metoda 1: 4x-UltraSharp (ESRGAN)</h2>
-                    <p>Skalowanie 4x modelem ESRGAN dostrojonym pod kątem mikro-tekstur. Wyraźne, twarde krawędzie, guziki i zamki. Najszybsza z metod neuronowych.</p>
+                    <h2>4. 4x-UltraSharp (ESRGAN Micro-texture tuned)</h2>
+                    <p>Skalowanie 4x modelem ESRGAN dostrojonym pod kątem mikro-tekstur. Wyraźne, twarde krawędzie, guziki i zamki. Najszybsza z zaawansowanych metod neuronowych.</p>
                 </div>
                 <div class="section-stats">
                     <div class="stat-badge">
@@ -481,11 +565,11 @@ def main():
             </div>
         </section>
 
-        <!-- ==================== SEKCJA 3: 4xREALWEBPHOTO (DAT-2) ==================== -->
+        <!-- ==================== SEKCJA 5: 4xREALWEBPHOTO (DAT-2) ==================== -->
         <section class="section-box dat2-section" id="sec-dat2">
             <div class="section-header dat2-header">
                 <div class="section-title-wrap">
-                    <h2>3. Metoda 2: 4xRealWebPhoto (DAT-2 Transformer) 🏆</h2>
+                    <h2>5. 4xRealWebPhoto (DAT-2 Transformer) 🏆</h2>
                     <p>Skalowanie 4x architekturą Dual Aggregation Transformer (2024/2025). Naturalne sploty wełny i tkanin, płynne przejścia tonalne, naturalna skóra, zero plastiku.</p>
                 </div>
                 <div class="section-stats">
@@ -540,6 +624,8 @@ def main():
 
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if (secId === 'sec-orig') document.getElementById('btn-orig').classList.add('active');
+            if (secId === 'sec-lanczos') document.getElementById('btn-lanczos').classList.add('active');
+            if (secId === 'sec-realesrgan') document.getElementById('btn-realesrgan').classList.add('active');
             if (secId === 'sec-ultra') document.getElementById('btn-ultra').classList.add('active');
             if (secId === 'sec-dat2') document.getElementById('btn-dat2').classList.add('active');
 
@@ -553,7 +639,7 @@ def main():
     out_file = OUTPUTS_DIR / "storefront_comparison.html"
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(html_content)
-    print(f"✓ Generated storefront gallery comparison: {out_file}")
+    print(f"✓ Generated storefront gallery comparison with all 5 methods: {out_file}")
 
 
 if __name__ == "__main__":

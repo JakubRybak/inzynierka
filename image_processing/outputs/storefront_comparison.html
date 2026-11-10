@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Storefront: Zbiorcze porównanie jakości zdjęć</title>
+    <title>E-commerce Storefront: Zbiorcze porównanie WSZYSTKICH metod</title>
     <style>
         :root {
             --bg-body: #090d16;
@@ -14,6 +14,8 @@
             --accent-blue: #38bdf8;
             --accent-green: #34d399;
             --accent-orange: #fb923c;
+            --accent-purple: #c084fc;
+            --accent-yellow: #facc15;
         }
 
         * {
@@ -34,7 +36,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(9, 13, 22, 0.92);
+            background: rgba(9, 13, 22, 0.94);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 12px 24px;
@@ -54,9 +56,9 @@
             gap: 8px;
         }
         .brand-title span {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--accent-blue);
-            font-weight: 500;
+            font-weight: 600;
             background: rgba(56, 189, 248, 0.12);
             padding: 3px 8px;
             border-radius: 4px;
@@ -65,7 +67,7 @@
 
         .nav-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
@@ -73,9 +75,9 @@
             background: var(--bg-card);
             color: var(--text-muted);
             border: 1px solid var(--border);
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
@@ -107,9 +109,11 @@
             font-size: 12px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.15s ease;
         }
         .mode-toggle:hover {
             border-color: #94a3b8;
+            background: #273549;
         }
 
         .main-container {
@@ -128,8 +132,8 @@
             background: linear-gradient(135deg, #131b2e 0%, #1e293b 100%);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -140,6 +144,12 @@
         .section-header.orig-header {
             border-left: 5px solid var(--accent-orange);
         }
+        .section-header.lanczos-header {
+            border-left: 5px solid #64748b;
+        }
+        .section-header.realesrgan-header {
+            border-left: 5px solid var(--accent-purple);
+        }
         .section-header.ultra-header {
             border-left: 5px solid var(--accent-blue);
         }
@@ -148,7 +158,7 @@
         }
 
         .section-title-wrap h2 {
-            font-size: 20px;
+            font-size: 19px;
             color: #ffffff;
             margin-bottom: 4px;
             display: flex;
@@ -162,11 +172,12 @@
 
         .section-stats {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             font-size: 12px;
+            flex-wrap: wrap;
         }
         .stat-badge {
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.75);
             border: 1px solid #334155;
             padding: 6px 12px;
             border-radius: 6px;
@@ -208,7 +219,7 @@
 
         .product-card:hover {
             transform: translateY(-3px);
-            border-color: #3b82f6;
+            border-color: #38bdf8;
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
         }
 
@@ -240,9 +251,9 @@
             position: absolute;
             bottom: 8px;
             right: 8px;
-            background: rgba(9, 13, 22, 0.75);
+            background: rgba(9, 13, 22, 0.8);
             backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #cbd5e1;
             font-size: 10px;
             padding: 3px 6px;
@@ -286,9 +297,6 @@
         }
 
         /* In-place tab switcher styles */
-        .tab-content {
-            display: block;
-        }
         body.tab-mode .section-box {
             display: none;
             margin-bottom: 0;
@@ -308,11 +316,17 @@
             <a href="#sec-orig" class="nav-btn" id="btn-orig" onclick="selectTab('sec-orig')">
                 <b>1.</b> Oryginały (256px)
             </a>
+            <a href="#sec-lanczos" class="nav-btn" id="btn-lanczos" onclick="selectTab('sec-lanczos')">
+                <b>2.</b> Lanczos (1024px)
+            </a>
+            <a href="#sec-realesrgan" class="nav-btn" id="btn-realesrgan" onclick="selectTab('sec-realesrgan')">
+                <b>3.</b> Real-ESRGAN (1024px)
+            </a>
             <a href="#sec-ultra" class="nav-btn" id="btn-ultra" onclick="selectTab('sec-ultra')">
-                <b>2.</b> 4x-UltraSharp (1024px)
+                <b>4.</b> 4x-UltraSharp (1024px)
             </a>
             <a href="#sec-dat2" class="nav-btn" id="btn-dat2" onclick="selectTab('sec-dat2')">
-                <b>3.</b> 4xRealWebPhoto DAT-2 (1024px)
+                <b>5.</b> DAT-2 (1024px) 🏆
             </a>
         </div>
 
@@ -562,12 +576,494 @@
             </div>
         </section>
 
-        <!-- ==================== SEKCJA 2: 4x-ULTRASHARP ==================== -->
+        <!-- ==================== SEKCJA 2: LANCZOS (KLASYCZNY BASELINE) ==================== -->
+        <section class="section-box lanczos-section" id="sec-lanczos">
+            <div class="section-header lanczos-header">
+                <div class="section-title-wrap">
+                    <h2>2. Lanczos + Unsharp (Interpolacja cyfrowa bez AI)</h2>
+                    <p>Tradycyjne powiększenie w bibliotece graficznej z filtrem wyostrzającym. Szybkie, ale powoduje efekt „mydła” i uwypukla pikselozę bez rekonstrukcji prawdziwych detali.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie:</span>
+                        <b>28 ms (36 fps)</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: #94a3b8">4.6 min</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>23.6 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                
+        <div class="product-card" data-pid="86605">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/01_jacket_86605.webp" alt="Leather Biker Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Diesel</div>
+                <div class="product-title">Leather Biker Jacket</div>
+                <div class="product-category">Jackets</div>
+                <div class="product-price">$335</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86933">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/02_knit_sweater_86933.webp" alt="Wool Knit Sweater" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Thom Browne</div>
+                <div class="product-title">Wool Knit Sweater</div>
+                <div class="product-category">Knit Sweaters</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87389">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/03_tshirt_87389.webp" alt="Graphic Print T-Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Givenchy</div>
+                <div class="product-title">Graphic Print T-Shirt</div>
+                <div class="product-category">T-shirts</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86877">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/04_dress_86877.webp" alt="Silk Sleeveless Dress" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Rag & Bone</div>
+                <div class="product-title">Silk Sleeveless Dress</div>
+                <div class="product-category">Dresses</div>
+                <div class="product-price">$595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86779">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/05_shirt_86779.webp" alt="Tailored Check Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Check Shirt</div>
+                <div class="product-category">Shirts</div>
+                <div class="product-price">$645</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86773">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/06_jeans_86773.webp" alt="Distressed Denim Jeans" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Distressed Denim Jeans</div>
+                <div class="product-category">Jeans</div>
+                <div class="product-price">$630</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="99750">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/07_coat_99750.webp" alt="Classic Wool Coat" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Comme des Garçons</div>
+                <div class="product-title">Classic Wool Coat</div>
+                <div class="product-category">Classic Coats</div>
+                <div class="product-price">$2,615</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="88112">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/08_hoodie_88112.webp" alt="Oversized Cotton Hoodie" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MM6 Maison Margiela</div>
+                <div class="product-title">Oversized Cotton Hoodie</div>
+                <div class="product-category">Hoodies & Zipups</div>
+                <div class="product-price">$385</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="91440">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/09_sweatshirt_91440.webp" alt="Crewneck Fleece Sweatshirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MSGM</div>
+                <div class="product-title">Crewneck Fleece Sweatshirt</div>
+                <div class="product-category">Sweatshirts</div>
+                <div class="product-price">$245</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87053">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/10_bomber_87053.webp" alt="Satin Bomber Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Lanvin</div>
+                <div class="product-title">Satin Bomber Jacket</div>
+                <div class="product-category">Bombers</div>
+                <div class="product-price">$1,595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86810">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/11_trousers_86810.webp" alt="Tailored Slim Trousers" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Slim Trousers</div>
+                <div class="product-category">Trousers</div>
+                <div class="product-price">$495</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="89767">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/12_skirt_89767.webp" alt="Pleated A-Line Skirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Carven</div>
+                <div class="product-title">Pleated A-Line Skirt</div>
+                <div class="product-category">Skirts</div>
+                <div class="product-price">$530</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="90103">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/13_cardigan_90103.webp" alt="Draped Open Cardigan" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">D.Gnak by Kang.D</div>
+                <div class="product-title">Draped Open Cardigan</div>
+                <div class="product-category">Cardigans</div>
+                <div class="product-price">$455</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87937">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/14_blouse_87937.webp" alt="Silk V-Neck Blouse" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">T by Alexander Wang</div>
+                <div class="product-title">Silk V-Neck Blouse</div>
+                <div class="product-category">Blouses</div>
+                <div class="product-price">$225</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87953">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="bicubic/15_polo_87953.webp" alt="Pique Cotton Polo Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Band of Outsiders</div>
+                <div class="product-title">Pique Cotton Polo Shirt</div>
+                <div class="product-category">Polos</div>
+                <div class="product-price">$145</div>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 3: REAL-ESRGAN X4PLUS ==================== -->
+        <section class="section-box realesrgan-section" id="sec-realesrgan">
+            <div class="section-header realesrgan-header">
+                <div class="section-title-wrap">
+                    <h2>3. Real-ESRGAN x4plus (Klasyczny model splotowy CNN)</h2>
+                    <p>Bazowy model ESRGAN (RRDBNet). Sprawdzony, stabilny model produkcyjny – zauważalnie wyostrza krawędzie, choć czasami wygładza fakturę materiałów.</p>
+                </div>
+                <div class="section-stats">
+                    <div class="stat-badge">
+                        <span>Rozdzielczość wyjściowa:</span>
+                        <b>1024 &times; 1024 px</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas / zdjęcie (M1 Pro):</span>
+                        <b>688 ms</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Czas dla 10 000 produktów:</span>
+                        <b style="color: var(--accent-purple)">1h 55m</b>
+                    </div>
+                    <div class="stat-badge">
+                        <span>Średni rozmiar WebP:</span>
+                        <b>33.2 KB</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store-grid">
+                
+        <div class="product-card" data-pid="86605">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/01_jacket_86605.webp" alt="Leather Biker Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Diesel</div>
+                <div class="product-title">Leather Biker Jacket</div>
+                <div class="product-category">Jackets</div>
+                <div class="product-price">$335</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86933">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/02_knit_sweater_86933.webp" alt="Wool Knit Sweater" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Thom Browne</div>
+                <div class="product-title">Wool Knit Sweater</div>
+                <div class="product-category">Knit Sweaters</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87389">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/03_tshirt_87389.webp" alt="Graphic Print T-Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Givenchy</div>
+                <div class="product-title">Graphic Print T-Shirt</div>
+                <div class="product-category">T-shirts</div>
+                <div class="product-price">$970</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86877">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/04_dress_86877.webp" alt="Silk Sleeveless Dress" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Rag & Bone</div>
+                <div class="product-title">Silk Sleeveless Dress</div>
+                <div class="product-category">Dresses</div>
+                <div class="product-price">$595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86779">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/05_shirt_86779.webp" alt="Tailored Check Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Check Shirt</div>
+                <div class="product-category">Shirts</div>
+                <div class="product-price">$645</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86773">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/06_jeans_86773.webp" alt="Distressed Denim Jeans" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Distressed Denim Jeans</div>
+                <div class="product-category">Jeans</div>
+                <div class="product-price">$630</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="99750">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/07_coat_99750.webp" alt="Classic Wool Coat" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Comme des Garçons</div>
+                <div class="product-title">Classic Wool Coat</div>
+                <div class="product-category">Classic Coats</div>
+                <div class="product-price">$2,615</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="88112">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/08_hoodie_88112.webp" alt="Oversized Cotton Hoodie" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MM6 Maison Margiela</div>
+                <div class="product-title">Oversized Cotton Hoodie</div>
+                <div class="product-category">Hoodies & Zipups</div>
+                <div class="product-price">$385</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="91440">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/09_sweatshirt_91440.webp" alt="Crewneck Fleece Sweatshirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">MSGM</div>
+                <div class="product-title">Crewneck Fleece Sweatshirt</div>
+                <div class="product-category">Sweatshirts</div>
+                <div class="product-price">$245</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87053">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/10_bomber_87053.webp" alt="Satin Bomber Jacket" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Lanvin</div>
+                <div class="product-title">Satin Bomber Jacket</div>
+                <div class="product-category">Bombers</div>
+                <div class="product-price">$1,595</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="86810">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/11_trousers_86810.webp" alt="Tailored Slim Trousers" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Dsquared2</div>
+                <div class="product-title">Tailored Slim Trousers</div>
+                <div class="product-category">Trousers</div>
+                <div class="product-price">$495</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="89767">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/12_skirt_89767.webp" alt="Pleated A-Line Skirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Carven</div>
+                <div class="product-title">Pleated A-Line Skirt</div>
+                <div class="product-category">Skirts</div>
+                <div class="product-price">$530</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="90103">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/13_cardigan_90103.webp" alt="Draped Open Cardigan" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">D.Gnak by Kang.D</div>
+                <div class="product-title">Draped Open Cardigan</div>
+                <div class="product-category">Cardigans</div>
+                <div class="product-price">$455</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87937">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/14_blouse_87937.webp" alt="Silk V-Neck Blouse" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">T by Alexander Wang</div>
+                <div class="product-title">Silk V-Neck Blouse</div>
+                <div class="product-category">Blouses</div>
+                <div class="product-price">$225</div>
+            </div>
+        </div>
+        
+
+        <div class="product-card" data-pid="87953">
+            <div class="product-media">
+                <span class="media-badge">1024 &times; 1024 px</span>
+                <img src="realesrgan_x4plus/15_polo_87953.webp" alt="Pique Cotton Polo Shirt" loading="lazy">
+            </div>
+            <div class="product-info">
+                <div class="product-brand">Band of Outsiders</div>
+                <div class="product-title">Pique Cotton Polo Shirt</div>
+                <div class="product-category">Polos</div>
+                <div class="product-price">$145</div>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+
+        <!-- ==================== SEKCJA 4: 4x-ULTRASHARP ==================== -->
         <section class="section-box ultra-section" id="sec-ultra">
             <div class="section-header ultra-header">
                 <div class="section-title-wrap">
-                    <h2>2. Metoda 1: 4x-UltraSharp (ESRGAN)</h2>
-                    <p>Skalowanie 4x modelem ESRGAN dostrojonym pod kątem mikro-tekstur. Wyraźne, twarde krawędzie, guziki i zamki. Najszybsza z metod neuronowych.</p>
+                    <h2>4. 4x-UltraSharp (ESRGAN Micro-texture tuned)</h2>
+                    <p>Skalowanie 4x modelem ESRGAN dostrojonym pod kątem mikro-tekstur. Wyraźne, twarde krawędzie, guziki i zamki. Najszybsza z zaawansowanych metod neuronowych.</p>
                 </div>
                 <div class="section-stats">
                     <div class="stat-badge">
@@ -803,11 +1299,11 @@
             </div>
         </section>
 
-        <!-- ==================== SEKCJA 3: 4xREALWEBPHOTO (DAT-2) ==================== -->
+        <!-- ==================== SEKCJA 5: 4xREALWEBPHOTO (DAT-2) ==================== -->
         <section class="section-box dat2-section" id="sec-dat2">
             <div class="section-header dat2-header">
                 <div class="section-title-wrap">
-                    <h2>3. Metoda 2: 4xRealWebPhoto (DAT-2 Transformer) 🏆</h2>
+                    <h2>5. 4xRealWebPhoto (DAT-2 Transformer) 🏆</h2>
                     <p>Skalowanie 4x architekturą Dual Aggregation Transformer (2024/2025). Naturalne sploty wełny i tkanin, płynne przejścia tonalne, naturalna skóra, zero plastiku.</p>
                 </div>
                 <div class="section-stats">
@@ -1071,6 +1567,8 @@
 
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if (secId === 'sec-orig') document.getElementById('btn-orig').classList.add('active');
+            if (secId === 'sec-lanczos') document.getElementById('btn-lanczos').classList.add('active');
+            if (secId === 'sec-realesrgan') document.getElementById('btn-realesrgan').classList.add('active');
             if (secId === 'sec-ultra') document.getElementById('btn-ultra').classList.add('active');
             if (secId === 'sec-dat2') document.getElementById('btn-dat2').classList.add('active');
 
