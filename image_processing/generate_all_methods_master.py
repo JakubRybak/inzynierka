@@ -425,6 +425,12 @@ def build_all_methods_report():
         body.pbg-grey-warm {{ --photo-bg: #edeae4; }}
         body.pbg-white {{ --photo-bg: #ffffff; }}
 
+        /* Synchronize Light Theme page background with chosen tone */
+        body.theme-light.pbg-grey-soft {{ --bg-body: #ededf0; }}
+        body.theme-light.pbg-grey-medium {{ --bg-body: #e2e4e8; }}
+        body.theme-light.pbg-grey-warm {{ --bg-body: #edeae4; }}
+        body.theme-light.pbg-white {{ --bg-body: #f8fafc; }}
+
         /* Light Theme */
         body.theme-light {{
             --bg-body: #f4f5f7;
@@ -780,7 +786,7 @@ def build_all_methods_report():
             overflow: hidden;
             background-color: var(--photo-bg);
             isolation: isolate;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.25s ease;
         }}
 
         .thumb-media img, .sf-media img {{
@@ -790,6 +796,7 @@ def build_all_methods_report():
             object-position: center;
             display: block;
             image-rendering: auto;
+            mix-blend-mode: multiply;
         }}
 
         .thumb-media.is-orig img, .sf-media.is-orig img {{
@@ -1015,16 +1022,18 @@ def build_all_methods_report():
             align-items: center;
             justify-content: center;
             background-color: var(--photo-bg);
+            isolation: isolate;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            transition: background-color 0.2s ease;
+            transition: background-color 0.25s ease;
         }}
         .modal-img-wrap img {{
             max-width: 100%;
             max-height: 72vh;
             object-fit: contain;
             display: block;
+            mix-blend-mode: multiply;
         }}
         .modal-img-wrap.is-pixelated img {{
             image-rendering: pixelated;
@@ -1068,9 +1077,9 @@ def build_all_methods_report():
             <div class="ctrl-section">
                 <span class="ctrl-label">🎨 Tło:</span>
                 <button class="btn-toggle active" id="btn-pbg-grey-soft" onclick="setPhotoBg('grey-soft')">Szare (#ededf0)</button>
-                <button class="btn-toggle" id="btn-pbg-grey-medium" onclick="setPhotoBg('grey-medium')">Średnie</button>
-                <button class="btn-toggle" id="btn-pbg-grey-warm" onclick="setPhotoBg('grey-warm')">Ciepłe</button>
-                <button class="btn-toggle" id="btn-pbg-white" onclick="setPhotoBg('white')">Białe 100%</button>
+                <button class="btn-toggle" id="btn-pbg-grey-medium" onclick="setPhotoBg('grey-medium')">Średnie (#e2e4e8)</button>
+                <button class="btn-toggle" id="btn-pbg-grey-warm" onclick="setPhotoBg('grey-warm')">Ciepłe (#edeae4)</button>
+                <button class="btn-toggle" id="btn-pbg-white" onclick="setPhotoBg('white')">Białe 100% (#ffffff)</button>
             </div>
 
             <div class="ctrl-section">
@@ -1217,7 +1226,16 @@ def build_all_methods_report():
                 </div>
             </div>
             <div class="modal-footer">
-                <span id="modal-status">Aktywna metoda podglądu HD: DAT-2 🏆</span>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                    <span id="modal-status">Aktywna metoda podglądu HD: DAT-2 🏆</span>
+                    <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px;">
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">🎨 Tło:</span>
+                        <button class="btn-toggle modal-pbg-btn" data-tone="grey-soft" onclick="setPhotoBg('grey-soft')">Szare</button>
+                        <button class="btn-toggle modal-pbg-btn" data-tone="grey-medium" onclick="setPhotoBg('grey-medium')">Średnie</button>
+                        <button class="btn-toggle modal-pbg-btn" data-tone="grey-warm" onclick="setPhotoBg('grey-warm')">Ciepłe</button>
+                        <button class="btn-toggle modal-pbg-btn" data-tone="white" onclick="setPhotoBg('white')">Białe</button>
+                    </div>
+                </div>
                 <span>Klawisze 1-8 przełączają metodę · Esc zamyka</span>
             </div>
         </div>
@@ -1264,6 +1282,12 @@ def build_all_methods_report():
             document.querySelectorAll('[id^="btn-pbg-"]').forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById('btn-pbg-' + tone);
             if (activeBtn) activeBtn.classList.add('active');
+
+            // Synchronizuj przyciski tła w modalu
+            document.querySelectorAll('.modal-pbg-btn').forEach(b => {{
+                if (b.dataset.tone === tone) b.classList.add('active');
+                else b.classList.remove('active');
+            }});
         }}
 
         function setCrop(ratio) {{
@@ -1358,6 +1382,13 @@ def build_all_methods_report():
             currentMethod = methodId in methodPaths ? methodId : 'dat2';
             document.getElementById('modal-title').innerText = title;
             updateModalView();
+
+            const currentTone = ['grey-medium', 'grey-warm', 'white'].find(t => document.body.classList.contains('pbg-' + t)) || 'grey-soft';
+            document.querySelectorAll('.modal-pbg-btn').forEach(b => {{
+                if (b.dataset.tone === currentTone) b.classList.add('active');
+                else b.classList.remove('active');
+            }});
+
             document.getElementById('image-modal').classList.add('open');
         }}
 
