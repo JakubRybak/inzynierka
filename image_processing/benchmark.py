@@ -1,11 +1,13 @@
 """Super-Resolution Pipeline and Benchmark for fashion e-commerce images.
 
-Evaluates 5 practical deployed and generative methods on Apple Silicon M1 Pro / MPS:
+Evaluates 7 practical deployed, hybrid, and generative methods on Apple Silicon M1 Pro / MPS:
 1. Classical Baseline: Lanczos + Unsharp Mask (Pillow)
 2. Classic CNN: Real-ESRGAN x4plus
 3. Texture-Focused CNN: 4x-UltraSharp
 4. Vision Transformer: 4xRealWebPhoto DAT-2 (Benchmark Winner)
-5. Generative GigaGAN: AuraSR-v2 (fal.ai / Aleph Alpha 2025)
+5. E-Commerce Hybrid: DAT-2 + GFPGAN Face Restoration (RetinaFace + StyleGAN2)
+6. Generative GigaGAN: AuraSR-v2 (fal.ai / Aleph Alpha 2025)
+7. Latent Diffusion: Stable Diffusion x4 Upscaler (Stability AI)
 
 Produces optimized 1024x1024 WebP images and renders master_comparison_all_methods.html.
 """
@@ -14,6 +16,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.request
@@ -37,6 +40,7 @@ MODEL_DOWNLOADS = {
     "4xRealWebPhoto_v4_dat2.pth": "https://huggingface.co/dseditor/UpscaleModels/resolve/main/4xRealWebPhoto_v4_dat2.pth",
     "4x-UltraSharp.pth": "https://huggingface.co/lokCX/4x-Ultrasharp/resolve/main/4x-UltraSharp.pth",
     "RealESRGAN_x4plus.pth": "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth",
+    "GFPGANv1.4.pth": "https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth",
 }
 
 
@@ -78,9 +82,9 @@ def run_bicubic(img: Image.Image) -> Image.Image:
 def run_pipeline() -> None:
     ensure_models()
     device = get_device()
-    print(f"==================================================")
+    print("==================================================")
     print(f"🚀 Running Super-Resolution Pipeline on: {device}")
-    print(f"==================================================")
+    print("==================================================")
 
     loader = ModelLoader()
     images = sorted(list(SAMPLE_DIR.glob("*.png")))
@@ -88,7 +92,7 @@ def run_pipeline() -> None:
         raise RuntimeError(f"No sample images found in {SAMPLE_DIR}")
     print(f"Found {len(images)} sample images.")
 
-    methods = [
+    standard_methods = [
         {
             "id": "bicubic",
             "name": "Lanczos + Unsharp (Classical Baseline)",
@@ -123,7 +127,7 @@ def run_pipeline() -> None:
 
     # Preload neural models
     loaded_models: Dict[str, Any] = {}
-    for m in methods:
+    for m in standard_methods:
         if m["type"] == "neural":
             print(f"Loading {m['name']} from {m['model_path'].name}...")
             t0 = time.perf_counter()
@@ -145,7 +149,7 @@ def run_pipeline() -> None:
             loaded_models[m["id"]] = model
             print(f"  ✓ Loaded {m['name']} in {time.perf_counter() - t0:.2f}s")
 
-    for m in methods:
+    for m in standard_methods:
         mid = m["id"]
         out_dir = OUTPUTS_DIR / mid
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -191,6 +195,13 @@ def run_pipeline() -> None:
         total_time_s = sum(latencies_ms) / 1000.0
         avg_ms = float(np.mean(latencies_ms))
         print(f"  • Total time: {total_time_s:.2f}s | Avg latency: {avg_ms:.1f} ms/img | Avg size: {np.mean(file_sizes_webp_kb):.1f} KB")
+
+    # Run hybrid and diffusion scripts
+    print("\nRunning Hybrid DAT-2 + GFPGAN Face Restoration...")
+    subprocess.run([sys.executable, str(HERE / "run_dat2_gfpgan.py")], check=True)
+
+    print("\nRunning Stable Diffusion x4 Upscaler...")
+    subprocess.run([sys.executable, str(HERE / "run_sd_x4.py")], check=True)
 
     print("\n✓ All images upscaled. Regenerating master comparison report...")
     build_all_methods_report()

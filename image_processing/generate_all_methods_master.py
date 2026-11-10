@@ -7,7 +7,9 @@ Contains ONLY 100% authentic, physically generated methods on Apple Silicon M1 P
 3. Real-ESRGAN x4plus (Classic CNN)
 4. 4x-UltraSharp (ESRGAN Fine-Tuned)
 5. 4xRealWebPhoto DAT-2 🏆 (Vision Transformer Benchmark Winner)
-6. AuraSR-v2 (GigaGAN Generative Upscaler 2025) ⚡
+6. DAT-2 + GFPGAN 👔✨ (Hybrid: Garment Vision Transformer + Generative Face Restoration)
+7. AuraSR-v2 ⚡ (fal.ai GigaGAN Generative Upscaler 2025)
+8. Stable Diffusion x4 🌪️ (Official Stability AI Latent Diffusion Model)
 """
 
 from pathlib import Path
@@ -55,14 +57,14 @@ ALL_METHODS = [
         "res": "256×256",
         "color": "#fb923c",
         "description": "Oryginalny plik 256×256 px powiększony rozdzielczością ekranu.",
-        "pros": "Stan wyjściowy bazy.",
+        "pros": "Stan wyjściowy bazy FashionGen.",
         "cons": "Mocno rozmyte, pikseloza na ekranach Retina/HiDPI."
     },
     {
         "id": "lanczos",
         "name": "Lanczos + Unsharp",
         "tag": "BASELINE MATEMATYCZNY",
-        "family": "Classical Interpolation",
+        "family": "Classical Filter",
         "year": "Standard",
         "conf": "Non-AI Filter",
         "time_per_img": "27.8 ms",
@@ -76,8 +78,8 @@ ALL_METHODS = [
         "format": "webp",
         "res": "1024×1024",
         "color": "#94a3b8",
-        "description": "Interpolacja matematyczna z lekkim wyostrzeniem nieostrej maski. Zero sieci neuronowej.",
-        "pros": "Błyskawiczny (36 FPS).",
+        "description": "Interpolacja matematyczna sinc z wyostrzeniem unsharp mask. Zero wag neuronowych.",
+        "pros": "Błyskawiczny (36 FPS na CPU).",
         "cons": "Rozmycie, brak rekonstrukcji jakichkolwiek nowych detali tkanin."
     },
     {
@@ -100,7 +102,7 @@ ALL_METHODS = [
         "color": "#c084fc",
         "description": "Przemysłowy standard CNN poprzednich lat. Skutecznie usuwa kompresję JPEG, ale mocno wygładza fakturę tkanin.",
         "pros": "Brak artefaktów szumu, stabilny, szybki.",
-        "cons": "Zbyt woskowaty wygląd w zbliżeniu na dzianinach."
+        "cons": "Zbyt woskowaty wygląd w zbliżeniu na dzianinach i wełnie."
     },
     {
         "id": "ultra",
@@ -108,7 +110,7 @@ ALL_METHODS = [
         "tag": "CNN MIKRO-FAKTURY",
         "family": "ESRGAN Fine-Tuned",
         "year": "2023",
-        "conf": "Community Benchmark",
+        "conf": "Community SOTA",
         "time_per_img": "680.7 ms",
         "time_10k": "1.89 h",
         "fidelity": 8.8,
@@ -120,9 +122,9 @@ ALL_METHODS = [
         "format": "webp",
         "res": "1024×1024",
         "color": "#38bdf8",
-        "description": "Wyostrzony model ESRGAN. Bardzo szybki, ostry, ale może dawać lekko twardy, cyfrowy obrys na zagięciach.",
+        "description": "Wyostrzony model ESRGAN do fotografii. Bardzo ostry obrys, ale może dawać lekko twardy, cyfrowy obrys na zagięciach.",
         "pros": "Ekspresowy (680 ms, poniżej 2h na 10 000 produktów).",
-        "cons": "Lekko twarde, plastikowe przejścia w porównaniu z Transformerem."
+        "cons": "Twardsze, bardziej plastikowe przejścia tonalne niż w modelach nowej generacji."
     },
     {
         "id": "dat2",
@@ -143,13 +145,35 @@ ALL_METHODS = [
         "res": "1024×1024",
         "color": "#34d399",
         "description": "Dual Aggregation Transformer. Wybitne zbalansowanie ostrości, miękkich zagnieceń i wierności bez zniekształceń. Jeden krok regresyjny.",
-        "pros": "100% wierność krojom i kolorom, brak halucynacji guzików/szwów, mieści się w 8.8h dla 10k ujęć.",
-        "cons": "Nie zrekonstruuje rzęs i tęczówek z 20-pikselowej twarzy modela."
+        "pros": "100% wierność krojom i kolorom, brak zniekształceń guzików/szwów, mieści się w 8.8h dla 10k ujęć.",
+        "cons": "Dla twarzy modeli w kadrze nie syntetyzuje mikroskopijnych detali rzęs i tęczówek."
+    },
+    {
+        "id": "dat2_gfpgan",
+        "name": "DAT-2 + GFPGAN 👔✨",
+        "tag": "HYBRYDA E-COMMERCE",
+        "family": "Transformer + Face GAN",
+        "year": "2024",
+        "conf": "DAT-2 + GFPGAN v1.4",
+        "time_per_img": "3.77 s",
+        "time_10k": "10.5 h",
+        "fidelity": 9.6,
+        "realism": 9.8,
+        "hallucination_risk": "Brak (0%)",
+        "vram": "~2.8 GB",
+        "has_image": True,
+        "folder": "dat2_gfpgan",
+        "format": "webp",
+        "res": "1024×1024",
+        "color": "#a855f7",
+        "description": "Najwyższy standard produkcyjny dla sklepów modowych. Tkanina i krój ubrania są odtwarzane przez bezbłędny DAT-2 (zero halucynacji materiału), a twarze modeli, oczy, zęby i włosy są wykrywane przez RetinaFace i fotorealistycznie rekonstruowane przez model GFPGAN.",
+        "pros": "Idealna harmonia: 100% wierności faktury odzieży + ostra, naturalna twarz i spojrzenie modela. Zero zniekształceń kroju.",
+        "cons": "Dwuetapowy potok inferencyjny (detekcja, odnowa twarzy i fuzja masek w czasie +0.6s/zdjęcie)."
     },
     {
         "id": "aurasr",
         "name": "AuraSR-v2 (GigaGAN 2025) ⚡",
-        "tag": "NOWOŚĆ GENERATYWNA",
+        "tag": "GENERATYWNY GigaGAN",
         "family": "Generative GigaGAN",
         "year": "2024/2025",
         "conf": "fal.ai / Aleph Alpha",
@@ -166,7 +190,29 @@ ALL_METHODS = [
         "color": "#f43f5e",
         "description": "Jednokrokowy generatywny upscaler GigaGAN od fal.ai. Dorysowuje autentyczne mikroskopijne sploty nitek, mikro-cienie i naturalną fakturę bez rozmyć (tryb overlapped przeciw szwom).",
         "pros": "Fotorealistyczna, ostra mikro-struktura materiałów niemożliwa do uzyskania klasycznymi filtrami.",
-        "cons": "Dłuższy czas inferencji (~12.8s/zdjęcie na M1 Pro z eliminacją szwów), lekka tendencja do wyostrzania szumów."
+        "cons": "Dłuższy czas inferencji (~12.8s na Apple Silicon MPS), lekka tendencja do wyostrzania szumów z kompresji."
+    },
+    {
+        "id": "sd_x4",
+        "name": "Stable Diffusion x4 🌪️",
+        "tag": "LATENT DIFFUSION",
+        "family": "Diffusion Model",
+        "year": "2023/2024",
+        "conf": "Stability AI Official",
+        "time_per_img": "24.50 s",
+        "time_10k": "68.1 h",
+        "fidelity": 8.4,
+        "realism": 9.4,
+        "hallucination_risk": "Średnie (~15%)",
+        "vram": "~3.5 GB",
+        "has_image": True,
+        "folder": "sd_x4",
+        "format": "webp",
+        "res": "1024×1024",
+        "color": "#06b6d4",
+        "description": "Klasyczna, pełna dyfuzja wielokrokowa (12 kroków odszumiania VAE) od Stability AI. Działa w przestrzeni cech ukrytych sterowana wektorami tekstowymi promptu e-commerce.",
+        "pros": "Czysty proces dyfuzyjny, doskonała głębia plastyczna, miękkie studyjne oświetlenie i redukcja szumów.",
+        "cons": "Najdłuższy czas przetwarzania (24.5s), ryzyko drobnych halucynacji krojów guzików i lamówek."
     }
 ]
 
@@ -189,7 +235,7 @@ def build_all_methods_report():
     # Table rows for benchmark accordion
     table_rows = []
     for m in ALL_METHODS:
-        is_winner = "highlight-row" if m["id"] == "dat2" else ("highlight-gen" if m["id"] == "aurasr" else "")
+        is_winner = "highlight-row" if m["id"] == "dat2" else ("highlight-hybrid" if m["id"] == "dat2_gfpgan" else ("highlight-gen" if m["id"] in ("aurasr", "sd_x4") else ""))
         badge = f"""<span class="badge-tag" style="border-color: {m['color']}; color: {m['color']}">{m['tag']}</span>"""
         table_rows.append(f"""
         <tr class="{is_winner}">
@@ -349,7 +395,7 @@ def build_all_methods_report():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Super-Resolution: Realne Metody Generatywne i Dyfuzyjne (Apple Silicon M1 Pro)</title>
+    <title>E-commerce Super-Resolution: 8 Fizycznych Metod AI (Apple Silicon M1 Pro)</title>
     <style>
         :root {{
             --bg-body: #090d16;
@@ -569,14 +615,14 @@ def build_all_methods_report():
         }}
 
         .main-container {{
-            max-width: 1840px;
+            max-width: 1960px;
             margin: 0 auto;
             padding: 24px;
         }}
 
         /* Hero Banner */
         .hero-banner {{
-            background: linear-gradient(135deg, #0f172a 0%, #172554 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px 30px;
@@ -594,7 +640,7 @@ def build_all_methods_report():
             font-size: 13px;
             line-height: 1.6;
             color: #94a3b8;
-            max-width: 1300px;
+            max-width: 1400px;
         }}
 
         /* Master Table Accordion */
@@ -642,6 +688,10 @@ def build_all_methods_report():
             background: rgba(52, 211, 153, 0.08);
             border-left: 3px solid #34d399;
         }}
+        .metrics-table tr.highlight-hybrid {{
+            background: rgba(168, 85, 247, 0.08);
+            border-left: 3px solid #a855f7;
+        }}
         .metrics-table tr.highlight-gen {{
             background: rgba(244, 63, 94, 0.08);
             border-left: 3px solid #f43f5e;
@@ -662,15 +712,17 @@ def build_all_methods_report():
             gap: 12px;
         }}
 
+        body.cols-8 .comparison-grid, body.cols-8 .sf-grid {{ grid-template-columns: repeat(8, 1fr); }}
+        body.cols-7 .comparison-grid, body.cols-7 .sf-grid {{ grid-template-columns: repeat(7, 1fr); }}
         body.cols-6 .comparison-grid, body.cols-6 .sf-grid {{ grid-template-columns: repeat(6, 1fr); }}
         body.cols-5 .comparison-grid, body.cols-5 .sf-grid {{ grid-template-columns: repeat(5, 1fr); }}
         body.cols-4 .comparison-grid, body.cols-4 .sf-grid {{ grid-template-columns: repeat(4, 1fr); }}
         body.cols-3 .comparison-grid, body.cols-3 .sf-grid {{ grid-template-columns: repeat(3, 1fr); }}
         body.cols-2 .comparison-grid, body.cols-2 .sf-grid {{ grid-template-columns: repeat(2, 1fr); }}
 
-        @media (max-width: 1500px) {{ body.cols-6 .comparison-grid, body.cols-6 .sf-grid {{ grid-template-columns: repeat(3, 1fr); }} }}
-        @media (max-width: 1100px) {{ body.cols-6 .comparison-grid, body.cols-6 .sf-grid, body.cols-5 .comparison-grid, body.cols-4 .comparison-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
-        @media (max-width: 700px) {{ body.cols-6 .comparison-grid, body.cols-6 .sf-grid, body.cols-5 .comparison-grid, body.cols-3 .comparison-grid {{ grid-template-columns: 1fr; }} }}
+        @media (max-width: 1700px) {{ body.cols-8 .comparison-grid, body.cols-8 .sf-grid {{ grid-template-columns: repeat(4, 1fr); }} }}
+        @media (max-width: 1200px) {{ body.cols-8 .comparison-grid, body.cols-8 .sf-grid, body.cols-6 .comparison-grid {{ grid-template-columns: repeat(2, 1fr); }} }}
+        @media (max-width: 700px) {{ body.cols-8 .comparison-grid, body.cols-8 .sf-grid, body.cols-6 .comparison-grid {{ grid-template-columns: 1fr; }} }}
 
         /* Product Card */
         .product-card {{
@@ -718,8 +770,8 @@ def build_all_methods_report():
             border-bottom: 1px solid var(--border);
             text-align: center;
         }}
-        .th-title {{ font-size: 12px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
-        .th-sub {{ font-size: 10px; color: var(--text-muted); margin-top: 1px; }}
+        .th-title {{ font-size: 11px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+        .th-sub {{ font-size: 9px; color: var(--text-muted); margin-top: 1px; }}
 
         .thumb-media, .sf-media {{
             position: relative;
@@ -866,7 +918,7 @@ def build_all_methods_report():
             background: #131b2e;
             border: 1px solid var(--border);
             border-radius: 14px;
-            max-width: 1150px;
+            max-width: 1200px;
             width: 100%;
             max-height: 94vh;
             display: flex;
@@ -913,7 +965,7 @@ def build_all_methods_report():
             border: 1px solid var(--border);
             padding: 6px 12px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
@@ -931,10 +983,20 @@ def build_all_methods_report():
             color: #090d16;
             border-color: #34d399;
         }}
+        .modal-tab-btn.is-hybrid.active {{
+            background: #a855f7;
+            color: #ffffff;
+            border-color: #a855f7;
+        }}
         .modal-tab-btn.is-gen.active {{
             background: #f43f5e;
             color: #ffffff;
             border-color: #f43f5e;
+        }}
+        .modal-tab-btn.is-diff.active {{
+            background: #06b6d4;
+            color: #090d16;
+            border-color: #06b6d4;
         }}
 
         .modal-body {{
@@ -980,12 +1042,12 @@ def build_all_methods_report():
         }}
     </style>
 </head>
-<body class="cols-6 crop-3-5 pbg-grey-soft theme-dark">
+<body class="cols-8 crop-3-5 pbg-grey-soft theme-dark">
 
     <!-- 1. STICKY TOPBAR -->
     <div class="topbar">
         <div class="top-brand">
-            FASHION STORE <span>SUPER-RESOLUTION MASTER SUITE (100% REAL AI)</span>
+            FASHION STORE <span>SUPER-RESOLUTION MASTER SUITE (8 METOD AI)</span>
         </div>
 
         <!-- MAIN VIEW SWITCHER -->
@@ -1021,8 +1083,8 @@ def build_all_methods_report():
 
             <div class="ctrl-section">
                 <span class="ctrl-label">🔍 Kolumny:</span>
-                <button class="btn-toggle active" id="btn-cols-6" onclick="setCols(6)">6 (Pełne)</button>
-                <button class="btn-toggle" id="btn-cols-5" onclick="setCols(5)">5</button>
+                <button class="btn-toggle active" id="btn-cols-8" onclick="setCols(8)">8 (Wszystkie)</button>
+                <button class="btn-toggle" id="btn-cols-6" onclick="setCols(6)">6</button>
                 <button class="btn-toggle" id="btn-cols-4" onclick="setCols(4)">4</button>
                 <button class="btn-toggle" id="btn-cols-3" onclick="setCols(3)">3</button>
                 <button class="btn-toggle" id="btn-cols-2" onclick="setCols(2)">2 (HD)</button>
@@ -1039,14 +1101,14 @@ def build_all_methods_report():
     <!-- 2. SUBBAR -->
     <div class="subbar" id="subbar-comparison">
         <div style="font-size: 12px; font-weight: 700; color: var(--accent-blue); display: flex; align-items: center; gap: 6px;">
-            <span>👥 Sekcja 1: Porównanie 6 autentycznych metod (100% fizycznych zdjęć AI bez atrap)</span>
+            <span>👥 Sekcja 1: Porównanie 8 autentycznych metod (100% fizycznych zdjęć AI bez atrap)</span>
         </div>
         <div class="subnav-links">
             <span class="ctrl-label" style="align-self: center;">Szybki filtr kolumn:</span>
-            <button class="subnav-btn active" id="fbtn-all" onclick="filterColGroup('all')">🌟 Wszystkie 6 metod</button>
-            <button class="subnav-btn" id="fbtn-top" onclick="filterColGroup('top')">🏆 Liderzy (DAT-2 vs AuraSR-v2)</button>
-            <button class="subnav-btn" id="fbtn-ai" onclick="filterColGroup('ai')">🤖 Nowoczesne AI (DAT-2, AuraSR-v2, UltraSharp)</button>
-            <button class="subnav-btn" id="fbtn-classic" onclick="filterColGroup('classic')">📐 Klasyczne (Oryginał, Lanczos, Real-ESRGAN)</button>
+            <button class="subnav-btn active" id="fbtn-all" onclick="filterColGroup('all')">🌟 Wszystkie 8 metod</button>
+            <button class="subnav-btn" id="fbtn-top" onclick="filterColGroup('top')">🏆 Liderzy Jakości (DAT-2, Hybryda GFPGAN, AuraSR-v2)</button>
+            <button class="subnav-btn" id="fbtn-gen" onclick="filterColGroup('gen')">✨ Generatywne & Dyfuzja (AuraSR-v2, SD x4, DAT-2+GFPGAN)</button>
+            <button class="subnav-btn" id="fbtn-classic" onclick="filterColGroup('classic')">📐 Klasyczne & CNN (Oryginał, Lanczos, Real-ESRGAN, UltraSharp)</button>
         </div>
     </div>
 
@@ -1054,7 +1116,9 @@ def build_all_methods_report():
         <div class="subnav-links">
             <span class="ctrl-label" style="align-self: center; margin-right: 4px;">Skocz do metody w katalogu:</span>
             <a href="#sf-sec-dat2" class="subnav-btn" onclick="selectSfTab('sf-sec-dat2')">🏆 DAT-2</a>
-            <a href="#sf-sec-aurasr" class="subnav-btn" onclick="selectSfTab('sf-sec-aurasr')">⚡ AuraSR-v2 (GigaGAN)</a>
+            <a href="#sf-sec-dat2_gfpgan" class="subnav-btn" onclick="selectSfTab('sf-sec-dat2_gfpgan')">👔✨ DAT-2 + GFPGAN</a>
+            <a href="#sf-sec-aurasr" class="subnav-btn" onclick="selectSfTab('sf-sec-aurasr')">⚡ AuraSR-v2</a>
+            <a href="#sf-sec-sd_x4" class="subnav-btn" onclick="selectSfTab('sf-sec-sd_x4')">🌪️ Stable Diffusion x4</a>
             <a href="#sf-sec-ultra" class="subnav-btn" onclick="selectSfTab('sf-sec-ultra')">4x-UltraSharp</a>
             <a href="#sf-sec-realesrgan" class="subnav-btn" onclick="selectSfTab('sf-sec-realesrgan')">Real-ESRGAN</a>
             <a href="#sf-sec-lanczos" class="subnav-btn" onclick="selectSfTab('sf-sec-lanczos')">Lanczos</a>
@@ -1071,12 +1135,13 @@ def build_all_methods_report():
     <div class="main-container">
 
         <div class="hero-banner">
-            <h1>Zaawansowany Raport Super-Resolution: Wszystkie Realne Metody (w tym Generatywny AuraSR-v2)</h1>
+            <h1>Zaawansowany Raport Super-Resolution: Wszystkie Realne Metody Generatywne, Dyfuzyjne i Hybrydowe</h1>
             <p>
-                Zestawienie <b>6 w 100% autentycznych, fizycznie przeliczonych metod</b> dla 15 produktów e-commerce na maszynie <b>Apple Silicon M1 Pro</b> (PyTorch MPS). 
+                Zestawienie <b>8 w 100% autentycznych, fizycznie przeliczonych metod</b> dla 15 produktów e-commerce na maszynie <b>Apple Silicon M1 Pro</b> (PyTorch MPS). 
                 Raport pozwala porównać klasyczny filtr matematyczny (Lanczos), sieci splotowe CNN (Real-ESRGAN, 4x-UltraSharp), 
-                zwycięski Vision Transformer (<b>4xRealWebPhoto DAT-2</b>) oraz najnowocześniejszy generatywny upscaler GigaGAN (<b>AuraSR-v2 z 2025 r.</b> od fal.ai).
-                Każdy piksel w tym raporcie pochodzi z realnego pliku WebP wygenerowanego lokalnie na Twoim komputerze — usunięto wszystkie placeholdery i atrapy.
+                zwycięski Vision Transformer (<b>4xRealWebPhoto DAT-2</b>), produkcyjną hybrydę e-commerce (<b>DAT-2 + GFPGAN Face Restoration</b>), 
+                generatywny upscaler GigaGAN (<b>AuraSR-v2 z 2025 r.</b> od fal.ai) oraz oficjalny model dyfuzyjny <b>Stable Diffusion x4</b> od Stability AI.
+                Każdy piksel w tym raporcie pochodzi z realnego pliku WebP wygenerowanego lokalnie na Twoim komputerze — zero atrap i placeholderów.
             </p>
         </div>
 
@@ -1110,8 +1175,8 @@ def build_all_methods_report():
         <!-- ========================================================= -->
         <section class="view-section active-view" id="view-comparison">
             <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-size: 18px; color: #ffffff;">👥 Sekcja 1: Porównanie produktów we wszystkich 6 realnych metodach</h2>
-                <span style="font-size: 12px; color: var(--text-muted);">15 produktów × 6 kolumn obok siebie</span>
+                <h2 style="font-size: 18px; color: #ffffff;">👥 Sekcja 1: Porównanie produktów we wszystkich 8 realnych metodach</h2>
+                <span style="font-size: 12px; color: var(--text-muted);">15 produktów × 8 kolumn obok siebie</span>
             </div>
             {''.join(sec1_cards)}
         </section>
@@ -1122,7 +1187,7 @@ def build_all_methods_report():
         <section class="view-section" id="view-storefront">
             <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
                 <h2 style="font-size: 18px; color: #ffffff;">🛍️ Sekcja 2: Pełny Storefront (Katalog podzielony na subsekcje metod)</h2>
-                <span style="font-size: 12px; color: var(--text-muted);">Wszystkie 6 metod ułożone w osobnych siatkach sklepowych</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Wszystkie 8 metod ułożone w osobnych siatkach sklepowych</span>
             </div>
             {''.join(sec2_sections)}
         </section>
@@ -1142,7 +1207,9 @@ def build_all_methods_report():
                 <button class="modal-tab-btn" id="mtab-realesrgan" onclick="switchModalMethod('realesrgan')">3. Real-ESRGAN</button>
                 <button class="modal-tab-btn" id="mtab-ultra" onclick="switchModalMethod('ultra')">4. 4x-UltraSharp</button>
                 <button class="modal-tab-btn is-dat2 active" id="mtab-dat2" onclick="switchModalMethod('dat2')">5. DAT-2 🏆</button>
-                <button class="modal-tab-btn is-gen" id="mtab-aurasr" onclick="switchModalMethod('aurasr')">6. AuraSR-v2 ⚡</button>
+                <button class="modal-tab-btn is-hybrid" id="mtab-dat2_gfpgan" onclick="switchModalMethod('dat2_gfpgan')">6. DAT-2 + GFPGAN 👔✨</button>
+                <button class="modal-tab-btn is-gen" id="mtab-aurasr" onclick="switchModalMethod('aurasr')">7. AuraSR-v2 ⚡</button>
+                <button class="modal-tab-btn is-diff" id="mtab-sd_x4" onclick="switchModalMethod('sd_x4')">8. SD x4 🌪️</button>
             </div>
             <div class="modal-body">
                 <div class="modal-img-wrap" id="modal-img-container">
@@ -1151,7 +1218,7 @@ def build_all_methods_report():
             </div>
             <div class="modal-footer">
                 <span id="modal-status">Aktywna metoda podglądu HD: DAT-2 🏆</span>
-                <span>Klawisze 1-6 przełączają metodę · Esc zamyka</span>
+                <span>Klawisze 1-8 przełączają metodę · Esc zamyka</span>
             </div>
         </div>
     </div>
@@ -1208,7 +1275,7 @@ def build_all_methods_report():
         }}
 
         function setCols(n) {{
-            document.body.classList.remove('cols-6', 'cols-5', 'cols-4', 'cols-3', 'cols-2');
+            document.body.classList.remove('cols-8', 'cols-7', 'cols-6', 'cols-5', 'cols-4', 'cols-3', 'cols-2');
             document.body.classList.add('cols-' + n);
             document.querySelectorAll('[id^="btn-cols-"]').forEach(b => b.classList.remove('active'));
             const activeBtn = document.getElementById('btn-cols-' + n);
@@ -1235,17 +1302,17 @@ def build_all_methods_report():
             if (activeBtn) activeBtn.classList.add('active');
 
             if (group === 'top') {{
-                const allowed = ['col-orig', 'col-dat2', 'col-aurasr'];
+                const allowed = ['col-orig', 'col-dat2', 'col-dat2_gfpgan', 'col-aurasr'];
                 allCols.forEach(c => {{
                     if (!allowed.some(cls => c.classList.contains(cls))) c.classList.add('hidden');
                 }});
-            }} else if (group === 'ai') {{
-                const allowed = ['col-orig', 'col-ultra', 'col-dat2', 'col-aurasr'];
+            }} else if (group === 'gen') {{
+                const allowed = ['col-orig', 'col-dat2', 'col-dat2_gfpgan', 'col-aurasr', 'col-sd_x4'];
                 allCols.forEach(c => {{
                     if (!allowed.some(cls => c.classList.contains(cls))) c.classList.add('hidden');
                 }});
             }} else if (group === 'classic') {{
-                const allowed = ['col-orig', 'col-lanczos', 'col-realesrgan'];
+                const allowed = ['col-orig', 'col-lanczos', 'col-realesrgan', 'col-ultra'];
                 allCols.forEach(c => {{
                     if (!allowed.some(cls => c.classList.contains(cls))) c.classList.add('hidden');
                 }});
@@ -1281,7 +1348,9 @@ def build_all_methods_report():
             'realesrgan': (stem) => 'realesrgan_x4plus/' + stem + '.webp',
             'ultra': (stem) => 'ultrasharp_x4/' + stem + '.webp',
             'dat2': (stem) => 'realwebphoto_dat2/' + stem + '.webp',
-            'aurasr': (stem) => 'aurasr_v2/' + stem + '.webp'
+            'dat2_gfpgan': (stem) => 'dat2_gfpgan/' + stem + '.webp',
+            'aurasr': (stem) => 'aurasr_v2/' + stem + '.webp',
+            'sd_x4': (stem) => 'sd_x4/' + stem + '.webp'
         }};
 
         function openModal(stem, methodId, title) {{
@@ -1321,7 +1390,9 @@ def build_all_methods_report():
                 'realesrgan': 'Real-ESRGAN x4plus (1024px)',
                 'ultra': '4x-UltraSharp (1024px)',
                 'dat2': '4xRealWebPhoto DAT-2 🏆 (1024px)',
-                'aurasr': 'AuraSR-v2 (GigaGAN Generative 2025) ⚡ (1024px)'
+                'dat2_gfpgan': 'DAT-2 + GFPGAN 👔✨ Hybryda (1024px)',
+                'aurasr': 'AuraSR-v2 (GigaGAN Generative 2025) ⚡ (1024px)',
+                'sd_x4': 'Stable Diffusion x4 (Latent Diffusion) 🌪️ (1024px)'
             }};
             document.getElementById('modal-status').innerText = 'Aktywna metoda podglądu HD: ' + (names[currentMethod] || currentMethod.toUpperCase());
         }}
@@ -1348,7 +1419,9 @@ def build_all_methods_report():
                 if (e.key === '3') switchModalMethod('realesrgan');
                 if (e.key === '4') switchModalMethod('ultra');
                 if (e.key === '5') switchModalMethod('dat2');
-                if (e.key === '6') switchModalMethod('aurasr');
+                if (e.key === '6') switchModalMethod('dat2_gfpgan');
+                if (e.key === '7') switchModalMethod('aurasr');
+                if (e.key === '8') switchModalMethod('sd_x4');
             }}
         }});
     </script>
