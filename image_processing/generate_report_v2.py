@@ -3,9 +3,12 @@
 Generate an enhanced visual comparison report (v2) for Super-Resolution methods:
 1. Enlarged photos with fluid widescreen container (up to 1840px).
 2. Side-cropping options (default 3:5 portrait, removes ~40% empty studio background).
-3. Interactive column switcher (5 cols, 3 cols, 2 cols, 1 col) for huge side-by-side inspection.
-4. Method toggle checkboxes to compare any 2-3 methods at giant scale.
-5. Interactive full-resolution modal (A/B switcher with keyboard 1..5 navigation).
+3. Soft light grey studio photo background (default #ededf0), replacing stark unnatural pure white.
+4. Interactive photo background switcher (#ededf0, #e2e4e8, #edeae4, #ffffff).
+5. Interactive column switcher (5 cols, 3 cols, 2 cols, 1 col) for huge side-by-side inspection.
+6. Page theme switcher (Dark Studio vs Light E-commerce).
+7. Method toggle checkboxes to compare any 2-3 methods at giant scale.
+8. Interactive full-resolution modal (A/B switcher with keyboard 1..5 navigation).
 """
 
 from pathlib import Path
@@ -167,7 +170,7 @@ def build_report():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super-Resolution v2: Powiększone zdjęcia & Przycięte puste tło</title>
+    <title>Super-Resolution v2: Powiększone zdjęcia & Naturalne szare tło</title>
     <style>
         :root {{
             --bg-body: #090d16;
@@ -181,6 +184,7 @@ def build_report():
             --accent-orange: #fb923c;
             --accent-purple: #c084fc;
             --crop-ratio: 3 / 5;
+            --photo-bg: #ededf0; /* Default soft light grey studio background */
         }}
 
         * {{
@@ -194,6 +198,7 @@ def build_report():
             background-color: var(--bg-body);
             color: var(--text-main);
             padding-bottom: 100px;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }}
 
         /* Aspect ratio crop variations */
@@ -201,6 +206,99 @@ def build_report():
         body.crop-9-16 {{ --crop-ratio: 9 / 16; }}
         body.crop-3-4 {{ --crop-ratio: 3 / 4; }}
         body.crop-1-1 {{ --crop-ratio: 1 / 1; }}
+
+        /* Photo background tone variations */
+        body.pbg-grey-soft {{ --photo-bg: #ededf0; }}
+        body.pbg-grey-medium {{ --photo-bg: #e2e4e8; }}
+        body.pbg-grey-warm {{ --photo-bg: #edeae4; }}
+        body.pbg-white {{ --photo-bg: #ffffff; }}
+
+        /* Light E-commerce Page Theme */
+        body.theme-light {{
+            --bg-body: #f4f5f7;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --border-hover: #0284c7;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }}
+        body.theme-light .topbar {{
+            background: rgba(244, 245, 247, 0.96);
+            border-bottom: 1px solid #cbd5e1;
+        }}
+        body.theme-light .top-brand {{
+            color: #0f172a;
+        }}
+        body.theme-light .ctrl-section {{
+            background: #ffffff;
+            border-color: #cbd5e1;
+        }}
+        body.theme-light .btn-toggle {{
+            background: #f8fafc;
+            color: #334155;
+            border-color: #cbd5e1;
+        }}
+        body.theme-light .btn-toggle:hover {{
+            background: #e2e8f0;
+            color: #0f172a;
+            border-color: #0284c7;
+        }}
+        body.theme-light .btn-toggle.active {{
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+        }}
+        body.theme-light .hero-banner {{
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }}
+        body.theme-light .hero-banner h1 {{
+            color: #0f172a;
+        }}
+        body.theme-light .hero-banner p {{
+            color: #475569;
+        }}
+        body.theme-light .product-card {{
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }}
+        body.theme-light .product-card-header {{
+            border-bottom-color: #f1f5f9;
+        }}
+        body.theme-light .product-card-header h3 {{
+            color: #0f172a;
+        }}
+        body.theme-light .thumb {{
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }}
+        body.theme-light .thumb-header {{
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+        }}
+        body.theme-light .thumb-header.highlight {{
+            background: rgba(16, 185, 129, 0.12);
+            border-bottom-color: rgba(16, 185, 129, 0.3);
+        }}
+        body.theme-light .th-title {{
+            color: #0f172a;
+        }}
+        body.theme-light .metrics-table {{
+            background: #ffffff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }}
+        body.theme-light .metrics-table th {{
+            background: #f8fafc;
+            color: #64748b;
+            border-bottom-color: #e2e8f0;
+        }}
+        body.theme-light .metrics-table td {{
+            border-bottom-color: #f1f5f9;
+            color: #1e293b;
+        }}
 
         /* Top sticky controller */
         .topbar {{
@@ -238,14 +336,14 @@ def build_report():
         .controls-group {{
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
         }}
 
         .ctrl-section {{
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: #131b2e;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -258,7 +356,7 @@ def build_report():
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-right: 4px;
+            margin-right: 3px;
         }}
 
         .btn-toggle {{
@@ -271,6 +369,7 @@ def build_report():
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
+            white-space: nowrap;
         }}
         .btn-toggle:hover {{
             background: #273549;
@@ -366,6 +465,7 @@ def build_report():
             padding: 20px;
             margin-bottom: 28px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }}
 
         .product-card-header {{
@@ -467,13 +567,15 @@ def build_report():
             margin-top: 2px;
         }}
 
-        /* Cropped media area */
+        /* Cropped media area with soft grey background & multiply blend */
         .thumb-media {{
             position: relative;
             width: 100%;
             aspect-ratio: var(--crop-ratio);
             overflow: hidden;
-            background: #090d16;
+            background-color: var(--photo-bg);
+            isolation: isolate;
+            transition: background-color 0.2s ease;
         }}
 
         .thumb-media img {{
@@ -482,7 +584,13 @@ def build_report():
             object-fit: cover;
             object-position: center;
             display: block;
+            mix-blend-mode: multiply;
             transition: transform 0.25s ease;
+        }}
+
+        /* When pure white background is selected, normal blend mode */
+        body.pbg-white .thumb-media img {{
+            mix-blend-mode: normal;
         }}
 
         /* 1:1 original square mode without cropping */
@@ -645,13 +753,23 @@ def build_report():
             align-items: center;
             justify-content: center;
             position: relative;
+            background-color: var(--photo-bg);
+            isolation: isolate;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 6px;
+            transition: background-color 0.2s ease;
         }}
         .modal-img-wrap img {{
             max-width: 100%;
             max-height: 72vh;
             object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            mix-blend-mode: multiply;
+        }}
+        body.pbg-white .modal-img-wrap img {{
+            mix-blend-mode: normal;
         }}
         .modal-img-wrap.is-pixelated img {{
             image-rendering: pixelated;
@@ -669,36 +787,52 @@ def build_report():
         }}
     </style>
 </head>
-<body class="crop-3-5 cols-5">
+<body class="crop-3-5 cols-5 pbg-grey-soft">
 
     <!-- Sticky Top Controls Bar -->
     <div class="topbar">
         <div class="top-brand">
-            SUPER-RESOLUTION <span>RAPORT V2 (POWIĘKSZONY & PRZYCIĘTY)</span>
+            SUPER-RESOLUTION <span>V2: SZARE TŁO & POWIĘKSZENIE</span>
         </div>
 
         <div class="controls-group">
+            <!-- Photo background tone switcher -->
+            <div class="ctrl-section">
+                <span class="ctrl-label">🎨 Tło zdjęć:</span>
+                <button class="btn-toggle active" id="btn-pbg-grey-soft" onclick="setPhotoBg('grey-soft')">Lekko szare (#ededf0)</button>
+                <button class="btn-toggle" id="btn-pbg-grey-medium" onclick="setPhotoBg('grey-medium')">Średni szary (#e2e4e8)</button>
+                <button class="btn-toggle" id="btn-pbg-grey-warm" onclick="setPhotoBg('grey-warm')">Ciepły szary (#edeae4)</button>
+                <button class="btn-toggle" id="btn-pbg-white" onclick="setPhotoBg('white')">Białe 100%</button>
+            </div>
+
             <!-- Crop aspect ratio buttons -->
             <div class="ctrl-section">
-                <span class="ctrl-label">✂️ Kadrowanie (puste boki):</span>
-                <button class="btn-toggle active" id="btn-crop-3-5" onclick="setCrop('3-5')">Sylwetka 3:5 (~40% wycięte)</button>
-                <button class="btn-toggle" id="btn-crop-9-16" onclick="setCrop('9-16')">Wąskie 9:16</button>
-                <button class="btn-toggle" id="btn-crop-3-4" onclick="setCrop('3-4')">Lekkie 3:4</button>
-                <button class="btn-toggle" id="btn-crop-1-1" onclick="setCrop('1-1')">Kwadrat 1:1</button>
+                <span class="ctrl-label">✂️ Boki:</span>
+                <button class="btn-toggle active" id="btn-crop-3-5" onclick="setCrop('3-5')">3:5 (~40% wycięte)</button>
+                <button class="btn-toggle" id="btn-crop-9-16" onclick="setCrop('9-16')">9:16</button>
+                <button class="btn-toggle" id="btn-crop-3-4" onclick="setCrop('3-4')">3:4</button>
+                <button class="btn-toggle" id="btn-crop-1-1" onclick="setCrop('1-1')">1:1</button>
             </div>
 
             <!-- Column layout / Zoom buttons -->
             <div class="ctrl-section">
-                <span class="ctrl-label">🔍 Rozmiar / Kolumny:</span>
-                <button class="btn-toggle active" id="btn-cols-5" onclick="setCols(5)">5 Kolumn</button>
-                <button class="btn-toggle" id="btn-cols-3" onclick="setCols(3)">3 Kolumny (Duże)</button>
-                <button class="btn-toggle" id="btn-cols-2" onclick="setCols(2)">2 Kolumny (HD)</button>
-                <button class="btn-toggle" id="btn-cols-1" onclick="setCols(1)">1 Kolumna (Max)</button>
+                <span class="ctrl-label">🔍 Kolumny:</span>
+                <button class="btn-toggle active" id="btn-cols-5" onclick="setCols(5)">5</button>
+                <button class="btn-toggle" id="btn-cols-3" onclick="setCols(3)">3</button>
+                <button class="btn-toggle" id="btn-cols-2" onclick="setCols(2)">2 (HD)</button>
+                <button class="btn-toggle" id="btn-cols-1" onclick="setCols(1)">1</button>
+            </div>
+
+            <!-- Page Theme -->
+            <div class="ctrl-section">
+                <span class="ctrl-label">🌓 Motyw:</span>
+                <button class="btn-toggle active" id="btn-theme-dark" onclick="setTheme('dark')">🌙 Ciemny</button>
+                <button class="btn-toggle" id="btn-theme-light" onclick="setTheme('light')">☀️ Jasny</button>
             </div>
 
             <!-- Method filter checkboxes -->
             <div class="ctrl-section">
-                <span class="ctrl-label">Kolumny:</span>
+                <span class="ctrl-label">Metody:</span>
                 <div class="filter-toggle-wrap">
                     <label class="filter-chip"><input type="checkbox" checked onchange="toggleMethod('orig', this.checked)"> Orig</label>
                     <label class="filter-chip"><input type="checkbox" checked onchange="toggleMethod('lanczos', this.checked)"> Lanczos</label>
@@ -717,9 +851,9 @@ def build_report():
             <div>
                 <h1>Wizualne porównanie metod Super-Resolution (M1 Pro 32 GB)</h1>
                 <p>
-                    Zdjęcia produktów zostały <b>powiększone</b> (kontener do 1840 px) oraz <b>przycięte po bokach</b> z domyślną proporcją <b>3:5</b>. 
-                    Dzięki temu zlikwidowano ~40% zbędnego, pustego tła studyjnego z lewej i prawej strony, a tkaniny, szwy oraz twarze modeli są o <b>ponad 2.5x większe</b> na ekranie.
-                    Możesz w każdej chwili zmienić kadrowanie na 9:16, 3:4 lub 1:1, albo włączyć 2-3 kolumny przyciskami powyżej.
+                    Tło za modelami zostało ustawione na <b>naturalny, miękki studyjny szary</b> (domyślnie <code>#ededf0</code>), dzięki czemu zlikwidowano sztuczną, oślepiającą biel 100%.
+                    Zdjęcia są powiększone i przycięte po bokach (3:5), eliminując zbędną przestrzeń.
+                    U góry możesz przełączać odcienie tła, poziom kadrowania oraz motyw strony (ciemny lub jasny).
                 </p>
             </div>
             <div>
@@ -779,6 +913,27 @@ def build_report():
         let currentStem = '';
         let currentMethod = 'dat2';
         let currentTitle = '';
+
+        function setPhotoBg(tone) {{
+            document.body.classList.remove('pbg-grey-soft', 'pbg-grey-medium', 'pbg-grey-warm', 'pbg-white');
+            document.body.classList.add('pbg-' + tone);
+
+            document.querySelectorAll('[id^="btn-pbg-"]').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('btn-pbg-' + tone);
+            if (btn) btn.classList.add('active');
+        }}
+
+        function setTheme(theme) {{
+            if (theme === 'light') {{
+                document.body.classList.add('theme-light');
+                document.getElementById('btn-theme-light').classList.add('active');
+                document.getElementById('btn-theme-dark').classList.remove('active');
+            }} else {{
+                document.body.classList.remove('theme-light');
+                document.getElementById('btn-theme-dark').classList.add('active');
+                document.getElementById('btn-theme-light').classList.remove('active');
+            }}
+        }}
 
         function setCrop(ratio) {{
             document.body.classList.remove('crop-3-5', 'crop-9-16', 'crop-3-4', 'crop-1-1');

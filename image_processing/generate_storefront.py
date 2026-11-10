@@ -118,7 +118,12 @@ def main():
             --accent-orange: #fb923c;
             --accent-purple: #c084fc;
             --accent-yellow: #facc15;
+            --photo-bg: #ededf0;
         }}
+
+        body.pbg-grey-soft {{ --photo-bg: #ededf0; }}
+        body.pbg-grey-medium {{ --photo-bg: #e2e4e8; }}
+        body.pbg-white {{ --photo-bg: #ffffff; }}
 
         * {{
             box-sizing: border-box;
@@ -327,10 +332,12 @@ def main():
 
         .product-media {{
             position: relative;
-            background: #090d16;
+            background-color: var(--photo-bg, #ededf0);
+            isolation: isolate;
             aspect-ratio: 1 / 1;
             width: 100%;
             overflow: hidden;
+            transition: background-color 0.2s ease;
         }}
 
         .product-media img {{
@@ -338,7 +345,12 @@ def main():
             height: 100%;
             object-fit: cover;
             display: block;
+            mix-blend-mode: multiply;
             transition: transform 0.3s ease;
+        }}
+
+        body.pbg-white .product-media img {{
+            mix-blend-mode: normal;
         }}
 
         .orig-section .product-media img {{
@@ -408,7 +420,7 @@ def main():
         }}
     </style>
 </head>
-<body>
+<body class="pbg-grey-soft">
     <div class="topbar">
         <div class="brand-title">
             FASHION STORE <span>SUPER-RESOLUTION DEMO</span>
@@ -432,7 +444,12 @@ def main():
             </a>
         </div>
 
-        <div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; gap: 4px; background: #131b2e; padding: 4px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px;">
+                <span style="color: var(--text-muted); padding: 4px 6px;">🎨 Tło zdjęć:</span>
+                <button class="nav-btn active" id="btn-sbg-grey" onclick="setStoreBg('grey-soft')" style="padding: 4px 8px; font-size: 11px;">Szare (#ededf0)</button>
+                <button class="nav-btn" id="btn-sbg-white" onclick="setStoreBg('white')" style="padding: 4px 8px; font-size: 11px;">Białe 100%</button>
+            </div>
             <button class="mode-toggle" id="toggle-mode-btn" onclick="toggleViewMode()">
                 🔄 Przełącz tryb: Zakładki w miejscu
             </button>
@@ -601,6 +618,20 @@ def main():
 
     <script>
         let isTabMode = false;
+
+        function setStoreBg(tone) {{
+            if (tone === 'white') {{
+                document.body.classList.remove('pbg-grey-soft');
+                document.body.classList.add('pbg-white');
+                document.getElementById('btn-sbg-white').classList.add('active');
+                document.getElementById('btn-sbg-grey').classList.remove('active');
+            }} else {{
+                document.body.classList.remove('pbg-white');
+                document.body.classList.add('pbg-grey-soft');
+                document.getElementById('btn-sbg-grey').classList.add('active');
+                document.getElementById('btn-sbg-white').classList.remove('active');
+            }}
+        }}
 
         function toggleViewMode() {{
             isTabMode = !isTabMode;
