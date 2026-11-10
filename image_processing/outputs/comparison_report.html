@@ -97,21 +97,22 @@
         .thumb.original img {
             image-rendering: pixelated;
         }
-        .badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #cbd5e1;
+        .thumb-header {
+            background: #1e293b;
+            color: #94a3b8;
             font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
+            font-weight: 600;
+            padding: 8px 10px;
+            border-bottom: 1px solid #334155;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .badge.highlight {
-            background: rgba(14, 165, 233, 0.9);
-            color: #ffffff;
+        .thumb-header.highlight {
+            background: rgba(14, 165, 233, 0.18);
+            color: #38bdf8;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.4);
             font-weight: bold;
         }
         .instructions {
@@ -187,49 +188,49 @@
             <h3>1. Jacket (ID 86605)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/01_jacket_86605.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/01_jacket_86605.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/01_jacket_86605.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/01_jacket_86605.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/01_jacket_86605.webp" alt="DAT-2">
                 </div>
             </div>
         </div>
         
         <div class="card" id="card-1">
-            <h3>2. Knit (ID sweater)</h3>
+            <h3>2. Knit sweater (ID 86933)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/02_knit_sweater_86933.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/02_knit_sweater_86933.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/02_knit_sweater_86933.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/02_knit_sweater_86933.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/02_knit_sweater_86933.webp" alt="DAT-2">
                 </div>
             </div>
@@ -239,23 +240,23 @@
             <h3>3. Tshirt (ID 87389)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/03_tshirt_87389.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/03_tshirt_87389.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/03_tshirt_87389.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/03_tshirt_87389.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/03_tshirt_87389.webp" alt="DAT-2">
                 </div>
             </div>
@@ -265,23 +266,23 @@
             <h3>4. Dress (ID 86877)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/04_dress_86877.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/04_dress_86877.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/04_dress_86877.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/04_dress_86877.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/04_dress_86877.webp" alt="DAT-2">
                 </div>
             </div>
@@ -291,23 +292,23 @@
             <h3>5. Shirt (ID 86779)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/05_shirt_86779.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/05_shirt_86779.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/05_shirt_86779.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/05_shirt_86779.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/05_shirt_86779.webp" alt="DAT-2">
                 </div>
             </div>
@@ -317,23 +318,23 @@
             <h3>6. Jeans (ID 86773)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/06_jeans_86773.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/06_jeans_86773.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/06_jeans_86773.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/06_jeans_86773.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/06_jeans_86773.webp" alt="DAT-2">
                 </div>
             </div>
@@ -343,23 +344,23 @@
             <h3>7. Coat (ID 99750)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/07_coat_99750.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/07_coat_99750.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/07_coat_99750.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/07_coat_99750.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/07_coat_99750.webp" alt="DAT-2">
                 </div>
             </div>
@@ -369,23 +370,23 @@
             <h3>8. Hoodie (ID 88112)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/08_hoodie_88112.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/08_hoodie_88112.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/08_hoodie_88112.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/08_hoodie_88112.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/08_hoodie_88112.webp" alt="DAT-2">
                 </div>
             </div>
@@ -395,23 +396,23 @@
             <h3>9. Sweatshirt (ID 91440)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/09_sweatshirt_91440.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/09_sweatshirt_91440.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/09_sweatshirt_91440.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/09_sweatshirt_91440.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/09_sweatshirt_91440.webp" alt="DAT-2">
                 </div>
             </div>
@@ -421,23 +422,23 @@
             <h3>10. Bomber (ID 87053)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/10_bomber_87053.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/10_bomber_87053.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/10_bomber_87053.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/10_bomber_87053.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/10_bomber_87053.webp" alt="DAT-2">
                 </div>
             </div>
@@ -447,23 +448,23 @@
             <h3>11. Trousers (ID 86810)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/11_trousers_86810.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/11_trousers_86810.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/11_trousers_86810.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/11_trousers_86810.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/11_trousers_86810.webp" alt="DAT-2">
                 </div>
             </div>
@@ -473,23 +474,23 @@
             <h3>12. Skirt (ID 89767)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/12_skirt_89767.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/12_skirt_89767.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/12_skirt_89767.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/12_skirt_89767.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/12_skirt_89767.webp" alt="DAT-2">
                 </div>
             </div>
@@ -499,23 +500,23 @@
             <h3>13. Cardigan (ID 90103)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/13_cardigan_90103.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/13_cardigan_90103.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/13_cardigan_90103.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/13_cardigan_90103.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/13_cardigan_90103.webp" alt="DAT-2">
                 </div>
             </div>
@@ -525,23 +526,23 @@
             <h3>14. Blouse (ID 87937)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/14_blouse_87937.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/14_blouse_87937.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/14_blouse_87937.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/14_blouse_87937.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/14_blouse_87937.webp" alt="DAT-2">
                 </div>
             </div>
@@ -551,23 +552,23 @@
             <h3>15. Polo (ID 87953)</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/15_polo_87953.png" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/15_polo_87953.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/15_polo_87953.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/15_polo_87953.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/15_polo_87953.webp" alt="DAT-2">
                 </div>
             </div>

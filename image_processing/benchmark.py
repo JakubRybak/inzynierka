@@ -205,30 +205,32 @@ def generate_html_report(
         stem = img_path.stem
         # Category label from filename: e.g. 01_jacket_86605 -> Jacket (86605)
         parts = stem.split("_")
-        cat_title = f"{parts[1].capitalize()} (ID {parts[2]})" if len(parts) >= 3 else stem
+        cat_name = " ".join(parts[1:-1]).capitalize() if len(parts) >= 3 else stem
+        pid = parts[-1] if len(parts) >= 3 else ""
+        cat_title = f"{cat_name} (ID {pid})" if pid else cat_name
 
         row_html = f"""
         <div class="card" id="card-{i}">
             <h3>{i+1}. {cat_title}</h3>
             <div class="grid">
                 <div class="thumb original">
-                    <span class="badge">Original (256x256)</span>
+                    <div class="thumb-header">Original (256&times;256)</div>
                     <img src="../sample_images/{img_path.name}" alt="Original">
                 </div>
                 <div class="thumb bicubic">
-                    <span class="badge">Lanczos Baseline (1024x1024)</span>
+                    <div class="thumb-header">Lanczos Baseline (1024&times;1024)</div>
                     <img src="bicubic/{stem}.webp" alt="Lanczos">
                 </div>
                 <div class="thumb realesrgan">
-                    <span class="badge">Real-ESRGAN (1024x1024)</span>
+                    <div class="thumb-header">Real-ESRGAN (1024&times;1024)</div>
                     <img src="realesrgan_x4plus/{stem}.webp" alt="Real-ESRGAN">
                 </div>
                 <div class="thumb ultrasharp">
-                    <span class="badge">4x-UltraSharp (1024x1024)</span>
+                    <div class="thumb-header">4x-UltraSharp (1024&times;1024)</div>
                     <img src="ultrasharp_x4/{stem}.webp" alt="UltraSharp">
                 </div>
                 <div class="thumb dat2">
-                    <span class="badge highlight">4xRealWebPhoto DAT-2 (1024x1024)</span>
+                    <div class="thumb-header highlight">4xRealWebPhoto DAT-2 (1024&times;1024)</div>
                     <img src="realwebphoto_dat2/{stem}.webp" alt="DAT-2">
                 </div>
             </div>
@@ -347,21 +349,22 @@ def generate_html_report(
         .thumb.original img {{
             image-rendering: pixelated;
         }}
-        .badge {{
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #cbd5e1;
+        .thumb-header {{
+            background: #1e293b;
+            color: #94a3b8;
             font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
+            font-weight: 600;
+            padding: 8px 10px;
+            border-bottom: 1px solid #334155;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }}
-        .badge.highlight {{
-            background: rgba(14, 165, 233, 0.9);
-            color: #ffffff;
+        .thumb-header.highlight {{
+            background: rgba(14, 165, 233, 0.18);
+            color: #38bdf8;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.4);
             font-weight: bold;
         }}
         .instructions {{
