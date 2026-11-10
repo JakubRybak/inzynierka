@@ -1,10 +1,11 @@
 """Super-Resolution Pipeline and Benchmark for fashion e-commerce images.
 
-Evaluates 4 practical deployed methods on Apple Silicon M1 Pro / MPS:
+Evaluates 5 practical deployed and generative methods on Apple Silicon M1 Pro / MPS:
 1. Classical Baseline: Lanczos + Unsharp Mask (Pillow)
 2. Classic CNN: Real-ESRGAN x4plus
 3. Texture-Focused CNN: 4x-UltraSharp
 4. Vision Transformer: 4xRealWebPhoto DAT-2 (Benchmark Winner)
+5. Generative GigaGAN: AuraSR-v2 (fal.ai / Aleph Alpha 2025)
 
 Produces optimized 1024x1024 WebP images and renders master_comparison_all_methods.html.
 """
@@ -112,6 +113,12 @@ def run_pipeline() -> None:
             "type": "neural",
             "model_path": MODELS_DIR / "4xRealWebPhoto_v4_dat2.pth",
         },
+        {
+            "id": "aurasr_v2",
+            "name": "AuraSR-v2 (GigaGAN Generative)",
+            "type": "aurasr",
+            "model_path": None,
+        },
     ]
 
     # Preload neural models
@@ -122,6 +129,19 @@ def run_pipeline() -> None:
             t0 = time.perf_counter()
             desc = loader.load_from_file(str(m["model_path"]))
             model = desc.to(device).eval()
+            loaded_models[m["id"]] = model
+            print(f"  ✓ Loaded {m['name']} in {time.perf_counter() - t0:.2f}s")
+        elif m["type"] == "aurasr":
+            print(f"Loading {m['name']} from fal/AuraSR-v2...")
+            t0 = time.perf_counter()
+            from huggingface_hub import snapshot_download
+            from safetensors.torch import load_file
+            from aura_sr import AuraSR
+            hf_path = Path(snapshot_download("fal/AuraSR-v2"))
+            config = json.loads((hf_path / "config.json").read_text())
+            model = AuraSR(config, device=str(device))
+            checkpoint = load_file(hf_path / "model.safetensors")
+            model.upsampler.load_state_dict(checkpoint, strict=True)
             loaded_models[m["id"]] = model
             print(f"  ✓ Loaded {m['name']} in {time.perf_counter() - t0:.2f}s")
 
@@ -137,6 +157,10 @@ def run_pipeline() -> None:
             with torch.no_grad():
                 _ = loaded_models[mid](dummy)
             sync_device(device)
+        elif m["type"] == "aurasr":
+            dummy_img = Image.open(images[0]).convert("RGB")
+            _ = loaded_models[mid].upscale_4x_overlapped(dummy_img)
+            sync_device(device)
 
         latencies_ms: List[float] = []
         file_sizes_webp_kb: List[float] = []
@@ -147,6 +171,9 @@ def run_pipeline() -> None:
             t_start = time.perf_counter()
             if m["type"] == "classical":
                 out_img = run_bicubic(img)
+            elif m["type"] == "aurasr":
+                out_img = loaded_models[mid].upscale_4x_overlapped(img)
+                sync_device(device)
             else:
                 t_input = to_tensor(img).unsqueeze(0).to(device)
                 with torch.no_grad():
