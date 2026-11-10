@@ -298,7 +298,7 @@ def build_all_methods_report():
                 </div>
                 <div class="thumb-footer-spec">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                        <span style="font-size: 10px; color: var(--text-muted);">Halucynacje: <b style="color: #ffffff;">{m['hallucination_risk']}</b></span>
+                        <span style="font-size: 10px; color: var(--text-muted);">Halucynacje: <b style="color: var(--text-main);">{m['hallucination_risk']}</b></span>
                         <span style="font-size: 10px; font-weight: 700; color: {m['color']};">{m['time_per_img']}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted);">
@@ -457,6 +457,26 @@ def build_all_methods_report():
         body.theme-light .metrics-table {{ background: #ffffff; border-color: #e2e8f0; }}
         body.theme-light .metrics-table th {{ background: #f8fafc; color: #64748b; }}
         body.theme-light .metrics-table td {{ color: #1e293b; border-color: #f1f5f9; }}
+        body.theme-light .stat-badge {{ background: #f1f5f9; border-color: #cbd5e1; }}
+        body.theme-light .stat-badge b {{ color: #0f172a; }}
+        body.theme-light .stat-badge span {{ color: #64748b; }}
+        body.theme-light .modal-content {{ background: #ffffff; border-color: #cbd5e1; box-shadow: 0 16px 40px rgba(0,0,0,0.15); }}
+        body.theme-light .modal-header {{ background: #f8fafc; border-bottom-color: #e2e8f0; }}
+        body.theme-light .modal-title {{ color: #0f172a; }}
+        body.theme-light .modal-close {{ background: #f1f5f9; color: #475569; border-color: #cbd5e1; }}
+        body.theme-light .modal-close:hover {{ background: #ef4444; color: #ffffff; border-color: #ef4444; }}
+        body.theme-light .modal-tabs {{ background: #f1f5f9; border-bottom-color: #e2e8f0; }}
+        body.theme-light .modal-tab-btn {{ background: #ffffff; color: #475569; border-color: #cbd5e1; }}
+        body.theme-light .modal-tab-btn:hover {{ background: #e2e8f0; color: #0f172a; border-color: #0284c7; }}
+        body.theme-light .modal-body {{ background: #f8fafc; }}
+        body.theme-light .modal-footer {{ background: #f8fafc; border-top-color: #e2e8f0; color: #64748b; }}
+        body.theme-light .subbar {{ background: rgba(244, 245, 247, 0.94); border-bottom-color: #cbd5e1; }}
+        body.theme-light .thumb-footer-spec {{ background: #f8fafc; border-top-color: #e2e8f0; }}
+        body.theme-light .thumb-footer-spec b {{ color: #0f172a !important; }}
+        body.theme-light .sf-info {{ background: #ffffff; }}
+        body.theme-light .sf-category {{ color: #64748b; }}
+        body.theme-light .sf-header-title h2 {{ color: #0f172a; }}
+        body.theme-light .quick-nav {{ background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }}
 
         /* Sticky Topbar */
         .topbar {{
@@ -1051,7 +1071,7 @@ def build_all_methods_report():
         }}
     </style>
 </head>
-<body class="cols-8 crop-3-5 pbg-grey-soft theme-dark">
+<body class="cols-8 crop-3-5 pbg-grey-soft theme-light">
 
     <!-- 1. STICKY TOPBAR -->
     <div class="topbar">
@@ -1101,8 +1121,8 @@ def build_all_methods_report():
 
             <div class="ctrl-section">
                 <span class="ctrl-label">🌓 Motyw:</span>
-                <button class="btn-toggle active" id="btn-theme-dark" onclick="setTheme('dark')">🌙 Ciemny</button>
-                <button class="btn-toggle" id="btn-theme-light" onclick="setTheme('light')">☀️ Jasny</button>
+                <button class="btn-toggle" id="btn-theme-dark" onclick="setTheme('dark')">🌙 Ciemny</button>
+                <button class="btn-toggle active" id="btn-theme-light" onclick="setTheme('light')">☀️ Jasny</button>
             </div>
         </div>
     </div>
@@ -1184,7 +1204,7 @@ def build_all_methods_report():
         <!-- ========================================================= -->
         <section class="view-section active-view" id="view-comparison">
             <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-size: 18px; color: #ffffff;">👥 Sekcja 1: Porównanie produktów we wszystkich 8 realnych metodach</h2>
+                <h2 style="font-size: 18px; color: var(--text-main);">👥 Sekcja 1: Porównanie produktów we wszystkich 8 realnych metodach</h2>
                 <span style="font-size: 12px; color: var(--text-muted);">15 produktów × 8 kolumn obok siebie</span>
             </div>
             {''.join(sec1_cards)}
@@ -1195,7 +1215,7 @@ def build_all_methods_report():
         <!-- ========================================================= -->
         <section class="view-section" id="view-storefront">
             <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="font-size: 18px; color: #ffffff;">🛍️ Sekcja 2: Pełny Storefront (Katalog podzielony na subsekcje metod)</h2>
+                <h2 style="font-size: 18px; color: var(--text-main);">🛍️ Sekcja 2: Pełny Storefront (Katalog podzielony na subsekcje metod)</h2>
                 <span style="font-size: 12px; color: var(--text-muted);">Wszystkie 8 metod ułożone w osobnych siatkach sklepowych</span>
             </div>
             {''.join(sec2_sections)}
