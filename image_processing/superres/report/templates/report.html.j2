@@ -1,266 +1,102 @@
-{#- Super-resolution comparison report. Rendered by superres/report/builder.py -#}
-{% macro tag_badge(method) -%}
-<span class="badge-tag" style="--method-color: {{ method.color }}">{{ method.tag }}</span>
+{% macro photo(method, sample) -%}
+<div class="photo-frame{% if method.is_original %} is-original{% endif %}">
+    <img src="{{ image_src(method, sample) }}" alt="{{ sample.display_name }} — {{ method.name }}" loading="lazy">
+</div>
 {%- endmacro %}
-
-{% macro comparison_thumb(method, sample) %}
-<div class="thumb" data-method="{{ method.id }}"
-     data-preview data-stem="{{ sample.stem }}" data-title="{{ sample.display_name }}">
-    <div class="thumb-header" style="--method-color: {{ method.color }}">
-        <div class="thumb-title">{{ method.name }}</div>
-        <div class="thumb-subtitle">{{ method.family }} · {{ method.time_per_image }}</div>
-    </div>
-    <div class="photo-frame{% if method.is_original %} is-original{% endif %}">
-        <img src="{{ image_src(method, sample) }}" alt="{{ method.name }}" loading="lazy">
-        <span class="media-badge">{{ method.file_format | upper }} {{ file_size(method, sample) }}</span>
-        <div class="zoom-hint">🔍 Kliknij powiększenie 1024px</div>
-    </div>
-    <div class="thumb-specs">
-        <div class="spec-row">
-            <span>Halucynacje: <b>{{ method.hallucination_risk }}</b></span>
-            <span class="spec-time" style="color: {{ method.color }}">{{ method.time_per_image }}</span>
-        </div>
-        <div class="spec-row">
-            <span>Wierność: <b>{{ method.fidelity }}/10</b></span>
-            <span>Realizm: <b>{{ method.realism }}/10</b></span>
-        </div>
-    </div>
-</div>
-{% endmacro %}
-
-{% macro storefront_card(method, sample) %}
-<div class="storefront-card" data-preview data-method="{{ method.id }}"
-     data-stem="{{ sample.stem }}" data-title="{{ sample.display_name }}">
-    <div class="photo-frame{% if method.is_original %} is-original{% endif %}">
-        <span class="media-badge">{{ method.resolution }} px</span>
-        <img src="{{ image_src(method, sample) }}" alt="{{ sample.product.title }}" loading="lazy">
-        <div class="zoom-hint">🔍 Podgląd HD</div>
-    </div>
-    <div class="storefront-info">
-        <div class="storefront-brand">{{ sample.product.brand }}</div>
-        <div class="storefront-title">{{ sample.product.title }}</div>
-        <div class="storefront-category">{{ sample.product.category }}</div>
-        <div class="storefront-price">{{ sample.product.price }}</div>
-    </div>
-</div>
-{% endmacro %}
-
-{% macro tone_buttons(short=false) %}
-{% for tone in photo_tones %}
-<button class="btn-toggle{% if tone.id == default_photo_tone %} active{% endif %}" data-tone="{{ tone.id }}">
-    {{- tone.short_label if short else tone.label -}}
-</button>
-{% endfor %}
-{% endmacro %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Super-Resolution: {{ methods | length }} metod AI (Apple Silicon M1 Pro)</title>
+    <title>Porównanie zdjęć produktowych</title>
     <style>
 {{ styles | safe }}
     </style>
 </head>
-<body class="cols-8 crop-3-5 tone-{{ default_photo_tone }}">
-
-<!-- Top bar: view switcher + display controls -->
-<header class="topbar">
-    <div class="brand">FASHION STORE <span>SUPER-RESOLUTION MASTER SUITE ({{ methods | length }} METOD AI)</span></div>
-
-    <nav class="view-switch">
-        <button class="view-switch-btn active" data-view="comparison">👥 1. Porównanie Produktów</button>
-        <button class="view-switch-btn" data-view="storefront">🛍️ 2. Pełny Storefront</button>
-        <button class="view-switch-btn" data-view="both">📑 Pokaż Obie Sekcje</button>
-    </nav>
-
-    <div class="controls">
-        <div class="control-group">
-            <span class="control-label">🎨 Tło:</span>
-            {{ tone_buttons() }}
-        </div>
-        <div class="control-group">
-            <span class="control-label">✂️ Boki:</span>
-            <button class="btn-toggle active" data-crop="3-5">3:5 (~40% wycięte)</button>
-            <button class="btn-toggle" data-crop="9-16">9:16</button>
-            <button class="btn-toggle" data-crop="3-4">3:4</button>
-            <button class="btn-toggle" data-crop="1-1">1:1</button>
-        </div>
-        <div class="control-group">
-            <span class="control-label">🔍 Kolumny:</span>
-            <button class="btn-toggle active" data-cols="8">8 (Wszystkie)</button>
-            <button class="btn-toggle" data-cols="6">6</button>
-            <button class="btn-toggle" data-cols="4">4</button>
-            <button class="btn-toggle" data-cols="3">3</button>
-            <button class="btn-toggle" data-cols="2">2 (HD)</button>
-        </div>
-    </div>
+<body class="crop-3-5 tone-{{ default_photo_tone }}">
+<header class="controls">
+    <fieldset>
+        <legend>Widok</legend>
+        <button type="button" data-view="comparison" aria-pressed="true">Porównanie produktu</button>
+        <button type="button" data-view="storefront" aria-pressed="false">Storefront</button>
+    </fieldset>
+    <fieldset>
+        <legend>Tło</legend>
+        {% for tone in photo_tones %}
+        <button type="button" data-tone="{{ tone.id }}" aria-pressed="{{ 'true' if tone.id == default_photo_tone else 'false' }}">{{ tone.label }}</button>
+        {% endfor %}
+    </fieldset>
+    <fieldset>
+        <legend>Kadr</legend>
+        <button type="button" data-crop="3-5" aria-pressed="true">3:5</button>
+        <button type="button" data-crop="9-16" aria-pressed="false">9:16</button>
+        <button type="button" data-crop="3-4" aria-pressed="false">3:4</button>
+        <button type="button" data-crop="1-1" aria-pressed="false">1:1</button>
+    </fieldset>
+    <fieldset>
+        <legend>Liczba kolumn</legend>
+        <button type="button" data-columns="auto" aria-pressed="true">Auto</button>
+        {% for count in [2, 3, 4, 6, 8] %}
+        <button type="button" data-columns="{{ count }}" aria-pressed="false">{{ count }}</button>
+        {% endfor %}
+    </fieldset>
 </header>
 
-<!-- Sub bars (one per view) -->
-<div class="subbar" id="subbar-comparison">
-    <div class="subbar-title">👥 Sekcja 1: Porównanie {{ methods | length }} autentycznych metod (100% fizycznych zdjęć AI bez atrap)</div>
-    <div class="subnav-links">
-        <span class="control-label">Szybki filtr kolumn:</span>
-        {% for filter in column_filters %}
-        <button class="subnav-btn{% if loop.first %} active{% endif %}" data-filter="{{ filter.id }}">{{ filter.label }}</button>
-        {% endfor %}
-    </div>
-</div>
+<main>
+    <table>
+        <caption>Czas przetwarzania na Apple M1 Pro</caption>
+        <thead>
+            <tr>
+                <th scope="col">Metoda</th>
+                <th scope="col">Czas na zdjęcie</th>
+                <th scope="col">Szacunek dla 10 000 zdjęć</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for method in methods %}
+            <tr>
+                <th scope="row">{{ method.name }}</th>
+                <td>{{ method.time_per_image }}</td>
+                <td>{{ method.time_per_10k }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-<div class="subbar" id="subbar-storefront" hidden>
-    <div class="subnav-links">
-        <span class="control-label">Skocz do metody w katalogu:</span>
-        {% for method in methods %}
-        <a href="#storefront-{{ method.id }}" class="subnav-btn" data-storefront-section="{{ method.id }}">{{ method.short_name }}</a>
-        {% endfor %}
-    </div>
-    <button class="btn-toggle" id="storefront-tab-mode">🔄 Przełącz tryb: Zakładki w miejscu</button>
-</div>
-
-<main class="main-container">
-
-    <section class="hero-banner">
-        <h1>Zaawansowany Raport Super-Resolution: Wszystkie Realne Metody Generatywne, Dyfuzyjne i Hybrydowe</h1>
-        <p>
-            Zestawienie <b>{{ methods | length }} w 100% autentycznych, fizycznie przeliczonych metod</b> dla {{ samples | length }} produktów e-commerce
-            na maszynie <b>Apple Silicon M1 Pro</b> (PyTorch MPS).
-            Raport pozwala porównać klasyczny filtr matematyczny (Lanczos), sieci splotowe CNN (Real-ESRGAN, 4x-UltraSharp),
-            zwycięski Vision Transformer (<b>4xRealWebPhoto DAT-2</b>), produkcyjną hybrydę e-commerce (<b>DAT-2 + GFPGAN Face Restoration</b>),
-            generatywny upscaler GigaGAN (<b>AuraSR-v2 z 2025 r.</b> od fal.ai) oraz oficjalny model dyfuzyjny <b>Stable Diffusion x4</b> od Stability AI.
-            Każdy piksel w tym raporcie pochodzi z realnego pliku WebP wygenerowanego lokalnie — zero atrap i placeholderów.
-        </p>
-    </section>
-
-    <!-- Benchmark table -->
-    <details class="metrics-accordion" open>
-        <summary>
-            <span>📊 Master-Tabela Architektoniczna i Benchmarkowa (100% Realne Wyniki z GPU M1 Pro)</span>
-            <span class="summary-hint">Kliknij, aby zwinąć/rozwinąć</span>
-        </summary>
-        <table class="metrics-table">
-            <thead>
-                <tr>
-                    <th>Metoda &amp; Architektura</th>
-                    <th>Kategoria / Rola</th>
-                    <th>Czas / zdj. (M1 Pro)</th>
-                    <th>10 000 produktów</th>
-                    <th>Wierność kroju (Fidelity)</th>
-                    <th>Realizm mikro-faktur</th>
-                    <th>Ryzyko halucynacji</th>
-                    <th>VRAM / RAM</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for method in methods %}
-                <tr{% if method.highlight %} class="row-{{ method.highlight }}"{% endif %}>
-                    <td>
-                        <b>{{ method.name }}</b> {{ tag_badge(method) }}<br>
-                        <small class="muted">{{ method.family }} · {{ method.year }} ({{ method.source }})</small>
-                    </td>
-                    <td><span class="method-family" style="color: {{ method.color }}">{{ method.family }}</span></td>
-                    <td><b>{{ method.time_per_image }}</b></td>
-                    <td><b>{{ method.time_per_10k }}</b></td>
-                    <td><b class="score-fidelity">{{ method.fidelity }}/10</b></td>
-                    <td><b class="score-realism">{{ method.realism }}/10</b></td>
-                    <td><b class="risk-{{ method.hallucination_level }}">{{ method.hallucination_risk }}</b></td>
-                    <td><small>{{ method.memory }}</small></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </details>
-
-    <!-- Section 1: product-by-product comparison -->
-    <section class="view-section active" id="view-comparison">
-        <div class="section-heading">
-            <h2>👥 Sekcja 1: Porównanie produktów we wszystkich {{ methods | length }} realnych metodach</h2>
-            <span>{{ samples | length }} produktów × {{ methods | length }} kolumn obok siebie</span>
-        </div>
+    <section id="view-comparison" aria-label="Porównanie produktu">
         {% for sample in samples %}
-        <article class="product-card">
-            <div class="product-card-header">
-                <div>
-                    <h3>{{ loop.index }}. {{ sample.display_name }} ({{ sample.product.category }}, ID {{ sample.product_id }})</h3>
-                    <div class="product-meta"><b>{{ sample.product.price }}</b> · Materiał: <i>{{ sample.product.material }}</i></div>
-                </div>
-                <span class="product-counter">Produkt {{ loop.index }} z {{ samples | length }}</span>
-            </div>
-            <div class="comparison-grid">
+        <article>
+            <h2>{{ sample.display_name }}</h2>
+            <div class="image-grid">
                 {% for method in methods %}
-                {{ comparison_thumb(method, sample) }}
+                <figure>
+                    <figcaption>{{ method.name }}</figcaption>
+                    {{ photo(method, sample) }}
+                </figure>
                 {% endfor %}
             </div>
         </article>
         {% endfor %}
     </section>
 
-    <!-- Section 2: storefront catalogue, one grid per method -->
-    <section class="view-section" id="view-storefront">
-        <div class="section-heading">
-            <h2>🛍️ Sekcja 2: Pełny Storefront (Katalog podzielony na subsekcje metod)</h2>
-            <span>Wszystkie {{ methods | length }} metod ułożone w osobnych siatkach sklepowych</span>
-        </div>
+    <section id="view-storefront" aria-label="Storefront" hidden>
         {% for method in methods %}
-        <div class="storefront-section" id="storefront-{{ method.id }}">
-            <div class="storefront-header" style="--method-color: {{ method.color }}">
-                <div class="storefront-header-title">
-                    <h2>{{ method.name }} {{ tag_badge(method) }}</h2>
-                    <p>{{ method.description }} — <b>Zalety:</b> {{ method.pros }} <b>Wady:</b> {{ method.cons }}</p>
-                </div>
-                <div class="storefront-stats">
-                    <div class="stat-badge"><span>Architektura:</span><b>{{ method.family }} ({{ method.year }})</b></div>
-                    <div class="stat-badge"><span>Czas / zdjęcie:</span><b>{{ method.time_per_image }}</b></div>
-                    <div class="stat-badge"><span>10 000 produktów:</span><b>{{ method.time_per_10k }}</b></div>
-                    <div class="stat-badge"><span>Wierność kroju:</span><b>{{ method.fidelity }}/10</b></div>
-                    <div class="stat-badge"><span>Ryzyko halucynacji:</span><b>{{ method.hallucination_risk }}</b></div>
-                </div>
-            </div>
-            <div class="storefront-grid">
+        <article>
+            <h2>{{ method.name }}</h2>
+            <div class="image-grid">
                 {% for sample in samples %}
-                {{ storefront_card(method, sample) }}
+                <figure>
+                    {{ photo(method, sample) }}
+                    <figcaption>{{ sample.display_name }} · {{ sample.product.price }}</figcaption>
+                </figure>
                 {% endfor %}
             </div>
-        </div>
+        </article>
         {% endfor %}
     </section>
-
 </main>
 
-<!-- Lightbox with 1024px preview -->
-<div class="modal-overlay" id="preview-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title" id="modal-title">Podgląd HD</div>
-            <button class="modal-close" data-close-modal>&times;</button>
-        </div>
-        <div class="modal-tabs">
-            {% for method in methods %}
-            <button class="modal-tab-btn{% if method.tab_style %} tab-{{ method.tab_style }}{% endif %}" data-modal-method="{{ method.id }}">
-                {{- loop.index }}. {{ method.short_name -}}
-            </button>
-            {% endfor %}
-        </div>
-        <div class="modal-body">
-            <div class="modal-photo-frame" id="modal-photo-frame">
-                <img id="modal-img" src="" alt="Podgląd 1024px">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div class="modal-footer-left">
-                <span id="modal-status"></span>
-                <div class="modal-tones">
-                    <span class="control-label">🎨 Tło:</span>
-                    {{ tone_buttons(short=true) }}
-                </div>
-            </div>
-            <span>Klawisze 1-{{ methods | length }} przełączają metodę · Esc zamyka</span>
-        </div>
-    </div>
-</div>
-
 <script>
-const REPORT_CONFIG = {{ app_config | tojson }};
 {{ script | safe }}
 </script>
 </body>

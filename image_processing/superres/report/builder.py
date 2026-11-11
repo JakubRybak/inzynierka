@@ -11,7 +11,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from ..paths import REPORT_PATH, SAMPLE_IMAGES_DIR, UPSCALED_IMAGES_DIR, list_sample_images, upscaled_image_path
-from .methods import COLUMN_FILTERS, DEFAULT_PREVIEW_ID, METHODS, MethodInfo
+from .methods import METHODS, MethodInfo
 from .products import SampleImage, load_sample_images
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -21,14 +21,13 @@ TEMPLATES_DIR = Path(__file__).parent / "templates"
 class PhotoTone:
     id: str
     label: str
-    short_label: str
 
 
 PHOTO_TONES = [
-    PhotoTone("grey-soft", "Szare (#ededf0)", "Szare"),
-    PhotoTone("grey-medium", "Średnie (#e2e4e8)", "Średnie"),
-    PhotoTone("grey-warm", "Ciepłe (#edeae4)", "Ciepłe"),
-    PhotoTone("white", "Białe 100% (#ffffff)", "Białe"),
+    PhotoTone("grey-soft", "Szare"),
+    PhotoTone("grey-medium", "Średnie"),
+    PhotoTone("grey-warm", "Ciepłe"),
+    PhotoTone("white", "Białe"),
 ]
 DEFAULT_PHOTO_TONE = "grey-soft"
 
@@ -53,15 +52,11 @@ def build_report(output_path: Path = REPORT_PATH) -> Path:
     html = env.get_template("report.html.j2").render(
         methods=METHODS,
         samples=samples,
-        column_filters=COLUMN_FILTERS,
         photo_tones=PHOTO_TONES,
         default_photo_tone=DEFAULT_PHOTO_TONE,
-        default_preview_id=DEFAULT_PREVIEW_ID,
         image_src=images.src,
-        file_size=images.file_size_label,
         styles=(TEMPLATES_DIR / "styles.css").read_text(encoding="utf-8"),
         script=(TEMPLATES_DIR / "app.js").read_text(encoding="utf-8"),
-        app_config=_app_config(images),
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -84,33 +79,3 @@ class _ImageLocator:
 
     def src(self, method: MethodInfo, sample: SampleImage) -> str:
         return f"{self.directory_url(method)}/{sample.stem}.{method.file_format}"
-
-    def file_size_label(self, method: MethodInfo, sample: SampleImage) -> str:
-        path = self.file(method, sample)
-        return _format_file_size(path.stat().st_size) if path.exists() else "N/A"
-
-
-def _app_config(images: _ImageLocator) -> dict:
-    """Data consumed by app.js (method order defines the 1-8 keyboard shortcuts)."""
-    return {
-        "defaultMethod": DEFAULT_PREVIEW_ID,
-        "methods": [
-            {
-                "id": m.id,
-                "label": f"{m.name} ({m.resolution}px)",
-                "imageDir": images.directory_url(m),
-                "extension": m.file_format,
-                "pixelated": m.is_original,
-            }
-            for m in METHODS
-        ],
-        "columnFilters": {f.id: list(f.method_ids) for f in COLUMN_FILTERS},
-    }
-
-
-def _format_file_size(num_bytes: int) -> str:
-    if num_bytes < 1024:
-        return f"{num_bytes} B"
-    if num_bytes < 1024 * 1024:
-        return f"{num_bytes / 1024:.1f} KB"
-    return f"{num_bytes / (1024 * 1024):.2f} MB"

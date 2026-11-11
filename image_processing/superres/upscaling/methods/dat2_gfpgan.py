@@ -1,10 +1,10 @@
 """Hybrid e-commerce upscaler: DAT-2 for the garment + GFPGAN for the model's face.
 
 Pipeline:
-    1. DAT-2 upscales the whole photo 4x (faithful fabric, no hallucinated details).
+    1. DAT-2 upscales the whole photo 4x.
     2. RetinaFace finds faces; each one is aligned to a 512x512 crop.
     3. GFPGAN v1.4 restores the crop (eyes, lips, skin).
-    4. BiSeNet face parsing builds a mask of skin + facial features only
+    4. ParseNet face parsing builds a mask of skin + facial features only
        (background, hair and clothes excluded), slightly eroded and feathered.
     5. The restored face is warped back and alpha-blended into the DAT-2 image.
 Photos without a detectable face are returned exactly as DAT-2 produced them.
@@ -22,13 +22,12 @@ from .spandrel_model import SpandrelUpscaler
 
 FACE_CROP_SIZE = 512
 
-# BiSeNet classes kept in the blend mask (1) vs. excluded (0):
+# ParseNet classes kept in the blend mask (1) vs. excluded (0):
 # 0 bg, 1 skin, 2-3 brows, 4-5 eyes, 6 glasses, 7-9 ears, 10 nose, 11 mouth, 12-13 lips,
 # 14 neck, 15 necklace, 16 cloth, 17 hair, 18 hat
 FACE_MASK_CLASSES = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0]
 
-# Erode then blur the mask: tight enough to never bleed into hair/background (no halo),
-# soft enough to hide the seam.
+# Erode and blur the mask before blending the restored crop.
 MASK_ERODE_KERNEL = np.ones((5, 5), np.uint8)
 MASK_BLUR_KERNEL = (19, 19)
 MASK_BLUR_SIGMA = 4

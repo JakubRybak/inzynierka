@@ -3,7 +3,7 @@
 
 Usage:
     python upscale.py                     # run all methods on missing images
-    python upscale.py dat2_gfpgan         # run only the top-performing hybrid method
+    python upscale.py dat2_gfpgan         # run only DAT-2 with face restoration
     python upscale.py dat2 aurasr sd_x4   # run selected methods
     python upscale.py --list              # list available upscaling methods
     python upscale.py --force             # recompute already existing outputs

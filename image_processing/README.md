@@ -4,41 +4,25 @@ Ewaluacja metod podnoszenia jakości i rozdzielczości zdjęć produktowych dla 
 
 ---
 
-## 🏆 Zestawienie 8 w 100% autentycznych metod AI (Apple Silicon M1 Pro)
+## Czasy przetwarzania na Apple M1 Pro
 
-Wszystkie metody zostały **fizycznie przeliczone** na próbce 15 ubrań z 15 różnych kategorii katalogu FashionGen (kurtki, swetry, t-shirty, sukienki, koszule, jeansy itp.). **W projekcie nie ma żadnych placeholderów ani atrap** — każdy piksel pochodzi z lokalnego pliku WebP na dysku.
+Porównanie obejmuje 15 zdjęć FashionGen. Czas na zdjęcie obejmuje wykonanie metody powiększania. Czas dla 10 000 zdjęć jest szacunkiem na podstawie tej wartości.
 
-| Metoda | Architektura | Czas / zdjęcie (MPS) | Czas dla 10 000 produktów | Średni rozmiar WebP (1024px) | Charakterystyka i Rola w E-Commerce |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Lanczos + Unsharp** (Baseline) | Interpolacja cyfrowa sinc (Pillow) | **27.8 ms** | **4.6 min** | 23.6 KB | Szybki filtr matematyczny, brak rekonstrukcji detali |
-| **Real-ESRGAN x4plus** (Klasyczny CNN) | ESRGAN (RRDBNet baseline) | **688.3 ms** | **1h 55m** | 33.2 KB | Stabilny standard przemysłowy, wygładza faktury |
-| **4x-UltraSharp** (Wyostrzony CNN) | ESRGAN (RRDBNet tuned) | **680.7 ms** | **1h 53m** | 46.8 KB | Wyostrzone krawędzie, lekko cyfrowy obrys |
-| **4xRealWebPhoto DAT-2** 🏆 | **DAT-2 (Vision Transformer 2024)** | **3 157 ms** | **8h 46m** | 41.7 KB | **Zwycięzca ogólny: 100% wierność krojom, 0% halucynacji** |
-| **DAT-2 + GFPGAN** 👔✨ | **Transformer + Face Restoration** | **3 770 ms** | **10h 30m** | 41.2 KB | **Hybryda e-commerce: Bezbłędna tkanina DAT-2 + ostra twarz modela** |
-| **AuraSR-v2** ⚡ | **GigaGAN Generative (fal.ai 2025)** | **12 837 ms** | **35h 39m** | 56.4 KB | **Generatywny fotorealizm, mikro-sploty nitek i faktura skóry** |
-| **Stable Diffusion x4** 🌪️ | **Latent Diffusion (Stability AI)** | **24 500 ms** | **68h 06m** | 58.2 KB | **Prawdziwy proces dyfuzyjny (12 kroków), studyjne oświetlenie i głębia** |
+| Metoda | Architektura | Czas na zdjęcie | Szacunek dla 10 000 zdjęć |
+| --- | --- | ---: | ---: |
+| **Lanczos + Unsharp** (Baseline) | Interpolacja cyfrowa sinc (Pillow) | **27.8 ms** | **4.6 min** |
+| **Real-ESRGAN x4plus** (Klasyczny CNN) | ESRGAN (RRDBNet baseline) | **688.3 ms** | **1h 55m** |
+| **4x-UltraSharp** (Wyostrzony CNN) | ESRGAN (RRDBNet tuned) | **680.7 ms** | **1h 53m** |
+| **4xRealWebPhoto DAT-2** | **DAT-2 (Vision Transformer 2024)** | **3 157 ms** | **8h 46m** |
+| **DAT-2 + GFPGAN** | **Transformer + Face Restoration** | **3 770 ms** | **10h 30m** |
+| **AuraSR-v2** | **GigaGAN Generative (fal.ai 2025)** | **12 837 ms** | **35h 39m** |
+| **Stable Diffusion x4** | **Latent Diffusion (Stability AI)** | **24 500 ms** | **68h 06m** |
 
----
+## Metody
 
-## 🔬 Trzy Realne Metody Nowej Generacji (Generatywne i Dyfuzyjne)
-
-### 1. AuraSR-v2 (fal.ai / Aleph Alpha 2025) ⚡
-- **Architektura:** Jednokrokowy generatywny GAN bazujący na GigaGAN (`fal/AuraSR-v2`).
-- **Działanie:** Wykorzystuje wielkoskalowy dyskryminator do syntezy mikroskopijnych splotów włókien, porów skóry i cieni zagięć materiału.
-- **Optymalizacja M1 Pro:** Uruchamiany w trybie `upscale_4x_overlapped` z dynamicznym łagodzeniem szwów kafelkowania na GPU MPS.
-
-### 2. DAT-2 + GFPGAN Face Restoration (Hybryda E-Commerce) 👔✨
-- **Architektura:** Połączenie Vision Transformera (DAT-2) z generatywnym modelem twarzy StyleGAN2 (`GFPGANv1.4.pth`), detektorem RetinaFace (`facexlib`) oraz segmentatorem ParseNet/BiSeNet.
-- **Działanie:** 
-  1. Krój i tkanina ubrania są powiększane przez DAT-2 (gwarancja 0% halucynacji guzików czy szwów).
-  2. RetinaFace automatycznie wykrywa obecność modela w kadrze.
-  3. Wykryta twarz jest wyostrzana przez GFPGAN i precyzyjnie maskowana z erozją krawędzi, eliminując białe poświaty.
-  4. Jeśli zdjęcie przedstawia samo ubranie (spodnie, spódnice), pozostaje czysty, nieskazitelny DAT-2.
-
-### 3. Stable Diffusion x4 Upscaler (Stability AI) 🌪️
-- **Architektura:** Pełny model dyfuzyjny w przestrzeni ukrytej (`stabilityai/stable-diffusion-x4-upscaler`).
-- **Działanie:** Wykonuje 12 iteracji odszumiania VAE kierowanych wektorem promptu (`high quality studio fashion catalog product photo`).
-- **Optymalizacja M1 Pro:** Zastosowano `enable_attention_slicing()`, `enable_vae_slicing()` oraz `enable_vae_tiling()`, co eliminuje problem przepełnienia pamięci MPS przy dekodowaniu tensora 1024×1024 px.
+- **AuraSR-v2** używa modelu opartego na GigaGAN i powiększa obraz w nakładających się kafelkach.
+- **DAT-2 + GFPGAN** powiększa zdjęcie za pomocą DAT-2, wykrywa twarze za pomocą RetinaFace i nakłada fragmenty przetworzone przez GFPGAN z maską z ParseNet.
+- **Stable Diffusion x4** wykonuje 12 kroków odszumiania z instrukcją tekstową. Pipeline używa dzielenia obliczeń uwagi oraz dzielenia i kafelkowania VAE.
 
 ---
 
@@ -75,7 +59,7 @@ image_processing/
 │       └── templates/             # Szablony i assety
 │           ├── report.html.j2     # Szablon raportu Jinja2 (semantyczny HTML)
 │           ├── styles.css         # Dedykowany, czysty arkusz CSS (wyłącznie Light Theme)
-│           └── app.js             # Skrypt obsługi widoków, filtrów i modala 1024px
+│           └── app.js             # Obsługa widoku, tła i kadru
 │
 ├── data/
 │   └── sample_images/             # 15 oryginalnych zdjęć produktów (256x256 px PNG)
@@ -126,7 +110,7 @@ Możesz uruchomić dowolną metodę pojedynczo lub w grupie:
 # Wyświetl listę dostępnych metod
 python upscale.py --list
 
-# Uruchom tylko zwycięską hybrydę DAT-2 + GFPGAN
+# Uruchom tylko hybrydę DAT-2 + GFPGAN
 python upscale.py dat2_gfpgan
 
 # Uruchom kilka wybranych metod i zaktualizuj raport
@@ -141,23 +125,8 @@ python upscale.py --force
 
 ---
 
-## 🎨 Cechy Interfejsu Raportu (`outputs/report.html`)
+## Widoki raportu
 
-1. **Stały, czysty Styl Jasny:**
-   - Wygląd profesjonalnego e-commerce (brak przełączników ciemnego motywu, pełna czytelność).
-2. **Dynamiczne odcienie tła studyjnego:**
-   - Tło każdego zdjęcia można płynnie przełączać pomiędzy:
-     - `Szare (#ededf0)` (chłodny odcień Zara/Mango)
-     - `Średnie (#e2e4e8)` (neutralna szarość SSENSE)
-     - `Ciepłe (#edeae4)` (kremowy odcień marek luksusowych)
-     - `Białe 100% (#ffffff)` (oryginalna czysta biel)
-   - Realizowane przez `mix-blend-mode: multiply` w wyizolowanych kontenerach.
-3. **Elastyczne kadrowanie (Aspect Ratio):**
-   - 3:5 (~40% wycięte po bokach)
-   - 9:16 (pionowy format mobilny)
-   - 3:4 (klasyczny format katalogowy)
-   - 1:1 (pełny kadr kwadratowy)
-4. **Powiększenie HD (Lightbox 1024px):**
-   - Kliknięcie dowolnego zdjęcia otwiera pełnowymiarowy podgląd 1024×1024 px.
-   - Klawisze numeryczne `1`–`8` natychmiast przełączają metody w locie.
-   - Klawisz `Esc` zamyka podgląd.
+- **Porównanie produktu** pokazuje oryginał i wszystkie warianty każdego zdjęcia obok siebie.
+- **Storefront** grupuje zdjęcia według metody powiększania.
+- Ustawienia tła, kadru i liczby kolumn działają w obu widokach.
