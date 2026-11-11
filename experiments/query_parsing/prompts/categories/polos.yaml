@@ -1,0 +1,108 @@
+category: Polos
+category_criterion: Polo shirt, polo, koszulka polo, polo shirt, or a collared tee (e.g. 'tee with a collar', 'collar
+  tee').
+feature_notes: {}
+jev_scopes: {}
+substyle_rules: []
+few_shots:
+- query: men's navy Lacoste polo shirt in 100% cotton under 250 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: brand
+      operator: in
+      values:
+      - Lacoste
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: price
+      operator: lte
+      value: 250
+    residual:
+    - navy
+  note: '''navy'' maps to Blue and stays in residual; ''100% cotton'' maps to equals_set.'
+- query: slim fit striped polo with long sleeves, cotton and elastane without polyester
+  output:
+    filters:
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual: []
+  note: Combined materials use contains_all; excluded material uses contains_none.
+- query: women's sleeveless golf polo around $65, not oversized
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Sleeveless
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    - feature: price
+      operator: around
+      value: 65
+    residual:
+    - golf
+  note: Activity/sport 'golf' stays in residual.
+- query: white and green polo shirt, but not turquoise, at least 80 EUR
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Green
+      - White
+    - feature: price
+      operator: gte
+      value: 80
+    residual:
+    - not turquoise
+  note: Two joined colors use contains_all; excluded shade stays in residual.
+- query: all-white piqué polo by Ralph Lauren for work
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - White
+    - feature: brand
+      operator: in
+      values:
+      - Ralph Lauren
+    residual:
+    - piqué
+    - for work
+  note: '''all-white'' requires equals_set [''White'']; knit texture ''piqué'' stays in residual.'

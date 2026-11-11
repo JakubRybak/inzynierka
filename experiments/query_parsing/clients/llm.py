@@ -28,7 +28,7 @@ from ..core.prompts_loader import (
     load_open_extraction_prompt,
 )
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GCP_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "project-3a86f100-1aae-4780-84b")
 DEFAULT_GCP_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "global")
 GEMINI_MODEL = "gemini-3.5-flash-lite"

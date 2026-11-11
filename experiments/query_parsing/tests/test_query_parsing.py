@@ -7,7 +7,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from query_parsing import (
+from experiments.query_parsing import (
     CONFIGS,
     QueryParser,
     QueryExtractor,
@@ -15,7 +15,7 @@ from query_parsing import (
     resolve_config_list,
     resolve_config_name,
 )
-from query_parsing.benchmark import (
+from experiments.query_parsing.benchmark import (
     canonicalize_clause,
     canonicalize_filters,
     load_dataset_rows,
@@ -23,7 +23,7 @@ from query_parsing.benchmark import (
     required_stages_for_configs,
     summarize_latencies,
 )
-from query_parsing.clients import (
+from experiments.query_parsing.clients import (
     JevCallResult,
     LLMCallResult,
     build_full_system_prompt,
@@ -33,7 +33,7 @@ from query_parsing.clients import (
     filters_from_answers,
     normalize_query,
 )
-from query_parsing.core import (
+from experiments.query_parsing.core import (
     CATEGORIES_PROMPTS_DIR,
     CATEGORY_CRITERIA,
     CATEGORY_FEW_SHOTS,

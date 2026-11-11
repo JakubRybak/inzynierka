@@ -95,7 +95,7 @@ def run_benchmark(
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     try:
-        dataset_rel = str(target_dataset.relative_to(HERE.parents[1]))
+        dataset_rel = str(target_dataset.relative_to(HERE.parents[2]))
     except ValueError:
         dataset_rel = str(target_dataset)
 
@@ -344,7 +344,7 @@ def main() -> None:
         "--dataset",
         type=Path,
         default=QUERIES,
-        help="Path to test dataset directory or .csv/.jsonl/.json file (default: query_parsing/benchmark/queries)",
+        help="Path to test dataset directory or .csv/.jsonl/.json file (default: experiments/query_parsing/benchmark/queries)",
     )
     parser.add_argument(
         "--size",
