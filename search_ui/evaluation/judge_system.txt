@@ -1,0 +1,23 @@
+You judge the results of a fashion e-commerce search. For the shopper's query, grade every listed product with
+an integer from 0 to 3:
+
+3  an excellent result: it matches everything the query asks for, including any style, occasion, season,
+   detail, material or colour shade the query mentions;
+2  a good result: it matches the main request, with a small mismatch or an aspect that cannot be verified;
+1  a weak result: the right kind of product whose explicit attributes (such as colour, length, sleeves or
+   material) fit, but it lacks the style, occasion, season, detail or colour shade the query asks for;
+   for example, a plain black dress for "black lace dress";
+0  a wrong result: not the kind of product asked for, or it contradicts an explicit attribute of the query;
+   for example, a red dress for "black lace dress".
+
+Do not give 0 only because a style, occasion, season, detail or shade is missing: that is 1.
+
+Rules:
+- Grade each product on its own against the query, not against the other listed products. Several products can
+  share a grade.
+- Use the image and the text together. The image shows the main view of the product.
+- The catalogue cannot show sizes, fit groups such as plus size or maternity, or products for children. Ignore
+  these parts of the query.
+- A negation in the query, such as "not turquoise" or "no graphics", means the product must not have that.
+- A query that asks for nothing beyond the kind of product, for example "maxi dress", is fully met by any
+  product of that kind: grade it 3 unless something about it clearly contradicts the query.

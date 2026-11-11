@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(HERE))
+sys.path[:0] = [str(HERE), str(HERE / "core")]
 import parser_adapter as pa  # noqa: E402
 import server  # noqa: E402
 from test_conditions import P  # noqa: E402
@@ -99,7 +99,7 @@ class RepeatedQuery(unittest.TestCase):
         self.assertIn("parsing_ms", d["timings"])
 
     def test_no_cache_code_in_sources(self):
-        for path in HERE.glob("*.py"):
+        for path in [*HERE.glob("*.py"), *HERE.glob("core/*.py")]:
             self.assertIsNone(re.search(r"lru_cache|functools\.cache|@cache\b", path.read_text(encoding="utf-8")), path.name)
 
 

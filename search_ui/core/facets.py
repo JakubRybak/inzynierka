@@ -1,4 +1,5 @@
 """Filter panel: features, value counts and price per category, taken from the feature extraction schemas."""
+import re
 import sys
 from collections import Counter
 
@@ -11,6 +12,11 @@ HIDDEN = {"Other", "Not Applicable", "Unknown"}
 OPERATORS = {"single_choice": ["in", "not_in"],
              "multi_choice": ["contains_any", "contains_all", "contains_none", "equals_set"],
              "composition": ["contains_any", "contains_all", "contains_none", "equals_set"]}
+
+
+def _schema_name(category):
+    """File-style name of a category, e.g. "Tank tops & Camisoles" -> "tank-tops-and-camisoles"."""
+    return re.sub(r"[^a-z0-9]+", "-", category.lower().replace("&", "and")).strip("-")
 
 
 def category_schemas():

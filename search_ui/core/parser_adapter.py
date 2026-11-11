@@ -1,11 +1,12 @@
 """
 Query parsers and the adapter from parser output to the condition tree in conditions.py.
-A parser is a function f(query) -> dict in the QueryParser.to_dict() format of poc/scripts/query_parser.py.
+A parser is a function f(query) -> dict with category, filters and residual (a list of phrases), the format of
+llm_parser.parse.
 
-    --parser llm              benchmark parses for dev queries, poc/scripts/query_parser.py (Vertex AI) for the rest
-                              (benchmark_parser.py, the default)
-    --parser mock             simple matching of query words against index values, no API calls
-    --parser module:function  any function returning the same format
+    --parser llm                      QueryExtractor of query_extraction/ (llm_parser.py, the default; paid calls)
+    --parser benchmark_parser:parse   reviewed benchmark parses for dev queries, the LLM parser for the rest
+    --parser mock                     simple matching of query words against index values, no API calls
+    --parser module:function          any function returning the same format
 """
 import importlib
 import re
@@ -105,7 +106,7 @@ def load_parser(spec, vocabulary=None):
     module, _, function = spec.partition(":")
     if not module or not function:
         raise SystemExit(f"--parser: expected llm, mock or module:function, got {spec!r}")
-    for p in (HERE.parent, HERE, Path.cwd()):
+    for p in (HERE.parents[1], HERE.parent, HERE, Path.cwd()):
         if str(p) not in sys.path:
             sys.path.insert(0, str(p))
     mod = importlib.import_module(module)

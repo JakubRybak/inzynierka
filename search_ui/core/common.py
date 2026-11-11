@@ -1,4 +1,5 @@
 """Paths, feature-file loader, product embeddings and the query embedder."""
+from concurrent.futures import ThreadPoolExecutor
 import json
 import random
 import time
@@ -8,9 +9,9 @@ import httpx
 import numpy as np
 import pandas as pd
 
-HERE = Path(__file__).resolve().parent
-REPO = HERE.parent
-DATA = HERE / "data"
+SEARCH_UI = Path(__file__).resolve().parents[1]
+REPO = SEARCH_UI.parent
+DATA = SEARCH_UI / "data"
 DATASET = REPO / "data/processed/fashiongen"
 PILOT = REPO / "feature_extraction/outputs/pilot_9922"
 FEATURES = PILOT / "products.parquet"
@@ -62,6 +63,24 @@ def load_embeddings(directory=EMBEDDINGS):
         d = pd.read_parquet(directory / name, columns=["product_id", "embedding"])
         vectors.append({str(i): np.asarray(v, np.float32) for i, v in zip(d["product_id"], d["embedding"])})
     return manifest, *vectors
+
+
+FEATURE_VECTORS = "feature_embeddings.npz"
+
+
+def embed_texts(ids, texts, embed, path, workers=16):
+    """Embeddings of texts (plain, no prefix) kept in path with their ids and texts; only a new or changed text is
+    embedded (one API call each). -> number of new calls."""
+    known = {}
+    if path.exists():
+        stored = np.load(path)
+        known = {(i, t): v for i, t, v in zip(stored["ids"].tolist(), stored["texts"].tolist(), stored["vectors"])}
+    missing = [(i, t) for i, t in zip(ids, texts) if (i, t) not in known]
+    with ThreadPoolExecutor(workers) as pool:
+        known.update(zip(missing, pool.map(lambda it: embed(it[1]), missing)))
+    vectors = normalize(np.stack([np.asarray(known[i, t], np.float32) for i, t in zip(ids, texts)]))
+    np.savez(path, ids=np.array(ids), texts=np.array(texts), vectors=vectors)
+    return len(missing)
 
 
 def query_text(q):

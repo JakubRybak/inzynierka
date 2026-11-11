@@ -1,38 +1,28 @@
 """
-Query parser of the search UI (--parser llm, the default): the reviewed parses of the query extraction benchmark,
-looked up by query text, for all 22 categories and without API calls. Only queries of the dev split are answered from the benchmark;
-a test query or any other query goes to the LLM parser (llm_parser.py, three categories, paid calls).
+Benchmark parser (--parser benchmark_parser:parse): the reviewed parses of the query extraction benchmark
+(query_extraction/benchmark/queries), looked up by query text, for all 22 categories and without API calls. Only
+queries of the dev split are answered from the benchmark; a test query or any other query goes to the LLM parser
+(llm_parser.py, paid calls).
 
 The split is the one of the ranking evaluation: dev or test by a hash of the query and its category, so test
-queries stay unseen while the ranking is tuned. The benchmark is read from query_extraction/queries in the working
-tree, or from BENCHMARK_REF while it is not merged.
+queries stay unseen while the ranking is tuned.
 """
 import csv
 import hashlib
 import io
 import json
-import subprocess
 import sys
 
 import common
 from parser_adapter import normalize_text
 
-BENCHMARK_DIR = "query_extraction/queries"
-BENCHMARK_REF = "origin/user_queries"
+BENCHMARK = common.REPO / "query_extraction/benchmark/queries"
 NO_CATEGORY = "No category"
 
 
-def _git(*args):
-    return subprocess.run(["git", "-C", str(common.REPO), *args], capture_output=True, text=True, check=True).stdout
-
-
-def benchmark_files():
-    """-> [(path, csv text)] from the working tree, or from BENCHMARK_REF."""
-    local = common.REPO / BENCHMARK_DIR
-    if local.is_dir():
-        return [(p.relative_to(common.REPO).as_posix(), p.read_text(encoding="utf-8")) for p in sorted(local.rglob("*.csv"))]
-    paths = _git("ls-tree", "-r", "--name-only", BENCHMARK_REF, "--", BENCHMARK_DIR).splitlines()
-    return [(p, _git("show", f"{BENCHMARK_REF}:{p}")) for p in paths if p.endswith(".csv")]
+def benchmark_files(folder=BENCHMARK):
+    """-> [(path, csv text)] of the benchmark files."""
+    return [(p.relative_to(common.REPO).as_posix(), p.read_text(encoding="utf-8")) for p in sorted(folder.rglob("*.csv"))]
 
 
 def query_id(query, category):
@@ -93,9 +83,9 @@ def _llm(query):
 
 
 def _fallback_categories():
-    sys.path.insert(0, str(common.REPO / "poc/scripts"))
-    from query_parser import SUPPORTED_CATEGORIES
-    return list(SUPPORTED_CATEGORIES)
+    sys.path.insert(0, str(common.REPO))
+    from query_extraction.core.catalog import load_query_catalog
+    return list(load_query_catalog())
 
 
 ROWS = load(benchmark_files())

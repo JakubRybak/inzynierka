@@ -4,14 +4,10 @@ import json
 import sys
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[1] / "core")]
+import benchmark_parser as bp  # noqa: E402
 import parser_adapter as pa  # noqa: E402
-
-with patch("subprocess.run") as run:
-    run.return_value.stdout = ""
-    import benchmark_parser as bp  # noqa: E402
 
 
 def benchmark(*rows):

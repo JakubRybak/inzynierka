@@ -1,20 +1,22 @@
 """
-Checks example_queries.yaml against the index: parser + filtering, no ranking.
+Checks static/example_queries.yaml against the index: parser + filtering, no ranking.
 
-    python search_ui/check_examples.py               # mock parser, example_queries.yaml, no API calls
-    python search_ui/check_examples.py --parser llm  # benchmark dev examples shown with the default parser
+    python search_ui/tests/check_examples.py                                  # mock parser, no API calls
+    python search_ui/tests/check_examples.py --parser benchmark_parser:parse  # the benchmark dev examples
 
 Groups that are not an indexed category, and categories the parser does not support, expect no category.
 """
 import argparse
+from pathlib import Path
 import sys
 
 import yaml
 
-import common
-import conditions
-import parser_adapter
-from server import EXAMPLES, pick_examples
+sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[1] / "core")]
+import common  # noqa: E402
+import conditions  # noqa: E402
+import parser_adapter  # noqa: E402
+from server import EXAMPLES, pick_examples  # noqa: E402
 
 
 def main():

@@ -1,90 +1,48 @@
 # Search UI
 
-[Wersja polska](README.pl.md)
+Local web demo of the search bar on the pilot: the 9,796 products with status `ready` of the 9,922-product pilot,
+in 22 categories. A query goes through the query parser of `query_extraction/`. The products are filtered by their
+extracted features, and the products left are ranked. The page shows what the parser understood, lets you change the
+filters by hand, switches between rankings and shows how long each stage took.
 
-Local web demo of the search bar on the 9,922-product pilot. A query goes through the LLM query parser, the
-products are filtered by the extracted features, and the remaining ones are ranked by embedding similarity. The page
-shows what the parser understood, lets you adjust the filters by hand and shows how long each stage took.
-
-It uses the outputs of the other parts of the repository and computes nothing offline itself:
-
-| Input | Where it comes from |
-| --- | --- |
-| product metadata and images | `data/processed/fashiongen/` (`dataset_preparation/fashiongen/`) |
-| product features | `feature_extraction/outputs/pilot_9922/products.parquet` |
-| product embeddings | `feature_extraction/outputs/pilot_9922/embeddings/` (description and main image, 3072 dims, Git LFS) |
-| filter panel features and values | `feature_extraction/schema/` (all 22 categories) |
-| benchmark parses | `query_extraction/queries/` on the `user_queries` branch (1,535 reviewed queries, 22 categories) |
-| query parser | `poc/scripts/query_parser.py` with prompts and schemas in `poc/query_parsing/` |
-
-A query is parsed in one of two ways (`benchmark_parser.py`):
-
-- **Benchmark** – a query of the **dev split** of the query extraction benchmark gets its reviewed parse, for all
-  22 categories and without API calls. The examples in the page are such queries. The split is the one of the
-  ranking evaluation (a hash of the query and its category), so test queries stay unseen while the ranking is
-  tuned. The benchmark is read from `query_extraction/queries/` in the working tree or, while it is not merged,
-  from `origin/user_queries`.
-- **LLM parser** – any other query, a test query included, goes to the two-step parser from the earlier proof of
-  concept. It supports **T-shirts, Dresses and Tank tops & Camisoles**; for other queries it returns no category,
-  and the category and filters are picked by hand in the filter panel. Its feature values were written before the
-  current schemas, so a value that no longer exists matches no product, with a warning.
+How the results are ordered, and where the ranking data comes from: [README_ranking.md](README_ranking.md).
 
 ## Quick start
 
-From the repository root, with a Python that has the requirements below:
+From the repository root:
 
 ```sh
-python search_ui/prepare.py        # pilot products with status ready -> search_ui/data/
-python search_ui/server.py
+python search_ui/prepare.py     # builds the index of the pilot in search_ui/data/ (git-ignored)
+python search_ui/server.py      # opens http://127.0.0.1:8000
 ```
 
-The page opens at http://127.0.0.1:8000. `prepare.py` only has to be run again when the features file changes.
-The embeddings are Git LFS files: with `git-lfs` installed they come with the checkout; otherwise install it and run
-`git lfs pull`.
+Run `prepare.py` again after the features, concept scores or phrase bank change. It embeds only what it has not
+embedded before, so a rerun with nothing new makes no paid calls.
 
 **Requirements**
 
-- Python packages: `pandas`, `numpy`, `pyarrow`, `pyyaml`, `google-genai`, `google-auth`, `requests`, `httpx`.
-- Google Cloud access to Vertex AI for the parser and the query embeddings:
+- Python packages: `pandas`, `numpy`, `pyarrow`, `pyyaml`, `google-genai`, `google-auth`, `requests`, `httpx`,
+  `scikit-learn`, `scipy`.
+- Vertex AI access, because every search embeds the query:
   ```sh
   gcloud auth application-default login
   export GOOGLE_CLOUD_PROJECT=<project id>
   export GOOGLE_CLOUD_LOCATION=global
   export GOOGLE_GENAI_USE_VERTEXAI=true
   ```
-- Without any parser: `python search_ui/server.py --parser mock`. The mock matches query words against index
-  values. Query embeddings still need Vertex AI.
+- The query parser needs `OPENROUTER_API_KEY` and `CEREBRAS_API_KEY` in `.env` at the repository root (see
+  `query_extraction/README.md`). Two parsers work without these keys:
+  - `--parser mock` matches query words against index values;
+  - `--parser benchmark_parser:parse` answers the dev queries of the benchmark with their reviewed parses and sends
+    any other query to the query parser.
+- The product embeddings are Git LFS files. Run `git lfs pull` if they are still pointers.
 
-## Using the page
+## How a query is answered
 
-- **Search bar and examples** – type a query (English or Polish) or click one of the examples, grouped by category
-  (five dev queries of the benchmark per category, those with a residual first).
-- **Parser reading** (under the search bar) – the conditions the parser extracted, one per line: the category
-  outlined, included values in green, excluded ones (AND NOT) in red, then the residual phrases and where the parse
-  came from (benchmark or LLM parser).
-- **Filters** (button above the results, opens a panel on the right) – every feature and value of the selected
-  category from the feature extraction schemas, with the number of products; `Other`, `Not Applicable` and
-  `Unknown` are left out, as the parser never filters on them. After a search it shows what the parser picked.
-  Clicking a value cycles *include → exclude → off*; multi-valued features (`colors`, `main_composition` and the
-  other multi-choice features) also have a mode: *any of*, *all of* or *only*. Every change searches again straight
-  away with these filters, without the parser. The numeric Price control supports `<`, `<=`, `>`, `>=` and `=`; add
-  a second condition to form a range. Currency is not converted. Products with zero or unknown prices do not match an
-  active price condition. *Reset to parser* restores the parser's filters. When the parser finds no category, you
-  can pick one here. The *Residual* field takes one phrase per line; the phrases are shown and passed on with the
-  filters, while the current ranking uses the whole query.
-- **Ranking** – `combined` (description + image), `text` (description) or `image`.
-- **Stage timings** (left, under the parser reading) – parsing (with its two LLM steps), filtering and ranking,
-  on one timeline.
-- **Results** (right, all of them, scrollable) – image, name, brand, price and the features that matched the
-  query. Clicking a product shows all its images, its description and every feature, the matched ones highlighted.
-- A link like `/?q=black+midi+dress&ranking=text` opens a search directly.
-
-## How it works
-
-1. **Parsing** (`parser_adapter.py`). The parser returns `category`, `filters` and `residual` (a list of phrases,
-   one per requirement; a string becomes one phrase) (`QueryParser.to_dict()`). A null category means the query is
-   outside the parser's categories, outside the catalog or too general, and no search is run. Otherwise the filters
-   become a condition tree (`conditions.py`):
+1. **Parsing** (`llm_parser.py`, `core/parser_adapter.py`). The parser returns `category`, `filters` and `residual`.
+   The residual is a list of phrases that the filters cannot express, such as "for a funeral" or "without pockets".
+   A null category means the query is outside the catalog or too general, and no search is run. The filters become
+   a condition tree:
 
    | Parser operator | Condition |
    | --- | --- |
@@ -92,52 +50,91 @@ The embeddings are Git LFS files: with `git-lfs` installed they come with the ch
    | `not_in`, `contains_none` | the product has none of the values |
    | `contains_all` | the product has all the values |
    | `equals_set` | the product has exactly these values |
-   | `lt`, `lte`, `gt`, `gte`, `eq` | numeric `msrpUSD` price comparisons; price uses `value` rather than `values` |
-   | `around` | price within ±20% of `value` (the parser rules leave the tolerance open; the same as in the ranking evaluation) |
+   | `lt`, `lte`, `gt`, `gte`, `eq` | price (`msrpUSD`) compared with `value` |
+   | `around` | price within ±20% of `value` |
 
-   ```json
-   {"op": "and", "args": [
-     {"feature": "category", "values": ["T-shirts"]},
-     {"feature": "colors", "values": ["Black", "White"], "match": "all"},
-     {"op": "not", "arg": {"feature": "main_composition", "values": ["Polyester"]}}
-   ]}
-   ```
+2. **Filtering** (`core/conditions.py`). Filtering is strict, and a filter is never loosened:
+   - feature values are treated as sets, and `main_composition` is the set of its materials, whatever their share;
+   - a product without a feature fails a positive filter and passes a negative one;
+   - a price condition needs a positive, finite price;
+   - a value that no product has, such as a brand outside the catalog, matches nothing and shows a warning;
+   - when no product meets every condition, the result is empty.
 
-2. **Filtering** (`conditions.py`). The tree is evaluated on every indexed product. Feature values are treated as
-   sets; `main_composition` is the set of materials in it, whatever their share. A missing feature never matches,
-   so a product without it is excluded by a positive filter and kept by a negative one. `brand` is compared with the
-   product metadata. A price comparison uses positive finite `msrpUSD`; zero, missing or invalid prices do not
-   match. A feature or value that no indexed product has (for example a brand outside the catalog) stays in the
-   tree and matches nothing, with a warning, so a filter is never loosened. When no product meets every condition,
-   the result is empty.
+3. **Ranking** (`server.py`, `core/`). The chosen ranking orders all the candidates; it never adds or removes
+   products. The default, `combined`, compares the query embedding with the description and image of each product.
+   The other rankings also use the residual phrases (see [README_ranking.md](README_ranking.md)).
 
-3. **Ranking** (`server.py`). The full query is embedded on every request with `gemini-embedding-2` (3072 dims)
-   and compared (cosine) with the precomputed embeddings of the candidates:
-   - `text` – with the product descriptions, query sent as `task: search result | query: <query>`;
-   - `image` – with the main product images, plain text sent;
-   - `combined` – mean of the z-scores of both, computed over the candidates.
+## Using the page
 
-Nothing is cached: a repeated query calls the parser and the embedding API again, and every HTTP response is sent
-with `Cache-Control: no-store`. Only the index, the product embeddings and the API clients are loaded at startup.
+- **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
+  category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
+- **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
+  (red), the residual phrases and where the parse came from. With `concepts`, `bank` or `hybrid` it also shows how
+  every phrase was read.
+- **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
+  - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
+    values.
+  - Price takes `<`, `<=`, `>`, `>=` or `=`; add two conditions for a range. Currency is not converted.
+  - Every change searches again with these filters, without the parser. *Reset to parser* restores the parsed
+    filters.
+  - The *Residual* field takes one phrase per line.
+- **Ranking**: the order of the results (see [README_ranking.md](README_ranking.md)).
+- **Stage timings**: parsing, with both parser steps, filtering and ranking.
+- **Results**: every candidate, with image, name, brand, price and the features that matched. Clicking a product
+  shows all its images, its description and its features.
+- A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly.
+
+## Files
+
+| Path | Contents |
+| --- | --- |
+| `server.py` | HTTP server and search pipeline: parse, filter, rank |
+| `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores and phrase bank |
+| `llm_parser.py` | `--parser llm`: the QueryExtractor of `query_extraction/` |
+| `core/` | the modules of the pipeline (below) |
+| `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
+| `offline/`, `ranking_data/`, `evaluation/` | the scripts, data and evaluation of the ranking ([README_ranking.md](README_ranking.md)) |
+| `tests/` | unit tests, which make no API calls, and `check_examples.py`, a check of the example queries against the index |
+| `data/` | the index built by `prepare.py` and the call logs of the offline scripts (git-ignored) |
+
+| `core/` module | Role |
+| --- | --- |
+| `parser_adapter.py` | parser loading, parser output to condition tree, mock parser |
+| `benchmark_parser.py` | the reviewed benchmark parses of dev queries |
+| `conditions.py` | condition tree: validation, evaluation, matched features |
+| `facets.py` | filter panel values per category, from `feature_extraction/schema/` |
+| `concepts.py` | concept scores in the index and the `concepts` ranking |
+| `bank.py` | the phrase bank, the `bank` ranking and the `hybrid` terms |
+| `feature_text.py` | a product's features as a short text for its embedding |
+| `common.py` | paths, loaders, query embedder |
+| `vertex.py` | Gemini calls on Vertex AI with retries, a budget and cost accounting (offline scripts and judge) |
 
 ## Options
 
 | `server.py` option | Default | |
 | --- | --- | --- |
-| `--parser` | `llm` | `llm` (benchmark, then the LLM parser), `mock` or `module:function` returning the parser output format |
-| `--ranking` | `combined` | default ranking: `combined`, `text` or `image` |
+| `--parser` | `llm` | `llm`, `mock` or `module:function` returning the parser output format |
+| `--ranking` | `combined` | default ranking in the page |
+| `--concept-threshold` | `0.72` | minimum phrase–concept name cosine for `concepts` |
+| `--concept-combine` | `geo` | how `concepts` combines phrases: `geo`, `mean` or `min` |
+| `--no-bank` | | do not load the phrase bank (`bank` and `hybrid` disappear) |
 | `--port` | `8000` | |
 | `--data` | `search_ui/data` | index built by `prepare.py` |
 | `--no-warmup` | | skip the test embedding call at startup |
 | `--no-browser` | | do not open the page |
 
-`prepare.py` takes `--features` (`.parquet`, `.jsonl` or `.csv`, one or more files; default: the pilot), `--status`
-(default `ready`), `--limit`, `--dataset`, `--embeddings` and `--output`. It stops if the embeddings do not cover
-every indexed product.
+`prepare.py` takes the following options:
+- `--features`: one or more `.parquet`, `.jsonl` or `.csv` files; default the pilot;
+- `--status`: default `ready`;
+- `--limit`, `--dataset`, `--embeddings`, `--output`, `--concept-scores`;
+- `--no-concepts`, `--no-bank`, `--no-feature-embeddings`.
 
-A parser given as `module:function` can set in its module `NAME` (shown in the page), `CATEGORIES` (the categories
-it can return for an arbitrary query, shown when it returns none) and `EXAMPLES` (example queries by group, shown
-instead of `example_queries.yaml`).
+It stops if the product embeddings do not cover every indexed product.
+
+A parser given as `module:function` can set three names in its module:
+- `NAME`, shown in the page;
+- `CATEGORIES`, the categories it can return;
+- `EXAMPLES`, example queries by group, shown instead of `static/example_queries.yaml`.
 
 ## HTTP API
 
@@ -145,51 +142,53 @@ instead of `example_queries.yaml`).
 | --- | --- |
 | `GET /api/search?q=…&ranking=…` | runs the whole pipeline |
 | `GET /api/search?q=…&filters=<json>` | skips the parser; `filters` is `{"category", "filters", "residual"}` in the parser format |
-| `GET /api/info` | parser name and categories, defaults, catalog categories, filter panel values, example queries |
+| `GET /api/info` | parser, defaults, categories, filter panel values, example queries |
 | `GET /api/product?id=…` | product details |
 | `GET /images/<image_path>` | product image |
 
-The search response contains `parsed` (category, filters, residual and their source), `tree`, `condition`,
-`warnings`, `results` (with `score`, `score_text`, `score_image`, `features` and the `matched` features),
-`timings` (`parsing_ms`, `filtering_ms`, `ranking_ms`, `query_embedding_ms`, `total_ms`) and, for the LLM parser,
-`parser_info` with the latency of both parser steps and the estimated cost. Errors come back as
-`{"error": {"stage", "message"}}` with the timings measured so far.
+A search response contains the following fields:
+- `parsed`, `tree`, `condition` and `warnings`;
+- `results`, with their scores and matched features;
+- `concepts` or `bank`, which say how each phrase was read;
+- `timings`, in ms per stage;
+- for the LLM parser, `parser_info`, with step latencies and estimated cost.
 
-## Files
-
-| File | |
-| --- | --- |
-| `prepare.py` | builds `data/index.parquet` (git-ignored) from the features file, metadata and images |
-| `server.py` | search pipeline, ranking and HTTP server |
-| `conditions.py` | condition tree: validation, evaluation, matched features |
-| `parser_adapter.py` | parser output → condition tree, mock parser, parser loading |
-| `benchmark_parser.py` | `--parser llm`: benchmark parses of dev queries, the LLM parser for other queries |
-| `llm_parser.py` | wraps `poc/scripts/query_parser.py` |
-| `facets.py` | filter panel values per category from `feature_extraction/schema` |
-| `common.py` | paths, loaders, query embedder |
-| `static/index.html` | the page (read on every request, so edits show after a reload) |
-| `example_queries.yaml` | examples shown in the page |
+Errors come back as `{"error": {"stage", "message"}}`. Nothing is cached: every response is sent with
+`Cache-Control: no-store`.
 
 ## Tests and checks
 
 ```sh
-python -m unittest discover -s search_ui/tests   # no API calls
-python search_ui/check_examples.py               # examples against the index, mock parser
-python search_ui/check_examples.py --parser llm  # the benchmark examples of the page, no LLM calls
+python -m unittest discover -s search_ui/tests                            # no API calls
+python search_ui/tests/check_examples.py                                  # examples against the index, mock parser
+python search_ui/tests/check_examples.py --parser benchmark_parser:parse  # the benchmark examples, no LLM calls
 ```
+
+The mock parser knows only the English values of the index, so `check_examples.py` flags the Polish examples.
 
 ## Troubleshooting
 
-- **`Failed to resolve 'oauth2.googleapis.com'`** or another connection error at startup – no network or DNS. The
-  server still starts; the parser and embeddings work once the connection is back.
-- **An error reading `embeddings/text.parquet` or `image.parquet`** – the files are still Git LFS pointers of a few
-  hundred bytes; run `git lfs pull`.
-- **`Missing optional dependency 'pyarrow'`** – the Python on `PATH` is not the one with the requirements.
-- **`No embeddings for N indexed products`** – the features file contains products outside the embedded set.
-- **The parser returns no category** for a query in one of the other 19 categories – expected outside the
-  benchmark; pick the category in the filter panel.
+- **A connection error at startup**, for example `Failed to resolve 'oauth2.googleapis.com'`. The server still starts;
+  the parser and embeddings work once the network is back.
+- **An error reading `embeddings/*.parquet`.** The files are still Git LFS pointers; run `git lfs pull`.
+- **`No embeddings for N indexed products`.** The features file contains products outside the embedded set.
+- **`Phrase bank ranking unavailable`.** `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out
+  of date; run `prepare.py`.
+- **`Missing OPENROUTER_API_KEY` or `Jev HTTP 401`.** `.env` at the repository root is missing a key, or a key spans
+  several lines.
 
-## Latency
+Typical latency per query:
+- parsing: about 0.7 s;
+- filtering: a few ms;
+- query embedding: 0.3–0.5 s;
+- `concepts`, `bank` and `hybrid`: up to about 0.3 s more, because they embed the residual phrases in parallel with
+  the query.
 
-Typical times per query with the LLM parser: parsing about 2 s (two LLM calls), filtering a few ms, query
-embedding 0.3–0.5 s. A benchmark parse and searching with filters from the panel skip the LLM.
+## Merging `main`
+
+On `main` the parser is `query_parsing/`, with `parse_query(query, include_meta=True)`, no `config` argument and no
+warm-up. The benchmark moved to `experiments/query_parsing/benchmark/queries/`. Two files have to follow:
+- `llm_parser.py`, which imports from `query_extraction`;
+- `core/benchmark_parser.py`, for the benchmark path and `query_extraction.core.catalog`.
+
+Nothing else in `search_ui/` imports the parser.

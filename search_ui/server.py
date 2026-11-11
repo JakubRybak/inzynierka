@@ -5,7 +5,10 @@ Filters can also be set by hand in the page; the parser is then skipped.
     python search_ui/server.py
     python search_ui/server.py --parser mock --ranking combined --port 8000
 
-Ranking compares the query embedding with the description and main image embeddings of the candidates.
+Ranking compares the query embedding with the description and main image embeddings of the candidates
+(combined, text, image), or uses the concept scores of the products: "concepts" matches every residual phrase with
+the concept names by embedding (concepts.py), "bank" labels the phrases with the phrase bank and scores them locally
+(bank.py), the combined similarity breaking its ties. Both rank by concepts only in categories where every product has concept scores.
 No caching: every query, including a repeated one, goes through the parser and the embedding API.
 """
 import argparse
@@ -24,14 +27,25 @@ from urllib.parse import parse_qs, urlparse
 import numpy as np
 import yaml
 
-import common
-import conditions
-import facets
-import parser_adapter
+sys.path.insert(0, str(Path(__file__).resolve().parent / "core"))
+import common  # noqa: E402
+import concepts  # noqa: E402
+import conditions  # noqa: E402
+import facets  # noqa: E402
+import parser_adapter  # noqa: E402
 
-RANKINGS = ("combined", "text", "image")
-PAGE = common.HERE / "static" / "index.html"
-EXAMPLES = common.HERE / "example_queries.yaml"
+RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid")
+HYBRID = dict(concept=0.5, negation=1.0)
+COLOUR_IMAGE_WEIGHT = 2.0
+POSITIVE = {"in", "contains_any", "contains_all", "equals_set"}
+
+
+def asks_colour(filters, routes):
+    """A colour filter that requires a colour, or a residual phrase the phrase bank reads as a shade."""
+    return any(f.get("feature") == "colors" and f.get("operator") in POSITIVE for f in filters) \
+        or any(r["kind"] == "shade" and not r["skipped"] for r in routes)
+PAGE = common.SEARCH_UI / "static/index.html"
+EXAMPLES = common.SEARCH_UI / "static/example_queries.yaml"
 EXAMPLES_SHOWN = 5
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
 
@@ -65,40 +79,101 @@ def _z(s, mask):
 
 
 class SearchEngine:
-    def __init__(self, products, T, I, parser, embedder):
+    def __init__(self, products, T, I, parser, embedder, concept_ranker=None, bank=None, F=None, weights=HYBRID):
         self.products = [conditions.prepare_product(p) for p in products]
-        self.rankings = list(RANKINGS)
+        self.concepts, self.bank, self.F, self.weights = concept_ranker, bank, F, dict(weights)
+        needs = dict(concepts=concept_ranker, bank=bank, hybrid=bank, features=F, combined_features=F)
+        self.rankings = [r for r in RANKINGS if needs.get(r, True) is not None]
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
         self.parser, self.embedder = parser, embedder
         self.vocabulary = conditions.Vocabulary(self.products)
         self.facets = facets.load(self.products)
         self.by_id = {p["product_id"]: p for p in self.products}
-        self.pool = ThreadPoolExecutor(2)
+        self.position = {p["product_id"]: i for i, p in enumerate(self.products)}
+        self.pool = ThreadPoolExecutor(3)
         self.examples = pick_examples(parser.examples, parser, self.products, self.vocabulary) \
             if getattr(parser, "examples", None) else None
 
-    def rank(self, q, ranking, cand, timings):
-        """-> (score, text similarity, image similarity) for the candidates. combined is the mean of the z-scores of
-        both similarities; products without an image come last in the image ranking."""
+    def rank(self, q, ranking, cand, category, timings, out):
+        """-> (score, text similarity, image similarity, tie-breaker or None) for the candidates. combined is the
+        mean of the z-scores of both similarities; products without an image come last in the image ranking."""
+        if ranking == "bank":
+            t = time.perf_counter()
+            jobs = self.query_vectors(q, "combined")
+            whole = {}
+
+            def whole_query(routes):
+                if not whole:
+                    out["image_weight"] = COLOUR_IMAGE_WEIGHT if asks_colour(out["parsed"]["filters"], routes) else 1.0
+                    whole["scores"] = self.embedding_scores(jobs, "combined", cand, timings, t,
+                                                            image_weight=out["image_weight"])
+                return whole["scores"][0]
+
+            score, out["bank"] = self.bank.rank(out["parsed"]["residual"], cand, category, typicality=False, query=q,
+                                                whole_query=whole_query)
+            timings["bank_ms"] = ms(t)
+            whole_query(out["bank"])
+            combined, s_t, s_i, _ = whole["scores"]
+            return score, s_t, s_i, combined
+        if ranking == "hybrid":
+            t = time.perf_counter()
+            jobs = self.query_vectors(q, "combined")
+            terms, out["bank"] = self.bank.adjustments(out["parsed"]["residual"], cand, category, query=q)
+            timings["bank_ms"] = ms(t)
+            out["image_weight"] = COLOUR_IMAGE_WEIGHT if asks_colour(out["parsed"]["filters"], out["bank"]) else 1.0
+            base, s_t, s_i, _ = self.embedding_scores(jobs, "combined_features" if self.F is not None else "combined",
+                                                      cand, timings, t, image_weight=out["image_weight"])
+            return self.combine(base, terms), s_t, s_i, None
+        if ranking == "concepts":
+            job = self.pool.submit(self.concepts.match, out["parsed"]["residual"], category, q)
+            combined, s_t, s_i, _ = self.rank(q, "combined", cand, category, timings, out)
+            m = out["concepts"] = job.result()
+            if not m["selected"]:
+                timings["concepts_ms"] = round(m.pop("ms"), 1)
+                return combined, s_t, s_i, None
+            t = time.perf_counter()
+            score = self.concepts.scores(m["selected"], cand)
+            timings["concepts_ms"] = round(m.pop("ms") + (time.perf_counter() - t) * 1000, 1)
+            return score, s_t, s_i, combined
         t = time.perf_counter()
+        return self.embedding_scores(self.query_vectors(q, ranking), ranking, cand, timings, t)
+
+    def combine(self, base, terms, weights=None):
+        """Hybrid score: the similarity of the whole query plus the concept terms minus the negation terms."""
+        w = weights or self.weights
+        return base + w["concept"] * sum(terms["concept"], np.zeros(len(base))) \
+            - w["negation"] * sum(terms["negation"], np.zeros(len(base)))
+
+    def query_vectors(self, q, ranking):
+        """Starts the query embeddings a ranking needs; the jobs never wait on other jobs of the pool."""
         jobs = {}
-        if ranking in ("text", "combined"):
+        if ranking in ("text", "combined", "features", "combined_features"):
             jobs["t"] = self.pool.submit(self.embedder, common.query_text(q))
-        if ranking in ("image", "combined"):
+        if ranking in ("image", "combined", "combined_features"):
             jobs["i"] = self.pool.submit(self.embedder, q)
+        return jobs
+
+    def embedding_scores(self, jobs, ranking, cand, timings, t, image_weight=1.0):
+        """image_weight: how much the image counts against the description (and the features) in combined."""
         v = {k: common.normalize(f.result()) for k, f in jobs.items()}
         timings["query_embedding_ms"] = ms(t)
         s_t = self.T[cand] @ v["t"] if "t" in v else None
         s_i = self.I[cand] @ v["i"] if "i" in v else None
         if ranking == "text":
-            return s_t, s_t, s_i
+            return s_t, s_t, s_i, None
+        if ranking == "features":
+            return self.F[cand] @ v["t"], s_t, s_i, None
         mask = self.has_image[cand]
         if ranking == "image":
-            return np.where(mask, s_i, -1.0), s_t, s_i
+            return np.where(mask, s_i, -1.0), s_t, s_i, None
         z_i = _z(s_i, mask)
         z_i[~mask] = z_i[mask].min() - 1 if mask.any() else 0
-        return (_z(s_t, np.ones(len(cand), bool)) + z_i) / 2, s_t, s_i
+        everyone = np.ones(len(cand), bool)
+        if ranking == "combined_features":
+            return (_z(s_t, everyone) + image_weight * z_i + _z(self.F[cand] @ v["t"], everyone)) / (2 + image_weight), \
+                s_t, s_i, None
+        return (_z(s_t, everyone) + image_weight * z_i) / (1 + image_weight), s_t, s_i, None
 
     def search(self, q, ranking="combined", manual=None):
         """manual: {"category", "filters", "residual"} in the parser format; when given, the parser is not called."""
@@ -151,15 +226,16 @@ class SearchEngine:
         s_t = s_i = None
         if len(cand) and q:
             try:
-                score, s_t, s_i = self.rank(q, ranking, cand, timings)
+                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)
-            order = np.argsort(-score, kind="stable")
+            order = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
         else:
             score, order = np.zeros(len(cand)), np.arange(len(cand))
         timings["ranking_ms"] = ms(t)
 
+        columns = self.concept_columns(out)
         results = []
         for j in order:
             i = int(cand[j])
@@ -173,10 +249,20 @@ class SearchEngine:
                 score_text=None if s_t is None else round(float(s_t[j]), 4),
                 score_image=None if s_i is None else round(float(s_i[j]), 4),
                 features={k: _show_value(v) for k, v in sorted(p["features"].items())},
-                matched=f["matched"].get(i, [])))
+                matched=f["matched"].get(i, []),
+                concepts=self.concepts.product_scores(i, columns) if columns else []))
         out["results"] = results
         timings["total_ms"] = ms(t0)
         return out
+
+    def concept_columns(self, out):
+        """Concept columns the ranking used, shown with every result."""
+        if not self.concepts:
+            return None
+        if out.get("concepts"):
+            return [s["column"] for s in out["concepts"]["selected"]] or None
+        used = dict.fromkeys(c for r in out.get("bank") or [] if not r["skipped"] for c in r["concepts"])
+        return [self.concepts.ids.index(c) for c in used if c in self.concepts.ids] or None
 
     def product(self, pid):
         p = self.by_id.get(pid)
@@ -187,7 +273,9 @@ class SearchEngine:
                     composition=_text(p.get("composition")), season=p.get("season") or "",
                     original_category=f"{p.get('original_section')} / {p.get('original_category')}",
                     status=p.get("status"), images=[f"/images/{z}" for z in p["images"]],
-                    features={k: _show_value(v) for k, v in sorted(p["features"].items())})
+                    features={k: _show_value(v) for k, v in sorted(p["features"].items())},
+                    concepts=sorted(self.concepts.product_scores(self.position[pid]), key=lambda c: -c["score"])
+                    if self.concepts else [])
 
 
 def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
@@ -278,12 +366,28 @@ def load_product_embeddings(products, meta):
     return T, np.where(np.linalg.norm(I, axis=1, keepdims=True) > 0, common.normalize(I), 0)
 
 
+def load_feature_embeddings(products, folder):
+    """Embeddings of the feature texts aligned with the products, or None when prepare.py did not build them."""
+    path = Path(folder) / common.FEATURE_VECTORS
+    if not path.exists():
+        return None
+    stored = np.load(path)
+    if stored["ids"].tolist() != [p["product_id"] for p in products]:
+        print("Feature embeddings do not match the index; rerun prepare.py")
+        return None
+    return stored["vectors"]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--parser", default="llm", help="llm, mock or module:function")
     ap.add_argument("--ranking", choices=RANKINGS, default="combined")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)
+    ap.add_argument("--concept-threshold", type=float, default=0.72, help="minimum phrase-concept cosine similarity")
+    ap.add_argument("--concept-combine", choices=list(concepts.COMBINE), default="geo",
+                    help="how the concept scores of the residual phrases are combined")
+    ap.add_argument("--no-bank", action="store_true", help="do not load the phrase-bank ranking")
     ap.add_argument("--no-warmup", action="store_true", help="skip the test embedding call at startup")
     ap.add_argument("--no-browser", action="store_true")
     args = ap.parse_args()
@@ -301,8 +405,35 @@ def main():
             print(f"Embedding API warm-up: {ms(t):.0f} ms")
         except Exception as e:
             print(f"Embedding API warm-up failed ({type(e).__name__}): check the network and GCP credentials")
+    ranker = concepts.load(args.data, meta, products, embedder, threshold=args.concept_threshold,
+                           combine=args.concept_combine)
+    if ranker:
+        info = meta["concepts"]
+        print(f"Concepts: {len(ranker.ids)}, all used in {', '.join(info['categories']) or 'no category'}"
+              + "".join(f"; {c}: {a} of {b} concepts" for c, (a, b) in info.get("partial", {}).items())
+              + f" · threshold {ranker.threshold}, {ranker.combine} of phrases")
+    bank_ranker = None
+    if not args.no_bank:
+        t = time.perf_counter()
+        vectors = args.data / "bank_embeddings.npz"
+        try:
+            import bank
+            rows = bank.load_rows()
+            stored = np.load(vectors)
+            if stored["phrases"].tolist() != [r["phrase"] for r in rows]:
+                raise OSError("the phrase bank changed since prepare.py; rerun it")
+            bank_ranker = bank.BankRanker(products, T, I, Path(meta["dataset"]), rows, stored["vectors"], embedder,
+                                          concepts.scored_concepts(meta.get("concepts") or {}),
+                                          ranker.ids if ranker else (), ranker.E if ranker else None)
+            print(f"Phrase bank: {len(rows)} phrases · {ms(t):.0f} ms")
+        except (ImportError, OSError) as e:
+            print(f"Phrase bank ranking unavailable ({type(e).__name__}: {str(e)[:200]}); run prepare.py")
+    F = load_feature_embeddings(products, args.data)
+    print(f"Feature embeddings: {'loaded' if F is not None else 'missing, run prepare.py'}")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
-    engine = SearchEngine(products, T, I, parser, embedder)
+    engine = SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker, F)
+    if args.ranking not in engine.rankings:
+        sys.exit(f"--ranking {args.ranking} is not available; available: {', '.join(engine.rankings)}")
     print(f"Parser: {engine.parser.name} · ranking: {args.ranking}")
     srv = build_server(engine, meta["dataset"], args.port, args.ranking)
     url = f"http://127.0.0.1:{args.port}/"
