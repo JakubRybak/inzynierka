@@ -96,6 +96,21 @@ image_processing/
 
 ---
 
+## 💻 Instalacja Środowiska
+
+Do uruchomienia wystarczy czysty wirtualny folder Python (>= 3.10) z zainstalowanym plikiem `requirements.txt`:
+
+```bash
+# Utworzenie i aktywacja wirtualnego środowiska
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Instalacja wszystkich wymaganych bibliotek AI i przetwarzania obrazu
+pip install -r requirements.txt
+```
+
+---
+
 ## 🚀 Uruchomienie i Obsługa (CLI)
 
 ### 1. Regeneracja Raportu HTML
