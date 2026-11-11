@@ -1,0 +1,135 @@
+category: Cardigans
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's oversized open-front cardigan in wool and cashmere under 320 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: closure_type
+      operator: in
+      values:
+      - Open Front
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cashmere
+      - Wool
+    - feature: price
+      operator: lte
+      value: 320
+    residual: []
+  note: '''open-front'' -> Open Front; ''wool and cashmere'' -> contains_all.'
+- query: cropped button-front V-neck cardigan in burgundy without acrylic, around $60
+  output:
+    filters:
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: closure_type
+      operator: in
+      values:
+      - Button
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Acrylic
+    - feature: price
+      operator: around
+      value: 60
+    residual:
+    - burgundy
+  note: '''button-front'' -> Button; ''burgundy'' -> Red + residual.'
+- query: 100% cotton all-white longline hooded cardigan with pockets
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: colors
+      operator: equals_set
+      values:
+      - White
+    - feature: length
+      operator: in
+      values:
+      - Longline
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    residual:
+    - with pockets
+  note: '''100% cotton'' and ''all-white'' both use equals_set; ''with pockets'' stays in residual.'
+- query: men's navy and grey striped collared cardigan by Tommy Hilfiger between 200 and 400 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_all
+      values:
+      - Blue
+      - Grey
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: neckline
+      operator: in
+      values:
+      - Collared
+    - feature: brand
+      operator: in
+      values:
+      - Tommy Hilfiger
+    - feature: price
+      operator: gte
+      value: 200
+    - feature: price
+      operator: lte
+      value: 400
+    residual:
+    - navy
+  note: '''navy and grey'' -> contains_all [''Blue'', ''Grey''] + residual [''navy''].'
+- query: green short-sleeve crewneck cardigan without a hood, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Short Sleeve
+    - feature: neckline
+      operator: in
+      values:
+      - Crewneck
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    residual:
+    - not emerald
+  note: Excluded shade stays in residual.

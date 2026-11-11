@@ -1,0 +1,141 @@
+category: Jeans
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's high-rise bootcut Levi's jeans, not ripped, 34 x 28, under 300 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: leg_shape
+      operator: in
+      values:
+      - Flared
+    - feature: brand
+      operator: in
+      values:
+      - Levi's
+    - feature: distressing
+      operator: contains_none
+      values:
+      - Distressed
+    - feature: price
+      operator: lte
+      value: 300
+    residual:
+    - bootcut
+    - 34 x 28
+  note: '''bootcut'' -> leg_shape=Flared + residual; ''not ripped'' -> distressing contains_none [''Distressed''];
+    ''34 x 28'' is size in residual.'
+- query: men's skinny fit biker jeans in black cotton and elastane, around $90
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: fit
+      operator: in
+      values:
+      - Skinny
+    - feature: colors
+      operator: contains_any
+      values:
+      - Black
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    - feature: price
+      operator: around
+      value: 90
+    residual:
+    - biker
+  note: '''skinny fit'' maps ONLY to fit=Skinny (do NOT infer leg_shape=Tapered); ''biker'' stays in residual.'
+- query: 100% cotton all-white wide-leg cropped jeans with clean wash, without elastane
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Elastane
+    - feature: colors
+      operator: equals_set
+      values:
+      - White
+    - feature: leg_shape
+      operator: in
+      values:
+      - Wide-Leg
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: distressing
+      operator: contains_any
+      values:
+      - Clean
+    residual: []
+  note: '''100% cotton'' and ''all-white'' use equals_set; ''clean wash'' -> distressing contains_any [''Clean''].'
+- query: faded and distressed low-rise relaxed straight jeans by Wrangler between 150 and 280 PLN
+  output:
+    filters:
+    - feature: distressing
+      operator: contains_all
+      values:
+      - Distressed
+      - Faded
+    - feature: rise
+      operator: in
+      values:
+      - Low-Rise
+    - feature: fit
+      operator: in
+      values:
+      - Relaxed
+    - feature: leg_shape
+      operator: in
+      values:
+      - Straight
+    - feature: brand
+      operator: in
+      values:
+      - Wrangler
+    - feature: price
+      operator: gte
+      value: 150
+    - feature: price
+      operator: lte
+      value: 280
+    residual: []
+  note: '''faded and distressed'' requires both -> distressing contains_all [''Distressed'', ''Faded''].'
+- query: blue or grey tapered jeans with elasticized waistband, not turquoise
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+      - Grey
+    - feature: leg_shape
+      operator: in
+      values:
+      - Tapered
+    - feature: waistband_type
+      operator: in
+      values:
+      - Elasticized
+    residual:
+    - not turquoise
+  note: Excluded shade 'not turquoise' stays only in residual.

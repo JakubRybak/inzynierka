@@ -1,0 +1,165 @@
+category: Dresses
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's burgundy 100% silk slip midi dress with spaghetti straps and V-neck under 500 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Silk
+    - feature: dress_type
+      operator: contains_any
+      values:
+      - Slip
+    - feature: length
+      operator: in
+      values:
+      - Midi
+    - feature: strap_width
+      operator: in
+      values:
+      - Spaghetti
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: price
+      operator: lte
+      value: 500
+    residual:
+    - burgundy
+  note: '''100% silk'' -> equals_set; ''spaghetti straps'' sets strap_width=Spaghetti without implying strap_style=Standard.'
+- query: black and white floral A-line maxi wrap dress in cotton and viscose without polyester, around $110
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Floral
+    - feature: dress_silhouette
+      operator: in
+      values:
+      - A-Line
+    - feature: length
+      operator: in
+      values:
+      - Maxi
+    - feature: dress_type
+      operator: contains_any
+      values:
+      - Wrap
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Viscose
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: around
+      value: 110
+    residual: []
+  note: Do NOT infer gender=Women from 'dress'.
+- query: all-black fitted long-sleeve turtleneck sweater dress by Mango between 150 and 300 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: dress_silhouette
+      operator: in
+      values:
+      - Fitted
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: dress_type
+      operator: contains_any
+      values:
+      - Sweater Dress
+    - feature: brand
+      operator: in
+      values:
+      - Mango
+    - feature: price
+      operator: gte
+      value: 150
+    - feature: price
+      operator: lte
+      value: 300
+    residual:
+    - turtleneck
+  note: '''all-black'' -> equals_set [''Black'']; ''turtleneck'' -> High Neck + residual.'
+- query: strapless mini cocktail dress in green, not emerald, not fitted
+  output:
+    filters:
+    - feature: strap_style
+      operator: in
+      values:
+      - Strapless
+    - feature: length
+      operator: in
+      values:
+      - Mini
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: dress_silhouette
+      operator: not_in
+      values:
+      - Fitted
+    residual:
+    - cocktail
+    - not emerald
+  note: Do not infer Sleeveless or strap_width from Strapless; 'cocktail' and 'not emerald' stay in residual.
+- query: collared short-sleeve linen shirt dress in navy for summer
+  output:
+    filters:
+    - feature: neckline
+      operator: in
+      values:
+      - Collared
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Short Sleeve
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Linen
+    - feature: dress_type
+      operator: contains_any
+      values:
+      - Shirt Dress
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    residual:
+    - navy
+    - for summer
+  note: '''shirt dress'' -> dress_type contains_any [''Shirt Dress'']; ''navy'' -> Blue + residual.'

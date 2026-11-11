@@ -1,0 +1,124 @@
+category: Sweatshirts
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: men's heather grey Nike crewneck sweatshirt in cotton and polyester under 220 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Grey
+    - feature: brand
+      operator: in
+      values:
+      - Nike
+    - feature: neckline
+      operator: in
+      values:
+      - Crewneck
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Polyester
+    - feature: price
+      operator: lte
+      value: 220
+    residual:
+    - heather grey
+  note: '''heather grey'' maps to Grey and stays in residual.'
+- query: women's oversized cropped fleece sweatshirt without a hood, around $55
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: around
+      value: 55
+    residual:
+    - fleece
+  note: '''fleece'' fabric texture stays in residual.'
+- query: 100% cotton all-black mock-neck sweatshirt, not slim
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: fit
+      operator: not_in
+      values:
+      - Slim
+    residual:
+    - mock-neck
+  note: '''mock-neck'' maps to High Neck and stays in residual.'
+- query: navy and white striped sweatshirt by Champion between 100 and 200 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Blue
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: brand
+      operator: in
+      values:
+      - Champion
+    - feature: price
+      operator: gte
+      value: 100
+    - feature: price
+      operator: lte
+      value: 200
+    residual:
+    - navy
+  note: '''navy and white'' maps to contains_all [''Blue'', ''White''] and keeps ''navy'' in residual.'
+- query: green short-sleeve sweatshirt without polyester, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Short Sleeve
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual:
+    - not emerald
+  note: Excluded shade 'not emerald' stays only in residual.

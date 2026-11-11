@@ -1,0 +1,127 @@
+category: Knit Sweaters
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: 100% wool burgundy turtleneck sweater for women under 350 PLN
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Wool
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: price
+      operator: lte
+      value: 350
+    residual:
+    - burgundy
+    - turtleneck
+  note: '''100% wool'' -> equals_set; ''burgundy'' and ''turtleneck'' map to Red/High Neck and stay in residual.'
+- query: men's oversized cable-knit crewneck jumper in wool and cashmere without acrylic
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: neckline
+      operator: in
+      values:
+      - Crewneck
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cashmere
+      - Wool
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Acrylic
+    residual:
+    - cable-knit
+  note: '''wool and cashmere'' uses contains_all; ''without acrylic'' uses contains_none; ''cable-knit'' stays in
+    residual.'
+- query: cropped striped V-neck knit sweater without a hood, around $75
+  output:
+    filters:
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: around
+      value: 75
+    residual: []
+  note: '''without a hood'' sets hood=Without Hood.'
+- query: all-black hooded knit sweater by Massimo Dutti between 150 and 300 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: brand
+      operator: in
+      values:
+      - Massimo Dutti
+    - feature: price
+      operator: gte
+      value: 150
+    - feature: price
+      operator: lte
+      value: 300
+    residual: []
+  note: '''all-black'' -> equals_set [''Black'']; ''hooded'' -> hood=With Hood.'
+- query: 30% wool green sweater with short sleeves, not emerald, not slim
+  output:
+    filters:
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Wool
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Short Sleeve
+    - feature: fit
+      operator: not_in
+      values:
+      - Slim
+    residual:
+    - not emerald
+  note: 30% share uses contains_any; excluded shade stays in residual.

@@ -1,0 +1,121 @@
+category: Bodysuits
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's all-black long-sleeve turtleneck bodysuit in cotton and elastane
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    residual:
+    - turtleneck
+  note: '''turtleneck'' maps to High Neck and stays in residual; do not infer strap_style=Standard Sleeved unless
+    explicitly stated.'
+- query: sleeveless burgundy lace bodysuit with spaghetti straps and V-neck under $60
+  output:
+    filters:
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Sleeveless
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: strap_width
+      operator: in
+      values:
+      - Spaghetti
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: price
+      operator: lte
+      value: 60
+    residual:
+    - burgundy
+    - lace
+  note: '''burgundy'' and unsupported fabric ''lace'' stay in residual.'
+- query: one-shoulder animal print bodysuit with leopard print, without nylon, around 120 PLN
+  output:
+    filters:
+    - feature: strap_style
+      operator: in
+      values:
+      - One-Shoulder
+    - feature: pattern
+      operator: in
+      values:
+      - Animal Print
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Nylon
+    - feature: price
+      operator: around
+      value: 120
+    residual:
+    - leopard print
+  note: '''leopard print'' maps to Animal Print and stays in residual.'
+- query: white or beige strapless bodysuit by Skims, not turquoise
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Beige
+      - White
+    - feature: strap_style
+      operator: in
+      values:
+      - Strapless
+    - feature: brand
+      operator: in
+      values:
+      - Skims
+    residual:
+    - not turquoise
+  note: Color alternatives use contains_any; excluded shade stays in residual.
+- query: 100% cotton scoop-neck bodysuit with wide straps between 80 and 150 PLN
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: neckline
+      operator: in
+      values:
+      - Scoop Neck
+    - feature: strap_width
+      operator: in
+      values:
+      - Wide
+    - feature: price
+      operator: gte
+      value: 80
+    - feature: price
+      operator: lte
+      value: 150
+    residual: []
+  note: '''100% cotton'' maps to equals_set [''Cotton''].'

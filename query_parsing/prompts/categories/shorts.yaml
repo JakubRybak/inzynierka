@@ -1,0 +1,145 @@
+category: Shorts
+feature_notes:
+  shorts_type: 'IMPORTANT: Sport/running/volleyball/gym/compression/athletic shorts map to shorts_type = Athletic
+    AND keep the specific sport or ''compression'' in residual (note: ''golf shorts'' does not map to Athletic).'
+substyle_rules:
+- '   - In Shorts: specific sports (''running'', ''volleyball'', ''gym'', ''compression'') map to shorts_type=Athletic
+  AND stay in residual.'
+few_shots:
+- query: men's navy Under Armour running shorts with elasticized waistband under 140 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: brand
+      operator: in
+      values:
+      - Under Armour
+    - feature: shorts_type
+      operator: in
+      values:
+      - Athletic
+    - feature: waistband_type
+      operator: in
+      values:
+      - Elasticized
+    - feature: price
+      operator: lte
+      value: 140
+    residual:
+    - navy
+    - running
+  note: In Shorts, 'running' maps to shorts_type=Athletic AND stays in residual; 'navy' maps to Blue AND stays in
+    residual.
+- query: women's high-rise denim shorts in 100% cotton without elastane, around $45
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: shorts_type
+      operator: in
+      values:
+      - Denim
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Elastane
+    - feature: price
+      operator: around
+      value: 45
+    residual: []
+  note: '''100% cotton'' -> equals_set [''Cotton'']; ''without elastane'' -> contains_none [''Elastane''].'
+- query: olive relaxed cargo shorts in cotton and nylon, mid-length, between 80 and 160 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: fit
+      operator: in
+      values:
+      - Relaxed
+    - feature: shorts_type
+      operator: in
+      values:
+      - Cargo
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Nylon
+    - feature: length
+      operator: in
+      values:
+      - Mid-Length
+    - feature: price
+      operator: gte
+      value: 80
+    - feature: price
+      operator: lte
+      value: 160
+    residual:
+    - olive
+  note: '''cotton and nylon'' -> contains_all; ''olive'' -> Green + residual.'
+- query: all-black tailored linen shorts with structured waistband, not skinny
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: shorts_type
+      operator: in
+      values:
+      - Tailored
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Linen
+    - feature: waistband_type
+      operator: in
+      values:
+      - Structured
+    - feature: fit
+      operator: not_in
+      values:
+      - Skinny
+    residual: []
+  note: '''all-black'' -> equals_set [''Black''].'
+- query: black and white striped sweatshorts for volleyball, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Striped
+    - feature: shorts_type
+      operator: in
+      values:
+      - Sweatshorts
+    residual:
+    - for volleyball
+    - not emerald
+  note: '''black and white'' -> contains_all; ''not emerald'' stays in residual.'

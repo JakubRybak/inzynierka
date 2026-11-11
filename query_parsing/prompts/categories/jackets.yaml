@@ -1,0 +1,154 @@
+category: Jackets
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: men's all-black leather biker jacket with zipper and lapel collar under 600 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Leather
+    - feature: jacket_style
+      operator: in
+      values:
+      - Biker
+    - feature: closure_type
+      operator: contains_any
+      values:
+      - Zip
+    - feature: collar_type
+      operator: in
+      values:
+      - Lapel Collar
+    - feature: price
+      operator: lte
+      value: 600
+    residual: []
+  note: '''all-black'' -> equals_set [''Black'']; ''biker'' -> jacket_style=Biker.'
+- query: women's oversized cropped denim jacket in 100% cotton with shearling-lined interior, around $110
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: jacket_style
+      operator: in
+      values:
+      - Denim
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: insulation
+      operator: in
+      values:
+      - Shearling Lined
+    - feature: price
+      operator: around
+      value: 110
+    residual: []
+  note: '''shearling-lined'' maps to insulation=Shearling Lined (not lining_composition).'
+- query: unlined navy and white nylon windbreaker jacket with hood by Columbia between 150 and 300 PLN
+  output:
+    filters:
+    - feature: lining_composition
+      operator: equals_set
+      values:
+      - Unlined
+    - feature: colors
+      operator: contains_all
+      values:
+      - Blue
+      - White
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Nylon
+    - feature: jacket_style
+      operator: in
+      values:
+      - Windbreaker
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: brand
+      operator: in
+      values:
+      - Columbia
+    - feature: price
+      operator: gte
+      value: 150
+    - feature: price
+      operator: lte
+      value: 300
+    residual:
+    - navy
+  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; ''navy and white'' -> contains_all [''Blue'',
+    ''White''] + residual [''navy''].'
+- query: burgundy faux leather jacket with silk lining and stand collar, without polyester
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: lining_composition
+      operator: contains_any
+      values:
+      - Silk
+    - feature: collar_type
+      operator: in
+      values:
+      - Stand Collar
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual:
+    - burgundy
+    - faux leather
+  note: '''faux leather'' does NOT map to Leather and stays in residual.'
+- query: green goose down quilted jacket without a hood, not emerald, not oversized
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: insulation
+      operator: in
+      values:
+      - Down
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    residual:
+    - goose down
+    - quilted
+    - not emerald
+  note: '''goose down'' maps to insulation=Down and keeps ''goose down'' in residual; ''quilted'' and ''not emerald''
+    stay in residual.'

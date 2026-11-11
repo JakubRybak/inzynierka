@@ -1,0 +1,140 @@
+category: Trousers
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's high-rise wide-leg tailored trousers in 100% wool by Massimo Dutti under 450 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: leg_shape
+      operator: in
+      values:
+      - Wide-Leg
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Wool
+    - feature: brand
+      operator: in
+      values:
+      - Massimo Dutti
+    - feature: price
+      operator: lte
+      value: 450
+    residual:
+    - tailored
+  note: '''100% wool'' -> equals_set [''Wool'']; ''tailored'' stays in residual.'
+- query: men's slim fit navy chinos in cotton and elastane without polyester, around $80
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: around
+      value: 80
+    residual:
+    - navy
+    - chinos
+  note: Slim fit maps ONLY to fit=Slim (do NOT infer leg_shape=Tapered).
+- query: all-black bootcut cropped pants with elasticized waistband between 120 and 250 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: leg_shape
+      operator: in
+      values:
+      - Flared
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: waistband_type
+      operator: in
+      values:
+      - Elasticized
+    - feature: price
+      operator: gte
+      value: 120
+    - feature: price
+      operator: lte
+      value: 250
+    residual:
+    - bootcut
+  note: '''bootcut'' maps to leg_shape=Flared AND stays in residual; elasticized waistband does not imply Tapered.'
+- query: grey and white plaid straight-leg full-length trousers with structured waistband, not skinny
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Grey
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Plaid
+    - feature: leg_shape
+      operator: in
+      values:
+      - Straight
+    - feature: length
+      operator: in
+      values:
+      - Full-Length
+    - feature: waistband_type
+      operator: in
+      values:
+      - Structured
+    - feature: fit
+      operator: not_in
+      values:
+      - Skinny
+    residual: []
+  note: '''grey and white'' -> contains_all.'
+- query: green tapered trousers with zippered cuffs, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: leg_shape
+      operator: in
+      values:
+      - Tapered
+    - feature: cuff_style
+      operator: in
+      values:
+      - Zippered Cuff
+    residual:
+    - not emerald
+  note: Explicit 'tapered' sets leg_shape=Tapered; 'not emerald' stays in residual.

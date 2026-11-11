@@ -1,0 +1,132 @@
+category: Cargo Pants
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: men's olive relaxed fit cargo pants in 100% cotton with elasticized cuffs under 200 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: fit
+      operator: in
+      values:
+      - Relaxed
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: cuff_style
+      operator: in
+      values:
+      - Elasticized Cuff
+    - feature: price
+      operator: lte
+      value: 200
+    residual:
+    - olive
+  note: '''olive'' -> Green + residual; ''100% cotton'' -> equals_set.'
+- query: black cargo trousers with elasticized waistband up to 220 PLN, not skinny
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Black
+    - feature: waistband_type
+      operator: in
+      values:
+      - Elasticized
+    - feature: price
+      operator: lte
+      value: 220
+    - feature: fit
+      operator: not_in
+      values:
+      - Skinny
+    residual: []
+  note: '''elasticized waistband'' (''z gumką w pasie'') sets ONLY waistband_type=Elasticized, NOT leg_shape=Tapered.'
+- query: women's high-rise wide-leg camo cargo pants in cotton and nylon without polyester, around $75
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: leg_shape
+      operator: in
+      values:
+      - Wide-Leg
+    - feature: pattern
+      operator: in
+      values:
+      - Camo
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Nylon
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: around
+      value: 75
+    residual: []
+  note: '''cotton and nylon'' -> contains_all; ''without polyester'' -> contains_none.'
+- query: all-black tapered cropped cargo pants by Carhartt between 180 and 350 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: leg_shape
+      operator: in
+      values:
+      - Tapered
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: brand
+      operator: in
+      values:
+      - Carhartt
+    - feature: price
+      operator: gte
+      value: 180
+    - feature: price
+      operator: lte
+      value: 350
+    residual: []
+  note: '''all-black'' -> equals_set [''Black''].'
+- query: green and beige straight-leg cargo pants with open hem, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Beige
+      - Green
+    - feature: leg_shape
+      operator: in
+      values:
+      - Straight
+    - feature: cuff_style
+      operator: in
+      values:
+      - Open Hem
+    residual:
+    - not emerald
+  note: '''green and beige'' -> contains_all; ''not emerald'' stays in residual.'

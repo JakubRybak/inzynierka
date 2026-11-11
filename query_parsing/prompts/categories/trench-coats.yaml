@@ -1,0 +1,146 @@
+category: Trench Coats
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: women's beige double-breasted belted trench coat in 100% cotton with lapel collar under 700 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: colors
+      operator: contains_any
+      values:
+      - Beige
+    - feature: closure_type
+      operator: contains_all
+      values:
+      - Belted
+      - Double-Breasted
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    - feature: collar_type
+      operator: in
+      values:
+      - Lapel Collar
+    - feature: price
+      operator: lte
+      value: 700
+    residual: []
+  note: '''double-breasted belted'' requires both closures -> contains_all [''Belted'', ''Double-Breasted''].'
+- query: unlined navy mid-length trench coat by Burberry without a hood, around $600
+  output:
+    filters:
+    - feature: lining_composition
+      operator: equals_set
+      values:
+      - Unlined
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: length
+      operator: in
+      values:
+      - Mid-Length
+    - feature: brand
+      operator: in
+      values:
+      - Burberry
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: around
+      value: 600
+    residual:
+    - navy
+  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; ''navy'' -> Blue + residual.'
+- query: men's oversized long leather trench coat in all-black with viscose lining
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Long
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Leather
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: lining_composition
+      operator: contains_any
+      values:
+      - Viscose
+    residual: []
+  note: '''all-black'' -> equals_set [''Black'']; ''with viscose lining'' -> lining_composition contains_any [''Viscose''].'
+- query: olive and black plaid hooded short trench with point collar between 250 and 500 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - Green
+    - feature: pattern
+      operator: in
+      values:
+      - Plaid
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: length
+      operator: in
+      values:
+      - Short
+    - feature: collar_type
+      operator: in
+      values:
+      - Point Collar
+    - feature: price
+      operator: gte
+      value: 250
+    - feature: price
+      operator: lte
+      value: 500
+    residual:
+    - olive
+  note: '''olive and black'' -> contains_all [''Black'', ''Green''] + residual [''olive''].'
+- query: uninsulated green trench coat without polyester, not emerald, not oversized
+  output:
+    filters:
+    - feature: insulation
+      operator: in
+      values:
+      - Uninsulated
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    residual:
+    - not emerald
+  note: Excluded shade stays only in residual.

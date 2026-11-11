@@ -1,0 +1,144 @@
+category: Vests
+feature_notes: {}
+substyle_rules: []
+few_shots:
+- query: men's navy Patagonia goose down vest with zipper and without a hood under 500 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: brand
+      operator: in
+      values:
+      - Patagonia
+    - feature: insulation
+      operator: in
+      values:
+      - Down
+    - feature: closure_type
+      operator: contains_any
+      values:
+      - Zip
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: lte
+      value: 500
+    residual:
+    - navy
+    - goose down
+  note: '''goose down'' maps to insulation=Down and stays in residual.'
+- query: unlined all-black tailored waistcoat in 100% wool with button closure, around $120
+  output:
+    filters:
+    - feature: lining_composition
+      operator: equals_set
+      values:
+      - Unlined
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Wool
+    - feature: closure_type
+      operator: contains_any
+      values:
+      - Button
+    - feature: price
+      operator: around
+      value: 120
+    residual:
+    - tailored
+  note: '''unlined'', ''all-black'', and ''100% wool'' all use equals_set.'
+- query: women's oversized longline hooded vest with synthetic padding between 150 and 300 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: length
+      operator: in
+      values:
+      - Longline
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: insulation
+      operator: in
+      values:
+      - Synthetic Padding
+    - feature: price
+      operator: gte
+      value: 150
+    - feature: price
+      operator: lte
+      value: 300
+    residual: []
+  note: '''synthetic padding'' maps to insulation=Synthetic Padding.'
+- query: olive and black camo gilet in nylon and cotton without polyester, with silk lining
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - Green
+    - feature: pattern
+      operator: in
+      values:
+      - Camo
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Nylon
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: lining_composition
+      operator: contains_any
+      values:
+      - Silk
+    residual:
+    - olive
+  note: '''olive and black'' -> contains_all [''Black'', ''Green''] + residual [''olive''].'
+- query: cropped green fleece-lined vest, not emerald, not oversized
+  output:
+    filters:
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: insulation
+      operator: in
+      values:
+      - Fleece Lined
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    residual:
+    - not emerald
+  note: '''fleece-lined'' maps to insulation=Fleece Lined; ''not emerald'' stays in residual.'
