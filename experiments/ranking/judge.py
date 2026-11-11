@@ -3,8 +3,8 @@ Relevance grades 0-3 for the pooled (query, product) pairs from Gemini. One call
 products without a grade: the query, then each product's name, brand, description, composition and main image, in a
 shuffled order under neutral labels. The judge never sees which ranking returned a product.
 
-    python search_ui/evaluation/judge.py                  # plan and cost estimate, no API calls
-    python search_ui/evaluation/judge.py --execute        # paid calls
+    python experiments/ranking/judge.py                  # plan and cost estimate, no API calls
+    python experiments/ranking/judge.py --execute        # paid calls
 
 Every call is appended to data/judgments.jsonl; a rerun grades only what is missing for the current prompt version.
 """
@@ -17,7 +17,7 @@ import random
 import re
 
 from evaluate import HERE, JUDGMENTS, POOL, common
-import vertex  # noqa: E402  (search_ui/, put on the path by evaluate)
+import vertex  # noqa: E402  (search_ui/core/, put on the path by evaluate)
 
 SYSTEM = HERE / "judge_system.txt"
 POSE = "id_gridfs_1"

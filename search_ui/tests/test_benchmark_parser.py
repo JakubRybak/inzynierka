@@ -16,7 +16,7 @@ def benchmark(*rows):
     w.writerow(["query", "expected_output", "language", "source"])
     for query, category, filters, residual in rows:
         w.writerow([query, json.dumps(dict(category=category, filters=filters, residual=residual)), "en", "test"])
-    return [("query_extraction/queries/test.csv", out.getvalue())]
+    return [("experiments/query_parsing/benchmark/queries/test.csv", out.getvalue())]
 
 
 def queries(split, n):

@@ -3,7 +3,7 @@ Query parsers and the adapter from parser output to the condition tree in condit
 A parser is a function f(query) -> dict with category, filters and residual (a list of phrases), the format of
 llm_parser.parse.
 
-    --parser llm                      QueryExtractor of query_extraction/ (llm_parser.py, the default; paid calls)
+    --parser llm                      QueryParser of query_parsing/ (llm_parser.py, the default; paid calls)
     --parser benchmark_parser:parse   reviewed benchmark parses for dev queries, the LLM parser for the rest
     --parser mock                     simple matching of query words against index values, no API calls
     --parser module:function          any function returning the same format

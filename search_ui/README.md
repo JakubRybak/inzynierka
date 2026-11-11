@@ -1,7 +1,7 @@
 # Search UI
 
 Local web demo of the search bar on the pilot: the 9,796 products with status `ready` of the 9,922-product pilot,
-in 22 categories. A query goes through the query parser of `query_extraction/`. The products are filtered by their
+in 22 categories. A query goes through the query parser of `query_parsing/`. The products are filtered by their
 extracted features, and the products left are ranked. The page shows what the parser understood, lets you change the
 filters by hand, switches between rankings and shows how long each stage took.
 
@@ -31,7 +31,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
   export GOOGLE_GENAI_USE_VERTEXAI=true
   ```
 - The query parser needs `OPENROUTER_API_KEY` and `CEREBRAS_API_KEY` in `.env` at the repository root (see
-  `query_extraction/README.md`). Two parsers work without these keys:
+  `query_parsing/README.md`). Two parsers work without these keys:
   - `--parser mock` matches query words against index values;
   - `--parser benchmark_parser:parse` answers the dev queries of the benchmark with their reviewed parses and sends
     any other query to the query parser.
@@ -90,10 +90,10 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | --- | --- |
 | `server.py` | HTTP server and search pipeline: parse, filter, rank |
 | `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores and phrase bank |
-| `llm_parser.py` | `--parser llm`: the QueryExtractor of `query_extraction/` |
+| `llm_parser.py` | `--parser llm`: the QueryParser of `query_parsing/` |
 | `core/` | the modules of the pipeline (below) |
 | `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
-| `offline/`, `ranking_data/`, `evaluation/` | the scripts, data and evaluation of the ranking ([README_ranking.md](README_ranking.md)) |
+| `offline/`, `ranking_data/` | the scripts and data of the ranking ([README_ranking.md](README_ranking.md)); its evaluation is in `experiments/ranking/` |
 | `tests/` | unit tests, which make no API calls, and `check_examples.py`, a check of the example queries against the index |
 | `data/` | the index built by `prepare.py` and the call logs of the offline scripts (git-ignored) |
 
@@ -183,12 +183,3 @@ Typical latency per query:
 - query embedding: 0.3–0.5 s;
 - `concepts`, `bank` and `hybrid`: up to about 0.3 s more, because they embed the residual phrases in parallel with
   the query.
-
-## Merging `main`
-
-On `main` the parser is `query_parsing/`, with `parse_query(query, include_meta=True)`, no `config` argument and no
-warm-up. The benchmark moved to `experiments/query_parsing/benchmark/queries/`. Two files have to follow:
-- `llm_parser.py`, which imports from `query_extraction`;
-- `core/benchmark_parser.py`, for the benchmark path and `query_extraction.core.catalog`.
-
-Nothing else in `search_ui/` imports the parser.

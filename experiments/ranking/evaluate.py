@@ -2,9 +2,9 @@
 Ranking evaluation on the pilot: the rankings of the search UI on the benchmark queries with their reviewed parses,
 a pool of products to judge and the metrics.
 
-    python search_ui/evaluation/evaluate.py run                   # data/runs.jsonl, data/pool.jsonl (embedding calls)
-    python search_ui/evaluation/evaluate.py report                # dev metrics from data/judgments.jsonl
-    python search_ui/evaluation/evaluate.py report --split test   # only at milestones, never for tuning
+    python experiments/ranking/evaluate.py run                   # data/runs.jsonl, data/pool.jsonl (embedding calls)
+    python experiments/ranking/evaluate.py report                # dev metrics from data/judgments.jsonl
+    python experiments/ranking/evaluate.py report --split test   # only at milestones, never for tuning
 
 Queries: benchmark queries with a category, a residual and at least 2 candidates after their filters. Rankings:
 random, combined, combined_features, concepts, bank and bank_heldout (the bank without the phrases that come only
@@ -24,7 +24,8 @@ import zlib
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-sys.path[:0] = [str(HERE.parent), str(HERE.parent / "core")]
+SEARCH_UI = HERE.parents[1] / "search_ui"
+sys.path[:0] = [str(SEARCH_UI), str(SEARCH_UI / "core")]
 import bank  # noqa: E402
 import benchmark_parser  # noqa: E402
 import common  # noqa: E402

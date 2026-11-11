@@ -110,10 +110,13 @@ To change the concepts:
 
 ## Evaluation
 
+The evaluation code is in `experiments/ranking/`, as the code that the choice of a ranking rests on.
+
+
 ```sh
-python search_ui/evaluation/evaluate.py run       # rankings and the pool to grade (embedding calls)
-python search_ui/evaluation/judge.py --execute    # grades of the pool (paid)
-python search_ui/evaluation/evaluate.py report    # nDCG@10, MRR and P@1 with bootstrap intervals
+python experiments/ranking/evaluate.py run       # rankings and the pool to grade (embedding calls)
+python experiments/ranking/judge.py --execute    # grades of the pool (paid)
+python experiments/ranking/evaluate.py report    # nDCG@10, MRR and P@1 with bootstrap intervals
 ```
 
 How the evaluation works:

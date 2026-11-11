@@ -1,6 +1,6 @@
 """
 Benchmark parser (--parser benchmark_parser:parse): the reviewed parses of the query extraction benchmark
-(query_extraction/benchmark/queries), looked up by query text, for all 22 categories and without API calls. Only
+(experiments/query_parsing/benchmark/queries), looked up by query text, for all 22 categories and without API calls. Only
 queries of the dev split are answered from the benchmark; a test query or any other query goes to the LLM parser
 (llm_parser.py, paid calls).
 
@@ -16,7 +16,7 @@ import sys
 import common
 from parser_adapter import normalize_text
 
-BENCHMARK = common.REPO / "query_extraction/benchmark/queries"
+BENCHMARK = common.REPO / "experiments/query_parsing/benchmark/queries"
 NO_CATEGORY = "No category"
 
 
@@ -84,7 +84,7 @@ def _llm(query):
 
 def _fallback_categories():
     sys.path.insert(0, str(common.REPO))
-    from query_extraction.core.catalog import load_query_catalog
+    from query_parsing.core.catalog import load_query_catalog
     return list(load_query_catalog())
 
 
@@ -93,4 +93,4 @@ EXAMPLES = examples(ROWS)
 CATEGORIES = _fallback_categories()
 parse = BenchmarkParser(ROWS, _llm)
 NAME = (f"benchmark ({sum(r['split'] == 'dev' for r in ROWS)} dev queries of {len(ROWS)}), "
-        f"other queries: query_parser.py")
+        f"other queries: llm_parser.py")
