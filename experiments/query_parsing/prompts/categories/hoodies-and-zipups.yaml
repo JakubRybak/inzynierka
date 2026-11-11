@@ -1,0 +1,157 @@
+category: Hoodies & Zipups
+category_criterion: Hoodie, hooded sweatshirt, zip-up sweatshirt, zip-up hoodie, half-zip or quarter-zip pullover/sweatshirt,
+  bluza z kapturem, bluza na suwak / rozpinana, bluza z krótkim zamkiem, sudadera con capucha / con cremallera.
+feature_notes:
+  hood: 'IMPORTANT: In Hoodies & Zipups, the word ''hoodie'' / ''hoodies'' / ''hooded'' / ''z kapturem'' / ''con
+    capucha'' explicitly sets hood = With Hood. ''without a hood'' / ''bez kaptura'' sets hood = Without Hood. A
+    ''zip-up'' or ''half-zip'' without mentioning hoodie/hood leaves hood unspecified.'
+  closure_type: 'IMPORTANT: ''zip-up'' / ''zip up'' / ''zipper'' / ''na suwak'' / ''con cremallera'' -> Zip; ''half-zip''
+    / ''quarter-zip'' / ''z krótkim zamkiem'' -> Half-Zip; ''pullover'' -> Pullover.'
+jev_scopes:
+  hood: 'The word ''hoodie''/''hoodies''/''hooded''/''z kapturem''/''con capucha'' requests With Hood (and leaves
+    Without Hood as not_specified, NEVER excluded). '
+  closure_type: '''zip-up''/''zip up''/''zipper''/''na suwak''/''con cremallera'' -> Zip; ''half-zip''/''z krótkim
+    zamkiem'' -> Half-Zip; ''pullover'' -> Pullover. '
+substyle_rules: []
+few_shots:
+- query: all-black cotton and elastane zip-up hoodie up to 180 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Elastane
+    - feature: closure_type
+      operator: in
+      values:
+      - Zip
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: price
+      operator: lte
+      value: 180
+    residual: []
+  note: In Hoodies & Zipups, 'hoodie' explicitly requests hood=With Hood (Without Hood stays not_specified, NOT
+    excluded).
+- query: men's navy Nike half-zip sweatshirt without a hood, around $70
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: colors
+      operator: contains_any
+      values:
+      - Blue
+    - feature: brand
+      operator: in
+      values:
+      - Nike
+    - feature: closure_type
+      operator: in
+      values:
+      - Half-Zip
+    - feature: hood
+      operator: in
+      values:
+      - Without Hood
+    - feature: price
+      operator: around
+      value: 70
+    residual:
+    - navy
+  note: '''half-zip'' -> Half-Zip; ''without a hood'' -> Without Hood; ''navy'' -> Blue + residual.'
+- query: women's oversized cropped pullover hoodie in 100% cotton, not slim
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: fit
+      operator: not_in
+      values:
+      - Slim
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: closure_type
+      operator: in
+      values:
+      - Pullover
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Cotton
+    residual: []
+  note: '''100% cotton'' -> equals_set [''Cotton''].'
+- query: grey and black camo zip-up sweatshirt without polyester between 120 and 240 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - Grey
+    - feature: pattern
+      operator: in
+      values:
+      - Camo
+    - feature: closure_type
+      operator: in
+      values:
+      - Zip
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    - feature: price
+      operator: gte
+      value: 120
+    - feature: price
+      operator: lte
+      value: 240
+    residual: []
+  note: A 'zip-up sweatshirt' without mentioning a hood leaves hood unspecified.
+- query: 2x olive sleeveless gym hoodie for men, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Sleeveless
+    - feature: hood
+      operator: in
+      values:
+      - With Hood
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    residual:
+    - 2x
+    - olive
+    - gym
+    - not emerald
+  note: '''2x'', ''olive'', ''gym'', and ''not emerald'' stay in residual.'

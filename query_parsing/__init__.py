@@ -1,32 +1,5 @@
-"""Query parsing package: structured category, filter, and residual parsing from search queries."""
+"""Public API for shopping query parsing."""
 
-from __future__ import annotations
+from .parser import QueryParser, parse_query
 
-from .parser import (
-    CONFIG_ALIASES,
-    CONFIGS,
-    DEFAULT_CONFIG,
-    QueryExtractor,
-    QueryParser,
-    assemble_stage_prediction,
-    get_default_extractor,
-    get_default_parser,
-    parse_query,
-    resolve_config_list,
-    resolve_config_name,
-)
-
-__all__ = [
-    "CONFIG_ALIASES",
-    "CONFIGS",
-    "DEFAULT_CONFIG",
-    "QueryExtractor",
-    "QueryParser",
-    "assemble_stage_prediction",
-    "get_default_extractor",
-    "get_default_parser",
-    "parse_query",
-    "resolve_config_list",
-    "resolve_config_name",
-]
-
+__all__ = ["QueryParser", "parse_query"]

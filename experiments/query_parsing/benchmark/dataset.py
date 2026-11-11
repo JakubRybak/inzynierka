@@ -191,7 +191,7 @@ def main() -> None:
     groups = load_queries()
     parser = argparse.ArgumentParser(
         description="Write a stratified query benchmark sample as CSV.",
-        epilog="Save generated samples outside query_parsing/queries/.",
+        epilog="Save generated samples outside experiments/query_parsing/benchmark/queries/.",
     )
     parser.add_argument("--size", type=parse_size, required=True, help="Number of queries or 'all'")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")

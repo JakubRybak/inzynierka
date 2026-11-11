@@ -1,0 +1,136 @@
+category: Blouses
+category_criterion: Blouse, dressy blouse, peasant blouse, tunic blouse, bluzka, blusa.
+feature_notes: {}
+jev_scopes: {}
+substyle_rules: []
+few_shots:
+- query: women's 100% silk burgundy V-neck blouse with long sleeves under 300 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Silk
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: neckline
+      operator: in
+      values:
+      - V-Neck
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    - feature: price
+      operator: lte
+      value: 300
+    residual:
+    - burgundy
+  note: '''100% silk'' -> equals_set; ''burgundy'' -> Red + residual.'
+- query: black and white polka dot collared blouse, cotton and viscose without polyester
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Polka Dot
+    - feature: neckline
+      operator: in
+      values:
+      - Collared
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Cotton
+      - Viscose
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual: []
+  note: '''black and white'' and ''cotton and viscose'' both use contains_all.'
+- query: sleeveless cropped leopard print blouse by Mango around $45, not oversized
+  output:
+    filters:
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Sleeveless
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: pattern
+      operator: in
+      values:
+      - Animal Print
+    - feature: brand
+      operator: in
+      values:
+      - Mango
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    - feature: price
+      operator: around
+      value: 45
+    residual:
+    - leopard print
+  note: '''leopard print'' maps to Animal Print and stays in residual.'
+- query: fitted turtleneck blouse with three-quarter sleeves in cream for office
+  output:
+    filters:
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+    - feature: neckline
+      operator: in
+      values:
+      - High Neck
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Three-Quarter Sleeve
+    - feature: colors
+      operator: contains_any
+      values:
+      - White
+    residual:
+    - turtleneck
+    - cream
+    - for office
+  note: '''turtleneck'' -> High Neck + residual; ''cream'' -> White + residual.'
+- query: green floral peasant blouse between 70 and 140 PLN, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: pattern
+      operator: in
+      values:
+      - Floral
+    - feature: price
+      operator: gte
+      value: 70
+    - feature: price
+      operator: lte
+      value: 140
+    residual:
+    - peasant
+    - not emerald
+  note: Excluded shade 'not emerald' stays only in residual.

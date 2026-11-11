@@ -149,110 +149,12 @@ def build_cerebras_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[
     }
 
 
-def build_vertex_full_schema(category: str, catalog: Dict[str, Dict[str, Dict[str, Any]]]) -> Dict[str, Any]:
-    """Build Vertex AI responseSchema for full LLM extraction."""
-    branches: List[Dict[str, Any]] = [
-        {
-            "type": "OBJECT",
-            "properties": {
-                "feature": {"type": "STRING", "enum": ["price"]},
-                "operator": {"type": "STRING", "enum": PRICE_OPERATORS},
-                "value": {"type": "NUMBER", "minimum": 0},
-            },
-            "required": ["feature", "operator", "value"],
-            "propertyOrdering": ["feature", "operator", "value"],
-        },
-        {
-            "type": "OBJECT",
-            "properties": {
-                "feature": {"type": "STRING", "enum": ["brand"]},
-                "operator": {"type": "STRING", "enum": SINGLE_OPERATORS},
-                "values": {"type": "ARRAY", "items": {"type": "STRING"}, "minItems": 1},
-            },
-            "required": ["feature", "operator", "values"],
-            "propertyOrdering": ["feature", "operator", "values"],
-        },
-    ]
-    for feature, spec in catalog[category].items():
-        branches.append(
-            {
-                "type": "OBJECT",
-                "properties": {
-                    "feature": {"type": "STRING", "enum": [feature]},
-                    "operator": {"type": "STRING", "enum": spec["operators"]},
-                    "values": {
-                        "type": "ARRAY",
-                        "items": {"type": "STRING", "enum": spec["values"]},
-                        "minItems": 1,
-                    },
-                },
-                "required": ["feature", "operator", "values"],
-                "propertyOrdering": ["feature", "operator", "values"],
-            }
-        )
-    return {
-        "type": "OBJECT",
-        "properties": {
-            "filters": {"type": "ARRAY", "items": {"anyOf": branches}},
-            "residual": {"type": "ARRAY", "items": {"type": "STRING"}},
-        },
-        "required": ["filters", "residual"],
-        "propertyOrdering": ["filters", "residual"],
-    }
-
-
-def build_cerebras_open_schema() -> Dict[str, Any]:
-    """Build strict JSON schema for split open-field extraction (brand, price, residual only)."""
-    return {
-        "type": "object",
-        "properties": {
-            "filters": {
-                "type": "array",
-                "items": {
-                    "anyOf": [
-                        {
-                            "type": "object",
-                            "properties": {
-                                "feature": {"type": "string", "enum": ["price"]},
-                                "operator": {"type": "string", "enum": PRICE_OPERATORS},
-                                "value": {"type": "number"},
-                            },
-                            "required": ["feature", "operator", "value"],
-                            "additionalProperties": False,
-                        },
-                        {
-                            "type": "object",
-                            "properties": {
-                                "feature": {"type": "string", "enum": ["brand"]},
-                                "operator": {"type": "string", "enum": SINGLE_OPERATORS},
-                                "values": {"type": "array", "items": {"type": "string"}},
-                            },
-                            "required": ["feature", "operator", "values"],
-                            "additionalProperties": False,
-                        },
-                    ]
-                },
-            },
-            "residual": {"type": "array", "items": {"type": "string"}},
-        },
-        "required": ["filters", "residual"],
-        "additionalProperties": False,
-    }
-
-
-build_cerebras_auxiliary_schema = build_cerebras_open_schema
-
-
 def validate_response(
     data: Any,
     category: str,
     catalog: Dict[str, Dict[str, Dict[str, Any]]],
-    *,
-    open_only: bool = False,
-    auxiliary_only: bool = False,
 ) -> Dict[str, Any]:
     """Validate and normalize structured LLM output."""
-    restrict_open = open_only or auxiliary_only
     if not isinstance(data, dict) or set(data.keys()) != {"filters", "residual"}:
         raise ValueError(f"Expected root keys {{'filters', 'residual'}}, got {list(data) if isinstance(data, dict) else type(data)}")
     if not isinstance(data["filters"], list):
@@ -291,8 +193,6 @@ def validate_response(
             dedup = list(dict.fromkeys(v.strip() for v in vals))
             cleaned_filters.append({"feature": "brand", "operator": op, "values": dedup})
         else:
-            if restrict_open:
-                raise ValueError(f"Open-field parser returned closed-vocabulary feature: {feat!r}")
             if feat not in cat_spec:
                 raise ValueError(f"Unsupported feature {feat!r} for category {category!r}")
             spec = cat_spec[feat]

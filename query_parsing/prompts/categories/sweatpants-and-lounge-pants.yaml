@@ -1,10 +1,6 @@
 category: Sweatpants & Lounge Pants
-category_criterion: Sweatpants, sweat pants, joggers, track pants, lounge pants, athletic fleece pants, spodnie
-  dresowe, dresy, joggery, pantalones de chándal.
 feature_notes:
   leg_shape: 'IMPORTANT: ''joggers'' / ''joggery'' maps to leg_shape = Tapered AND keeps ''joggers'' in residual.'
-jev_scopes:
-  leg_shape: '''joggers''/''joggery'' requests Tapered. '
 substyle_rules:
 - '   - In Sweatpants & Lounge Pants: ''joggers'' / ''joggery'' maps to leg_shape=Tapered AND stays in residual.'
 few_shots:
