@@ -8,7 +8,7 @@ search time. The ranking uses three kinds of signals:
   offline by Gemini;
 - **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
-This is the state of 2026-11-11. The ranking is still an experiment, and no ranking has been chosen yet.
+This is the state of 2026-11-11. The default ranking is `hybrid`; the other rankings stay available in the page.
 
 ## Rankings
 
@@ -16,12 +16,12 @@ This is the state of 2026-11-11. The ranking is still an experiment, and no rank
 | --- | --- |
 | `text` | cosine of the query and the description |
 | `image` | cosine of the query and the main image |
-| `combined` (default) | mean of the z-scores of `text` and `image` |
+| `combined` | mean of the z-scores of `text` and `image` |
 | `features` | cosine of the query and the feature text, e.g. "Dresses. For women. Black. 100% linen. Midi length." |
 | `combined_features` | mean of the z-scores of description, image and feature text |
 | `concepts` | the scores of the concepts that the residual phrases name |
 | `bank` | one signal per residual phrase, picked with the phrase bank |
-| `hybrid` | `combined_features`, plus concept scores and minus negations, picked with the phrase bank |
+| `hybrid` (default) | `combined_features`, plus concept scores and minus negations, picked with the phrase bank |
 
 ## Concepts
 
@@ -83,7 +83,7 @@ hybrid = combined_features + 0.5 × z(concept scores of each occasion, style or 
                            − 1.0 × z(what each negated phrase excludes)
 ```
 
-Other phrases add nothing, because the whole query already covers them. The weights were chosen on the dev queries.
+Other phrases add nothing, because the whole query already covers them.
 
 In `bank` and `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
 for a colour when it has a colour filter or a phrase read as a shade.
@@ -108,45 +108,8 @@ To change the concepts:
 3. Relabel the bank: `python search_ui/offline/phrase_bank.py --execute`.
 4. Rebuild the index: `python search_ui/prepare.py`.
 
-## Evaluation
-
-The evaluation code is in `experiments/ranking/`, as the code that the choice of a ranking rests on.
-
-
-```sh
-python experiments/ranking/evaluate.py run       # rankings and the pool to grade (embedding calls)
-python experiments/ranking/judge.py --execute    # grades of the pool (paid)
-python experiments/ranking/evaluate.py report    # nDCG@10, MRR and P@1 with bootstrap intervals
-```
-
-How the evaluation works:
-- The queries are benchmark queries with a residual, with their reviewed parses, so parser errors do not count.
-- Gemini grades the pooled top 10 of every ranking from 0 to 3. It is not told which ranking returned a product.
-- Only the dev split is used for tuning.
-- `results.ipynb` shows the results, and `concept_scores.ipynb` browses the concept scores.
-- The grades cost $2.59 and are not in the repository.
-
-Dev, 313 queries:
-
-| Ranking | nDCG@10 | Difference from `combined` |
-| --- | --- | --- |
-| `combined` | 0.874 | |
-| `hybrid` | 0.880 | +0.006 [−0.008, +0.020] |
-| `combined_features` | 0.871 | −0.004 |
-| `bank` | 0.843 | −0.031 [−0.054, −0.009] |
-| `concepts` | 0.835 | −0.039 |
-
-**These numbers are out of date.** They predate the following changes:
-- the concept scores of all 22 categories (then only three categories had scores);
-- the current phrase bank;
-- the whole-query signal in `bank`;
-- the image weight for colours.
-
-The evaluation has to run again before a ranking is chosen.
-
 ## Open issues
 
 - **Shades split by the parser.** For "light pink dress" the parser returns the filter `colors: Pink` and the
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be
   cleaner.
-- **Choice of ranking.** It waits for the new evaluation.

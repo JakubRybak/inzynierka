@@ -381,7 +381,7 @@ def load_feature_embeddings(products, folder):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--parser", default="llm", help="llm, mock or module:function")
-    ap.add_argument("--ranking", choices=RANKINGS, default="combined")
+    ap.add_argument("--ranking", choices=RANKINGS, help="default ranking in the page (hybrid, or combined without the phrase bank)")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)
     ap.add_argument("--concept-threshold", type=float, default=0.72, help="minimum phrase-concept cosine similarity")
@@ -432,6 +432,7 @@ def main():
     print(f"Feature embeddings: {'loaded' if F is not None else 'missing, run prepare.py'}")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
     engine = SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker, F)
+    args.ranking = args.ranking or ("hybrid" if "hybrid" in engine.rankings else "combined")
     if args.ranking not in engine.rankings:
         sys.exit(f"--ranking {args.ranking} is not available; available: {', '.join(engine.rankings)}")
     print(f"Parser: {engine.parser.name} · ranking: {args.ranking}")

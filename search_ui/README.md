@@ -61,8 +61,8 @@ embedded before, so a rerun with nothing new makes no paid calls.
    - when no product meets every condition, the result is empty.
 
 3. **Ranking** (`server.py`, `core/`). The chosen ranking orders all the candidates; it never adds or removes
-   products. The default, `combined`, compares the query embedding with the description and image of each product.
-   The other rankings also use the residual phrases (see [README_ranking.md](README_ranking.md)).
+   products. The default, `hybrid`, compares the query embedding with the description, image and features of each
+   product and corrects it with the residual phrases (see [README_ranking.md](README_ranking.md)).
 
 ## Using the page
 
@@ -93,7 +93,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | `llm_parser.py` | `--parser llm`: the QueryParser of `query_parsing/` |
 | `core/` | the modules of the pipeline (below) |
 | `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
-| `offline/`, `ranking_data/` | the scripts and data of the ranking ([README_ranking.md](README_ranking.md)); its evaluation is in `experiments/ranking/` |
+| `offline/`, `ranking_data/` | the scripts and data of the ranking ([README_ranking.md](README_ranking.md)) |
 | `tests/` | unit tests, which make no API calls, and `check_examples.py`, a check of the example queries against the index |
 | `data/` | the index built by `prepare.py` and the call logs of the offline scripts (git-ignored) |
 
@@ -101,20 +101,20 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | --- | --- |
 | `parser_adapter.py` | parser loading, parser output to condition tree, mock parser |
 | `benchmark_parser.py` | the reviewed benchmark parses of dev queries |
-| `conditions.py` | condition tree: validation, evaluation, matched features |
+| `conditions.py` | condition tree: validation, matching, matched features |
 | `facets.py` | filter panel values per category, from `feature_extraction/schema/` |
 | `concepts.py` | concept scores in the index and the `concepts` ranking |
 | `bank.py` | the phrase bank, the `bank` ranking and the `hybrid` terms |
 | `feature_text.py` | a product's features as a short text for its embedding |
 | `common.py` | paths, loaders, query embedder |
-| `vertex.py` | Gemini calls on Vertex AI with retries, a budget and cost accounting (offline scripts and judge) |
+| `vertex.py` | Gemini calls on Vertex AI with retries, a budget and cost accounting (offline scripts) |
 
 ## Options
 
 | `server.py` option | Default | |
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` or `module:function` returning the parser output format |
-| `--ranking` | `combined` | default ranking in the page |
+| `--ranking` | `hybrid` | default ranking in the page; `combined` when the phrase bank is not loaded |
 | `--concept-threshold` | `0.72` | minimum phrase–concept name cosine for `concepts` |
 | `--concept-combine` | `geo` | how `concepts` combines phrases: `geo`, `mean` or `min` |
 | `--no-bank` | | do not load the phrase bank (`bank` and `hybrid` disappear) |
