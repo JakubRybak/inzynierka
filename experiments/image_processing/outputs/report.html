@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porównanie zdjęć produktowych</title>
+    <style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    color: #172033;
+    background: #f8fafc;
+    font: 15px/1.45 system-ui, sans-serif;
+}
+
+.crop-3-5 { --crop-ratio: 3 / 5; }
+.crop-9-16 { --crop-ratio: 9 / 16; }
+.crop-3-4 { --crop-ratio: 3 / 4; }
+.crop-1-1 { --crop-ratio: 1; }
+
+.tone-grey-soft { --photo-bg: #ededf0; }
+.tone-grey-medium { --photo-bg: #e2e4e8; }
+.tone-grey-warm { --photo-bg: #edeae4; }
+.tone-white { --photo-bg: #fff; }
+
+.controls {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    padding: 10px clamp(12px, 3vw, 36px);
+    background: #fff;
+    border-bottom: 1px solid #dbe2ea;
+}
+
+fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+legend {
+    padding: 0 0 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+button {
+    margin-bottom: 2px;
+    padding: 5px 9px;
+    border: 1px solid #b9c4d1;
+    border-radius: 5px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+button[aria-pressed="true"] {
+    border-color: #1e40af;
+    background: #1e40af;
+    color: #fff;
+}
+
+main { padding: 16px clamp(12px, 3vw, 36px); }
+
+table {
+    max-width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+caption {
+    margin-bottom: 4px;
+    text-align: left;
+    font-weight: 700;
+}
+
+th, td {
+    padding: 4px 10px 4px 0;
+    border-bottom: 1px solid #dbe2ea;
+}
+
+td { white-space: nowrap; }
+
+article { margin: 24px 0; }
+h2 { margin: 0 0 8px; font-size: 18px; }
+
+body { --auto-columns: 8; }
+
+.columns-2 { --columns: 2; }
+.columns-3 { --columns: 3; }
+.columns-4 { --columns: 4; }
+.columns-6 { --columns: 6; }
+.columns-8 { --columns: 8; }
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, var(--auto-columns)), minmax(0, 1fr));
+    gap: 8px;
+}
+
+figure {
+    display: grid;
+    align-content: end;
+    gap: 4px;
+    margin: 0;
+}
+
+figcaption {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+}
+
+.photo-frame {
+    isolation: isolate;
+    overflow: hidden;
+    aspect-ratio: var(--crop-ratio);
+    background: var(--photo-bg);
+}
+
+.photo-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+
+.photo-frame.is-original img { image-rendering: pixelated; }
+
+@media (max-width: 1100px) {
+    body { --auto-columns: 4; }
+}
+
+@media (max-width: 600px) {
+    body { --auto-columns: 2; }
+    .controls { position: static; }
+}
+
+    </style>
+</head>
+<body class="crop-3-5 tone-grey-soft">
+<header class="controls">
+    <fieldset>
+        <legend>Widok</legend>
+        <button type="button" data-view="comparison" aria-pressed="true">Porównanie produktu</button>
+        <button type="button" data-view="storefront" aria-pressed="false">Storefront</button>
+    </fieldset>
+    <fieldset>
+        <legend>Tło</legend>
+        <button type="button" data-tone="grey-soft" aria-pressed="true">Szare</button>
+        <button type="button" data-tone="grey-medium" aria-pressed="false">Średnie</button>
+        <button type="button" data-tone="grey-warm" aria-pressed="false">Ciepłe</button>
+        <button type="button" data-tone="white" aria-pressed="false">Białe</button>
+    </fieldset>
+    <fieldset>
+        <legend>Kadr</legend>
+        <button type="button" data-crop="3-5" aria-pressed="true">3:5</button>
+        <button type="button" data-crop="9-16" aria-pressed="false">9:16</button>
+        <button type="button" data-crop="3-4" aria-pressed="false">3:4</button>
+        <button type="button" data-crop="1-1" aria-pressed="false">1:1</button>
+    </fieldset>
+    <fieldset>
+        <legend>Liczba kolumn</legend>
+        <button type="button" data-columns="auto" aria-pressed="true">Auto</button>
+        <button type="button" data-columns="2" aria-pressed="false">2</button>
+        <button type="button" data-columns="3" aria-pressed="false">3</button>
+        <button type="button" data-columns="4" aria-pressed="false">4</button>
+        <button type="button" data-columns="6" aria-pressed="false">6</button>
+        <button type="button" data-columns="8" aria-pressed="false">8</button>
+    </fieldset>
+</header>
+
+<main>
+    <table>
+        <caption>Czas przetwarzania na Apple M1 Pro</caption>
+        <thead>
+            <tr>
+                <th scope="col">Metoda</th>
+                <th scope="col">Czas na zdjęcie</th>
+                <th scope="col">Szacunek dla 10 000 zdjęć</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Oryginał</th>
+                <td>0 ms</td>
+                <td>0 min</td>
+            </tr>
+            <tr>
+                <th scope="row">Lanczos + Unsharp</th>
+                <td>27.8 ms</td>
+                <td>4.6 min</td>
+            </tr>
+            <tr>
+                <th scope="row">4xRealWebPhoto DAT-2</th>
+                <td>3.16 s</td>
+                <td>8.8 h</td>
+            </tr>
+            <tr>
+                <th scope="row">DAT-2 + GFPGAN</th>
+                <td>3.77 s</td>
+                <td>10.5 h</td>
+            </tr>
+            <tr>
+                <th scope="row">Stable Diffusion x4</th>
+                <td>24.50 s</td>
+                <td>68.1 h</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <section id="view-comparison" aria-label="Porównanie produktu">
+        <article>
+            <h2>Diesel — Leather Biker Jacket</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/01_jacket_86605.png" alt="Diesel — Leather Biker Jacket — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Thom Browne — Wool Knit Sweater</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/02_knit_sweater_86933.png" alt="Thom Browne — Wool Knit Sweater — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Givenchy — Graphic Print T-Shirt</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/03_tshirt_87389.png" alt="Givenchy — Graphic Print T-Shirt — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Rag &amp; Bone — Silk Sleeveless Dress</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/04_dress_86877.png" alt="Rag &amp; Bone — Silk Sleeveless Dress — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Dsquared2 — Tailored Check Shirt</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/05_shirt_86779.png" alt="Dsquared2 — Tailored Check Shirt — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Dsquared2 — Distressed Denim Jeans</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/06_jeans_86773.png" alt="Dsquared2 — Distressed Denim Jeans — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Comme des Garçons — Classic Wool Coat</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/07_coat_99750.png" alt="Comme des Garçons — Classic Wool Coat — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>MM6 Maison Margiela — Oversized Cotton Hoodie</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/08_hoodie_88112.png" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>MSGM — Crewneck Fleece Sweatshirt</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/09_sweatshirt_91440.png" alt="MSGM — Crewneck Fleece Sweatshirt — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Lanvin — Satin Bomber Jacket</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/10_bomber_87053.png" alt="Lanvin — Satin Bomber Jacket — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Dsquared2 — Tailored Slim Trousers</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/11_trousers_86810.png" alt="Dsquared2 — Tailored Slim Trousers — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Carven — Pleated A-Line Skirt</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/12_skirt_89767.png" alt="Carven — Pleated A-Line Skirt — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>D.Gnak by Kang.D — Draped Open Cardigan</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/13_cardigan_90103.png" alt="D.Gnak by Kang.D — Draped Open Cardigan — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>T by Alexander Wang — Silk V-Neck Blouse</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/14_blouse_87937.png" alt="T by Alexander Wang — Silk V-Neck Blouse — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Band of Outsiders — Pique Cotton Polo Shirt</h2>
+            <div class="image-grid">
+                <figure>
+                    <figcaption>Oryginał</figcaption>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/15_polo_87953.png" alt="Band of Outsiders — Pique Cotton Polo Shirt — Oryginał" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Lanczos + Unsharp</figcaption>
+                    <div class="photo-frame">
+    <img src="images/lanczos/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>4xRealWebPhoto DAT-2</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>DAT-2 + GFPGAN</figcaption>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                </figure>
+                <figure>
+                    <figcaption>Stable Diffusion x4</figcaption>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                </figure>
+            </div>
+        </article>
+    </section>
+
+    <section id="view-storefront" aria-label="Storefront" hidden>
+        <article>
+            <h2>Oryginał</h2>
+            <div class="image-grid">
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/01_jacket_86605.png" alt="Diesel — Leather Biker Jacket — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Diesel — Leather Biker Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/02_knit_sweater_86933.png" alt="Thom Browne — Wool Knit Sweater — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Thom Browne — Wool Knit Sweater</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/03_tshirt_87389.png" alt="Givenchy — Graphic Print T-Shirt — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Givenchy — Graphic Print T-Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/04_dress_86877.png" alt="Rag &amp; Bone — Silk Sleeveless Dress — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Rag &amp; Bone — Silk Sleeveless Dress</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/05_shirt_86779.png" alt="Dsquared2 — Tailored Check Shirt — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Check Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/06_jeans_86773.png" alt="Dsquared2 — Distressed Denim Jeans — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Distressed Denim Jeans</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/07_coat_99750.png" alt="Comme des Garçons — Classic Wool Coat — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Comme des Garçons — Classic Wool Coat</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/08_hoodie_88112.png" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Oryginał" loading="lazy">
+</div>
+                    <figcaption>MM6 Maison Margiela — Oversized Cotton Hoodie</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/09_sweatshirt_91440.png" alt="MSGM — Crewneck Fleece Sweatshirt — Oryginał" loading="lazy">
+</div>
+                    <figcaption>MSGM — Crewneck Fleece Sweatshirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/10_bomber_87053.png" alt="Lanvin — Satin Bomber Jacket — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Lanvin — Satin Bomber Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/11_trousers_86810.png" alt="Dsquared2 — Tailored Slim Trousers — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Slim Trousers</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/12_skirt_89767.png" alt="Carven — Pleated A-Line Skirt — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Carven — Pleated A-Line Skirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/13_cardigan_90103.png" alt="D.Gnak by Kang.D — Draped Open Cardigan — Oryginał" loading="lazy">
+</div>
+                    <figcaption>D.Gnak by Kang.D — Draped Open Cardigan</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/14_blouse_87937.png" alt="T by Alexander Wang — Silk V-Neck Blouse — Oryginał" loading="lazy">
+</div>
+                    <figcaption>T by Alexander Wang — Silk V-Neck Blouse</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame is-original">
+    <img src="../data/sample_images/15_polo_87953.png" alt="Band of Outsiders — Pique Cotton Polo Shirt — Oryginał" loading="lazy">
+</div>
+                    <figcaption>Band of Outsiders — Pique Cotton Polo Shirt</figcaption>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Lanczos + Unsharp</h2>
+            <div class="image-grid">
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Diesel — Leather Biker Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Thom Browne — Wool Knit Sweater</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Givenchy — Graphic Print T-Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Rag &amp; Bone — Silk Sleeveless Dress</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Check Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Distressed Denim Jeans</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Comme des Garçons — Classic Wool Coat</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>MM6 Maison Margiela — Oversized Cotton Hoodie</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>MSGM — Crewneck Fleece Sweatshirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Lanvin — Satin Bomber Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Slim Trousers</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Carven — Pleated A-Line Skirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>D.Gnak by Kang.D — Draped Open Cardigan</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>T by Alexander Wang — Silk V-Neck Blouse</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/lanczos/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — Lanczos + Unsharp" loading="lazy">
+</div>
+                    <figcaption>Band of Outsiders — Pique Cotton Polo Shirt</figcaption>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>4xRealWebPhoto DAT-2</h2>
+            <div class="image-grid">
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Diesel — Leather Biker Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Thom Browne — Wool Knit Sweater</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Givenchy — Graphic Print T-Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Rag &amp; Bone — Silk Sleeveless Dress</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Check Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Distressed Denim Jeans</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Comme des Garçons — Classic Wool Coat</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>MM6 Maison Margiela — Oversized Cotton Hoodie</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>MSGM — Crewneck Fleece Sweatshirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Lanvin — Satin Bomber Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Slim Trousers</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Carven — Pleated A-Line Skirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>D.Gnak by Kang.D — Draped Open Cardigan</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>T by Alexander Wang — Silk V-Neck Blouse</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — 4xRealWebPhoto DAT-2" loading="lazy">
+</div>
+                    <figcaption>Band of Outsiders — Pique Cotton Polo Shirt</figcaption>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>DAT-2 + GFPGAN</h2>
+            <div class="image-grid">
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Diesel — Leather Biker Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Thom Browne — Wool Knit Sweater</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Givenchy — Graphic Print T-Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Rag &amp; Bone — Silk Sleeveless Dress</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Check Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Distressed Denim Jeans</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Comme des Garçons — Classic Wool Coat</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>MM6 Maison Margiela — Oversized Cotton Hoodie</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>MSGM — Crewneck Fleece Sweatshirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Lanvin — Satin Bomber Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Slim Trousers</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Carven — Pleated A-Line Skirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>D.Gnak by Kang.D — Draped Open Cardigan</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>T by Alexander Wang — Silk V-Neck Blouse</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/dat2_gfpgan/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — DAT-2 + GFPGAN" loading="lazy">
+</div>
+                    <figcaption>Band of Outsiders — Pique Cotton Polo Shirt</figcaption>
+                </figure>
+            </div>
+        </article>
+        <article>
+            <h2>Stable Diffusion x4</h2>
+            <div class="image-grid">
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/01_jacket_86605.webp" alt="Diesel — Leather Biker Jacket — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Diesel — Leather Biker Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/02_knit_sweater_86933.webp" alt="Thom Browne — Wool Knit Sweater — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Thom Browne — Wool Knit Sweater</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/03_tshirt_87389.webp" alt="Givenchy — Graphic Print T-Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Givenchy — Graphic Print T-Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/04_dress_86877.webp" alt="Rag &amp; Bone — Silk Sleeveless Dress — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Rag &amp; Bone — Silk Sleeveless Dress</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/05_shirt_86779.webp" alt="Dsquared2 — Tailored Check Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Check Shirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/06_jeans_86773.webp" alt="Dsquared2 — Distressed Denim Jeans — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Distressed Denim Jeans</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/07_coat_99750.webp" alt="Comme des Garçons — Classic Wool Coat — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Comme des Garçons — Classic Wool Coat</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/08_hoodie_88112.webp" alt="MM6 Maison Margiela — Oversized Cotton Hoodie — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>MM6 Maison Margiela — Oversized Cotton Hoodie</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/09_sweatshirt_91440.webp" alt="MSGM — Crewneck Fleece Sweatshirt — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>MSGM — Crewneck Fleece Sweatshirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/10_bomber_87053.webp" alt="Lanvin — Satin Bomber Jacket — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Lanvin — Satin Bomber Jacket</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/11_trousers_86810.webp" alt="Dsquared2 — Tailored Slim Trousers — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Dsquared2 — Tailored Slim Trousers</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/12_skirt_89767.webp" alt="Carven — Pleated A-Line Skirt — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Carven — Pleated A-Line Skirt</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/13_cardigan_90103.webp" alt="D.Gnak by Kang.D — Draped Open Cardigan — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>D.Gnak by Kang.D — Draped Open Cardigan</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/14_blouse_87937.webp" alt="T by Alexander Wang — Silk V-Neck Blouse — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>T by Alexander Wang — Silk V-Neck Blouse</figcaption>
+                </figure>
+                <figure>
+                    <div class="photo-frame">
+    <img src="images/sd_x4/15_polo_87953.webp" alt="Band of Outsiders — Pique Cotton Polo Shirt — Stable Diffusion x4" loading="lazy">
+</div>
+                    <figcaption>Band of Outsiders — Pique Cotton Polo Shirt</figcaption>
+                </figure>
+            </div>
+        </article>
+    </section>
+</main>
+
+<script>
+const views = {
+    comparison: document.getElementById('view-comparison'),
+    storefront: document.getElementById('view-storefront'),
+};
+
+function bindButtons(control, apply) {
+    const buttons = document.querySelectorAll(`[data-${control}]`);
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const selected = button.dataset[control];
+            apply(selected, buttons);
+            buttons.forEach(option => {
+                option.setAttribute('aria-pressed', String(option === button));
+            });
+        });
+    });
+}
+
+bindButtons('view', view => {
+    Object.entries(views).forEach(([name, section]) => {
+        section.hidden = name !== view;
+    });
+});
+
+for (const control of ['tone', 'crop', 'columns']) {
+    bindButtons(control, (value, buttons) => {
+        const classes = Array.from(buttons, button => `${control}-${button.dataset[control]}`);
+        document.body.classList.remove(...classes);
+        document.body.classList.add(`${control}-${value}`);
+    });
+}
+
+</script>
+</body>
+</html>
