@@ -10,7 +10,7 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add image_processing to sys.path so superres package can be imported directly
+# Add image_processing_experiments to sys.path so superres package can be imported directly
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))

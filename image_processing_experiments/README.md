@@ -31,7 +31,7 @@ Porównanie obejmuje 15 zdjęć FashionGen. Czas na zdjęcie obejmuje wykonanie 
 Projekt został podzielony na czyste, wyspecjalizowane moduły w pakiecie `superres`:
 
 ```
-image_processing/
+image_processing_experiments/
 ├── README.md                      # Pełna dokumentacja projektu
 ├── .gitignore                     # Ignorowanie wag *.pth (>100MB)
 ├── upscale.py                     # Prosty CLI do uruchamiania upscalingu
