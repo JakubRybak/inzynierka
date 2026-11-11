@@ -36,16 +36,6 @@ def load_full_extraction_prompt() -> Dict[str, Any]:
 
 
 @lru_cache(maxsize=1)
-def load_closed_features_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "closed_features.yaml")
-
-
-@lru_cache(maxsize=1)
-def load_open_extraction_prompt() -> Dict[str, Any]:
-    return _read_yaml(PROMPTS_DIR / "open_extraction.yaml")
-
-
-@lru_cache(maxsize=1)
 def load_category_prompt_configs() -> Dict[str, Dict[str, Any]]:
     configs: Dict[str, Dict[str, Any]] = {}
     for path in sorted(CATEGORIES_PROMPTS_DIR.glob("*.yaml")):

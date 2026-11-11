@@ -1,0 +1,102 @@
+instructions: Select the single product category that the user wants to buy in CURRENT_QUERY across English, Polish,
+  and Spanish. Classify the target garment being bought, NOT clothing mentioned only as styling context (e.g. 't-shirt
+  to wear with jeans' -> T-shirts; 'belt to wear with jeans' -> outside; 'buttons for a wool coat' -> outside).
+  A 'T-shirt dress', 'shirt dress', 'sweater dress', or 'sweatshirt dress' is Dresses. A generic 'top' or 'crop
+  top' without a more specific category is Tank tops & Camisoles. A collared tee ('tee with a collar') is Polos.
+  A 'dress shirt' is Shirts. If no supported category or multiple alternative categories ('t-shirt or dress') are
+  requested, choose outside.
+outside_description: No supported garment category is requested (e.g. shoes, sneakers, boots, bags, belts, hats,
+  scarves, socks, jewelry, bras, swimsuits, pajamas, full two-piece suits, replacement parts/accessories, queries
+  with no garment type like 'something black under $50', or alternative categories like 't-shirt or dress').
+categories:
+  T-shirts: T-shirt, tee, tee shirt, koszulka, t-shirt, camiseta. Includes long-sleeve, short-sleeve, and sleeveless
+    tees. Excludes collared tees/polos (Polos) and T-shirt dresses (Dresses).
+  Polos: Polo shirt, polo, koszulka polo, polo shirt, or a collared tee (e.g. 'tee with a collar', 'collar tee').
+  Tank tops & Camisoles: Tank top, camisole, cami, singlet, sleeveless strap top, top na ramiączkach, or generic
+    'top' / 'crop top' / 'black top' when no more specific supported garment category is named.
+  Bodysuits: Bodysuit, body suit, one-piece top/leotard with snap crotch, body (Polish/Spanish garment).
+  Shirts: Shirt, dress shirt, button-down shirt, button-up shirt, oxford shirt, flannel shirt, koszula, camisa.
+    Excludes T-shirts (T-shirts), polo shirts (Polos), sweatshirts (Sweatshirts), and shirt dresses (Dresses).
+  Blouses: Blouse, dressy blouse, peasant blouse, tunic blouse, bluzka, blusa.
+  Knit Sweaters: Sweater, knit sweater, pullover sweater, jumper, turtleneck sweater, mock-neck sweater, jersey,
+    sweter, suéter. Excludes sweatshirts (Sweatshirts), hoodies/zip-ups (Hoodies & Zipups), cardigans (Cardigans),
+    and sweater dresses (Dresses).
+  Sweatshirts: Sweatshirt, crewneck sweatshirt, fleece sweatshirt without zip, bluza (when not a hoodie or zip-up),
+    sudadera (without zip or hood-first 'hoodie' designation).
+  Hoodies & Zipups: Hoodie, hooded sweatshirt, zip-up sweatshirt, zip-up hoodie, half-zip or quarter-zip pullover/sweatshirt,
+    bluza z kapturem, bluza na suwak / rozpinana, bluza z krótkim zamkiem, sudadera con capucha / con cremallera.
+  Cardigans: Cardigan, button-front or open-front knit sweater, kardigan, rozpinany sweter, cárdigan.
+  Classic Coats: Coat, classic coat, overcoat, topcoat, peacoat, pea coat, parka, duffle coat, wool coat, winter
+    coat, fur coat, down coat, płaszcz, parka, abrigo. Excludes trench coats (Trench Coats) and jackets (Jackets).
+  Trench Coats: Trench coat, trench, gabardine trench, mac trench, trencz, gabardina.
+  Jackets: Jacket, denim/jean jacket, leather jacket, biker/moto jacket, windbreaker, puffer jacket, quilted jacket,
+    field jacket, blazer/sport jacket, kurtka, chaqueta, cazadora. Excludes bomber jackets (Bombers) and vests (Vests).
+  Bombers: Bomber jacket, bomber, flight jacket, varsity/letterman bomber, bomberka, cazadora bomber.
+  Vests: Vest, gilet, sleeveless jacket, bodywarmer, down vest, quilted vest, waistcoat, kamizelka, chaleco.
+  Trousers: Trousers, pants, dress pants, slacks, chinos, tailored pants, wide-leg pants, leather pants, spodnie
+    (garniturowe/materiałowe/ogólne), pantalones. Excludes cargo pants (Cargo Pants), sweatpants/joggers (Sweatpants
+    & Lounge Pants), jeans (Jeans), and shorts (Shorts).
+  Cargo Pants: Cargo pants, cargo trousers, combat pants with utility cargo pockets, bojówki, pantalones cargo.
+  Sweatpants & Lounge Pants: Sweatpants, sweat pants, joggers, track pants, lounge pants, athletic fleece pants,
+    spodnie dresowe, dresy, joggery, pantalones de chándal.
+  Jeans: Jeans, denim pants, dżinsy, jeansy, vaqueros.
+  Shorts: Shorts, denim shorts, cargo shorts, athletic/running/volleyball/gym shorts, sweatshorts, tailored shorts,
+    bermuda shorts, szorty, krótkie spodenki, pantalones cortos.
+  Skirts: Skirt, mini/midi/maxi skirt, pleated skirt, wrap skirt, A-line skirt, spódnica, falda.
+  Dresses: Dress, gown, sundress, maxi/midi/mini dress, slip dress, shirt dress, T-shirt dress, sweater dress, sweatshirt
+    dress, wrap dress, sukienka, vestido.
+few_shots:
+- query: a green jersey T-shirt dress for summer
+  answer: Dresses
+- query: a ribbed singlet in white
+  answer: Tank tops & Camisoles
+- query: a black crop top for a party
+  answer: Tank tops & Camisoles
+- query: a cotton tee with a collar
+  answer: Polos
+- query: a tee to wear with a leather jacket
+  answer: T-shirts
+- query: a classic white dress shirt for office
+  answer: Shirts
+- query: a silk peasant blouse
+  answer: Blouses
+- query: a fleece crewneck sweatshirt without hood
+  answer: Sweatshirts
+- query: a grey zip-up hoodie
+  answer: Hoodies & Zipups
+- query: a cotton half-zip pullover with a hood
+  answer: Hoodies & Zipups
+- query: a chunky cable-knit wool jumper
+  answer: Knit Sweaters
+- query: an open-front knit cardigan
+  answer: Cardigans
+- query: a double-breasted wool peacoat
+  answer: Classic Coats
+- query: a beige belted gabardine trench
+  answer: Trench Coats
+- query: a black leather biker jacket
+  answer: Jackets
+- query: an olive nylon flight bomber
+  answer: Bombers
+- query: a quilted down gilet
+  answer: Vests
+- query: tailored high-waisted wool slacks
+  answer: Trousers
+- query: olive combat pants with utility cargo pockets
+  answer: Cargo Pants
+- query: grey fleece tapered joggers
+  answer: Sweatpants & Lounge Pants
+- query: faded bootcut denim jeans
+  answer: Jeans
+- query: men's linen bermuda shorts
+  answer: Shorts
+- query: a pleated midi skirt
+  answer: Skirts
+- query: a long-sleeve snap-crotch bodysuit
+  answer: Bodysuits
+- query: leather Chelsea ankle boots
+  answer: outside
+- query: something warm in black under 100 dollars
+  answer: outside
+- query: a cotton T-shirt or a linen dress
+  answer: outside

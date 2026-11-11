@@ -1,11 +1,8 @@
 category: Classic Coats
-category_criterion: Coat, classic coat, overcoat, topcoat, peacoat, pea coat, parka, duffle coat, wool coat, winter
-  coat, fur coat, down coat, płaszcz, parka, abrigo. Excludes trench coats (Trench Coats) and jackets (Jackets).
 feature_notes:
   coat_style: 'IMPORTANT: ''classic coat'', ''overcoat'', ''topcoat'', ''pea coat'', ''peacoat'', ''chesterfield'',
     ''car coat'' map to Standard (and specific sub-styles like ''pea coat''/''peacoat'' also stay in residual).
     ''parka'' maps to Parka. A generic ''coat'' / ''płaszcz'' / ''abrigo'' alone does NOT set coat_style.'
-jev_scopes: {}
 substyle_rules:
 - '   - In Classic Coats: ''pea coat'' / ''peacoat'' maps to coat_style=Standard AND stays in residual.'
 few_shots:

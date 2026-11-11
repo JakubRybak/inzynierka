@@ -1,0 +1,147 @@
+category: Skirts
+category_criterion: Skirt, mini/midi/maxi skirt, pleated skirt, wrap skirt, A-line skirt, spódnica, falda.
+feature_notes: {}
+jev_scopes: {}
+substyle_rules:
+- '   - In Skirts: ''pencil'' maps to skirt_silhouette=Fitted AND stays in residual.'
+few_shots:
+- query: women's high-rise pleated midi skirt in 100% silk, burgundy, under 350 PLN
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: rise
+      operator: in
+      values:
+      - High-Rise
+    - feature: skirt_type
+      operator: contains_any
+      values:
+      - Pleated
+    - feature: length
+      operator: in
+      values:
+      - Midi
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Silk
+    - feature: colors
+      operator: contains_any
+      values:
+      - Red
+    - feature: price
+      operator: lte
+      value: 350
+    residual:
+    - burgundy
+  note: skirt_type is multi-choice; '100% silk' -> equals_set; 'burgundy' -> Red + residual.
+- query: black and white plaid A-line mini wrap skirt in wool and polyester, around $65
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - White
+    - feature: pattern
+      operator: in
+      values:
+      - Plaid
+    - feature: skirt_silhouette
+      operator: in
+      values:
+      - A-Line
+    - feature: length
+      operator: in
+      values:
+      - Mini
+    - feature: skirt_type
+      operator: contains_any
+      values:
+      - Wrap
+    - feature: main_composition
+      operator: contains_all
+      values:
+      - Polyester
+      - Wool
+    - feature: price
+      operator: around
+      value: 65
+    residual: []
+  note: '''black and white'' and ''wool and polyester'' both use contains_all.'
+- query: tiered and ruffled floral maxi skirt without acrylic between 120 and 240 PLN
+  output:
+    filters:
+    - feature: skirt_type
+      operator: contains_all
+      values:
+      - Ruffled
+      - Tiered
+    - feature: pattern
+      operator: in
+      values:
+      - Floral
+    - feature: length
+      operator: in
+      values:
+      - Maxi
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Acrylic
+    - feature: price
+      operator: gte
+      value: 120
+    - feature: price
+      operator: lte
+      value: 240
+    residual: []
+  note: '''tiered and ruffled'' requires both on multi-choice skirt_type -> contains_all; do not infer gender=Women.'
+- query: all-black fitted leather pencil skirt by Zara, not low-rise
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - Black
+    - feature: skirt_silhouette
+      operator: in
+      values:
+      - Fitted
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Leather
+    - feature: brand
+      operator: in
+      values:
+      - Zara
+    - feature: rise
+      operator: not_in
+      values:
+      - Low-Rise
+    residual:
+    - pencil
+  note: '''all-black'' -> equals_set [''Black'']; ''pencil'' maps to Fitted and stays in residual.'
+- query: green leopard print asymmetric skirt, not emerald
+  output:
+    filters:
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    - feature: pattern
+      operator: in
+      values:
+      - Animal Print
+    - feature: skirt_type
+      operator: contains_any
+      values:
+      - Asymmetric
+    residual:
+    - leopard print
+    - not emerald
+  note: '''leopard print'' maps to Animal Print and stays in residual; ''not emerald'' stays in residual.'

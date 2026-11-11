@@ -1,11 +1,7 @@
 category: Shorts
-category_criterion: Shorts, denim shorts, cargo shorts, athletic/running/volleyball/gym shorts, sweatshorts, tailored
-  shorts, bermuda shorts, szorty, krótkie spodenki, pantalones cortos.
 feature_notes:
   shorts_type: 'IMPORTANT: Sport/running/volleyball/gym/compression/athletic shorts map to shorts_type = Athletic
     AND keep the specific sport or ''compression'' in residual (note: ''golf shorts'' does not map to Athletic).'
-jev_scopes:
-  shorts_type: 'Running/volleyball/gym/compression/athletic shorts request Athletic. '
 substyle_rules:
 - '   - In Shorts: specific sports (''running'', ''volleyball'', ''gym'', ''compression'') map to shorts_type=Athletic
   AND stay in residual.'

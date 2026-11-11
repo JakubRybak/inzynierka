@@ -1,0 +1,130 @@
+category: Shirts
+category_criterion: Shirt, dress shirt, button-down shirt, button-up shirt, oxford shirt, flannel shirt, koszula,
+  camisa. Excludes T-shirts (T-shirts), polo shirts (Polos), sweatshirts (Sweatshirts), and shirt dresses (Dresses).
+feature_notes: {}
+jev_scopes: {}
+substyle_rules:
+- '   - In Shirts: ''dress shirt'' puts ''dress'' in residual; ''button-down'', ''button-up'', ''oxford'', ''flannel''
+  stay in residual.'
+few_shots:
+- query: men's slim fit dress shirt by Calvin Klein with point collar under $85
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Men
+    - feature: fit
+      operator: in
+      values:
+      - Slim
+    - feature: brand
+      operator: in
+      values:
+      - Calvin Klein
+    - feature: collar_type
+      operator: in
+      values:
+      - Point Collar
+    - feature: price
+      operator: lte
+      value: 85
+    residual:
+    - dress
+  note: In Shirts, 'dress shirt' keeps 'dress' in residual.
+- query: 100% linen short-sleeve camp collar shirt in olive for beach
+  output:
+    filters:
+    - feature: main_composition
+      operator: equals_set
+      values:
+      - Linen
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Short Sleeve
+    - feature: collar_type
+      operator: in
+      values:
+      - Camp Collar
+    - feature: colors
+      operator: contains_any
+      values:
+      - Green
+    residual:
+    - olive
+    - for beach
+  note: '''100% linen'' -> equals_set; ''olive'' -> Green + residual.'
+- query: red and black plaid long-sleeve flannel shirt, not oversized, around 160 PLN
+  output:
+    filters:
+    - feature: colors
+      operator: contains_all
+      values:
+      - Black
+      - Red
+    - feature: pattern
+      operator: in
+      values:
+      - Plaid
+    - feature: sleeve_length
+      operator: in
+      values:
+      - Long Sleeve
+    - feature: fit
+      operator: not_in
+      values:
+      - Oversized
+    - feature: price
+      operator: around
+      value: 160
+    residual:
+    - flannel
+  note: '''red and black'' uses contains_all; ''flannel'' stays in residual.'
+- query: women's oversized button-down oxford shirt in cotton without polyester
+  output:
+    filters:
+    - feature: gender
+      operator: in
+      values:
+      - Women
+    - feature: fit
+      operator: in
+      values:
+      - Oversized
+    - feature: main_composition
+      operator: contains_any
+      values:
+      - Cotton
+    - feature: main_composition
+      operator: contains_none
+      values:
+      - Polyester
+    residual:
+    - button-down
+    - oxford
+  note: '''button-down'' and ''oxford'' stay in residual.'
+- query: all-white collarless cropped shirt between 90 and 180 PLN, not turquoise
+  output:
+    filters:
+    - feature: colors
+      operator: equals_set
+      values:
+      - White
+    - feature: collar_type
+      operator: in
+      values:
+      - Collarless
+    - feature: length
+      operator: in
+      values:
+      - Cropped
+    - feature: price
+      operator: gte
+      value: 90
+    - feature: price
+      operator: lte
+      value: 180
+    residual:
+    - not turquoise
+  note: '''all-white'' -> equals_set [''White''].'
