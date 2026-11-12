@@ -24,6 +24,9 @@ products_new/data/processed/
 /data/raw/amazon_esci/?*
 !/data/raw/*/.gitkeep
 /data/processed/fashiongen/?*
+!/data/processed/fashiongen/images_enhanced/
+/data/processed/fashiongen/images_enhanced/*
+!/data/processed/fashiongen/images_enhanced/pilot_9922/
 /data/processed/amazon_esci/?*
 !/data/processed/*/.gitkeep
 
