@@ -7,6 +7,8 @@ search time. The ranking uses four kinds of signals:
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
   offline by Gemini;
 - **product colours**: one to three colours of every product with their share, given offline by Gemini;
+- **product details**: the details of every product (lace, sequins, cable knit, a skull graphic) with their extent,
+  given offline by Gemini;
 - **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
 This is the state of 2026-11-12. The default ranking is `hybrid`; the other rankings stay available in the page.
@@ -22,7 +24,7 @@ This is the state of 2026-11-12. The default ranking is `hybrid`; the other rank
 | `combined_features` | mean of the z-scores of description, image and feature text |
 | `concepts` | the scores of the concepts that the residual phrases name |
 | `bank` | one signal per residual phrase, picked with the phrase bank |
-| `hybrid` (default) | `combined_features`, plus concept and colour scores and minus negations, picked with the phrase bank |
+| `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
 
 ## Concepts
 
@@ -55,6 +57,23 @@ A shade phrase gets a target colour:
 A candidate scores by how close its colours are to the target in CIELAB, weighted by their share: a burgundy dress
 beats a black one with a burgundy belt.
 
+## Details
+
+Gemini listed the details of every product from its name, description and two photos (front and back), up to eight,
+each with an extent: all-over (a lace dress), part (a lace panel) or small (a lace trim)
+(`ranking_data/product_details.parquet`). The prompt names the kinds of details to look for in every category:
+surface and texture, decoration, shape and construction, prints and graphics, wear and wash. It leaves out what the
+extracted features already record (colour, length, fit, sleeves, neckline, closure). 96% of the products have at
+least one detail; their names form a dictionary of 1,176 names.
+
+A phrase gets detail names when the bank reads it as a detail or as "other", or does not know it. It takes the most
+similar name, when the cosine is at least 0.80, and with it every name whose cosine to that name is at least 0.82.
+Gemini names one detail in several ways and the similarity between two names is steadier than between a phrase and
+a name, so "with graphic" → graphic, bunny graphic, skull graphic and about 160 more, "dress with pockets" → pockets
+and 26 other kinds of pockets. Each name weighs by its closeness: 1 for the most similar name, 0.5 at 0.82. A negated
+phrase is matched without its negation ("without pockets" → pockets). A candidate scores by its best detail among
+these names: 1 for all-over, 0.7 for part, 0.4 for small, times the weight of the name.
+
 ## Phrase bank
 
 Each phrase of `ranking_data/phrase_bank.jsonl` has the following labels:
@@ -70,7 +89,8 @@ At search time a residual phrase takes the labels of the first match:
 1. the same phrase in the bank;
 2. its nearest bank phrase, when the cosine is at least 0.86;
 3. the most similar colour name, when the cosine is at least 0.80 (see Colours);
-4. the concept with the most similar name, when the cosine is at least 0.80.
+4. detail names, when the cosine is at least 0.80 (see Details);
+5. the concept with the most similar name, when the cosine is at least 0.80.
 
 A phrase with no match is unknown. Two rules apply first:
 - **Shades.** A lightness word right before a colour of the query is a shade, for example "light" in "light pink
@@ -87,6 +107,7 @@ Each phrase gives one column of percentiles within the candidates:
 | occasion, style or season with concepts | its concept scores |
 | any other phrase with concepts | its text signals and concept scores |
 | shade with a target colour | the closeness of the candidate's colours to it |
+| phrase with detail names | the candidate's details |
 | shade without one | its text signals, with the image counted twice |
 | negated | its signal, inverted |
 | size or audience ("petite") | none: the catalog has no such information |
@@ -100,10 +121,13 @@ image embeddings. The columns are combined with a geometric mean, which acts as 
 ```
 hybrid = combined_features + 0.5 × z(concept scores of each occasion, style or season phrase)
                            + 1.0 × z(colour closeness of each shade phrase)
+                           + 1.0 × z(details of each detail phrase)
                            − 1.0 × z(what each negated phrase excludes)
 ```
 
-Other phrases add nothing, because the whole query already covers them.
+Other phrases add nothing, because the whole query already covers them. The page shows every part of the score: in
+the side panel how much each part moves the ranking (its spread over the candidates), on every result a bar of its
+parts, and in the product view their values.
 
 In `bank` and `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
 for a colour when it has a colour filter or a phrase read as a shade.
@@ -120,6 +144,7 @@ what is missing.
 | `concept_scores.parquet` | `score_concepts.py` (898 products) and `score_batch.py` (8,898 products, Batch API at half price); Gemini 3.5 Flash-Lite, prompt in `offline/prompts/` | $11.13 |
 | `phrase_bank.jsonl` | `phrase_bank.py`, with the colours of the shade phrases | $0.75 |
 | `product_colors.parquet` | `product_colors.py` (Batch API); Gemini 3.5 Flash-Lite with the product name and main photo | $2.51 |
+| `product_details.parquet` | `product_details.py` (Batch API); Gemini 3.5 Flash-Lite with the product name, description and two photos | $3.99 |
 | `color_names.parquet` | `product_colors.py`: the colour names of the products; Gemini left out names that are not colours ("leopard print", "grey knit") | $0.01 |
 | `concept_names.parquet` | `prepare.py`: embeddings of the concept names | |
 | `esci_clothing_queries.csv` | 10,454 Amazon ESCI queries from the earlier proof of concept | |
@@ -136,3 +161,8 @@ To change the concepts:
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be
   cleaner.
 - **"light" alone.** Without a colour after it, "light" is read as lightweight ("light coat"), as the bank says.
+- **Detail weights.** The weights 1.0 of the colour and detail terms are not measured yet. A detail term is large
+  for the few candidates that have the detail, so they usually come first.
+- **Detail names.** Closeness cannot tell every neighbour from the same detail: "lace" also reaches "lace-up" and
+  "lacing", "buckle" also reaches "belt", at a lower weight. The photos are small, so most details come
+  from the description; the prompt says so and should change with better photos.

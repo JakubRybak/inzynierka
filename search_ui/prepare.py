@@ -5,7 +5,8 @@ ranking_data/concept_scores.parquet exists, its concept scores become concept__<
 their embeddings go to data/concepts.parquet (names from ranking_data/concept_names.parquet; a new name costs one
 embedding call). The phrases of ranking_data/phrase_bank.jsonl are embedded into data/bank_embeddings.npz for the bank
 ranking (one call per phrase not embedded there yet; under $0.01 for the whole bank), and the colour names of
-ranking_data/color_names.parquet into data/color_embeddings.npz. The extracted features of
+ranking_data/color_names.parquet into data/color_embeddings.npz, and the detail names of
+ranking_data/product_details.parquet into data/detail_embeddings.npz. The extracted features of
 every product are written as a short text (feature_text.py) and embedded into data/feature_embeddings.npz (one call
 per product whose text is new; about $0.07 for the pilot).
 
@@ -27,6 +28,7 @@ import bank  # noqa: E402
 import colours  # noqa: E402
 import common  # noqa: E402
 import concepts  # noqa: E402
+import details  # noqa: E402
 import feature_text  # noqa: E402
 
 
@@ -112,6 +114,10 @@ def main():
             names = list(pd.read_parquet(colours.NAMES)["name"])
             new = colours.embed_names(names, embedder, args.output)
             print(f"Colour names: {len(names)} embedded ({new} new calls) -> {args.output / colours.VECTORS}")
+        if details.PRODUCTS.exists():
+            names = details.names(pd.read_parquet(details.PRODUCTS))
+            new = details.embed_names(names, embedder, args.output)
+            print(f"Detail names: {len(names)} embedded ({new} new calls) -> {args.output / details.VECTORS}")
     if not args.no_feature_embeddings:
         embedder = common.QueryEmbedder(manifest["model"], manifest["output_dimensionality"])
         texts = [feature_text.feature_text(r) for r in d.to_dict("records")]

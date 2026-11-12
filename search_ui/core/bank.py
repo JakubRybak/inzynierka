@@ -8,7 +8,9 @@ same model as the products (Gemini Embedding 2):
 A lightness word right before a colour in the query ("light" in "light pink dress", which a parser may split
 from the colour) is read as a shade, whatever the bank says about it alone ("light" there means lightweight). With the
 product colours (colours.py), a shade phrase gets a target colour: its bank hex, a colour name of the dictionary, or
-for a phrase the bank does not know, the nearest colour name when the similarity reaches colours.MATCH.
+for a phrase the bank does not know, the nearest colour name when the similarity reaches colours.MATCH. With the
+product details (details.py), a detail phrase, an "other" phrase or a phrase the bank does not know gets the detail
+names it asks for ("z koronką" -> lace, lace trim), matched without its negation ("without pockets" -> pockets).
 A phrase is negated when the bank says so; a phrase the bank does not know is negated when it starts with a
 negation word followed by at most NEGATED_WORDS words (longer ones, such as "not in this lifetime tour", are
 usually slogans).
@@ -17,6 +19,7 @@ Every phrase gives one column of percentiles within the candidates:
 - an occasion, style or season phrase of the bank with concepts uses the concept scores only, when the category is
   fully scored;
 - a shade with a target colour uses the closeness of the candidates' colours to it;
+- a phrase with detail names uses the candidates' details (their extent), with its concepts if it has any;
 - every other phrase uses text signals: TF-IDF over the name and description and the similarity of the phrase to
   the description and image embeddings, averaged; concepts of such a phrase are added, a concept matched by name
   with CONCEPT_WEIGHT against 1 for the text;
@@ -47,6 +50,7 @@ CONCEPT_WEIGHT = 2.0
 SHADE_IMAGE_WEIGHT = 2.0
 FLOOR = 0.01
 ABSTRACT = {"occasion", "style", "season"}
+DETAIL_KINDS = {"detail", "other"}
 UNSATISFIABLE = re.compile(r"\b(plus[- ]?size|plus|petite|tall|big and tall|maternity|pregnan\w*|nursing|\d*x+l|xxs"
                            r"|sizes?|kids?|child(ren)?|toddlers?|boys?|girls?(?! night)|juniors?|teens?|youth|baby)\b")
 NEGATION = re.compile(r"^(with\s+no|without|not|no|non|bez|nie|sin)\b[\s-]*")
@@ -128,8 +132,8 @@ def embed_bank(rows, embed, folder, workers=8):
 
 class BankRanker:
     def __init__(self, products, T, I, dataset, rows, vectors, embedder, concept_categories=(), concept_ids=(),
-                 concept_vectors=None, colours=None):
-        self.colours = colours
+                 concept_vectors=None, colours=None, details=None):
+        self.colours, self.details = colours, details
         self.rows, self.matrix = rows, common.normalize(np.asarray(vectors, np.float32))
         self.exact = {r["phrase"]: r for r in rows}
         self.embedder, self.pool = embedder, ThreadPoolExecutor(8)
@@ -158,6 +162,12 @@ class BankRanker:
         if text in self.exact:
             return self.exact[text]["english"]
         return text[NEGATION.match(text).end():] if negated_text(text) else text
+
+    def detail_text(self, text):
+        """The text a phrase is matched with detail names: its English version without a negation."""
+        english = self.english(text)
+        m = NEGATION.match(english)
+        return english[m.end():] if m and english[m.end():].strip() else english
 
     def bank_colour(self, row):
         """Target colour of a bank shade phrase: its hex, or only its lightness."""
@@ -200,8 +210,13 @@ class BankRanker:
             colour = self.colour_target(self.english(text), vectors)
             if colour:
                 match, similarity = "colour name", colour["similarity"]
+        detail = None
+        if colour is None and self.details is not None and (row is None or row["kind"] in DETAIL_KINDS):
+            detail = self.details.target((vectors or {}).get(common.query_text(self.detail_text(text))))
+            if row is None and detail:
+                match, similarity = "detail name", detail["similarity"]
         scored = self.scored.get(category, set())
-        if row is None and colour is None and self.concept_E is not None and scored:
+        if row is None and colour is None and detail is None and self.concept_E is not None and scored:
             sims = np.where([c in scored for c in self.concept_ids], self.concept_E @ vector, -np.inf)
             k = int(np.argmax(sims))
             if sims[k] >= CONCEPT_MATCH:
@@ -212,20 +227,27 @@ class BankRanker:
                    else negated_text(text))
         return dict(phrase=phrase, match=match, similarity=similarity,
                     neighbour=row["phrase"] if row and match == "nearest" else None,
-                    kind=row["kind"] if row else "shade" if colour else None, concepts=asked if available else [],
+                    kind=row["kind"] if row else "shade" if colour else "detail" if detail else None,
+                    concepts=asked if available else [],
                     concepts_unavailable=asked if asked and not available else [],
                     skipped=bool(row and row["kind"] == "size_or_audience")
                     or (row is None and bool(UNSATISFIABLE.search(text))),
                     negated=bool(negated),
                     english=self.english(text),
                     text_signals=not (row and row["kind"] in ABSTRACT and asked and available),
-                    colour=colour)
+                    colour=colour, detail=detail)
 
     def colour_score(self, r, cand):
         """Percentiles of the closeness of the candidates' colours to the phrase's target colour, or None."""
         if not r.get("colour") or self.colours is None:
             return None
         return percentiles(self.colours.score(r["colour"], cand))
+
+    def detail_raw(self, r, cand):
+        """The candidates' details the phrase asks for (extent times name weight, 0 without one), or None."""
+        if not r.get("detail") or self.details is None:
+            return None
+        return self.details.score(r["detail"], cand)
 
     def text_score(self, english, cand, vectors, image_weight=1.0):
         """Weighted mean of the percentiles of TF-IDF and of the similarity to the description and image embeddings;
@@ -250,7 +272,9 @@ class BankRanker:
         colour = self.colour_score(r, cand)
         if colour is not None:
             return 1 - colour if r["negated"] else colour
-        parts = [(1.0, self.text_score(r["english"], cand, vectors, self.image_weight(r)))] if r["text_signals"] else []
+        detail = self.detail_raw(r, cand)
+        parts = [(1.0, percentiles(detail))] if detail is not None else \
+            [(1.0, self.text_score(r["english"], cand, vectors, self.image_weight(r)))] if r["text_signals"] else []
         if r["concepts"]:
             raw = self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1)
             parts.append((CONCEPT_WEIGHT if parts and r["match"] == "concept" else 1.0, percentiles(raw)))
@@ -273,6 +297,8 @@ class BankRanker:
                 texts.add(common.query_text(text))
             english = self.english(text)
             texts |= {common.query_text(english), english}
+            if self.details is not None:
+                texts.add(common.query_text(self.detail_text(text)))
         texts = sorted(texts)
         return dict(zip(texts, (common.normalize(np.asarray(v, np.float32))
                                 for v in self.pool.map(self.embedder, texts))))
@@ -280,35 +306,39 @@ class BankRanker:
     def adjustments(self, residual, cand, category, query=None):
         """Terms the hybrid ranking adds to the similarity of the whole query, as z-scores within the candidates:
         "concept" for an occasion, style or season phrase with concepts (or a concept matched by name), "negation"
-        for a negated phrase (its concept scores, or its text signals) to be subtracted. Other phrases add nothing.
-        "colour" for a shade with a target colour. -> (terms, routes)."""
+        for a negated phrase (its concept scores, details or colour, or its text signals) to be subtracted, "colour"
+        for a shade with a target colour, "detail" for a phrase with detail names. Other phrases add nothing. Every
+        route gets "term": the term it went to, or None. -> (terms, routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
         vectors = self.embed(residual, query)
         routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
                   for p in residual]
-        terms = dict(concept=[], negation=[], colour=[])
+        terms = dict(concept=[], negation=[], colour=[], detail=[])
         for r in routes:
+            r["term"] = None
             if r["skipped"]:
                 continue
-            colour = self.colour_score(r, cand)
-            if colour is not None:
-                terms["negation" if r["negated"] else "colour"].append(zscore(colour))
-                continue
+            colour, detail = self.colour_score(r, cand), self.detail_raw(r, cand)
             conceptual = bool(r["concepts"]) and (r["kind"] in ABSTRACT or r["match"] == "concept")
-            if conceptual:
-                column = zscore(self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1))
-            if r["negated"]:
-                terms["negation"].append(column if conceptual else
-                                         zscore(self.text_score(r["english"], cand, vectors, self.image_weight(r))))
+            if colour is not None or detail is not None:
+                r["term"] = "negation" if r["negated"] else "colour" if colour is not None else "detail"
+                column = zscore(colour if colour is not None else detail)
             elif conceptual:
-                terms["concept"].append(column)
+                r["term"] = "negation" if r["negated"] else "concept"
+                column = zscore(self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1))
+            elif r["negated"]:
+                r["term"] = "negation"
+                column = zscore(self.text_score(r["english"], cand, vectors, self.image_weight(r)))
+            else:
+                continue
+            terms[r["term"]].append(column)
         return terms, routes
 
     @staticmethod
     def own_signal(r):
         """The bank scores a phrase itself only when it knows something about it: its concepts, a negation or a
-        shade. Any other phrase (a theme, a detail, an unknown phrase) is better judged by the whole query."""
-        return bool(r["concepts"]) or r["negated"] or r["kind"] == "shade"
+        shade or detail names. Any other phrase (a theme, an unknown phrase) is better judged by the whole query."""
+        return bool(r["concepts"]) or r["negated"] or r["kind"] == "shade" or bool(r.get("detail"))
 
     def rank(self, residual, cand, category, typicality=True, query=None, whole_query=None):
         """-> (scores of the candidates, routes of the phrases). typicality=False leaves ties (and all candidates when

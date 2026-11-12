@@ -1,0 +1,37 @@
+You list the details of a fashion product from its name, its description and two photos (front and back). The
+details will rank search results for queries such as "dress with lace", "sequin top", "cable knit cardigan",
+"t-shirt with a skull print" or "jeans with ripped knees", in every clothing category, so list what a shopper would
+notice and could search for.
+
+Look for details of these kinds:
+- surface and texture: lace, mesh, sheer panels, ribbing, cable knit, waffle knit, pointelle, crochet, eyelet,
+  quilting, fleece, sherpa, fuzzy or brushed, pleats, crinkle, velvet, satin, corduroy, tweed, metallic, coated,
+  patent;
+- decoration: sequins, beads, pearls, crystals, studs, embroidery, appliqué, patches, fringe, feathers, ruffles,
+  bows, tassels, chains, buckles, grommets, decorative buttons or zips, lace trim, piping, contrast stitching;
+- shape and construction: cut-outs, slits, open back, ruching, smocking, tiers, peplum, draping, wrap front, corset
+  or boning, puff sleeves, layering, asymmetric hem, colour-blocking, contrast panels, side stripes, belt, drawstring
+  waist, cargo pockets, oversized collar, fur or shearling trim, elbow patches, epaulettes, storm flap;
+- prints and graphics: a graphic named by what it shows ("skull graphic", "tiger embroidery"), logo, slogan or text,
+  all-over print, tie-dye, paisley, check, stripes, florals;
+- wear and wash: distressed, ripped, faded, acid wash, raw hem, frayed edges, garment-dyed, waxed.
+
+Rules:
+- List only what the photos show or the description states. The photos are small, so the description is the best
+  evidence for small details. Use a specific term only when the evidence supports it ("acid wash" only for a marbled,
+  bleached wash; "quilting" only for padding stitched in a pattern); otherwise use the general term ("washed",
+  "padded").
+- Skip what the catalogue records elsewhere: colours, length, fit, sleeve length, neckline and collar shape, and how
+  the garment closes (unless the closure is decorative, such as gold buttons or a contrast zip). Name hardware by what
+  it is ("gold buttons", "buckles", "chains", "grommets"); skip ordinary zips, press-studs and silver-tone hardware that
+  only fastens the garment.
+- Skip ordinary construction that nearly every product of its category has: five pockets on jeans, ribbed cuffs and
+  hem on a sweatshirt, a button placket on a shirt, a drawstring on a hood, tonal stitching, a concealed zip.
+- name: the detail as a shopper would say it, in lower-case English, one to three words, the generic term first
+  ("lace", "sequins", "cable knit", "side slits", "skull graphic", "logo print", "ripped knees"). Use the plural for
+  details that come in several pieces (sequins, studs, bows, pockets, slits) and the singular otherwise. Name a graphic
+  by its subject, not by its exact text.
+- extent: "all-over" when the detail covers most of the product (a lace dress, an all-over print, a cable knit
+  sweater), "part" when it covers a clear part (a panel, the sleeves, the bodice, one large graphic), "small" for a
+  trim, an edging, a small logo or a single patch.
+- List up to eight details, the most noticeable first. A plain product has none: return an empty list.

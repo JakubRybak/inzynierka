@@ -6,7 +6,8 @@
         --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2;
         --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8;
         --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490;
-        --k-con:#6d28d9; --k-con-bg:#ede9fe; }
+        --k-con:#6d28d9; --k-con-bg:#ede9fe;
+        --p-emb:#60a5fa; --p-con:#8b5cf6; --p-col:#f59e0b; --p-det:#14b8a6; --p-neg:#ef4444; }
 @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --mut:#a8a29e; --line:#44403c; --card:#292524; --acc:#93c5fd;
         --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a;
         --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd;
@@ -124,6 +125,23 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .loading { grid-column:1/-1; display:flex; justify-content:center; padding:80px 0; }
 .spinner { width:36px; height:36px; border:3px solid var(--line); border-top-color:var(--acc); border-radius:50%; animation:spin .8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
+.parts { margin-top:10px; border:1px solid var(--line); border-radius:8px; background:var(--card); padding:8px 10px; font-size:12px; }
+.parts .pr { display:grid; grid-template-columns:minmax(0, 1fr) 46px; gap:2px 8px; align-items:center; margin:3px 0; }
+.parts .pr .lab { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.parts .pr .v { text-align:right; font-variant-numeric:tabular-nums; color:var(--mut); }
+.parts .pr .bar { grid-column:1/-1; height:6px; background:var(--soft); border-radius:3px; overflow:hidden; }
+.parts .pr .bar i { display:block; height:100%; border-radius:3px; }
+.k-emb { background:var(--p-emb); } .k-con { background:var(--p-con); } .k-col { background:var(--p-col); }
+.k-det { background:var(--p-det); } .k-neg { background:var(--p-neg); }
+.sbar { position:relative; height:8px; margin-top:6px; background:var(--soft); border-radius:4px; overflow:hidden; }
+.sbar i { position:absolute; top:0; bottom:0; }
+.sbar .zero { position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--mut); }
+.chip.dt { background:#ccfbf1; color:#0f766e; }
+@media (prefers-color-scheme: dark) { .chip.dt { background:#134e4a; color:#5eead4; } }
+.swatch { display:inline-block; width:14px; height:14px; border:1px solid #999; vertical-align:middle; margin-right:4px; border-radius:3px; }
+.dlist { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.dlist .chip { font-weight:500; }
+.dlist .chip.on { outline:2px solid var(--p-det); }
 </style></head><body>
 <div id="panel"><div class="box" id="box"></div></div>
 <div class="app" id="app">
@@ -163,7 +181,7 @@ const MODES = {any: "any of", all: "all of", exact: "only"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
-let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0;
+let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0, SCALE = 1;
 const PRICE_OPS = {lt: "<", lte: "≤", gt: ">", gte: "≥", eq: "="};
 let PANEL = {category: null, sel: {}, mode: {}, prices: [], residual: []}, brandQuery = "", applyTimer = null;
 
@@ -426,11 +444,13 @@ function bankLine() {
       : r.match === "concept" ? `concept name ${r.similarity.toFixed(2)}`
       : r.match === "colour" ? "modifies the colour after it"
       : r.match === "colour name" ? `colour name ${r.similarity.toFixed(2)}`
+      : r.match === "detail name" ? `detail name ${r.similarity.toFixed(2)}`
       : `unknown, nearest ${r.similarity === null ? "–" : r.similarity.toFixed(2)}`;
     const c = r.colour;
     const used = r.skipped ? `<span class="meta">skipped (size or audience)</span>`
       : c && c.hex ? `colour <span style="display:inline-block;width:14px;height:14px;background:${esc(c.hex)};border:1px solid #999;vertical-align:middle"></span> <b>${esc(c.name)}</b> ${esc(c.hex)}`
       : c ? `colour: ${c.lightness === "light" ? "lighter" : "darker"} shades first`
+      : r.detail ? `details <b>${r.detail.names.slice(0, 8).map(esc).join(", ")}</b>${r.detail.names.length > 8 ? ` and ${r.detail.names.length - 8} more` : ""}`
       : r.whole_query ? `<span class="meta">nothing special – the whole query (combined) decides</span>`
       : [r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>${r.text_signals ? "" : " only"}` : "",
          r.text_signals ? `text “${esc(r.english)}”` : "",
@@ -441,13 +461,43 @@ function bankLine() {
   }).join("");
 }
 
+function partKind(label) {
+  const k = label.split(" · ")[0];
+  return k === "concept" ? "k-con" : k === "colour" ? "k-col" : k === "detail" ? "k-det" : k === "negation" ? "k-neg" : "k-emb";
+}
+
+// how much each part of the score moves the ranking: its spread (standard deviation) over the candidates
+function partsPanel() {
+  const sp = D && D.score_parts;
+  if (!sp || !sp.length) return "";
+  const max = Math.max(...sp.map(x => x.spread)) || 1, w = D.weights;
+  const formula = w ? `similarity of the whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "similarity of the whole query";
+  return `<div class="parts"><div><b>Score</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
+    sp.map(x => `<div class="pr"><span class="lab" title="${esc(x.label)}">${esc(x.label)}</span><span class="v">±${x.spread.toFixed(2)}</span>` +
+      `<div class="bar"><i class="${partKind(x.label)}" style="width:${Math.max(2, 100 * x.spread / max)}%"></i></div></div>`).join("") + `</div>`;
+}
+
+// the parts of one product's score, right of the middle line when they raise it, left when they lower it
+function scoreBar(p) {
+  const e = Object.entries(p.parts || {});
+  if (!e.length) return "";
+  const scale = SCALE || 1;
+  let pos = 50, neg = 50, h = "";
+  for (const [l, v] of e) {
+    const w = Math.min(50, 50 * Math.abs(v) / scale);
+    if (v >= 0) { h += `<i class="${partKind(l)}" style="left:${pos}%;width:${w}%"></i>`; pos += w; }
+    else { neg -= w; h += `<i class="${partKind(l)}" style="left:${neg}%;width:${w}%"></i>`; }
+  }
+  return `<div class="sbar" title="${esc(e.map(([l, v]) => `${l}: ${v >= 0 ? "+" : ""}${v.toFixed(2)}`).join("\n"))}">${h}<span class="zero"></span></div>`;
+}
+
 function sourceLine() {
   const s = D && D.parser_info && D.parser_info.source;
   return s && s !== "manual" ? `<div class="residual"><span class="meta">Parse from:</span> ${esc(s)}</div>` : "";
 }
 
 function drawParserTop() {
-  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + sourceLine() + conceptLine() + conceptList() + bankLine();
+  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + sourceLine() + conceptLine() + conceptList() + bankLine() + partsPanel();
 }
 
 function drawNotes() {
@@ -474,6 +524,9 @@ function drawResults() {
   $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b>`;
   if (!n) { $("grid").innerHTML = `<div class="empty">No products meet all the conditions.</div>`; return; }
   const g = $("grid");
+  // the longest side of any product's bar fills half of the bar
+  const side = (p, sign) => Object.values(p.parts || {}).reduce((a, v) => a + Math.max(sign * v, 0), 0);
+  SCALE = D.results.reduce((m, p) => Math.max(m, side(p, 1), side(p, -1)), 1e-9);
   D.results.forEach((p, i) => g.appendChild(card(p, i)));
 }
 
@@ -484,8 +537,10 @@ function card(p, i) {
     (p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : `<div class="noimg"></div>`) +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
-      ${hit.length || p.concepts.length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
-        `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}</div>` : ""}</div>`;
+      ${hit.length || p.concepts.length || (p.details || []).length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
+        `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}` +
+        `${(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : ""}
+      ${scoreBar(p)}</div>`;
   d.onclick = () => details(p);
   return d;
 }
@@ -497,11 +552,17 @@ async function details(k) {
   $("box").innerHTML = `<div class="meta">Loading…</div>`; $("panel").classList.add("on");
   const r = await fetch("/api/product?id=" + encodeURIComponent(k.id), noCache), p = await r.json();
   if (!r.ok) { $("box").innerHTML = `<div class="errorbox">${esc(p.error ? p.error.message : r.status)}</div>`; return; }
-  const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name));
+  const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name)), asked = new Set((k.details || []).map(x => x.name));
   $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
     `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
+    (Object.keys(k.parts || {}).length ? `<h3>Score ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
+      `<tr><td><span class="swatch ${partKind(l)}" style="border:0"></span>${esc(l)}</td><td>${v >= 0 ? "+" : ""}${v.toFixed(2)}</td></tr>`).join("")}</table>` : "") +
+    ((p.details || []).length ? `<h3>Details (Gemini)</h3><div class="dlist">${p.details.map(x =>
+      `<span class="chip dt${asked.has(x.name) ? " on" : ""}">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : "") +
+    ((p.colours || []).length ? `<h3>Colours (Gemini)</h3><table>${p.colours.map(c =>
+      `<tr><td><span class="swatch" style="background:${esc(c.hex)}"></span>${esc(c.name)}</td><td>${esc(c.family)} · ${esc(c.hex)} · ${Math.round(c.share * 100)}%</td></tr>`).join("")}</table>` : "") +
     `<table>${Object.entries(p.features).map(([c, v]) => `<tr class="${hit.has(c) ? "on" : ""}"><td>${esc(c)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` +
     (p.concepts.length ? `<h3>Concept scores</h3><table>${p.concepts.map(c =>
       `<tr class="${chosen.has(c.name) ? "on" : ""}"><td>${esc(c.name)}</td><td>${c.score}/10</td></tr>`).join("")}</table>` : "");

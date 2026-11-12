@@ -28,6 +28,7 @@ SEARCH_UI = HERE.parents[1] / "search_ui"
 sys.path[:0] = [str(SEARCH_UI), str(SEARCH_UI / "core")]
 import bank  # noqa: E402
 import colours  # noqa: E402
+import details  # noqa: E402
 import benchmark_parser  # noqa: E402
 import common  # noqa: E402
 import concepts  # noqa: E402
@@ -82,11 +83,12 @@ def engines():
     vectors = np.load(common.DATA / bank.VECTORS)["vectors"]
     keep = heldout_rows(rows)
 
-    colour_data = colours.load(products)
+    colour_data, detail_data = colours.load(products), details.load(products)
 
     def bank_ranker(rs, vs):
         return bank.BankRanker(products, T, I, Path(meta["dataset"]), rs, vs, embedder,
-                               concepts.scored_concepts(meta["concepts"]), ranker.ids, ranker.E, colour_data)
+                               concepts.scored_concepts(meta["concepts"]), ranker.ids, ranker.E, colour_data,
+                               detail_data)
 
     parser = parser_adapter.Parser("benchmark", lambda q: None)
     F = server.load_feature_embeddings(products, common.DATA)
