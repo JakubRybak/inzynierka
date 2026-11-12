@@ -175,7 +175,7 @@ const RANKING_NAMES = {combined: "embedding combined (description + image)", tex
                        image: "embedding image", concepts: "concepts (residual → nearest concept name)",
                        bank: "phrase bank (concepts + text, combined breaks ties)", features: "embedding features",
                        combined_features: "embedding description + image + features",
-                       hybrid: "hybrid (description + image + features, + concepts, − negations)"};
+                       hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)"};
 const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
@@ -316,7 +316,9 @@ async function search(manual = null) {
   const q = $("q").value.trim(); if (!q && !manual) return;
   const mine = ++seq;
   const opts = `ranking=${encodeURIComponent($("ranking").value)}`;
-  history.replaceState(null, "", `?q=${encodeURIComponent(q)}&${opts}`);
+  // the ranking goes into the address only when it is not the default, so a reload keeps the default
+  const chosen = INFO && $("ranking").value !== INFO.ranking ? `&${opts}` : "";
+  history.replaceState(null, "", `?q=${encodeURIComponent(q)}${chosen}`);
   $("timings").classList.add("busy");
   $("status").innerHTML = $("banner").innerHTML = $("notes").innerHTML = "";
   $("grid").innerHTML = `<div class="loading"><div class="spinner"></div></div>`;
