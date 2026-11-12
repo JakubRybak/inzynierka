@@ -6,7 +6,9 @@ same model as the products (Gemini Embedding 2):
 - another phrase takes the labels of its nearest bank phrase when the similarity is at least NEAREST;
 - otherwise it takes the concept whose name is the most similar, when that similarity is at least CONCEPT_MATCH.
 A lightness word right before a colour in the query ("light" in "light pink dress", which a parser may split
-from the colour) is read as a shade, whatever the bank says about it alone ("light" there means lightweight).
+from the colour) is read as a shade, whatever the bank says about it alone ("light" there means lightweight). With the
+product colours (colours.py), a shade phrase gets a target colour: its bank hex, a colour name of the dictionary, or
+for a phrase the bank does not know, the nearest colour name when the similarity reaches colours.MATCH.
 A phrase is negated when the bank says so; a phrase the bank does not know is negated when it starts with a
 negation word followed by at most NEGATED_WORDS words (longer ones, such as "not in this lifetime tour", are
 usually slogans).
@@ -14,6 +16,7 @@ usually slogans).
 Every phrase gives one column of percentiles within the candidates:
 - an occasion, style or season phrase of the bank with concepts uses the concept scores only, when the category is
   fully scored;
+- a shade with a target colour uses the closeness of the candidates' colours to it;
 - every other phrase uses text signals: TF-IDF over the name and description and the similarity of the phrase to
   the description and image embeddings, averaged; concepts of such a phrase are added, a concept matched by name
   with CONCEPT_WEIGHT against 1 for the text;
@@ -75,10 +78,18 @@ def zscore(x):
     return (x - x.mean()) / s if s > 0 else np.zeros_like(x)
 
 
+def shade_phrase(text, query):
+    """"light pink" when the phrase is a lightness word ("light") that stands right before a colour ("pink") in the
+    query, otherwise None."""
+    if not query or text not in SHADE_WORDS:
+        return None
+    m = re.search(rf"\b{re.escape(text)}[\s-]+({COLOUR})\b", " ".join(query.lower().split()))
+    return f"{text} {m.group(1)}" if m else None
+
+
 def colour_word_before(text, query):
     """True when the phrase is a lightness word that stands right before a colour in the query."""
-    return bool(query) and text in SHADE_WORDS and \
-        bool(re.search(rf"\b{re.escape(text)}[\s-]+{COLOUR}\b", " ".join(query.lower().split())))
+    return shade_phrase(text, query) is not None
 
 
 def negated_text(text):
@@ -117,7 +128,8 @@ def embed_bank(rows, embed, folder, workers=8):
 
 class BankRanker:
     def __init__(self, products, T, I, dataset, rows, vectors, embedder, concept_categories=(), concept_ids=(),
-                 concept_vectors=None):
+                 concept_vectors=None, colours=None):
+        self.colours = colours
         self.rows, self.matrix = rows, common.normalize(np.asarray(vectors, np.float32))
         self.exact = {r["phrase"]: r for r in rows}
         self.embedder, self.pool = embedder, ThreadPoolExecutor(8)
@@ -147,21 +159,49 @@ class BankRanker:
             return self.exact[text]["english"]
         return text[NEGATION.match(text).end():] if negated_text(text) else text
 
-    def route(self, phrase, category, vector, query=None):
+    def bank_colour(self, row):
+        """Target colour of a bank shade phrase: its hex, or only its lightness."""
+        if row.get("hex"):
+            return dict(name=row["phrase"], hex=row["hex"], family=row.get("family"), similarity=None)
+        if row.get("lightness") in ("light", "dark"):
+            return dict(name=row["phrase"], lightness=row["lightness"], family=None, similarity=None)
+        return None
+
+    def colour_target(self, text, vectors):
+        """Target colour of a shade text: a bank shade, a dictionary name, or the nearest dictionary name."""
+        if self.colours is None:
+            return None
+        row = self.exact.get(text)
+        if row is not None and row["kind"] == "shade" and self.bank_colour(row):
+            return self.bank_colour(row)
+        return self.colours.target(text, (vectors or {}).get(common.query_text(text)))
+
+    def route(self, phrase, category, vector, query=None, vectors=None):
         """How a phrase is scored. vector: its query-format embedding (unused for a phrase found in the bank);
-        query: the whole query, to read a lightness word before a colour as a shade."""
+        query: the whole query, to read a lightness word before a colour as a shade; vectors: the embeddings of
+        embed(), for the colour of a shade."""
         text = normalize_phrase(phrase)
-        if colour_word_before(text, query):
+        shade = shade_phrase(text, query)
+        if shade:
             return dict(phrase=phrase, match="colour", similarity=None, neighbour=None, kind="shade", concepts=[],
-                        concepts_unavailable=[], skipped=False, negated=False, english=text, text_signals=True)
-        row, match, similarity, matched = self.exact.get(text), "exact", None, []
+                        concepts_unavailable=[], skipped=False, negated=False, english=text, text_signals=True,
+                        colour=self.colour_target(shade, vectors))
+        row, match, similarity, matched, colour = self.exact.get(text), "exact", None, [], None
         if row is None:
             sims = self.matrix @ vector
             j = int(np.argmax(sims))
             similarity = round(float(sims[j]), 3)
             row, match = (self.rows[j], "nearest") if sims[j] >= NEAREST else (None, "none")
+        if row is not None and row["kind"] == "shade" and self.colours is not None:
+            # a neighbour tells that the phrase is a shade, not which one ("ciemnozielona" is nearest to "ciemnoszary")
+            colour = (self.colour_target(self.english(text), vectors) if match == "nearest" else None) \
+                or self.bank_colour(row)
+        if row is None and self.colours is not None:
+            colour = self.colour_target(self.english(text), vectors)
+            if colour:
+                match, similarity = "colour name", colour["similarity"]
         scored = self.scored.get(category, set())
-        if row is None and self.concept_E is not None and scored:
+        if row is None and colour is None and self.concept_E is not None and scored:
             sims = np.where([c in scored for c in self.concept_ids], self.concept_E @ vector, -np.inf)
             k = int(np.argmax(sims))
             if sims[k] >= CONCEPT_MATCH:
@@ -172,13 +212,20 @@ class BankRanker:
                    else negated_text(text))
         return dict(phrase=phrase, match=match, similarity=similarity,
                     neighbour=row["phrase"] if row and match == "nearest" else None,
-                    kind=row["kind"] if row else None, concepts=asked if available else [],
+                    kind=row["kind"] if row else "shade" if colour else None, concepts=asked if available else [],
                     concepts_unavailable=asked if asked and not available else [],
                     skipped=bool(row and row["kind"] == "size_or_audience")
                     or (row is None and bool(UNSATISFIABLE.search(text))),
                     negated=bool(negated),
                     english=self.english(text),
-                    text_signals=not (row and row["kind"] in ABSTRACT and asked and available))
+                    text_signals=not (row and row["kind"] in ABSTRACT and asked and available),
+                    colour=colour)
+
+    def colour_score(self, r, cand):
+        """Percentiles of the closeness of the candidates' colours to the phrase's target colour, or None."""
+        if not r.get("colour") or self.colours is None:
+            return None
+        return percentiles(self.colours.score(r["colour"], cand))
 
     def text_score(self, english, cand, vectors, image_weight=1.0):
         """Weighted mean of the percentiles of TF-IDF and of the similarity to the description and image embeddings;
@@ -200,6 +247,9 @@ class BankRanker:
     def phrase_column(self, r, cand, vectors):
         if r["skipped"]:
             return None
+        colour = self.colour_score(r, cand)
+        if colour is not None:
+            return 1 - colour if r["negated"] else colour
         parts = [(1.0, self.text_score(r["english"], cand, vectors, self.image_weight(r)))] if r["text_signals"] else []
         if r["concepts"]:
             raw = self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1)
@@ -209,12 +259,16 @@ class BankRanker:
         p = sum(w * s for w, s in parts) / sum(w for w, _ in parts)
         return 1 - p if r["negated"] else p
 
-    def embed(self, residual):
+    def embed(self, residual, query=None):
         """All embeddings the phrases may need, in parallel: the phrase for the bank and concept names, its English
-        version for the descriptions (query format) and for the images (plain)."""
+        version for the descriptions (query format) and for the images (plain), and a lightness word with the colour
+        after it ("light pink") for the colour names."""
         texts = set()
         for phrase in residual:
             text = normalize_phrase(phrase)
+            shade = shade_phrase(text, query)
+            if shade and self.colours is not None:
+                texts.add(common.query_text(shade))
             if text not in self.exact:
                 texts.add(common.query_text(text))
             english = self.english(text)
@@ -227,13 +281,18 @@ class BankRanker:
         """Terms the hybrid ranking adds to the similarity of the whole query, as z-scores within the candidates:
         "concept" for an occasion, style or season phrase with concepts (or a concept matched by name), "negation"
         for a negated phrase (its concept scores, or its text signals) to be subtracted. Other phrases add nothing.
-        -> (terms, routes)."""
+        "colour" for a shade with a target colour. -> (terms, routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual)
-        routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query) for p in residual]
-        terms = dict(concept=[], negation=[])
+        vectors = self.embed(residual, query)
+        routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
+                  for p in residual]
+        terms = dict(concept=[], negation=[], colour=[])
         for r in routes:
             if r["skipped"]:
+                continue
+            colour = self.colour_score(r, cand)
+            if colour is not None:
+                terms["negation" if r["negated"] else "colour"].append(zscore(colour))
                 continue
             conceptual = bool(r["concepts"]) and (r["kind"] in ABSTRACT or r["match"] == "concept")
             if conceptual:
@@ -256,8 +315,9 @@ class BankRanker:
         no phrase is usable) to the caller. whole_query(routes) -> similarity of the whole query to the candidates:
         when given, a phrase without its own signal takes that column instead of its text signals."""
         residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual)
-        routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query) for p in residual]
+        vectors = self.embed(residual, query)
+        routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
+                  for p in residual]
         whole = None
         columns = []
         for r in routes:

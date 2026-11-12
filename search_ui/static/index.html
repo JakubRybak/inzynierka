@@ -425,8 +425,12 @@ function bankLine() {
       : r.match === "nearest" ? `nearest: “${esc(r.neighbour)}” ${r.similarity.toFixed(2)}`
       : r.match === "concept" ? `concept name ${r.similarity.toFixed(2)}`
       : r.match === "colour" ? "modifies the colour after it"
+      : r.match === "colour name" ? `colour name ${r.similarity.toFixed(2)}`
       : `unknown, nearest ${r.similarity === null ? "–" : r.similarity.toFixed(2)}`;
+    const c = r.colour;
     const used = r.skipped ? `<span class="meta">skipped (size or audience)</span>`
+      : c && c.hex ? `colour <span style="display:inline-block;width:14px;height:14px;background:${esc(c.hex)};border:1px solid #999;vertical-align:middle"></span> <b>${esc(c.name)}</b> ${esc(c.hex)}`
+      : c ? `colour: ${c.lightness === "light" ? "lighter" : "darker"} shades first`
       : r.whole_query ? `<span class="meta">nothing special – the whole query (combined) decides</span>`
       : [r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>${r.text_signals ? "" : " only"}` : "",
          r.text_signals ? `text “${esc(r.english)}”` : "",

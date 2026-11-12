@@ -35,7 +35,7 @@ import facets  # noqa: E402
 import parser_adapter  # noqa: E402
 
 RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid")
-HYBRID = dict(concept=0.5, negation=1.0)
+HYBRID = dict(concept=0.5, negation=1.0, colour=1.0)
 COLOUR_IMAGE_WEIGHT = 2.0
 POSITIVE = {"in", "contains_any", "contains_all", "equals_set"}
 
@@ -140,9 +140,11 @@ class SearchEngine:
         return self.embedding_scores(self.query_vectors(q, ranking), ranking, cand, timings, t)
 
     def combine(self, base, terms, weights=None):
-        """Hybrid score: the similarity of the whole query plus the concept terms minus the negation terms."""
+        """Hybrid score: the similarity of the whole query plus the concept and colour terms minus the negation
+        terms."""
         w = weights or self.weights
         return base + w["concept"] * sum(terms["concept"], np.zeros(len(base))) \
+            + w.get("colour", 0.0) * sum(terms.get("colour", []), np.zeros(len(base))) \
             - w["negation"] * sum(terms["negation"], np.zeros(len(base)))
 
     def query_vectors(self, q, ranking):
@@ -418,14 +420,17 @@ def main():
         vectors = args.data / "bank_embeddings.npz"
         try:
             import bank
+            import colours
             rows = bank.load_rows()
             stored = np.load(vectors)
             if stored["phrases"].tolist() != [r["phrase"] for r in rows]:
                 raise OSError("the phrase bank changed since prepare.py; rerun it")
+            colour_data = colours.load(products, args.data)
             bank_ranker = bank.BankRanker(products, T, I, Path(meta["dataset"]), rows, stored["vectors"], embedder,
                                           concepts.scored_concepts(meta.get("concepts") or {}),
-                                          ranker.ids if ranker else (), ranker.E if ranker else None)
-            print(f"Phrase bank: {len(rows)} phrases · {ms(t):.0f} ms")
+                                          ranker.ids if ranker else (), ranker.E if ranker else None, colour_data)
+            print(f"Phrase bank: {len(rows)} phrases · colours: "
+                  f"{f'{len(colour_data.names)} names' if colour_data else 'missing, run prepare.py'} · {ms(t):.0f} ms")
         except (ImportError, OSError) as e:
             print(f"Phrase bank ranking unavailable ({type(e).__name__}: {str(e)[:200]}); run prepare.py")
     F = load_feature_embeddings(products, args.data)

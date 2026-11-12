@@ -26,12 +26,14 @@ import benchmark_parser  # noqa: E402
 import common  # noqa: E402
 import concept_candidates  # noqa: E402
 import concepts  # noqa: E402
+import product_colors  # noqa: E402
 import vertex  # noqa: E402
 
 OUT = common.DATA / "phrase_bank"
 OLD_BANK = OUT / "phrase_bank_v1.jsonl"
 LABELS = OUT / "labels.jsonl"
 VARIANTS = OUT / "variants.jsonl"
+SHADES = OUT / "shades.jsonl"
 KINDS = ["detail", "shade", "occasion", "style", "season", "size_or_audience", "other"]
 BATCH = 50
 TOP_FOR_VARIANTS = 150
@@ -129,6 +131,55 @@ def variant_body(phrases):
                                  "thinkingConfig": {"thinkingLevel": "MINIMAL"}}}
 
 
+SHADE = """You give the colour that each phrase of a shopping query names. The phrases are colours and shades in English,
+Polish or Spanish, for example "dusty rose", "brudny róż", "azul claro", "emerald green", "light", "ciemny".
+- hex: the colour as it would look on a garment, as #RRGGBB; null when the phrase names no hue, only a lightness
+  ("light", "dark", "jasny").
+- family: the basic colour family of that colour, one of: {families}; null when hex is null.
+- lightness: "light" when the phrase asks for a lighter shade than the plain colour ("light blue", "pale", "pastel",
+  "jasny"), "dark" when it asks for a darker one ("dark green", "deep purple", "ciemny"), otherwise "none".
+Answer for every phrase, in the given order."""
+
+
+def shade_body(phrases, system):
+    item = {"type": "OBJECT", "required": ["phrase", "hex", "family", "lightness"],
+            "properties": {"phrase": {"type": "STRING"}, "hex": {"type": "STRING", "nullable": True},
+                           "family": {"type": "STRING", "enum": product_colors.FAMILIES, "nullable": True},
+                           "lightness": {"type": "STRING", "enum": ["light", "dark", "none"]}}}
+    text = "Phrases:\n" + "\n".join(f"{i + 1}. {p}" for i, p in enumerate(phrases))
+    return {"systemInstruction": {"parts": [{"text": system}]}, "contents": [{"role": "user", "parts": [{"text": text}]}],
+            "generationConfig": {"temperature": 0, "maxOutputTokens": 8192, "responseMimeType": "application/json",
+                                 "responseSchema": {"type": "OBJECT", "required": ["results"],
+                                                    "properties": {"results": {"type": "ARRAY", "items": item}}},
+                                 "thinkingConfig": {"thinkingLevel": "MINIMAL"}}}
+
+
+def shades(phrases, execute, budget, spent):
+    """Target colour of every shade phrase: hex, family and lightness, for the colour ranking."""
+    system = SHADE.format(families=", ".join(product_colors.FAMILIES))
+    v = version(system)
+    done = {x["phrase"]: x for r in logged(SHADES, v) for x in r["items"]}
+    todo = [p for p in phrases if p not in done]
+    tasks = [dict(id=f"shades-{k}", phrases=todo[k:k + BATCH]) for k in range(0, len(todo), BATCH)]
+    costs = [vertex.estimate(len(system) + 30 * len(t["phrases"]), 40 * len(t["phrases"])) for t in tasks]
+    print(f"shades: {len(todo)} phrases in {len(tasks)} calls (up to ${sum(costs):.3f})")
+    if execute and tasks:
+        def work(task, client):
+            response = client(shade_body(task["phrases"], system))
+            results = json.loads(vertex.response_text(response))["results"]
+            if len(results) != len(task["phrases"]):
+                raise ValueError(f"{len(results)} results for {len(task['phrases'])} phrases")
+            items = []
+            for phrase, r in zip(task["phrases"], results):
+                hex_value = r.get("hex") if r.get("hex") and product_colors.HEX.fullmatch(r["hex"]) else None
+                items.append(dict(phrase=phrase, hex=hex_value and hex_value.upper(),
+                                  family=r.get("family") if hex_value else None, lightness=r["lightness"]))
+            return dict(id=task["id"], prompt_version=v, items=items, usage=response.get("usageMetadata", {}), at=stamp())
+        vertex.run(tasks, costs, work, SHADES, budget, spent)
+        done = {x["phrase"]: x for r in logged(SHADES, v) for x in r["items"]}
+    return done
+
+
 def stamp():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -188,14 +239,19 @@ def main():
             return dict(id=task["id"], prompt_version=v, items=items, usage=response.get("usageMetadata", {}), at=stamp())
         vertex.run(tasks, costs, work, LABELS, args.budget_usd, vertex.spent_in(LABELS) + vertex.spent_in(VARIANTS))
         done = {x["phrase"]: x for r in logged(LABELS, v) for x in r["items"]}
+    spent = vertex.spent_in(LABELS) + vertex.spent_in(VARIANTS) + vertex.spent_in(SHADES)
+    colours = shades(sorted(p for p in counts if p in done and done[p]["kind"] == "shade"), args.execute,
+                     args.budget_usd, spent)
     if args.execute:
         if not OLD_BANK.exists():
             OLD_BANK.write_bytes(bank.BANK.read_bytes())
         rows = [dict(done[p], queries=n) for p, n in sorted(counts.items()) if p in done]
         with bank.BANK.open("w", encoding="utf-8") as out:
             for r in rows:
-                out.write(json.dumps({k: r[k] for k in ("phrase", "kind", "negated", "english", "concepts", "queries")},
-                                     ensure_ascii=False) + "\n")
+                row = {k: r[k] for k in ("phrase", "kind", "negated", "english", "concepts", "queries")}
+                if r["kind"] == "shade" and r["phrase"] in colours:
+                    row |= {k: colours[r["phrase"]][k] for k in ("hex", "family", "lightness")}
+                out.write(json.dumps(row, ensure_ascii=False) + "\n")
         kinds = Counter(r["kind"] for r in rows)
         print(f"{len(rows)} phrases -> {bank.BANK}; kinds {dict(kinds)}; with a concept {sum(bool(r['concepts']) for r in rows)}")
 

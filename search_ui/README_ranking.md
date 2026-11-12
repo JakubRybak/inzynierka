@@ -1,14 +1,15 @@
 # Ranking
 
 The ranking orders the products that passed the filters; it never adds or removes any. No generative model runs at
-search time. The ranking uses three kinds of signals:
+search time. The ranking uses four kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
   offline by Gemini;
+- **product colours**: one to three colours of every product with their share, given offline by Gemini;
 - **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
-This is the state of 2026-11-11. The default ranking is `hybrid`; the other rankings stay available in the page.
+This is the state of 2026-11-12. The default ranking is `hybrid`; the other rankings stay available in the page.
 
 ## Rankings
 
@@ -21,7 +22,7 @@ This is the state of 2026-11-11. The default ranking is `hybrid`; the other rank
 | `combined_features` | mean of the z-scores of description, image and feature text |
 | `concepts` | the scores of the concepts that the residual phrases name |
 | `bank` | one signal per residual phrase, picked with the phrase bank |
-| `hybrid` (default) | `combined_features`, plus concept scores and minus negations, picked with the phrase bank |
+| `hybrid` (default) | `combined_features`, plus concept and colour scores and minus negations, picked with the phrase bank |
 
 ## Concepts
 
@@ -38,6 +39,22 @@ The `concepts` ranking gives each residual phrase the concept with the most simi
 0.72. The scores of the matched concepts are combined with a geometric mean, and `combined` breaks ties. When no
 phrase matches, the ranking is `combined`.
 
+## Colours
+
+Gemini gave every product its colours from the product name and the main photo: one to three colours, each with a
+name ("dusty pink", "burgundy", "light wash blue"), a basic family, a hex value and a share of the product
+(`ranking_data/product_colors.parquet`). Their names form the colour dictionary (`ranking_data/color_names.parquet`):
+220 colour names, each with the typical hex of the products that got it.
+
+A shade phrase gets a target colour:
+- a lightness word followed by a colour in the query ("light pink") takes the colour of that pair;
+- a bank shade phrase takes its own hex ("brudny róż" → `#C57B8C`), and a bare "dark" or "jasny" only a direction;
+- any other phrase takes the most similar colour name of the dictionary, when the cosine is at least 0.80, so "wine
+  red", "bordowy" or "ciemny granat" work without being in the bank.
+
+A candidate scores by how close its colours are to the target in CIELAB, weighted by their share: a burgundy dress
+beats a black one with a burgundy belt.
+
 ## Phrase bank
 
 Each phrase of `ranking_data/phrase_bank.jsonl` has the following labels:
@@ -52,7 +69,8 @@ and Spanish versions of the most frequent ones. Phrases found only in benchmark 
 At search time a residual phrase takes the labels of the first match:
 1. the same phrase in the bank;
 2. its nearest bank phrase, when the cosine is at least 0.86;
-3. the concept with the most similar name, when the cosine is at least 0.80.
+3. the most similar colour name, when the cosine is at least 0.80 (see Colours);
+4. the concept with the most similar name, when the cosine is at least 0.80.
 
 A phrase with no match is unknown. Two rules apply first:
 - **Shades.** A lightness word right before a colour of the query is a shade, for example "light" in "light pink
@@ -68,7 +86,8 @@ Each phrase gives one column of percentiles within the candidates:
 | --- | --- |
 | occasion, style or season with concepts | its concept scores |
 | any other phrase with concepts | its text signals and concept scores |
-| shade | its text signals, with the image counted twice |
+| shade with a target colour | the closeness of the candidate's colours to it |
+| shade without one | its text signals, with the image counted twice |
 | negated | its signal, inverted |
 | size or audience ("petite") | none: the catalog has no such information |
 | anything else (a print, a theme, an unknown phrase) | the `combined` similarity of the whole query |
@@ -80,6 +99,7 @@ image embeddings. The columns are combined with a geometric mean, which acts as 
 
 ```
 hybrid = combined_features + 0.5 × z(concept scores of each occasion, style or season phrase)
+                           + 1.0 × z(colour closeness of each shade phrase)
                            − 1.0 × z(what each negated phrase excludes)
 ```
 
@@ -98,7 +118,9 @@ what is missing.
 | --- | --- | --- |
 | `concepts.yaml` | by hand; the newest concepts come from the candidates of `concept_candidates.py` | $0.48 |
 | `concept_scores.parquet` | `score_concepts.py` (898 products) and `score_batch.py` (8,898 products, Batch API at half price); Gemini 3.5 Flash-Lite, prompt in `offline/prompts/` | $11.13 |
-| `phrase_bank.jsonl` | `phrase_bank.py` | $0.74 |
+| `phrase_bank.jsonl` | `phrase_bank.py`, with the colours of the shade phrases | $0.75 |
+| `product_colors.parquet` | `product_colors.py` (Batch API); Gemini 3.5 Flash-Lite with the product name and main photo | $2.51 |
+| `color_names.parquet` | `product_colors.py`: the colour names of the products; Gemini left out names that are not colours ("leopard print", "grey knit") | $0.01 |
 | `concept_names.parquet` | `prepare.py`: embeddings of the concept names | |
 | `esci_clothing_queries.csv` | 10,454 Amazon ESCI queries from the earlier proof of concept | |
 
@@ -113,3 +135,4 @@ To change the concepts:
 - **Shades split by the parser.** For "light pink dress" the parser returns the filter `colors: Pink` and the
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be
   cleaner.
+- **"light" alone.** Without a colour after it, "light" is read as lightweight ("light coat"), as the bank says.

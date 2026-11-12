@@ -89,7 +89,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | Path | Contents |
 | --- | --- |
 | `server.py` | HTTP server and search pipeline: parse, filter, rank |
-| `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores and phrase bank |
+| `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores, phrase bank and colour names |
 | `llm_parser.py` | `--parser llm`: the QueryParser of `query_parsing/` |
 | `core/` | the modules of the pipeline (below) |
 | `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
@@ -105,6 +105,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | `facets.py` | filter panel values per category, from `feature_extraction/schema/` |
 | `concepts.py` | concept scores in the index and the `concepts` ranking |
 | `bank.py` | the phrase bank, the `bank` ranking and the `hybrid` terms |
+| `colours.py` | product colours and the colour dictionary, for shade phrases |
 | `feature_text.py` | a product's features as a short text for its embedding |
 | `common.py` | paths, loaders, query embedder |
 | `vertex.py` | Gemini calls on Vertex AI with retries, a budget and cost accounting (offline scripts) |
