@@ -69,6 +69,21 @@ class Bank(unittest.TestCase):
         score, routes = self.ranker.rank(residual, cand, category)
         return [self.products[i]["product_id"] for i in cand[np.argsort(-score, kind="stable")]], routes
 
+    def test_prefetched_spans_save_calls_after_parsing(self):
+        query = "black dress with pockets"
+        pre = self.ranker.prefetch(query)
+        self.assertIn(common.query_text("with pockets"), pre)
+        self.assertNotIn(common.query_text("with"), pre)
+        for f in pre.values():
+            f.result()
+        calls, stats = len(self.embedder.texts), {}
+        self.ranker.adjustments(["with pockets"], self.dresses, "Dresses", query=query, prefetched=pre, stats=stats)
+        self.assertEqual(len(self.embedder.texts), calls)
+        self.assertEqual(stats, dict(phrase_embeddings_early=1, phrase_embeddings_late=0))
+        stats = {}
+        self.ranker.adjustments(["deep pockets"], self.dresses, "Dresses", query=query, prefetched=pre, stats=stats)
+        self.assertEqual(stats, dict(phrase_embeddings_early=0, phrase_embeddings_late=1))
+
     def test_bank_occasion_uses_only_concepts_in_a_scored_category(self):
         order, routes = self.order(["For a  wedding"], self.dresses, "Dresses")
         self.assertEqual(order, ["d2", "d3", "d1"])

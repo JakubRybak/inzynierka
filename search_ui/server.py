@@ -36,8 +36,11 @@ import facets  # noqa: E402
 import parser_adapter  # noqa: E402
 
 RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid")
-HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=1.0)
+# detail 0.25: chosen on the dev queries of the benchmark (0.25, 0.5 and 1.0 measured); colour 1.0 is not measured
+HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
+# the query embeddings a ranking needs, started together with the parser
+QUERY_EMBEDDINGS = dict(hybrid="combined", bank="combined", concepts="combined")
 POSITIVE = {"in", "contains_any", "contains_all", "equals_set"}
 
 
@@ -99,12 +102,13 @@ class SearchEngine:
         self.examples = pick_examples(parser.examples, parser, self.products, self.vocabulary) \
             if getattr(parser, "examples", None) else None
 
-    def rank(self, q, ranking, cand, category, timings, out):
+    def rank(self, q, ranking, cand, category, timings, out, jobs=None, prefetched=None):
         """-> (score, text similarity, image similarity, tie-breaker or None) for the candidates. combined is the
-        mean of the z-scores of both similarities; products without an image come last in the image ranking."""
+        mean of the z-scores of both similarities; products without an image come last in the image ranking.
+        jobs: the query embeddings, when started earlier; prefetched: phrase embeddings started earlier (bank)."""
         if ranking == "bank":
             t = time.perf_counter()
-            jobs = self.query_vectors(q, "combined")
+            jobs = jobs or self.query_vectors(q, "combined", timings)
             whole = {}
 
             def whole_query(routes):
@@ -115,15 +119,16 @@ class SearchEngine:
                 return whole["scores"][0]
 
             score, out["bank"] = self.bank.rank(out["parsed"]["residual"], cand, category, typicality=False, query=q,
-                                                whole_query=whole_query)
+                                                whole_query=whole_query, prefetched=prefetched, stats=timings)
             timings["bank_ms"] = ms(t)
             whole_query(out["bank"])
             combined, s_t, s_i, _ = whole["scores"]
             return score, s_t, s_i, combined
         if ranking == "hybrid":
             t = time.perf_counter()
-            jobs = self.query_vectors(q, "combined")
-            terms, out["bank"] = self.bank.adjustments(out["parsed"]["residual"], cand, category, query=q)
+            jobs = jobs or self.query_vectors(q, "combined", timings)
+            terms, out["bank"] = self.bank.adjustments(out["parsed"]["residual"], cand, category, query=q,
+                                                       prefetched=prefetched, stats=timings)
             timings["bank_ms"] = ms(t)
             out["image_weight"] = COLOUR_IMAGE_WEIGHT if asks_colour(out["parsed"]["filters"], out["bank"]) else 1.0
             parts = out["_parts"] = {}
@@ -137,7 +142,7 @@ class SearchEngine:
             return self.combine(base, terms), s_t, s_i, None
         if ranking == "concepts":
             job = self.pool.submit(self.concepts.match, out["parsed"]["residual"], category, q)
-            combined, s_t, s_i, _ = self.rank(q, "combined", cand, category, timings, out)
+            combined, s_t, s_i, _ = self.rank(q, "combined", cand, category, timings, out, jobs)
             m = out["concepts"] = job.result()
             if not m["selected"]:
                 timings["concepts_ms"] = round(m.pop("ms"), 1)
@@ -148,7 +153,8 @@ class SearchEngine:
             return score, s_t, s_i, combined
         t = time.perf_counter()
         out["_parts"] = {}
-        return self.embedding_scores(self.query_vectors(q, ranking), ranking, cand, timings, t, parts=out["_parts"])
+        return self.embedding_scores(jobs or self.query_vectors(q, ranking, timings), ranking, cand, timings, t,
+                                     parts=out["_parts"])
 
     def combine(self, base, terms, weights=None):
         """Hybrid score: the similarity of the whole query plus the concept, colour and detail terms minus the
@@ -159,20 +165,25 @@ class SearchEngine:
             total = total + w.get(kind, 0.0) * sum(terms.get(kind, []), np.zeros(len(base)))
         return total
 
-    def query_vectors(self, q, ranking):
-        """Starts the query embeddings a ranking needs; the jobs never wait on other jobs of the pool."""
-        jobs = {}
+    def query_vectors(self, q, ranking, timings=None):
+        """Starts the query embeddings a ranking needs; the jobs never wait on other jobs of the pool. timings gets
+        query_embedding_ms: from the start until the last embedding arrived."""
+        jobs, start = {}, time.perf_counter()
         if ranking in ("text", "combined", "features", "combined_features"):
             jobs["t"] = self.pool.submit(self.embedder, common.query_text(q))
         if ranking in ("image", "combined", "combined_features"):
             jobs["i"] = self.pool.submit(self.embedder, q)
+        if timings is not None:
+            for f in jobs.values():
+                f.add_done_callback(lambda _: timings.__setitem__(
+                    "query_embedding_ms", max(timings.get("query_embedding_ms", 0), ms(start))))
         return jobs
 
     def embedding_scores(self, jobs, ranking, cand, timings, t, image_weight=1.0, parts=None):
         """image_weight: how much the image counts against the description (and the features) in combined. parts:
         a dict that gets the share of the description, image and features in a combined score."""
         v = {k: common.normalize(f.result()) for k, f in jobs.items()}
-        timings["query_embedding_ms"] = ms(t)
+        timings["embedding_wait_ms"] = ms(t)
         s_t = self.T[cand] @ v["t"] if "t" in v else None
         s_i = self.I[cand] @ v["i"] if "i" in v else None
         if ranking == "text":
@@ -207,6 +218,11 @@ class SearchEngine:
             traceback.print_exc()
             return out
 
+        # the query embeddings do not depend on the parser, so they run while it parses
+        jobs = self.query_vectors(q, QUERY_EMBEDDINGS.get(ranking, ranking), timings) if q else None
+        # so do the embeddings of the spans of the query, which the residual phrases usually are
+        prefetched = self.bank.prefetch(q) if q and manual is None and self.bank is not None \
+            and ranking in ("hybrid", "bank") else None
         t = time.perf_counter()
         try:
             if manual is None:
@@ -245,7 +261,8 @@ class SearchEngine:
         s_t = s_i = None
         if len(cand) and q:
             try:
-                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out)
+                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out, jobs,
+                                                 prefetched)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)

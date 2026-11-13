@@ -360,11 +360,14 @@ function drawTimings() {
       (pi.step2_s ? row("step 2 · features", pi.step2_s * 1000, "c-parse", {sub: true, start: s1})
                   : row("step 2 · features", null, "c-parse", {sub: true, extra: "skipped, no category"}));
   }
+  if (t.query_embedding_ms !== undefined)
+    html += row("Query embedding", t.query_embedding_ms, "c-rank", {extra: "runs while the parser parses"});
   html += row("Filtering", t.filtering_ms, "c-filter", {start: p}) +
     row("Ranking", t.ranking_ms, "c-rank", {start: p + f,
-        extra: [t.query_embedding_ms !== undefined ? `incl. query embedding ${fmtMs(t.query_embedding_ms)}` : "",
+        extra: [t.embedding_wait_ms !== undefined ? `waited for the query embedding ${fmtMs(t.embedding_wait_ms)}` : "",
                 t.concepts_ms !== undefined ? `concept matching ${fmtMs(t.concepts_ms)}` : "",
-                t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : ""].filter(Boolean).join(" · ")}) +
+                t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : "",
+                t.phrase_embeddings_early || t.phrase_embeddings_late ? `phrase embeddings: ${t.phrase_embeddings_early || 0} ready from before, ${t.phrase_embeddings_late || 0} after parsing` : ""].filter(Boolean).join(" · ")}) +
     `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
   $("timings").innerHTML = html;
 }
@@ -523,7 +526,7 @@ function drawResults() {
     return;
   }
   const n = D.counts.candidates;
-  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b>`;
+  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b> <span class="meta">· ${fmtMs(D.timings.total_ms)} in total</span>`;
   if (!n) { $("grid").innerHTML = `<div class="empty">No products meet all the conditions.</div>`; return; }
   const g = $("grid");
   // the longest side of any product's bar fills half of the bar

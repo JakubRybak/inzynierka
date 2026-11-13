@@ -54,6 +54,9 @@ DETAIL_KINDS = {"detail", "other"}
 UNSATISFIABLE = re.compile(r"\b(plus[- ]?size|plus|petite|tall|big and tall|maternity|pregnan\w*|nursing|\d*x+l|xxs"
                            r"|sizes?|kids?|child(ren)?|toddlers?|boys?|girls?(?! night)|juniors?|teens?|youth|baby)\b")
 NEGATION = re.compile(r"^(with\s+no|without|not|no|non|bez|nie|sin)\b[\s-]*")
+PREFETCH = 30  # spans of the query embedded while the parser parses
+SPAN_WORDS = 3  # 92% of the residual phrases of the parser benchmark have at most 3 words, 97% are spans of the query
+LONE_WORDS = {"a", "an", "the", "with", "for", "and", "or", "in", "on", "of", "to", "z", "w", "na", "i", "do", "dla"}
 SHADE_WORDS = {"light", "dark", "pale", "bright", "deep", "soft", "dusty", "pastel", "neon", "hot", "baby", "ice",
                "muted", "vivid", "rich"}
 COLOUR = (r"(?:black|white|gr[ae]y|blue|red|green|pink|beige|brown|yellow|orange|purple|navy|burgundy|olive|khaki|"
@@ -136,7 +139,7 @@ class BankRanker:
         self.colours, self.details = colours, details
         self.rows, self.matrix = rows, common.normalize(np.asarray(vectors, np.float32))
         self.exact = {r["phrase"]: r for r in rows}
-        self.embedder, self.pool = embedder, ThreadPoolExecutor(8)
+        self.embedder, self.pool, self.prefetch_pool = embedder, ThreadPoolExecutor(8), ThreadPoolExecutor(PREFETCH)
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
         self.typical = common.normalize(T + I)
@@ -252,6 +255,7 @@ class BankRanker:
     def text_score(self, english, cand, vectors, image_weight=1.0):
         """Weighted mean of the percentiles of TF-IDF and of the similarity to the description and image embeddings;
         the image weighs image_weight against 1 for the others."""
+        self.fetch([common.query_text(english), english], vectors)
         out = []
         v = self.tfidf.transform([english])
         if v.nnz:
@@ -283,34 +287,75 @@ class BankRanker:
         p = sum(w * s for w, s in parts) / sum(w for w, _ in parts)
         return 1 - p if r["negated"] else p
 
-    def embed(self, residual, query=None):
-        """All embeddings the phrases may need, in parallel: the phrase for the bank and concept names, its English
-        version for the descriptions (query format) and for the images (plain), and a lightness word with the colour
-        after it ("light pink") for the colour names."""
+    def prefetch(self, query):
+        """Starts, before the parser returns the residual, the embeddings its phrases will probably need: every span
+        of one to SPAN_WORDS words of the query (the shortest first, at most PREFETCH; a span without its negation is
+        a shorter span) and, for a span the bank knows as a detail, its English version. -> {text: future}."""
+        words = [w.strip(".,;:!?()\"") for w in normalize_phrase(query).split()]
+        words = [w for w in words if w]
+        texts = []
+        for n in range(1, SPAN_WORDS + 1):
+            for k in range(len(words) - n + 1):
+                span = " ".join(words[k:k + n])
+                if n == 1 and span in LONE_WORDS:
+                    continue
+                row = self.exact.get(span)
+                if row is None:
+                    texts.append(common.query_text(span))
+                elif self.details is not None and row["kind"] in DETAIL_KINDS:
+                    texts.append(common.query_text(self.detail_text(span)))
+        texts = list(dict.fromkeys(texts))[:PREFETCH]
+        return {t: self.prefetch_pool.submit(self.embedder, t) for t in texts}
+
+    def embed(self, residual, query=None, text_signals=True, prefetched=None, stats=None):
+        """The embeddings the phrases need, in parallel: a phrase the bank does not know (for the bank, colour, detail
+        and concept names, with and without its negation), a lightness word with the colour after it ("light pink")
+        for the colour names, a known detail phrase for the detail names, and with text_signals the English version
+        for the descriptions (query format) and the images (plain); text_score() embeds those later when needed."""
         texts = set()
         for phrase in residual:
             text = normalize_phrase(phrase)
             shade = shade_phrase(text, query)
             if shade and self.colours is not None:
                 texts.add(common.query_text(shade))
-            if text not in self.exact:
-                texts.add(common.query_text(text))
-            english = self.english(text)
-            texts |= {common.query_text(english), english}
-            if self.details is not None:
+            row = self.exact.get(text)
+            if row is None:
+                texts |= {common.query_text(text), common.query_text(self.english(text))}
+            if self.details is not None and (row is None or row["kind"] in DETAIL_KINDS):
                 texts.add(common.query_text(self.detail_text(text)))
-        texts = sorted(texts)
-        return dict(zip(texts, (common.normalize(np.asarray(v, np.float32))
-                                for v in self.pool.map(self.embedder, texts))))
+            if text_signals:
+                english = self.english(text)
+                texts |= {common.query_text(english), english}
+        return self.fetch(texts, {}, prefetched, stats)
 
-    def adjustments(self, residual, cand, category, query=None):
+    def fetch(self, texts, vectors, prefetched=None, stats=None):
+        """Adds the embeddings of the texts missing from vectors and returns vectors: from prefetched ({text: future},
+        see prefetch) when there, the others embedded now, in parallel. stats gets phrase_embeddings_early and
+        phrase_embeddings_late: how many came from prefetched and how many were embedded now."""
+        prefetched = prefetched or {}
+        missing = sorted(set(texts) - set(vectors))
+        late = {t: self.pool.submit(self.embedder, t) for t in missing if t not in prefetched}
+        early = [t for t in missing if t in prefetched]
+        for t in early:
+            try:
+                vectors[t] = common.normalize(np.asarray(prefetched[t].result(), np.float32))
+            except Exception:
+                late[t] = self.pool.submit(self.embedder, t)
+        for t, f in late.items():
+            vectors[t] = common.normalize(np.asarray(f.result(), np.float32))
+        if stats is not None:
+            stats["phrase_embeddings_early"] = stats.get("phrase_embeddings_early", 0) + len(missing) - len(late)
+            stats["phrase_embeddings_late"] = stats.get("phrase_embeddings_late", 0) + len(late)
+        return vectors
+
+    def adjustments(self, residual, cand, category, query=None, prefetched=None, stats=None):
         """Terms the hybrid ranking adds to the similarity of the whole query, as z-scores within the candidates:
         "concept" for an occasion, style or season phrase with concepts (or a concept matched by name), "negation"
         for a negated phrase (its concept scores, details or colour, or its text signals) to be subtracted, "colour"
         for a shade with a target colour, "detail" for a phrase with detail names. Other phrases add nothing. Every
         route gets "term": the term it went to, or None. -> (terms, routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual, query)
+        vectors = self.embed(residual, query, text_signals=False, prefetched=prefetched, stats=stats)
         routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
                   for p in residual]
         terms = dict(concept=[], negation=[], colour=[], detail=[])
@@ -340,12 +385,13 @@ class BankRanker:
         shade or detail names. Any other phrase (a theme, an unknown phrase) is better judged by the whole query."""
         return bool(r["concepts"]) or r["negated"] or r["kind"] == "shade" or bool(r.get("detail"))
 
-    def rank(self, residual, cand, category, typicality=True, query=None, whole_query=None):
+    def rank(self, residual, cand, category, typicality=True, query=None, whole_query=None, prefetched=None,
+             stats=None):
         """-> (scores of the candidates, routes of the phrases). typicality=False leaves ties (and all candidates when
         no phrase is usable) to the caller. whole_query(routes) -> similarity of the whole query to the candidates:
         when given, a phrase without its own signal takes that column instead of its text signals."""
         residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual, query)
+        vectors = self.embed(residual, query, prefetched=prefetched, stats=stats)
         routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
                   for p in residual]
         whole = None

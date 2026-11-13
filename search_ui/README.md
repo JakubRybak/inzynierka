@@ -79,9 +79,13 @@ embedded before, so a rerun with nothing new makes no paid calls.
     filters.
   - The *Residual* field takes one phrase per line.
 - **Ranking**: the order of the results (see [README_ranking.md](README_ranking.md)).
-- **Stage timings**: parsing, with both parser steps, filtering and ranking.
-- **Results**: every candidate, with image, name, brand, price and the features that matched. Clicking a product
-  shows all its images, its description and its features.
+- **Stage timings**: parsing, with both parser steps, the query embedding (which runs while the parser parses),
+  filtering, ranking and the total, which also stands next to the number of results.
+- **Score**: in `hybrid`, how much each part of the score moves the ranking (see
+  [README_ranking.md](README_ranking.md)).
+- **Results**: every candidate, with image, name, brand, price, the features that matched and a bar of its score
+  parts. Clicking a product shows all its images, its description, its features, its score parts and the details
+  and colours Gemini gave it.
 - A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly.
 
 ## Files
@@ -179,8 +183,9 @@ The mock parser knows only the English values of the index, so `check_examples.p
   several lines.
 
 Typical latency per query:
-- parsing: about 0.7 s;
+- parsing: about 0.7–1.1 s;
+- query embedding: 0.3–0.6 s, during the parsing, so it adds nothing when the parser is slower;
 - filtering: a few ms;
-- query embedding: 0.3–0.5 s;
-- `concepts`, `bank` and `hybrid`: up to about 0.3 s more, because they embed the residual phrases in parallel with
-  the query.
+- residual phrases (`bank` and `hybrid`): every span of one to three words of the query is embedded during the
+  parsing too, because most residual phrases are such spans; only a phrase that is not one (about 3–8%) needs one
+  more embedding call (about 0.3–0.6 s) after the parsing. The stage timings show how many were ready.

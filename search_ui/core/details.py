@@ -51,9 +51,8 @@ class Details:
         b = int(np.argmax(sims))
         if sims[b] < MATCH:
             return None
-        # closeness to the phrase's most similar name: between names, or the phrase's own similarity raised so that
-        # the most similar name is 1
-        closeness = np.maximum(self.E @ self.E[b], sims + (1 - sims[b]))
+        # closeness to the phrase's most similar name, or to the phrase itself
+        closeness = np.maximum(self.E @ self.E[b], sims)
         chosen = np.flatnonzero((closeness >= NEIGHBOUR) | (sims >= MATCH))
         chosen = chosen[np.argsort(-closeness[chosen], kind="stable")]
         weights = 0.5 + 0.5 * np.clip((closeness[chosen] - NEIGHBOUR) / (1 - NEIGHBOUR), 0, 1)

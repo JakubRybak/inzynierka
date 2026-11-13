@@ -55,9 +55,11 @@ class RepeatedQuery(unittest.TestCase):
         self.assertIn("query_embedding_ms", b["timings"])
 
     def test_out_of_catalog_skips_ranking(self):
+        # the query embeddings start together with the parser, before it tells the query is out of the catalog
         e, embedder = engine()
         d = e.search("red shoes")
-        self.assertEqual((d["match"], d["results"], embedder.n), ("out_of_catalog", [], 0))
+        self.assertEqual((d["match"], d["results"]), ("out_of_catalog", []))
+        self.assertNotIn("ranking_ms", d["timings"])
         self.assertIn("parsing_ms", d["timings"])
         self.assertNotIn("filtering_ms", d["timings"])
 

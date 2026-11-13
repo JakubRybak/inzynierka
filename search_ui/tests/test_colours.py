@@ -46,6 +46,32 @@ class Colours(unittest.TestCase):
         self.assertEqual(int(np.argmax(light)), 0)
         self.assertEqual(int(np.argmax(dark)), 2)
 
+    def test_a_phrase_close_to_many_hues_gets_only_lightness(self):
+        e = np.eye(64, dtype=np.float32)
+        names = pd.DataFrame([("light pink", "#F2C7CB", "Pink"), ("light blue", "#A8C2E0", "Blue"),
+                              ("light yellow", "#E9CD6B", "Yellow"), ("dark grey", "#4A4A4A", "Grey"),
+                              ("charcoal", "#36454F", "Grey")], columns=["name", "hex", "family"])
+        # the light names share e[10], the greys e[11]; a phrase along a shared axis is 0.9 to each of its names
+        vectors = [0.9 * e[10 if i < 3 else 11] + np.sqrt(1 - 0.81) * e[i] for i in range(len(names))]
+        c = colours.Colours(self.ps, pd.DataFrame(columns=["product_id", "rank", "name", "family", "hex", "share"]),
+                            names, np.stack(vectors))
+        self.assertEqual(c.target("light coloured", e[10])["lightness"], "light")
+        self.assertNotIn("hex", c.target("light coloured", e[10]))
+        self.assertEqual(c.target("dark greyish", e[11])["hex"], "#4A4A4A")
+
+    def test_a_phrase_near_a_general_entry_gets_only_lightness(self):
+        e = np.eye(64, dtype=np.float32)
+        names = pd.DataFrame([("light beige", "#DCDAD5", "Beige")], columns=["name", "hex", "family"])
+        # "light colour" is 0.8 to "light beige"
+        c = colours.Colours(self.ps, pd.DataFrame(columns=["product_id", "rank", "name", "family", "hex", "share"]),
+                            names, np.stack([e[0]]), generic_vectors=np.stack([0.8 * e[0] + 0.6 * e[2], e[3]]))
+
+        def phrase(to_name, to_general):
+            x = (to_general - 0.8 * to_name) / 0.6
+            return to_name * e[0] + x * e[2] + np.sqrt(1 - to_name ** 2 - x ** 2) * e[9]
+        self.assertEqual(c.target("light coloured", phrase(0.90, 0.88))["lightness"], "light")
+        self.assertEqual(c.target("light beigeish", phrase(0.90, 0.85))["name"], "light beige")
+
     def test_target_exact_and_nearest(self):
         self.assertEqual(self.c.target("burgundy")["hex"], "#6B222A")
         self.assertEqual(self.c.target("dark  pink dress", vector(common_text("dark pink")))["name"], "dark pink")

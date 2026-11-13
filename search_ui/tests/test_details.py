@@ -38,6 +38,13 @@ class Details(unittest.TestCase):
         self.assertTrue(0.5 <= t["weights"][1] < 0.7)
         self.assertIsNone(d.target(near(0.7, 0, 3)))
 
+    def test_a_weak_best_match_does_not_pull_in_distant_names(self):
+        e = np.eye(8, dtype=np.float32)
+        far = 0.6 * e[0] + 0.3 * e[3] + np.sqrt(1 - 0.36 - 0.09) * e[5]  # 0.66 to the phrase, 0.6 to "ruffles"
+        d = details.Details(self.ps, DETAILS.iloc[:0], ["ruffles", "scalloped edges"], np.stack([e[0], far]))
+        phrase = 0.82 * e[0] + np.sqrt(1 - 0.82 ** 2) * e[3]
+        self.assertEqual(d.target(phrase)["names"], ["ruffles"])
+
     def test_score_is_extent_times_weight(self):
         d = detail_data(self.ps)
         s = d.score(dict(columns=[0, 1], weights=[1.0, 0.5]), self.dresses)

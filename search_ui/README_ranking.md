@@ -52,7 +52,12 @@ A shade phrase gets a target colour:
 - a lightness word followed by a colour in the query ("light pink") takes the colour of that pair;
 - a bank shade phrase takes its own hex ("brudny róż" → `#C57B8C`), and a bare "dark" or "jasny" only a direction;
 - any other phrase takes the most similar colour name of the dictionary, when the cosine is at least 0.80, so "wine
-  red", "bordowy" or "ciemny granat" work without being in the bank.
+  red", "bordowy" or "ciemny granat" work without being in the bank;
+- a phrase that asks only for lightness ("light coloured", "dark", "pastel") is about as close to colour names of many
+  hues, so when the names within 0.02 of the most similar one spread over the hue circle, and are not just greys, it
+  takes only the direction of their mean lightness: lighter or darker shades first. Two general entries, "light
+  colour" and "dark colour", do the same for a phrase that is at most 0.03 less similar to one of them than to the
+  nearest colour name ("light coloured", "w jasnym kolorze", "dark coloured").
 
 A candidate scores by how close its colours are to the target in CIELAB, weighted by their share: a burgundy dress
 beats a black one with a burgundy belt.
@@ -121,7 +126,7 @@ image embeddings. The columns are combined with a geometric mean, which acts as 
 ```
 hybrid = combined_features + 0.5 × z(concept scores of each occasion, style or season phrase)
                            + 1.0 × z(colour closeness of each shade phrase)
-                           + 1.0 × z(details of each detail phrase)
+                           + 0.25 × z(details of each detail phrase)
                            − 1.0 × z(what each negated phrase excludes)
 ```
 
@@ -161,8 +166,9 @@ To change the concepts:
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be
   cleaner.
 - **"light" alone.** Without a colour after it, "light" is read as lightweight ("light coat"), as the bank says.
-- **Detail weights.** The weights 1.0 of the colour and detail terms are not measured yet. A detail term is large
-  for the few candidates that have the detail, so they usually come first.
+- **Term weights.** The detail weight 0.25 was chosen among 0.25, 0.5 and 1.0 on the dev queries of the benchmark;
+  a larger one lets a wrong match ("denim" as a detail, "two buttons" as decorative buttons) push the right products
+  down. The colour weight 1.0 is not measured.
 - **Detail names.** Closeness cannot tell every neighbour from the same detail: "lace" also reaches "lace-up" and
   "lacing", "buckle" also reaches "belt", at a lower weight. The photos are small, so most details come
   from the description; the prompt says so and should change with better photos.
