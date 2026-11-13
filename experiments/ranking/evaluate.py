@@ -3,14 +3,17 @@ Ranking evaluation on the pilot: the rankings of the search UI on the benchmark 
 a pool of products to judge and the metrics.
 
     python experiments/ranking/evaluate.py run                   # data/runs.jsonl, data/pool.jsonl (embedding calls)
+    python experiments/ranking/evaluate.py run --only hybrid_details   # rerun some rankings, keep the other runs
     python experiments/ranking/evaluate.py report                # dev metrics from data/judgments.jsonl
     python experiments/ranking/evaluate.py report --split test   # only at milestones, never for tuning
 
 Queries: benchmark queries with a category, a residual and at least 2 candidates after their filters. Rankings:
 random, combined, combined_features, concepts, bank and bank_heldout (the bank without the phrases that come only
 from benchmark queries, so its phrases are as often unknown as in new queries), and the hybrid ranking for every
-pair of weights in GRID, with both banks (hybrid_c<concept>_n<negation>, hybrid_heldout_...). The pool holds every candidate of queries with at
-most COMPLETE candidates and the union of the rankings' top K otherwise. Products without a grade count as 0.
+pair of weights in GRID, with both banks (hybrid_c<concept>_n<negation>, hybrid_heldout_...), and with the weights of
+the search UI: hybrid_colour without the detail term, hybrid_details with it, hybrid_details_w<weight> with other detail
+weights. The pool holds every candidate of queries with at most COMPLETE candidates and the union of the rankings'
+top K otherwise. Products without a grade count as 0.
 """
 import argparse
 from collections import defaultdict
@@ -44,7 +47,10 @@ BASE = ("random", "combined", "combined_features", "concepts", "bank", "bank_hel
 GRID = [dict(concept=c, negation=n) for c in (0.25, 0.5, 1.0) for n in (0.5, 1.0)]
 HYBRIDS = [f"hybrid{h}_c{w['concept']:g}_n{w['negation']:g}" for h in ("", "_heldout") for w in GRID]
 COLOUR = ["hybrid_colour", "hybrid_colour_heldout"]
-RANKINGS = BASE + tuple(HYBRIDS) + tuple(COLOUR)
+DETAIL_WEIGHTS = (0.25, 0.5)
+DETAILS = ["hybrid_details", "hybrid_details_heldout"] + [f"hybrid_details{h}_w{w:g}" for h in ("", "_heldout")
+                                                          for w in DETAIL_WEIGHTS]
+RANKINGS = BASE + tuple(HYBRIDS) + tuple(COLOUR) + tuple(DETAILS)
 K = 10
 COMPLETE = 20
 RELEVANT = 2
@@ -123,8 +129,14 @@ def hybrids(engines, q):
             name = f"{prefix}_c{w['concept']:g}_n{w['negation']:g}"
             out[name] = (top_k(engine, cand, engine.combine(base, terms, w)), ms, matches)
         colour = image_base if server.asks_colour(q["filters"], routes) else base
-        name = "hybrid_colour" + prefix.removeprefix("hybrid")
-        out[name] = (top_k(engine, cand, engine.combine(colour, terms, server.HYBRID)), ms, matches)
+        suffix = prefix.removeprefix("hybrid")
+        out["hybrid_colour" + suffix] = (top_k(engine, cand, engine.combine(colour, terms, dict(server.HYBRID, detail=0))),
+                                         ms, matches)
+        out["hybrid_details" + suffix] = (top_k(engine, cand, engine.combine(colour, terms, server.HYBRID)), ms, matches)
+        for w in DETAIL_WEIGHTS:
+            out[f"hybrid_details{suffix}_w{w:g}"] = (top_k(engine, cand, engine.combine(colour, terms,
+                                                                                       dict(server.HYBRID, detail=w))),
+                                                     ms, matches)
     return out
 
 
@@ -143,25 +155,42 @@ def order(engine, q, ranking):
     return [engine.products[cand[i]]["product_id"] for i in idx[:K]], ms, [r["match"] for r in routes]
 
 
-def run(split, limit, workers):
+def run(split, limit, workers, only=None):
+    """only: rerun just these rankings and keep the other runs and the pool of earlier runs."""
     by_ranking_engine = engines()
     engine = by_ranking_engine["combined"]
     queries = load_queries(engine.products, engine.vocabulary, split)[:limit]
     DATA.mkdir(exist_ok=True)
+    keep_runs, keep_pool = [], {}
+    if only:
+        keep_runs = [r for r in map(json.loads, RUNS.open(encoding="utf-8")) if r["ranking"] not in only]
+        keep_pool = {r["id"]: r for r in map(json.loads, POOL.open(encoding="utf-8"))}
 
     def one(q):
-        return q, {r: order(by_ranking_engine[r], q, r) for r in BASE} | hybrids(by_ranking_engine, q)
+        out = {r: order(by_ranking_engine[r], q, r) for r in BASE if not only or r in only}
+        if not only or any(r.startswith("hybrid") for r in only):
+            out |= {r: v for r, v in hybrids(by_ranking_engine, q).items() if not only or r in only}
+        return q, out
 
-    with ThreadPoolExecutor(workers) as pool, RUNS.open("w", encoding="utf-8") as runs, \
-            POOL.open("w", encoding="utf-8") as pooled:
-        for q, by_ranking in pool.map(one, queries):
+    with ThreadPoolExecutor(workers) as pool:
+        results = list(pool.map(one, queries))
+    with RUNS.open("w", encoding="utf-8") as runs, POOL.open("w", encoding="utf-8") as pooled:
+        for r in keep_runs:
+            runs.write(json.dumps(r) + "\n")
+        done = set()
+        for q, by_ranking in results:
+            done.add(q["id"])
             products = set(engine.products[i]["product_id"] for i in q["candidates"]) if q["n"] <= COMPLETE else set()
+            products |= set(keep_pool.get(q["id"], {}).get("product_ids", []))
             for r, (top, ms, matches) in by_ranking.items():
                 products.update(top)
                 runs.write(json.dumps(dict(id=q["id"], ranking=r, top=top, ms=round(ms, 1), matches=matches)) + "\n")
             pooled.write(json.dumps(dict(id=q["id"], split=q["split"], query=q["query"], category=q["category"],
                                          residual=q["residual"], n=q["n"], product_ids=sorted(products, key=int)),
                                     ensure_ascii=False) + "\n")
+        for qid, r in keep_pool.items():
+            if qid not in done:
+                pooled.write(json.dumps(r, ensure_ascii=False) + "\n")
     sizes = [len(json.loads(line)["product_ids"]) for line in POOL.open(encoding="utf-8")]
     print(f"{len(queries)} queries ({split}), {len(RANKINGS)} rankings -> {RUNS}")
     print(f"pool: {sum(sizes)} (query, product) pairs, {np.mean(sizes):.1f} per query -> {POOL}")
@@ -263,6 +292,7 @@ if __name__ == "__main__":
                     help="test only at milestones, never for tuning")
     ap.add_argument("--limit", type=int, help="run: at most this many queries")
     ap.add_argument("--workers", type=int, default=4, help="run: queries in parallel")
+    ap.add_argument("--only", nargs="+", choices=RANKINGS, help="run: rerun just these rankings, keep the other runs")
     ap.add_argument("--baseline", default="combined", help="report: ranking the differences are measured against")
     a = ap.parse_args()
-    run(a.split, a.limit, a.workers) if a.command == "run" else report(a.split, a.baseline)
+    run(a.split, a.limit, a.workers, a.only) if a.command == "run" else report(a.split, a.baseline)
