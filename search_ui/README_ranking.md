@@ -1,7 +1,7 @@
 # Ranking
 
 The ranking orders the products that passed the filters; it never adds or removes any. No generative model runs at
-search time. The ranking uses four kinds of signals:
+search time. The ranking uses five kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
@@ -11,7 +11,7 @@ search time. The ranking uses four kinds of signals:
   given offline by Gemini;
 - **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
-This is the state of 2026-11-12. The default ranking is `hybrid`; the other rankings stay available in the page.
+This is the state of 2026-11-13. The default ranking is `hybrid`; the other rankings stay available in the page.
 
 ## Rankings
 
@@ -53,7 +53,7 @@ A shade phrase gets a target colour:
 - a bank shade phrase takes its own hex ("brudny róż" → `#C57B8C`), and a bare "dark" or "jasny" only a direction;
 - any other phrase takes the most similar colour name of the dictionary, when the cosine is at least 0.80, so "wine
   red", "bordowy" or "ciemny granat" work without being in the bank;
-- a phrase that asks only for lightness ("light coloured", "dark", "pastel") is about as close to colour names of many
+- a phrase that asks only for lightness ("pale", "pastel", "bright colours") is about as close to colour names of many
   hues, so when the names within 0.02 of the most similar one spread over the hue circle, and are not just greys, it
   takes only the direction of their mean lightness: lighter or darker shades first. Two general entries, "light
   colour" and "dark colour", do the same for a phrase that is at most 0.03 less similar to one of them than to the

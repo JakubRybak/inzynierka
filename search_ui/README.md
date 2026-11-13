@@ -16,7 +16,7 @@ python search_ui/prepare.py     # builds the index of the pilot in search_ui/dat
 python search_ui/server.py      # opens http://127.0.0.1:8000
 ```
 
-Run `prepare.py` again after the features, concept scores or phrase bank change. It embeds only what it has not
+Run `prepare.py` again after the features, concept scores, phrase bank, colours or details change. It embeds only what it has not
 embedded before, so a rerun with nothing new makes no paid calls.
 
 **Requirements**
@@ -93,7 +93,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | Path | Contents |
 | --- | --- |
 | `server.py` | HTTP server and search pipeline: parse, filter, rank |
-| `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores, phrase bank and colour names |
+| `prepare.py` | builds the index in `data/` from the features, metadata, images, concept scores, phrase bank, colour names and detail names |
 | `llm_parser.py` | `--parser llm`: the QueryParser of `query_parsing/` |
 | `core/` | the modules of the pipeline (below) |
 | `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
@@ -110,6 +110,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 | `concepts.py` | concept scores in the index and the `concepts` ranking |
 | `bank.py` | the phrase bank, the `bank` ranking and the `hybrid` terms |
 | `colours.py` | product colours and the colour dictionary, for shade phrases |
+| `details.py` | product details and the detail dictionary, for detail phrases |
 | `feature_text.py` | a product's features as a short text for its embedding |
 | `common.py` | paths, loaders, query embedder |
 | `vertex.py` | Gemini calls on Vertex AI with retries, a budget and cost accounting (offline scripts) |
@@ -148,13 +149,14 @@ A parser given as `module:function` can set three names in its module:
 | `GET /api/search?q=…&ranking=…` | runs the whole pipeline |
 | `GET /api/search?q=…&filters=<json>` | skips the parser; `filters` is `{"category", "filters", "residual"}` in the parser format |
 | `GET /api/info` | parser, defaults, categories, filter panel values, example queries |
-| `GET /api/product?id=…` | product details |
+| `GET /api/product?id=…` | one product, with its colours and details from Gemini |
 | `GET /images/<image_path>` | product image |
 
 A search response contains the following fields:
 - `parsed`, `tree`, `condition` and `warnings`;
-- `results`, with their scores and matched features;
+- `results`, with their scores, matched features, score parts (`parts`) and the details the query asked for;
 - `concepts` or `bank`, which say how each phrase was read;
+- `score_parts` and `weights`: how much each part of the score moves the ranking, and the `hybrid` weights;
 - `timings`, in ms per stage;
 - for the LLM parser, `parser_info`, with step latencies and estimated cost.
 
