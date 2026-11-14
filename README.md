@@ -2,7 +2,7 @@
 
 The `extraction_clean` branch contains catalog preparation and product feature
 extraction. The product taxonomy is defined in
-[categories_and_features.md](categories_and_features.md).
+[categories_and_features.md](docs/catalog/categories_and_features.md).
 
 ## Workflow
 

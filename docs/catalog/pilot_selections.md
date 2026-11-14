@@ -1,17 +1,6 @@
-# Product selections
+# Pilot 9922 product selection
 
-Each CSV lists the products processed by a run, one row per product, with the columns
-`product_id`, `split`, `section` and `category`. The `selection` field in the extraction
-config points to one of these files.
-
-| File | Products | Purpose |
-| --- | ---: | --- |
-| `pilot_900.csv` | 900 | Original pilot: 300 products from the train split in each of T-shirts, Dresses, and Tank tops & Camisoles. |
-| `pilot_9922.csv` | 9,922 | Pilot for all 22 categories, used to develop query parsing, filtering and ranking. |
-
-## pilot_9922.csv
-
-The selection keeps fewer than 10,000 products and follows these rules:
+The [selection CSV](../../data/processed/fashiongen/pilot_9922/selection.csv) lists one row per product. The selection keeps fewer than 10,000 products and follows these rules:
 
 - Only the train split is used. Products that keyword extraction marks as `excluded`
   are not eligible, so the selection matches the searchable catalog.
@@ -22,7 +11,7 @@ The selection keeps fewer than 10,000 products and follows these rules:
 - Within a category, the products are stratified by gender and price tercile with
   proportional allocation. Products are drawn in the order of the SHA-256 hash of
   `pilot-2026-11|<product_id>`, so the selection is deterministic.
-- All 900 products of `pilot_900.csv` are included. They follow the catalog distribution
+- All 900 products from the original pilot are included. They follow the catalog distribution
   of gender, price and season, so they do not bias the selection. In Tank tops & Camisoles,
   9 products were added to the original 300 to restore the proportions.
 - 228 reference products are part of the selection. The pipeline reuses their manual
@@ -58,7 +47,7 @@ Eligible counts are train products that are not excluded.
 
 ### Running
 
-Set `selection: feature_extraction/config/samples/pilot_9922.csv` and list all 22
+Set `selection: data/processed/fashiongen/pilot_9922/selection.csv` and list all 22
 categories in `categories`. Keep `splits: [train, validation]`: the selection contains
 only train products, but six Sweaters references come from the validation split and
 the reference bank loads every reference of the selected categories.

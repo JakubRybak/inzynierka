@@ -1,12 +1,10 @@
 # Product feature extraction
 
 Keyword rules and Gemini complete the fixed product taxonomy. Keyword rules, LLM
-definitions and output validation cover all 22 categories. `config/extraction.yaml`
-selects the active scope. Its default selection still covers the original 900 products
-in T-shirts, Dresses, and Tank tops & Camisoles. The reference file contains 440
-reviewed products: 20 per category. The default category filter uses the original 60
-references. Running additional categories requires a matching product selection
-and embedding coverage for their targets and references.
+definitions and output validation cover all 22 categories. `extraction.yaml`
+sets the dataset and categories. The default categories are T-shirts, Dresses, and
+Tank tops & Camisoles. The reference file contains 20 reviewed products per category.
+Select the products explicitly before running extraction or building embeddings.
 
 ## Layout
 
@@ -22,7 +20,7 @@ and embedding coverage for their targets and references.
 - `artifacts/` holds local generated datasets, embedding caches, requests and run logs.
 - `tests/` contains offline regression tests.
 
-The source taxonomy stays at `categories_and_features.md` in the repository root.
+The source taxonomy is documented in [categories_and_features.md](../docs/catalog/categories_and_features.md).
 Processed products and images stay at `data/processed/fashiongen/`.
 
 ## Category-specific prompt definitions
@@ -129,7 +127,7 @@ Create the environment only on first setup; activate the existing environment
 on later runs.
 
 For paid calls, install the Google Cloud CLI and configure Application Default
-Credentials for the project selected in `config/extraction.yaml`:
+Credentials for the project selected in `extraction.yaml`:
 
 ```sh
 gcloud auth application-default login
@@ -139,13 +137,13 @@ gcloud auth application-default set-quota-project YOUR_PROJECT_ID
 The account needs permission to call Vertex AI in that project. Replace
 `YOUR_PROJECT_ID` with the configured project ID.
 
-Edit `feature_extraction/config/extraction.yaml` to select the dataset, category
+Edit `feature_extraction/extraction.yaml` to select the dataset, category
 scope, sample, references, embeddings, model, Vertex project, generation settings,
 timeouts, retry policy and estimated USD budgets. Relative paths resolve against
 the repository root. A custom config file can be passed with `--config`.
 
-The default selection preserves the original 900 product IDs. Set `selection` to
-null or pass `--all-products` to process every product in the configured categories.
+Set `selection` in the configuration or pass `--selection CSV` to choose a sample.
+Pass `--all-products` to process every product in the configured categories.
 The loader supports train and validation manifests and rejects duplicate IDs.
 Current extraction outputs combine selected splits in a single dataset and do
 not retain a split column. The reference bank is shared across selected splits.
@@ -173,16 +171,16 @@ This option keeps the shared embedding cache and writes a separate export under
 the extraction configuration has been saved, the run reuses its export and
 existing inference state.
 
-Keyword-only extraction for the default sample:
+Keyword-only extraction for an explicit sample:
 
 ```sh
-python -m feature_extraction.run --stage keywords --run-name keywords_900
+python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --stage keywords --run-name keywords_sample
 ```
 
 Prepare prompts for all selected products with existing embeddings:
 
 ```sh
-python -m feature_extraction.run --run-name extraction_900
+python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name extraction_sample
 ```
 
 This mode makes no API calls. It saves keyword results, prompt previews and the
@@ -194,7 +192,7 @@ after each valid result and may select different examples later.
 Execute the same run only after reviewing its configuration and budget:
 
 ```sh
-python -m feature_extraction.run --run-name extraction_900 --execute
+python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name extraction_sample --execute
 ```
 
 The `--stage llm` command also computes keyword inputs before completing missing
@@ -204,13 +202,13 @@ list for a new run. Use the same inputs and limit when resuming a run.
 Inspect the embedding cache offline:
 
 ```sh
-python -m feature_extraction.embeddings.build
+python -m feature_extraction.embeddings.build --selection PATH_TO_SELECTION.csv
 ```
 
 Compute missing vectors with explicit paid execution:
 
 ```sh
-python -m feature_extraction.embeddings.build --execute
+python -m feature_extraction.embeddings.build --selection PATH_TO_SELECTION.csv --execute
 ```
 
 Embeddings use the first source image (`id_gridfs_1`) and, separately, the verbatim
@@ -274,11 +272,11 @@ bucket. The caller must be able to upload and read objects, and the Vertex AI
 service agent must be able to read batch inputs and write outputs there.
 
 ```sh
-# Online, with the default product selection
-python -m feature_extraction.run --run-name online-pilot --mode online --execute
+# Online, with an explicit product selection
+python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name online-pilot --mode online --execute
 
 # One Vertex job for a small sample
-python -m feature_extraction.run --run-name batch-smoke --mode batch --limit 5 --execute
+python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name batch-smoke --mode batch --limit 5 --execute
 
 # Entire catalog in successive parts, after configuring embeddings and budget
 python -m feature_extraction.run --run-name batch-catalog --mode batch --batch-size 200 --all-products --all-categories --execute
@@ -288,8 +286,8 @@ Omit `--execute` to prepare the first outstanding part locally, without
 uploading data or calling Vertex. See `summary.json` for the planned request
 count and reservation. The full catalog requires image and text embeddings for all selected
 products and manual references. To prepare embeddings for the same scope, use a
-config with `selection: null` and all required categories with
-`python -m feature_extraction.embeddings.build --config PATH`.
+config with all required categories and explicitly pass `--all-products` with
+`python -m feature_extraction.embeddings.build --config PATH --all-products`.
 
 Without `--batch-size`, the selected requests go into one job. With
 `--batch-size N`, the limit applies to products requiring Gemini after keyword
