@@ -103,14 +103,16 @@ def run_benchmark(
     if output_path.exists() and not fresh:
         loaded = json.loads(output_path.read_text(encoding="utf-8"))
         loaded_queries = loaded.get("queries", [])
-        if [q["query"] for q in loaded_queries] == [r["query"] for r in sample_rows]:
+        saved_cases = [(q["query"], q["expected"]) for q in loaded_queries]
+        current_cases = [(r["query"], r["expected"]) for r in sample_rows]
+        if saved_cases == current_cases:
             state = loaded
             state["dataset"] = dataset_rel
             state["selected_configs"] = selected_configs
             print(f"Resuming from existing checkpoint: {output_path}", flush=True)
         else:
             print(
-                f"Existing file {output_path} has a different query set; initializing new state.",
+                f"Existing file {output_path} has a different queries or expected outputs; initializing new state.",
                 flush=True,
             )
 

@@ -33,7 +33,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Black", "White"]`
+- `colors equals_set ["Black", "White"]`
 - `gender in ["Men"]`
 
 **Residual** — `button down`
@@ -44,7 +44,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — `button down`
@@ -55,7 +55,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `oxford`
 
@@ -65,7 +65,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `gender in ["Women"]`
 
 **Residual** — `burgundy` · `dress`
@@ -97,7 +97,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `gender in ["Men"]`
 
 **Residual** — `dark green` · `dress`
@@ -159,7 +159,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `lilac` · `dress`
 
@@ -180,7 +180,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 - `gender in ["Women"]`
 
 **Residual** — `mauve` · `flannel`
@@ -213,7 +213,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `ivory` · `dress`
 
@@ -224,7 +224,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `sleeve_length in ["Long Sleeve"]`
 
 **Residual** — `button down`
@@ -281,7 +281,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_all ["Blue", "Grey"]`
+- `colors equals_set ["Blue", "Grey"]`
 
 **Residual** — `navy` · `oxford`
 
@@ -302,7 +302,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "Black"]`
+- `colors equals_set ["Red", "Black"]`
 - `pattern in ["Plaid"]`
 - `gender in ["Women"]`
 
@@ -369,7 +369,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `collar_type in ["Collarless"]`
 - `sleeve_length in ["Three-Quarter Sleeve"]`
 
@@ -426,7 +426,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "Orange"]`
+- `colors equals_any_set ["Black", "Orange"]`
 - `colors contains_none ["Blue", "Grey"]`
 
 **Residual** — `dress`
@@ -437,7 +437,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Pink", "Green"]`
+- `colors equals_set ["Pink", "Green"]`
 - `colors contains_none ["White"]`
 
 **Residual** — brak
@@ -469,7 +469,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 - `pattern in ["Polka Dot"]`
 
 **Residual** — `for a retro party`
@@ -480,7 +480,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `pattern in ["Camo"]`
 
 **Residual** — brak
@@ -491,7 +491,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 - `pattern in ["Animal Print"]`
 
 **Residual** — `leopard print`
@@ -502,7 +502,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `main_composition contains_any ["Linen"]`
 
 **Residual** — `turquoise` · `for a summer wedding`
@@ -590,7 +590,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 - `brand in ["Zara", "Mango"]`
 - `price around 60`
 
@@ -602,7 +602,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `brand not_in ["Zara", "H&M"]`
 
 **Residual** — `navy` · `dress`
@@ -613,7 +613,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `price gte 30`
 
 **Residual** — `dress` · `for work`
@@ -648,7 +648,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `sleeve_length in ["Long Sleeve"]`
 - `main_composition contains_none ["Polyester"]`
 

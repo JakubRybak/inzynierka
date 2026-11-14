@@ -29,6 +29,8 @@ def canonicalize_clause(clause: Dict[str, Any]) -> Tuple[Any, ...]:
     # A 1-element contains_all is semantically identical to a 1-element contains_any.
     if op == "contains_all" and len(dedup) == 1:
         op = "contains_any"
+    if feat == "colors" and op == "equals_any_set" and len(dedup) == 1:
+        op = "equals_set"
     return (feat, op, dedup)
 
 

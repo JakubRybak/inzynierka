@@ -75,7 +75,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — brak
 
@@ -97,7 +97,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `gender in ["Women"]`
 
 **Residual** — `carolina blue`
@@ -108,7 +108,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `navy`
 
@@ -130,7 +130,7 @@
 
 - `gender in ["Men"]`
 - `brand in ["Lacoste"]`
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — brak
 
@@ -140,7 +140,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -246,7 +246,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `boys` · `dri fit`
 
@@ -278,7 +278,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `brand in ["Under Armour"]`
 
 **Residual** — `forest green`
@@ -299,7 +299,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 
 **Residual** — `6x`
 
@@ -359,7 +359,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "White"]`
+- `colors equals_set ["Red", "White"]`
 
 **Residual** — `maroon`
 
@@ -414,7 +414,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 
 **Residual** — brak
 
@@ -426,7 +426,7 @@
 
 - `gender in ["Men"]`
 - `main_composition contains_any ["Polyester"]`
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 
 **Residual** — brak
 
@@ -592,7 +592,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — `girl`
 
@@ -602,7 +602,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `gender in ["Men"]`
 
 **Residual** — brak
@@ -644,7 +644,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 
 **Residual** — `toddler` · `hunter green`
 
@@ -684,7 +684,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `sleeve_length in ["Long Sleeve"]`
 - `gender in ["Men"]`
 
@@ -696,7 +696,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Men"]`
 
 **Residual** — `bulk`
@@ -774,7 +774,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -798,7 +798,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `navy` · `with two buttons`
 
@@ -828,7 +828,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Black", "White"]`
+- `colors equals_set ["Black", "White"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — brak
@@ -839,7 +839,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue", "Beige"]`
+- `colors equals_any_set ["Blue", "Beige"]`
 - `colors contains_none ["Green"]`
 
 **Residual** — `navy`
@@ -949,7 +949,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `price lte 30`
 
 **Residual** — brak
@@ -992,7 +992,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 
 **Residual** — `for a retro look`
 
@@ -1031,7 +1031,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue", "White"]`
+- `colors equals_any_set ["Blue", "White"]`
 - `price lte 120`
 
 **Residual** — `granatowe`
@@ -1053,6 +1053,6 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `na golfa`

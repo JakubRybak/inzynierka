@@ -82,7 +82,7 @@ class _FakeLLMClient:
         return LLMCallResult(
             parsed={
                 "filters": [
-                    {"feature": "colors", "operator": "contains_any", "values": ["Black"]},
+                    {"feature": "colors", "operator": "equals_set", "values": ["Black"]},
                     {"feature": "brand", "operator": "in", "values": ["Nike"]},
                 ],
                 "residual": ["for gym"],
@@ -185,7 +185,7 @@ class QueryParsingOfflineTests(unittest.TestCase):
         valid_full = validate_response(
             {
                 "filters": [
-                    {"feature": "colors", "operator": "contains_all", "values": ["Black"]},
+                    {"feature": "colors", "operator": "equals_any_set", "values": ["Black"]},
                     {"feature": "brand", "operator": "in", "values": ["Nike"]},
                     {"feature": "price", "operator": "around", "value": 99.5},
                 ],
@@ -194,7 +194,7 @@ class QueryParsingOfflineTests(unittest.TestCase):
             "T-shirts",
             self.catalog,
         )
-        self.assertEqual(valid_full["filters"][0]["operator"], "contains_any")
+        self.assertEqual(valid_full["filters"][0]["operator"], "equals_set")
 
     def test_jev_payloads_and_answer_conversion(self) -> None:
         cp = category_payload("black tee")
@@ -210,9 +210,15 @@ class QueryParsingOfflineTests(unittest.TestCase):
         self.assertEqual(filters, [{"feature": "colors", "operator": "equals_set", "values": ["Black"]}])
 
     def test_evaluation_equivalence_and_metrics(self) -> None:
-        c1 = canonicalize_clause({"feature": "colors", "operator": "contains_all", "values": ["Black"]})
-        c2 = canonicalize_clause({"feature": "colors", "operator": "contains_any", "values": ["Black"]})
+        c1 = canonicalize_clause({"feature": "colors", "operator": "equals_any_set", "values": ["Black"]})
+        c2 = canonicalize_clause({"feature": "colors", "operator": "equals_set", "values": ["Black"]})
         self.assertEqual(c1, c2)
+
+        colors = {"feature": "colors", "values": ["Black", "White"]}
+        together = canonicalize_clause(dict(colors, operator="equals_set"))
+        alternatives = canonicalize_clause(dict(colors, operator="equals_any_set"))
+        self.assertNotEqual(together, alternatives)
+        self.assertNotEqual(alternatives, canonicalize_clause(dict(colors, operator="contains_any")))
 
         b1 = canonicalize_filters([{"feature": "brand", "operator": "in", "values": ["adidas"]}])
         b2 = canonicalize_filters([{"feature": "brand", "operator": "in", "values": ["Adidas"]}])
@@ -262,7 +268,7 @@ class QueryParsingOfflineTests(unittest.TestCase):
         self.assertEqual(
             res_split["filters"],
             [
-                {"feature": "colors", "operator": "contains_any", "values": ["Black"]},
+                {"feature": "colors", "operator": "equals_set", "values": ["Black"]},
                 {"feature": "brand", "operator": "in", "values": ["Nike"]},
             ],
         )

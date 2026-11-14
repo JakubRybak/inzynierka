@@ -14,7 +14,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `acdc`
 
@@ -370,7 +370,7 @@
 **Filtry**
 
 - `fit in ["Slim"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `neckline in ["Crewneck"]`
 - `hood in ["Without Hood"]`
 
@@ -403,7 +403,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "Black"]`
+- `colors equals_set ["Red", "Black"]`
 - `pattern in ["Striped"]`
 
 **Residual** — brak
@@ -414,7 +414,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Blue"]`
+- `colors equals_any_set ["White", "Blue"]`
 - `colors contains_none ["Yellow"]`
 
 **Residual** — brak
@@ -490,7 +490,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `hood in ["Without Hood"]`
 - `price around 120`
 

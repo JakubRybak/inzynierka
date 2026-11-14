@@ -38,7 +38,7 @@ few_shots:
       values:
       - Sleeveless
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: strap_width
@@ -81,7 +81,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_any_set
       values:
       - Beige
       - White
@@ -95,7 +95,7 @@ few_shots:
       - Skims
     residual:
     - not turquoise
-  note: Color alternatives use contains_any; excluded shade stays in residual.
+  note: Color alternatives use equals_any_set; excluded shade stays in residual.
 - query: 100% cotton scoop-neck bodysuit with wide straps between 80 and 150 PLN
   output:
     filters:

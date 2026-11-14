@@ -14,7 +14,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `main_composition contains_any ["Wool"]`
 - `coat_style in ["Standard"]`
 - `length in ["Long"]`
@@ -27,7 +27,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `coat_style in ["Standard"]`
 - `gender in ["Women"]`
 
@@ -39,7 +39,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `length in ["Long"]`
 
 **Residual** — `formal`
@@ -61,7 +61,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `gender in ["Women"]`
 
 **Residual** — `azul marino` · `invierno` · `rebajas`
@@ -121,7 +121,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `coat_style in ["Parka"]`
 - `hood in ["With Hood"]`
 - `closure_type contains_all ["Zip", "Press-Stud"]`
@@ -262,7 +262,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Orange"]`
+- `colors equals_set ["Orange"]`
 - `pattern in ["Plaid"]`
 
 **Residual** — `winter`
@@ -455,7 +455,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "White"]`
+- `colors equals_any_set ["Black", "White"]`
 - `colors contains_none ["Red", "Pink"]`
 
 **Residual** — brak
@@ -466,7 +466,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Yellow", "Black"]`
+- `colors equals_set ["Yellow", "Black"]`
 - `colors contains_none ["Blue"]`
 
 **Residual** — brak
@@ -497,7 +497,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `price around 89.99`
 
 **Residual** — `turquoise`
@@ -552,7 +552,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `brand not_in ["Zara", "H&M"]`
 
 **Residual** — `navy`
@@ -563,7 +563,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 - `price gte 35`
 
 **Residual** — `for work`
@@ -574,7 +574,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `price lte 85`
 
 **Residual** — `with roomy pockets`
@@ -587,7 +587,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 
 **Residual** — `for a music festival`
 
@@ -597,7 +597,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `pattern in ["Polka Dot"]`
 
 **Residual** — brak
@@ -609,7 +609,7 @@
 **Filtry**
 
 - `pattern in ["Solid"]`
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 
 **Residual** — `for travel`
 
@@ -619,6 +619,6 @@
 
 **Filtry**
 
-- `colors contains_any ["Orange"]`
+- `colors equals_set ["Orange"]`
 
 **Residual** — `that packs easily` · `for a weekend trip`

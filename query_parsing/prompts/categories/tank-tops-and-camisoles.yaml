@@ -6,7 +6,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     residual:
@@ -71,7 +71,7 @@ few_shots:
       values:
       - Strapless
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: main_composition
@@ -88,7 +88,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Pink
       - White
@@ -111,4 +111,4 @@ few_shots:
       operator: lte
       value: 90
     residual: []
-  note: '''pink and white'' uses contains_all.'
+  note: '''pink and white'' uses equals_set.'

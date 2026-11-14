@@ -47,7 +47,7 @@ few_shots:
       values:
       - Skinny
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Black
     - feature: main_composition
@@ -126,7 +126,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_any_set
       values:
       - Blue
       - Grey

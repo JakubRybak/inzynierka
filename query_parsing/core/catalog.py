@@ -21,6 +21,7 @@ LLM_PROMPTS_DIR = ROOT / "feature_extraction" / "llm" / "prompts"
 EXCLUDED_FILTER_VALUES = {"Other", "Not Applicable", "Unknown"}
 SINGLE_OPERATORS = ["in", "not_in"]
 MULTI_OPERATORS = ["contains_any", "contains_all", "contains_none", "equals_set"]
+COLOR_OPERATORS = ["equals_set", "equals_any_set", "contains_none"]
 PRICE_OPERATORS = ["lte", "gte", "around"]
 
 CATEGORY_CRITERIA: Dict[str, str] = dict(load_category_classification_prompt()["categories"])
@@ -53,6 +54,8 @@ def load_query_catalog() -> Dict[str, Dict[str, Dict[str, Any]]]:
             values = [v for v in allowed_values(spec) if v not in EXCLUDED_FILTER_VALUES]
             multi = spec["type"] in ("multi_choice", "composition")
             operators = MULTI_OPERATORS if multi else SINGLE_OPERATORS
+            if feature == "colors":
+                operators = COLOR_OPERATORS
 
             if feature in common_prompts:
                 prompt_def = common_prompts[feature]
@@ -206,6 +209,8 @@ def validate_response(
             ):
                 raise ValueError(f"Invalid categorical filter for {category}: {clause!r}")
             dedup = list(dict.fromkeys(vals))
+            if op == "equals_any_set" and len(dedup) == 1:
+                op = "equals_set"
             if op == "contains_all" and len(dedup) == 1:
                 op = "contains_any"
             cleaned_filters.append({"feature": feat, "operator": op, "values": dedup})

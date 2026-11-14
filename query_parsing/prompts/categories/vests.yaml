@@ -10,7 +10,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     - feature: brand
@@ -96,7 +96,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - Green
@@ -119,7 +119,7 @@ few_shots:
       - Silk
     residual:
     - olive
-  note: '''olive and black'' -> contains_all [''Black'', ''Green''] + residual [''olive''].'
+  note: '''olive and black'' -> equals_set [''Black'', ''Green''] + residual [''olive''].'
 - query: cropped green fleece-lined vest, not emerald, not oversized
   output:
     filters:
@@ -128,7 +128,7 @@ few_shots:
       values:
       - Cropped
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: insulation

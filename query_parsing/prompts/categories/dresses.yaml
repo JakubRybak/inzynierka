@@ -10,7 +10,7 @@ few_shots:
       values:
       - Women
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: main_composition
@@ -43,7 +43,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - White
@@ -125,7 +125,7 @@ few_shots:
       values:
       - Mini
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: dress_silhouette
@@ -156,7 +156,7 @@ few_shots:
       values:
       - Shirt Dress
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     residual:

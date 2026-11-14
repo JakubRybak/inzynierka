@@ -13,7 +13,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     - feature: brand
@@ -81,7 +81,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Green
       - White
@@ -90,7 +90,7 @@ few_shots:
       value: 80
     residual:
     - not turquoise
-  note: Two joined colors use contains_all; excluded shade stays in residual.
+  note: Two joined colors use equals_set; excluded shade stays in residual.
 - query: all-white piqué polo by Ralph Lauren for work
   output:
     filters:

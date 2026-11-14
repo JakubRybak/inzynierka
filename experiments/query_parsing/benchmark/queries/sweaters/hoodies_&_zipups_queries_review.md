@@ -77,7 +77,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `hood in ["With Hood"]`
 - `gender in ["Women"]`
 
@@ -139,7 +139,7 @@
 - `hood in ["With Hood"]`
 - `gender in ["Women"]`
 - `closure_type in ["Zip"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `cute` · `aesthetic`
 
@@ -170,7 +170,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `pattern in ["Plaid"]`
 - `hood in ["With Hood"]`
 
@@ -184,7 +184,7 @@
 
 - `closure_type in ["Zip"]`
 - `hood in ["With Hood"]`
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 
 **Residual** — `harry potter`
 
@@ -195,7 +195,7 @@
 **Filtry**
 
 - `hood in ["With Hood"]`
-- `colors contains_all ["White", "Black"]`
+- `colors equals_set ["White", "Black"]`
 
 **Residual** — brak
 
@@ -226,7 +226,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `hood in ["With Hood"]`
 
 **Residual** — `kids` · `girl`
@@ -248,7 +248,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `length in ["Cropped"]`
 - `hood in ["With Hood"]`
 
@@ -263,7 +263,7 @@
 - `brand in ["Nike"]`
 - `hood in ["With Hood"]`
 - `gender in ["Men"]`
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — brak
 
@@ -334,7 +334,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `brand in ["Champion"]`
 - `hood in ["With Hood"]`
 
@@ -478,7 +478,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Blue"]`
+- `colors equals_any_set ["White", "Blue"]`
 - `hood in ["With Hood"]`
 - `colors contains_none ["Red"]`
 
@@ -537,7 +537,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `hood in ["With Hood"]`
 - `price gte 30`
 - `price lte 65`
@@ -560,7 +560,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `hood in ["With Hood"]`
 - `closure_type in ["Zip"]`
 - `price lte 200`

@@ -17,7 +17,7 @@ few_shots:
       values:
       - Nike
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     - feature: main_composition
@@ -84,7 +84,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - White
@@ -98,7 +98,7 @@ few_shots:
       - Cropped
     residual:
     - not emerald
-  note: Color conjunction uses contains_all (ALL); excluded shade 'not emerald' stays only in residual.
+  note: Color conjunction uses equals_set; excluded shade 'not emerald' stays only in residual.
 - query: 2x men's burgundy turtleneck T-shirt by Adidas up to 140 PLN
   output:
     filters:
@@ -107,7 +107,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: neckline

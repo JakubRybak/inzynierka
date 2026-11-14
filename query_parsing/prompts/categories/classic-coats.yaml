@@ -14,7 +14,7 @@ few_shots:
       values:
       - Women
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Brown
     - feature: closure_type
@@ -52,7 +52,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: hood
@@ -117,7 +117,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - White
@@ -142,12 +142,12 @@ few_shots:
       values:
       - Oversized
     residual: []
-  note: '''black and white'' -> contains_all; ''with belt'' -> closure_type contains_any [''Belted''].'
+  note: '''black and white'' -> equals_set; ''with belt'' -> closure_type contains_any [''Belted''].'
 - query: green shearling-lined short coat with stand collar, without polyester, not emerald
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: insulation
