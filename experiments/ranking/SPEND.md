@@ -1,6 +1,6 @@
 # Spending ledger of the ranking task
 
-`BUDGET_USD = 20` for the whole task, all paid APIs together. Amounts in USD. **Spent: 4.80.**
+`BUDGET_USD = 20` for the whole task, all paid APIs together. Amounts in USD. **Spent: 5.32.**
 
 - The judge log (`data/judgments.jsonl`) held $2.7829 from earlier work when the task started; that is not part of
   this budget.
@@ -26,5 +26,10 @@
 | 2026-11-14 | Embeddings: 25 sentences that changed when HTML tags were dropped from the descriptions | 0.001 | 0.000 | 4.791 |
 | 2026-11-14 | Judge: the last new top-10 products after the refit (7 pairs, 7 calls) | ≤ 0.04 | 0.007 | 4.798 |
 | 2026-11-14 | Second judge: 6 new pairs | 0.001 | 0.001 | 4.799 |
+| 2026-11-14 | Jev 1.14 through OpenRouter: second stage for 313 queries, two text variants, and 70 queries of the held-out bank (`rerank.py`, 696 calls) | 0.27 | 0.237 | 5.036 |
+| 2026-11-14 | Judge: new top-10 products of the two-stage rankings (373 pairs, 188 calls) | ≤ 1.04 | 0.227 | 5.263 |
+| 2026-11-14 | Second judge: 650 new pairs of the two-stage rankings (235 calls) | 0.10 | 0.053 | 5.316 |
 
-By service: Gemini judge $2.39 (4,874 new graded pairs), LLM reranker $1.98, second judge $0.35, embeddings $0.09.
+OpenRouter in total: $0.63 (second judge $0.40, Jev $0.24). The rest is Google Cloud.
+
+By service before the last three rows: Gemini judge $2.39 (4,874 new graded pairs), LLM reranker $1.98, second judge $0.35, embeddings $0.09.
