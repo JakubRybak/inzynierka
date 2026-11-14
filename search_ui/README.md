@@ -7,6 +7,24 @@ filters by hand, switches between rankings and shows how long each stage took.
 
 How the results are ordered, and where the ranking data comes from: [README_ranking.md](README_ranking.md).
 
+Select **sentences + Jev** or **hybrid + Jev** in the Ranking menu to regrade the first 30 results of the chosen
+base ranking with Jev 1.14. The default remains `sentences`. Both options use `OPENROUTER_API_KEY` from the environment or the
+repository `.env`, including with the mock or benchmark parser. One extra call costs about $0.0003 and took
+about 0.32 s in the offline experiment. The page shows its time, reported cost and product grades. If the call
+fails, the base ranking's order is shown with a warning. With fewer than two candidates or an empty query, no Jev call
+is made. Repeated searches and filter changes with a nonempty query make a fresh call when this option is selected.
+You can also open `/?q=dress+for+a+wedding&ranking=sentences_jev` or use `ranking=hybrid_jev`.
+
+Select **hybrid + Jev vision** (`ranking=hybrid_jev_vision`) to include one main product photo alongside the
+text for each of the top 30 hybrid results. It uses the same API key. Photos are read from the dataset path in
+`data/meta.json`, preferring `pilot_9922/images_enhanced/<id>/<id>_id_gridfs_1.webp`. These enhanced photos are
+sent at their full 1024 × 1024 resolution, converted to JPEG. If an enhanced photo is missing or unreadable,
+an indexed original photo is used. Images above 1024 px are reduced; smaller images keep their resolution
+except for Jev's 280 px minimum. Proportions are preserved with white padding. The page reports how many photos
+were used, and marks each graded product as `text + photo` or `text only`. Missing individual photos fall back
+to text; if none can be read, the hybrid order is kept without a Jev call. Vision cost, latency and quality have
+not been benchmarked; the text-only figures above do not apply to it. Actual cost and time appear after a search.
+
 ## Quick start
 
 From the repository root:
@@ -23,7 +41,7 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
 **Requirements**
 
 - Python packages: `pandas`, `numpy`, `pyarrow`, `pyyaml`, `google-genai`, `google-auth`, `requests`, `httpx`,
-  `scikit-learn`, `scipy`.
+  `scikit-learn`, `scipy`; `Pillow` for Jev vision.
 - Vertex AI access, because every search embeds the query:
   ```sh
   gcloud auth application-default login
@@ -51,6 +69,7 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
    | `not_in`, `contains_none` | the product has none of the values |
    | `contains_all` | the product has all the values |
    | `equals_set` | the product has exactly these values |
+   | `equals_any_set` | the product has exactly one of the listed colors and no other colors |
    | `lt`, `lte`, `gt`, `gte`, `eq` | price (`msrpUSD`) compared with `value` |
    | `around` | price within ±20% of `value` |
 
@@ -68,6 +87,10 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
 
 ## Using the page
 
+The page uses the layout from `app-ranking-demo`: a light theme, four product columns and portrait photo
+frames. Main photos use the enhanced 1024 px WebP from `pilot_9922/images_enhanced/` in the dataset when
+available; other views fall back to their original PNGs. All sentence and Jev ranking options remain available.
+
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
   category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
 - **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
@@ -75,7 +98,7 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
   shows how every phrase was read.
 - **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
   - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
-    values.
+    values. Colors can require exactly the selected set or exactly one of the selected colors.
   - Price takes `<`, `<=`, `>`, `>=` or `=`; add two conditions for a range. Currency is not converted.
   - Every change searches again with these filters, without the parser. *Reset to parser* restores the parsed
     filters.
@@ -187,6 +210,9 @@ The mock parser knows only the English values of the index, so `check_examples.p
   of date; run `prepare.py`.
 - **`Missing OPENROUTER_API_KEY` or `Jev HTTP 401`.** `.env` at the repository root is missing a key, or a key spans
   several lines.
+- **`No readable product photos for Jev vision`.** Check that `dataset` in `search_ui/data/meta.json` points to
+  the local dataset containing the indexed `images/train/...` and `images/validation/...` files. The vision
+  option also needs `Pillow` (`python -m pip install Pillow`).
 
 Typical latency per query:
 - parsing: about 0.7–1.1 s;

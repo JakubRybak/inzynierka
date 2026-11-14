@@ -2,17 +2,12 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Semantic search</title>
 <style>
-:root { --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
+:root { color-scheme:light; --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
         --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2;
         --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8;
         --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490;
         --k-con:#6d28d9; --k-con-bg:#ede9fe;
         --p-emb:#60a5fa; --p-con:#8b5cf6; --p-col:#f59e0b; --p-det:#14b8a6; --p-neg:#ef4444; }
-@media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --mut:#a8a29e; --line:#44403c; --card:#292524; --acc:#93c5fd;
-        --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a;
-        --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd;
-        --k-is:#86efac; --k-is-bg:#14532d; --k-not:#fca5a5; --k-not-bg:#4c1414; --k-cat:#67e8f9;
-        --k-con:#c4b5fd; --k-con-bg:#2e1065; } }
 * { box-sizing:border-box; }
 body { margin:0; font:14px/1.45 -apple-system, system-ui, sans-serif; background:var(--bg); color:var(--fg); }
 .app { display:grid; grid-template-columns:400px minmax(0, 1fr); min-height:100vh; }
@@ -88,7 +83,7 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 #status { margin:4px 0 8px; font-size:14px; }
 #status b { font-weight:600; }
 .banner { background:var(--hl); color:var(--hlfg); border-radius:6px; padding:8px 12px; margin-bottom:10px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; }
+.grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; }
 .p { background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; position:relative; cursor:pointer; }
 .p:hover { border-color:var(--acc); }
 #panel { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:10; }
@@ -100,13 +95,14 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 #panel td:first-child { color:var(--mut); width:40%; }
 #panel tr.on td:last-child { color:var(--ok); font-weight:600; }
 .photos { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:6px; margin:12px 0 0; }
-.photos img { width:100%; aspect-ratio:1/1; object-fit:contain; background:#fff; border-radius:6px; border:1px solid var(--line); }
+.photo-frame { isolation:isolate; overflow:hidden; aspect-ratio:3/5; background:#e2e4e8; }
+.photo-frame img { display:block; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; }
+.photos .photo-frame { border-radius:6px; border:1px solid var(--line); }
 .close { float:right; }
 .desc { margin:12px 0 0; font-size:13px; line-height:1.5; }
-.p img, .p .noimg { width:100%; aspect-ratio:1/1; object-fit:contain; display:block; background:#fff; }
 .p .t { padding:7px 9px 9px; font-size:12px; }
 .p .t > b { font-size:13px; }
-.p .nr { position:absolute; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
+.p .nr { position:absolute; z-index:1; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
 .residual { margin:6px 0 0; font-size:13px; }
@@ -137,7 +133,6 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .sbar i { position:absolute; top:0; bottom:0; }
 .sbar .zero { position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--mut); }
 .chip.dt { background:#ccfbf1; color:#0f766e; }
-@media (prefers-color-scheme: dark) { .chip.dt { background:#134e4a; color:#5eead4; } }
 .swatch { display:inline-block; width:14px; height:14px; border:1px solid #999; vertical-align:middle; margin-right:4px; border-radius:3px; }
 .dlist { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
 .dlist .chip { font-weight:500; }
@@ -176,10 +171,16 @@ const RANKING_NAMES = {combined: "embedding combined (description + image)", tex
                        bank: "phrase bank (concepts + text, combined breaks ties)", features: "embedding features",
                        combined_features: "embedding description + image + features",
                        hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)",
-                       sentences: "sentences (description + image + features + best sentences, + concepts; fitted weights)"};
+                       sentences: "sentences (description + image + features + best sentences, + concepts; fitted weights)",
+                       sentences_jev: "sentences + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
+                       hybrid_jev: "hybrid + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
+                       hybrid_jev_vision: "hybrid + Jev vision (top 30 · text + photos)"};
 const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
-const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
+const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};
+const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact", equals_any_set: "exactAny"};
+const MULTI_OPERATORS = {any: "contains_any", all: "contains_all", exact: "equals_set", exactAny: "equals_any_set"};
+const defaultMode = feature => feature === "colors" ? "exact" : "any";
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
 let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0, SCALE = 1;
@@ -215,7 +216,10 @@ function panelFromParsed(p) {
     if (f.feature === "price") { PANEL.prices.push({...f}); return; }
     const s = PANEL.sel[f.feature] = PANEL.sel[f.feature] || {};
     if (EXCLUDE.has(f.operator)) f.values.forEach(v => s[v] = "out");
-    else { f.values.forEach(v => s[v] = "in"); PANEL.mode[f.feature] = INCLUDE[f.operator] || "any"; }
+    else { f.values.forEach(v => s[v] = "in"); const mode = INCLUDE[f.operator];
+      PANEL.mode[f.feature] = f.feature === "colors" && (mode === "any" || mode === "all")
+        ? (mode === "any" && f.values.length > 1 ? "exactAny" : "exact")
+        : mode || defaultMode(f.feature); }
   });
 }
 function applySoon() { clearTimeout(applyTimer); applyTimer = setTimeout(() => search(panelFilters()), 250); }
@@ -225,9 +229,9 @@ function panelFilters() {
     if (fc.kind === "number") return;
     const s = PANEL.sel[fc.feature] || {};
     const ins = Object.keys(s).filter(v => s[v] === "in"), outs = Object.keys(s).filter(v => s[v] === "out");
-    const multi = fc.kind === "multi", mode = PANEL.mode[fc.feature] || "any";
+    const multi = fc.kind === "multi", mode = PANEL.mode[fc.feature] || defaultMode(fc.feature);
     if (ins.length) filters.push({feature: fc.feature, values: ins,
-      operator: !multi ? "in" : mode === "all" ? "contains_all" : mode === "exact" ? "equals_set" : "contains_any"});
+      operator: multi ? MULTI_OPERATORS[mode] : "in"});
     if (outs.length) filters.push({feature: fc.feature, values: outs, operator: multi ? "contains_none" : "not_in"});
   });
   // features the panel does not show (not in the category schema) keep their parser filters
@@ -272,8 +276,8 @@ function drawPanel() {
       values = values.filter(([v]) => s[v] || (q ? v.toLowerCase().includes(q) : true)).slice(0, q ? 60 : 15);
     }
     h += `<div class="facet"><div class="fh"><b>${esc(fc.feature)}</b>` +
-      (fc.kind === "multi" ? `<select data-mode="${esc(fc.feature)}">` + Object.entries(MODES).map(([m, t]) =>
-        `<option value="${m}" ${(PANEL.mode[fc.feature] || "any") === m ? "selected" : ""}>${t}</option>`).join("") + `</select>` : "") +
+      (fc.kind === "multi" ? `<select data-mode="${esc(fc.feature)}">` + Object.entries(fc.feature === "colors" ? COLOR_MODES : MODES).map(([m, t]) =>
+        `<option value="${m}" ${(PANEL.mode[fc.feature] || defaultMode(fc.feature)) === m ? "selected" : ""}>${t}</option>`).join("") + `</select>` : "") +
       `</div>` + (fc.feature === "brand" ? `<input class="brandq" id="brandq" placeholder="search ${num(fc.values.length)} brands" value="${esc(brandQuery)}">` : "") +
       `<div class="vals">` + values.map(([v, n]) =>
         `<button type="button" class="val ${s[v] || ""} ${n ? "" : "zero"}" data-f="${esc(fc.feature)}" data-v="${esc(v)}">${esc(v)}<span class="n">${num(n)}</span></button>`).join("") +
@@ -368,6 +372,7 @@ function drawTimings() {
         extra: [t.embedding_wait_ms !== undefined ? `waited for the query embedding ${fmtMs(t.embedding_wait_ms)}` : "",
                 t.concepts_ms !== undefined ? `concept matching ${fmtMs(t.concepts_ms)}` : "",
                 t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : "",
+                t.rerank_ms !== undefined ? `Jev reranking ${fmtMs(t.rerank_ms)}` : "",
                 t.phrase_embeddings_early || t.phrase_embeddings_late ? `phrase embeddings: ${t.phrase_embeddings_early || 0} ready from before, ${t.phrase_embeddings_late || 0} after parsing` : ""].filter(Boolean).join(" · ")}) +
     `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
   $("timings").innerHTML = html;
@@ -398,7 +403,7 @@ function treeLines(c) {
   const args = c.op === "and" ? c.args : [c];
   return `<div class="lines">` + args.map((a, i) => {
     const neg = a.op === "not", prefix = [i ? "AND" : "", neg ? "NOT" : ""].filter(Boolean).join(" ");
-    return `<span class="op ${neg ? "k-not" : "k-is"}">${prefix}</span><span class="cond">${treeHtml(neg ? a.arg : a, neg)}</span>`;
+    return `<span class="op ${neg ? "k-not" : "k-is"}">${prefix}</span><span class="cond">${treeHtml(neg ? a.arg : a, neg, false)}</span>`;
   }).join("") + `</div>`;
 }
 
@@ -480,7 +485,8 @@ function partsPanel() {
   if (!sp || !sp.length) return "";
   const max = Math.max(...sp.map(x => x.spread)) || 1, w = D.weights;
   const formula = D.formula || (w ? `similarity of the whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "similarity of the whole query");
-  return `<div class="parts"><div><b>Score</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
+  const title = D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score";
+  return `<div class="parts"><div><b>${title}</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
     sp.map(x => `<div class="pr"><span class="lab" title="${esc(x.label)}">${esc(x.label)}</span><span class="v">±${x.spread.toFixed(2)}</span>` +
       `<div class="bar"><i class="${partKind(x.label)}" style="width:${Math.max(2, 100 * x.spread / max)}%"></i></div></div>`).join("") + `</div>`;
 }
@@ -510,6 +516,11 @@ function drawParserTop() {
 
 function drawNotes() {
   let h = "";
+  if (D.rerank && D.rerank.status === "applied") {
+    const r = D.rerank, cost = r.cost_usd == null ? "" : ` · $${r.cost_usd.toFixed(6)}`;
+    h += `<div class="meta">Jev${r.vision ? ` vision (${num(r.images)} photos)` : ""} reordered the first ${num(r.count)} results · ${fmtMs(D.timings.rerank_ms)}${cost}. ` +
+      `Score: expected grade (0–3) + ${r.blend} × standardized first-stage score. The remaining results keep their ${esc(r.base_ranking)} order.</div>`;
+  }
   if (D.error) h += `<div class="errorbox"><b>Error – stage: ${esc(D.error.stage)}</b><br>${esc(D.error.message)}</div>`;
   if (D.parsed && D.parsed.source === "manual" && "tree" in D)
     h += `<div class="meta">Filters applied by hand:</div>${treeLines(D.tree)}`;
@@ -542,9 +553,10 @@ function card(p, i) {
   const hit = p.matched.filter(f => f in p.features);
   const d = document.createElement("div"); d.className = "p";
   d.innerHTML = `<span class="nr">${i + 1}</span>` +
-    (p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : `<div class="noimg"></div>`) +
+    `<div class="photo-frame">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : ""}</div>` +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
+      ${p.rerank ? `<div class="meta">Jev grade: ${p.rerank.grade.toFixed(2)}/3 · rerank score: ${p.rerank.score.toFixed(2)}${p.rerank.image_used === undefined ? "" : p.rerank.image_used ? " · text + photo" : " · text only"}</div>` : ""}
       ${hit.length || p.concepts.length || (p.details || []).length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
         `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}` +
         `${(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : ""}
@@ -563,9 +575,10 @@ async function details(k) {
   const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name)), asked = new Set((k.details || []).map(x => x.name));
   $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
-    `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>` +
+    `<div class="photos">${p.images.map(z => `<div class="photo-frame"><img src="${esc(z)}" alt=""></div>`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
-    (Object.keys(k.parts || {}).length ? `<h3>Score ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
+    (k.rerank ? `<h3>Jev reranking</h3><p>Expected grade: ${k.rerank.grade.toFixed(2)}/3 · rerank score: ${k.rerank.score.toFixed(2)}${k.rerank.image_used === undefined ? "" : k.rerank.image_used ? " · text + photo" : " · text only"}</p>` : "") +
+    (Object.keys(k.parts || {}).length ? `<h3>${D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score"} ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
       `<tr><td><span class="swatch ${partKind(l)}" style="border:0"></span>${esc(l)}</td><td>${v >= 0 ? "+" : ""}${v.toFixed(2)}</td></tr>`).join("")}</table>` : "") +
     ((p.details || []).length ? `<h3>Details (Gemini)</h3><div class="dlist">${p.details.map(x =>
       `<span class="chip dt${asked.has(x.name) ? " on" : ""}">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : "") +

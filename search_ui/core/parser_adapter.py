@@ -61,6 +61,14 @@ def to_condition(raw):
         if isinstance(f, dict) and f.get("feature") == "price":
             args.append(conditions.validate(f, f"filters[{i}]"))
             continue
+        if isinstance(f, dict) and f.get("operator") == "equals_any_set":
+            values = f.get("values")
+            if f.get("feature") != "colors" or not isinstance(values, list) or not values:
+                raise conditions.ConditionError(f"filters[{i}]: equals_any_set requires a non-empty list of colors")
+            args.append({"op": "or", "args": [
+                {"feature": "colors", "values": [value], "match": "exact"} for value in values
+            ]})
+            continue
         if not isinstance(f, dict) or f.get("operator") not in OPERATORS:
             raise conditions.ConditionError(f"filters[{i}]: unknown operator {f.get('operator') if isinstance(f, dict) else f!r}")
         mode, negated = OPERATORS[f["operator"]]

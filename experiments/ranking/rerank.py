@@ -16,7 +16,6 @@ so the result is out of fold like "sentences".
 import argparse
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import html
 import json
 import sys
 import threading
@@ -30,29 +29,11 @@ import evaluate as ev
 from evaluate import colours, common, details
 import judge
 from lab import save_runs
+from jev_reranker import ENDPOINT, MODEL, DEPTH, api_key, payload, rerank
 
-ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
-MODEL = "typesafe/jev-1.14"
 LOG = ev.DATA / "rerank.jsonl"
 STAGE = ev.DATA / "rerank_stage1.json"
-DEPTH = 30
 USD_PER_PRODUCT = 0.000015  # measured: about $0.00026 for 20 products
-CRITERIA = {
-    "3": "excellent: the product matches everything the query asks for, including any style, occasion, season, "
-         "detail, material or colour shade the query mentions",
-    "2": "good: it matches the main request, with a small mismatch or an aspect that cannot be verified",
-    "1": "weak: the right kind of product whose explicit attributes fit, but it lacks the style, occasion, season, "
-         "detail or colour shade the query asks for",
-    "0": "wrong: not the kind of product asked for, or it contradicts an explicit attribute of the query"}
-INSTRUCTIONS = ("Grade how well one product of PRODUCTS answers the shopper's QUERY in a fashion e-commerce search. "
-                "Ignore sizes, plus size, maternity and children's sizes in the query. A negation such as "
-                "'no graphics' means the product must not have that. Grade the product {label}.")
-
-
-def api_key():
-    sys.path.insert(0, str(common.REPO))
-    from query_parsing.clients.credentials import load_api_key
-    return load_api_key("OPENROUTER_API_KEY")
 
 
 def facts():
@@ -63,12 +44,6 @@ def facts():
     for pid, rows in pd.read_parquet(details.PRODUCTS).sort_values(["product_id", "rank"]).groupby("product_id"):
         out[pid].append("Details: " + ", ".join(f"{r.name} ({r.extent})" for r in rows.itertuples()))
     return {pid: " | ".join(parts) for pid, parts in out.items()}
-
-
-def product_text(p, extra=None):
-    text = (f"{html.unescape(p['name'])} | {p['brand']} | {html.unescape(str(p['description']))} | "
-            f"Composition: {p['composition']}")
-    return f"{text} | {extra}" if extra else text
 
 
 def first_stage(depth=DEPTH):
@@ -88,13 +63,6 @@ def first_stage(depth=DEPTH):
                                      score=[float(score[i]) for i in order])
     STAGE.write_text(json.dumps(out), encoding="utf-8")
     return out
-
-
-def payload(task, by_id, extra):
-    products = {label: product_text(by_id[pid], extra.get(pid) if extra else None) for label, pid in task["labels"].items()}
-    return {"model": MODEL, "state": {"QUERY": task["query"], "CATEGORY": task["category"], "PRODUCTS": products},
-            "questions": {label: {"type": "choice", "instructions": INSTRUCTIONS.format(label=label),
-                                  "criteria": CRITERIA} for label in products}}
 
 
 def call(body, key):
@@ -121,14 +89,6 @@ def done(variant, bank):
                 merged = dict(out.get(r["id"], {}).get("answers", {}), **r["answers"])
                 out[r["id"]] = dict(r, answers=merged)
     return out
-
-
-def expected(answer):
-    """Expected grade from the probabilities of an answer, or its choice when it has none."""
-    p = answer.get("probabilities")
-    if isinstance(p, dict) and p:
-        return sum(int(k) * float(v) for k, v in p.items()) / max(sum(map(float, p.values())), 1e-9)
-    return float(answer["choice"])
 
 
 def execute(tasks, by_id, extra, variant, bank, budget, workers):
@@ -162,18 +122,6 @@ def execute(tasks, by_id, extra, variant, bank, budget, workers):
         for f in as_completed([pool.submit(one, t, out) for t in tasks]):
             f.result()
     print(f"done {state['done'] - state['errors']}, errors {state['errors']}; log total ${state['spent']:.4f}")
-
-
-def rerank(stage, answers, depth, blend):
-    """The first depth candidates of the first stage ordered by expected grade plus blend times the z-score of the
-    first-stage score among them; the rest keep their order behind."""
-    top, score = stage["top"][:depth], np.array(stage["score"][:depth])
-    if len(top) < 2:
-        return stage["top"]
-    z = (score - score.mean()) / (score.std() + 1e-9)
-    grade = np.array([expected(answers[p]) if p in answers else 0.0 for p in top])
-    order = np.argsort(-(grade + blend * z), kind="stable")
-    return [top[i] for i in order] + stage["top"][depth:]
 
 
 def main():

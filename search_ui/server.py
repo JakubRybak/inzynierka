@@ -33,9 +33,12 @@ import common  # noqa: E402
 import concepts  # noqa: E402
 import conditions  # noqa: E402
 import facets  # noqa: E402
+import jev_reranker  # noqa: E402
 import parser_adapter  # noqa: E402
 
-RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid", "sentences")
+RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid", "sentences",
+            "sentences_jev", "hybrid_jev", "hybrid_jev_vision")
+RERANK_BASES = dict(sentences_jev="sentences", hybrid_jev="hybrid", hybrid_jev_vision="hybrid")
 # detail 0.25: chosen on the dev queries of the benchmark (0.25, 0.5 and 1.0 measured); colour 1.0 is not measured
 HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
@@ -44,7 +47,7 @@ SENTENCE_WEIGHTS = common.SEARCH_UI / "ranking_data/sentence_weights.json"
 SENTENCE_PARTS = ("description", "sentences", "image", "features", "concept", "phrase")
 # the query embeddings a ranking needs, started together with the parser
 QUERY_EMBEDDINGS = dict(hybrid="combined", bank="combined", concepts="combined", sentences="combined")
-POSITIVE = {"in", "contains_any", "contains_all", "equals_set"}
+POSITIVE = {"in", "contains_any", "contains_all", "equals_set", "equals_any_set"}
 
 
 def asks_colour(filters, routes):
@@ -54,7 +57,7 @@ def asks_colour(filters, routes):
 PAGE = common.SEARCH_UI / "static/index.html"
 EXAMPLES = common.SEARCH_UI / "static/example_queries.yaml"
 EXAMPLES_SHOWN = 5
-IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
+IMAGE_PATH = re.compile(r"images/(?:train|validation)/(?P<product>[A-Za-z0-9_-]+)/(?P<stem>[A-Za-z0-9_-]+)\.png")
 
 
 def load_sentence_weights(path=SENTENCE_WEIGHTS):
@@ -94,16 +97,21 @@ def _z(s, mask):
 
 class SearchEngine:
     def __init__(self, products, T, I, parser, embedder, concept_ranker=None, bank=None, F=None, weights=HYBRID,
-                 attributes=None, sentences=None, sentence_weights=None):
+                 attributes=None, sentences=None, sentence_weights=None, reranker=None,
+                 image_dir=common.DATASET, vision_reranker=None):
         """attributes: {product_id: {"colours": [...], "details": [...]}} shown with a product. sentences: the
         sentence embeddings (sentences.py); sentence_weights: {part: weight} of the sentence ranking."""
         self.products = [conditions.prepare_product(p) for p in products]
         self.attributes = attributes or {}
         self.concepts, self.bank, self.F, self.weights = concept_ranker, bank, F, dict(weights)
         self.sentences, self.sentence_weights = sentences, sentence_weights
+        self.reranker = reranker if reranker is not None else jev_reranker.JevReranker()
+        self.vision_reranker = vision_reranker if vision_reranker is not None else \
+            jev_reranker.JevReranker(image_dir=image_dir, timeout=15.0)
         ready = bank is not None and F is not None and sentences is not None and sentence_weights is not None
         needs = dict(concepts=concept_ranker, bank=bank, hybrid=bank, features=F, combined_features=F,
                      sentences=True if ready else None)
+        needs.update({r: needs[base] for r, base in RERANK_BASES.items()})
         self.rankings = [r for r in RANKINGS if needs.get(r, True) is not None]
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
@@ -260,6 +268,7 @@ class SearchEngine:
         timings = {}
         out = dict(query=q, parser=self.parser.name, ranking=ranking, timings=timings,
                    counts=dict(index=len(self.products)), warnings=[])
+        base_ranking = RERANK_BASES.get(ranking, ranking)
 
         def fail(stage, e):
             timings["total_ms"] = ms(t0)
@@ -268,10 +277,10 @@ class SearchEngine:
             return out
 
         # the query embeddings do not depend on the parser, so they run while it parses
-        jobs = self.query_vectors(q, QUERY_EMBEDDINGS.get(ranking, ranking), timings) if q else None
+        jobs = self.query_vectors(q, QUERY_EMBEDDINGS.get(base_ranking, base_ranking), timings) if q else None
         # so do the embeddings of the spans of the query, which the residual phrases usually are
-        prefetched = self.bank.prefetch(q, lean=ranking == "sentences") if q and manual is None \
-            and self.bank is not None and ranking in ("hybrid", "bank", "sentences") else None
+        prefetched = self.bank.prefetch(q, lean=base_ranking == "sentences") if q and manual is None \
+            and self.bank is not None and base_ranking in ("hybrid", "bank", "sentences") else None
         t = time.perf_counter()
         try:
             if manual is None:
@@ -308,14 +317,42 @@ class SearchEngine:
 
         t = time.perf_counter()
         s_t = s_i = None
+        rerank_parts = {}
         if len(cand) and q:
             try:
-                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out, jobs,
+                score, s_t, s_i, tie = self.rank(q, base_ranking, cand, out["parsed"]["category"], timings, out, jobs,
                                                  prefetched)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)
             order = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
+            if ranking in RERANK_BASES:
+                start = time.perf_counter()
+                vision = ranking == "hybrid_jev_vision"
+                try:
+                    top = order[:jev_reranker.DEPTH]
+                    products = [self.products[int(cand[j])] for j in top]
+                    reranker = self.vision_reranker if vision else self.reranker
+                    ids, rerank_parts, out["rerank"] = reranker(q, out["parsed"]["category"], products, score[top])
+                    positions = {p["product_id"]: j for p, j in zip(products, top)}
+                    if len(ids) != len(top) or set(ids) != set(positions):
+                        raise ValueError("Reranker changed the candidate set")
+                    if vision and out["rerank"].get("status") == "applied" and out["rerank"]["images"] < len(top):
+                        out["warnings"].append(f"Jev vision received photos for {out['rerank']['images']} of "
+                                               f"{len(top)} products; the others were evaluated from text only.")
+                    order = np.concatenate(([positions[pid] for pid in ids], order[len(top):]))
+                except Exception as e:
+                    rerank_parts = {}
+                    out["rerank"] = dict(status="fallback", count=0)
+                    if isinstance(e, jev_reranker.NoProductImages):
+                        reason = "No readable product photos for Jev vision."
+                    else:
+                        reason = "Check OPENROUTER_API_KEY and the connection to OpenRouter."
+                        if vision:
+                            reason += " Also check local photos and Pillow."
+                    out["warnings"].append(f"Jev reranking unavailable; showing the {base_ranking} ranking. {reason}")
+                out["rerank"]["base_ranking"] = base_ranking
+                timings["rerank_ms"] = ms(start)
         else:
             score, order = np.zeros(len(cand)), np.arange(len(cand))
         timings["ranking_ms"] = ms(t)
@@ -324,7 +361,7 @@ class SearchEngine:
         parts = out.pop("_parts", None) or {}
         if parts and len(cand):
             out["score_parts"] = [dict(label=k, spread=round(float(np.std(v)), 3)) for k, v in parts.items()]
-            out["weights"] = dict(self.weights) if ranking == "hybrid" else None
+            out["weights"] = dict(self.weights) if base_ranking == "hybrid" else None
         asked = {n for r in out.get("bank") or [] if r.get("detail") for n in r["detail"]["names"]}
         results = []
         for j in order:
@@ -337,6 +374,7 @@ class SearchEngine:
                 price=_show_price(p),
                 image=f"/images/{p['images'][0]}" if p["images"] else "",
                 score=round(float(score[j]), 4),
+                rerank=rerank_parts.get(p["product_id"]),
                 score_text=None if s_t is None else round(float(s_t[j]), 4),
                 score_image=None if s_i is None else round(float(s_i[j]), 4),
                 features={k: _show_value(v) for k, v in sorted(p["features"].items())},
@@ -393,6 +431,7 @@ def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
 
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
+    enhanced_dir = image_dir / common.PILOT.name / "images_enhanced"
 
     class Handler(BaseHTTPRequestHandler):
         def send(self, code, body, content_type="application/json; charset=utf-8"):
@@ -433,9 +472,14 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                     return self.send(200, p) if p else self.send(404, {"error": dict(stage="product", message="no such product")})
                 if u.path.startswith("/images/"):
                     rel = u.path[len("/images/"):]
-                    path = image_dir / rel
-                    if IMAGE_PATH.fullmatch(rel) and path.is_file():
-                        return self.send(200, path.read_bytes(), "image/png")
+                    match = IMAGE_PATH.fullmatch(rel)
+                    if match:
+                        enhanced = enhanced_dir / match["product"] / (match["stem"] + ".webp")
+                        if enhanced.is_file():
+                            return self.send(200, enhanced.read_bytes(), "image/webp")
+                        original = image_dir / rel
+                        if original.is_file():
+                            return self.send(200, original.read_bytes(), "image/png")
                 self.send(404, {"error": dict(stage="request", message="not found")})
             except Exception as e:
                 traceback.print_exc()
@@ -551,7 +595,7 @@ def main():
     print(f"Feature embeddings: {'loaded' if F is not None else 'missing, run prepare.py'}")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
     engine = SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker, F, attributes=product_attributes(),
-                          sentences=sentence_data, sentence_weights=load_sentence_weights())
+                          sentences=sentence_data, sentence_weights=load_sentence_weights(), image_dir=meta["dataset"])
     args.ranking = args.ranking or next(r for r in ("sentences", "hybrid", "combined") if r in engine.rankings)
     if args.ranking not in engine.rankings:
         sys.exit(f"--ranking {args.ranking} is not available; available: {', '.join(engine.rankings)}")

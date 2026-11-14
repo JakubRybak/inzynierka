@@ -1,7 +1,8 @@
 # Ranking
 
-The ranking orders the products that passed the filters; it never adds or removes any. No generative model runs at
-search time. The ranking uses six kinds of signals:
+The ranking orders the products that passed the filters; it never adds or removes any. The base rankings use
+embeddings and precomputed signals; the optional Jev variants also call a model at search time. The base ranking
+uses six kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
@@ -28,6 +29,44 @@ This is the state of 2026-11-13. The default ranking is `sentences`; the other r
 | `bank` | one signal per residual phrase, picked with the phrase bank |
 | `hybrid` | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
 | `sentences` (default) | description, best sentences, image and feature text for the whole query, plus the concept scores and the best sentence of every phrase; fitted weights |
+| `sentences_jev` (optional) | `sentences` selects the top 30; Jev grades their texts and reorders them by expected grade + 0.25 × their standardized first-stage score |
+| `hybrid_jev` (optional) | `hybrid` selects the top 30; the same Jev second stage reorders them by expected grade + 0.25 × their standardized first-stage score |
+| `hybrid_jev_vision` (optional) | `hybrid` selects the top 30; Jev grades their text and main photo, using the same expected-grade blend |
+
+## Optional Jev second stage
+
+`core/jev_reranker.py` shares the prompt and scoring code with `experiments/ranking/rerank.py`. It implements the
+experiment's `jev_text_d30_b0.25` variant: Jev 1.14 reads the query and each product's name, brand, description and
+composition, with shuffled product labels. It returns probabilities for grades 0–3 in one OpenRouter request.
+The expected grade plus 0.25 times the first-stage z-score determines the order of the first 30. Ties preserve
+their first-stage order. All remaining candidates stay behind those 30 in their previous order; no product is
+added or removed. The UI shows Jev grades and scores separately from the first-stage score breakdown.
+
+`sentences_jev` needs the sentence embeddings, fitted weights, feature embeddings and phrase bank, just like
+`sentences`. `hybrid_jev` starts with the original hybrid signals, including colour, detail and negation terms,
+and requires only the assets needed by `hybrid`; sentence embeddings and fitted sentence weights are not needed.
+`hybrid_jev` has not yet been benchmarked; the Jev quality results in
+`experiments/ranking/RESULTS_2026-11-14.md` use the sentence-based first stage.
+
+`hybrid_jev_vision` adds one photo per product to the text, keeping the same model, grades and blend. It needs
+the same ranking assets as `hybrid`, plus local product photos and Pillow. It first tries
+`pilot_9922/images_enhanced/<id>/<id>_id_gridfs_1.webp` under `meta["dataset"]`, keeping the enhanced photo's
+full 1024 × 1024 resolution. If unavailable or unreadable, it falls back to indexed originals, preferring
+`*_id_gridfs_1`. It corrects EXIF orientation and converts to JPEG (quality 90), caps the longest side at
+1024 px and preserves smaller originals except for Jev's 280 px minimum. White padding preserves proportions;
+source files stay unchanged. Image bytes are embedded in each product's state object as an inline data URL, following
+[OpenRouter's multimodal decisions format](https://openrouter.ai/docs/guides/community/multimodal-decisions).
+The prompt asks Jev to use photos for visible colour, pattern, silhouette and decoration, text for composition,
+and to treat details hidden from the photo as unknown. It focuses on the garment being sold, not the background
+or other clothes. Products with no readable photo are graded from text and marked as such in the UI; if no
+candidate has a readable photo, there is no Jev call and the full hybrid order is retained. This variant has
+not been benchmarked for quality, cost or latency. The text-only measurements do not describe vision.
+
+All three options use `OPENROUTER_API_KEY`. They make no Jev calls at startup or for other rankings. Calls are
+uncached, have connect/read timeouts of 3.05/5 seconds (3.05/15 for vision) and are not retried automatically. A missing key, network
+error or invalid answer leaves the complete base ranking order intact and produces a warning. Fewer than two
+candidates or an empty query skip the call. The text-only offline measurements were about $0.0003 per call and 0.32 s
+median added latency; the UI displays the actual call time and cost when returned by the API.
 
 ## Concepts
 
