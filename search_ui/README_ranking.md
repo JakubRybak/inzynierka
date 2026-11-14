@@ -1,7 +1,7 @@
 # Ranking
 
 The ranking orders the products that passed the filters; it never adds or removes any. No generative model runs at
-search time. The ranking uses five kinds of signals:
+search time. The ranking uses six kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
@@ -9,9 +9,11 @@ search time. The ranking uses five kinds of signals:
 - **product colours**: one to three colours of every product with their share, given offline by Gemini;
 - **product details**: the details of every product (lace, sequins, cable knit, a skull graphic) with their extent,
   given offline by Gemini;
-- **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
+- **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for;
+- **product sentences**: the name and every sentence of the description of each product, embedded in advance one
+  by one.
 
-This is the state of 2026-11-13. The default ranking is `hybrid`; the other rankings stay available in the page.
+This is the state of 2026-11-13. The default ranking is `sentences`; the other rankings stay available in the page.
 
 ## Rankings
 
@@ -24,7 +26,8 @@ This is the state of 2026-11-13. The default ranking is `hybrid`; the other rank
 | `combined_features` | mean of the z-scores of description, image and feature text |
 | `concepts` | the scores of the concepts that the residual phrases name |
 | `bank` | one signal per residual phrase, picked with the phrase bank |
-| `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
+| `hybrid` | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
+| `sentences` (default) | description, best sentences, image and feature text for the whole query, plus the concept scores and the best sentence of every phrase; fitted weights |
 
 ## Concepts
 
@@ -137,6 +140,49 @@ parts, and in the product view their values.
 In `bank` and `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
 for a colour when it has a colour filter or a phrase read as a shade.
 
+## Sentences
+
+SSENSE descriptions are lists of short sentences, each about one thing: "Short sleeve cotton jersey t-shirt in
+'blush' pink.", "Two-button placket at front.", "Velcro tabs at cuffs.". The embedding of a whole description blurs
+them. `prepare.py` therefore embeds the name and every sentence of every product on its own, verbatim like the
+descriptions (`core/sentences.py`). Most sentences repeat across products ("Tonal stitching." occurs 9,147 times), so
+the pilot has 30,977 unique ones. HTML tags left in some descriptions (`<br>`) are dropped first. Only the first 768
+dimensions of the embeddings are kept; on the dev queries the ranking is as good with 768 dimensions as with all
+3,072.
+
+Two scores come from them:
+- **the whole query**: the mean similarity of the query to the two most similar sentences of a candidate;
+- **a residual phrase**: the similarity of the phrase to the candidate's best sentence, counted only as far as it is
+  above the phrase's median similarity to all sentences. "with two buttons" is 0.68 to "Two-button placket." and 0.41
+  to a typical sentence, so a polo with that sentence gets 0.27, while the median polo, whose best sentence is about
+  other buttons, gets 0.17. A phrase that no sentence speaks about, such as "for work", is about as far from every
+  sentence: all coats get 0.11 give or take 0.01, which hardly changes their order. This replaces a threshold.
+
+## `sentences`
+
+```
+sentences = 1.00 × z(description) + 1.40 × z(best sentences) + 2.52 × z(image) + 0.26 × z(features)
+          + 2.94 × z(concept scores of each occasion, style or season phrase)
+          + 43.0 × (best sentence of each phrase, above the phrase's median)
+```
+
+- The first four parts compare the whole query with the candidate; `z` is the z-score within the candidates.
+- A phrase is read with the phrase bank only for three things: its concepts when it is an occasion, style or season
+  (or names a concept), whether it is negated, and whether it is a size or audience phrase, which is skipped. The
+  colour and detail routes of `hybrid` are not used: a shade or a detail is found in the sentences, where the
+  description states it. A negated phrase counts with a minus in both of its terms.
+- A phrase of the bank uses the embedding stored with the bank, so only the spans of the query that the bank does
+  not know are embedded while the parser parses.
+- **The weights are fitted**, not set by hand (`experiments/ranking/learn.py`, written to
+  `ranking_data/sentence_weights.json`): a pairwise logistic regression on the judge's grades of the dev queries of
+  the benchmark. Of two graded products of a query, the one with the higher grade should score higher. The last
+  weight is large because its part is a raw similarity difference (0 to about 0.4), not a z-score.
+
+The measurements are in `experiments/ranking/RESULTS_2026-11-14.md`. With weights fitted without the query being
+ranked, `sentences` reaches nDCG@10 0.855 on the dev queries against 0.837 for `hybrid` (+0.018, 95% interval
++0.005 to +0.031), with the same MRR and P@1; a second judge from another model family gives +0.022. It is weaker
+than `hybrid` on occasion phrases (0.859 against 0.879).
+
 ## Where the data comes from
 
 The scripts in `offline/` made the files in `ranking_data/`. They do not run at search time. Without `--execute`,
@@ -152,6 +198,7 @@ what is missing.
 | `product_details.parquet` | `product_details.py` (Batch API); Gemini 3.5 Flash-Lite with the product name, description and two photos | $3.99 |
 | `color_names.parquet` | `product_colors.py`: the colour names of the products; Gemini left out names that are not colours ("leopard print", "grey knit") | $0.01 |
 | `concept_names.parquet` | `prepare.py`: embeddings of the concept names | |
+| `sentence_weights.json` | `experiments/ranking/learn.py --write`: the weights of `sentences`, fitted on the judge's grades of the dev queries | |
 | `esci_clothing_queries.csv` | 10,454 Amazon ESCI queries from the earlier proof of concept | |
 
 To change the concepts:
@@ -160,7 +207,19 @@ To change the concepts:
 3. Relabel the bank: `python search_ui/offline/phrase_bank.py --execute`.
 4. Rebuild the index: `python search_ui/prepare.py`.
 
+The sentence embeddings are not in `ranking_data/`: `prepare.py` writes them to `data/sentence_embeddings.npz`
+(68 MB, about 31,000 embedding calls and $0.06 for the pilot).
+
 ## Open issues
+
+- **Fitted weights.** The weights of `sentences` come from 313 dev queries and one judge. They vary between the five
+  folds of the cross-validation (for example the image 2.2 to 3.2 times the description), and the test split of the
+  benchmark has not been used to confirm them. Refit them with `learn.py` when the signals or the grades change.
+- **Phrases that are not spans of the query.** A residual phrase that the bank does not know and that is not a span
+  of one to three words of the query (4% of the dev queries) is embedded after the parsing, which costs one more
+  round trip.
+- **Negations and excluded colours.** "no red" is a filter on the main colours; a navy hoodie with a red logo
+  passes it. Only about four dev queries are negated, so the negation terms are not measured.
 
 - **Shades split by the parser.** For "light pink dress" the parser returns the filter `colors: Pink` and the
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be

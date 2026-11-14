@@ -1,0 +1,16 @@
+{
+ "weights": {
+  "description": 1.0,
+  "sentences": 1.4008,
+  "image": 2.5194,
+  "features": 0.2612,
+  "concept": 2.9378,
+  "phrase": 42.9703
+ },
+ "fitted": {
+  "date": "2026-11-13",
+  "queries": 313,
+  "graded_pairs": 12770,
+  "method": "pairwise logistic regression, experiments/ranking/learn.py"
+ }
+}

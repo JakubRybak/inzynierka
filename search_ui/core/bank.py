@@ -104,6 +104,12 @@ def negated_text(text):
     return bool(m) and 0 < len(text[m.end():].split()) <= NEGATED_WORDS
 
 
+def bare_phrase(text):
+    """A normalized phrase without a leading negation word, when anything is left."""
+    m = NEGATION.match(text)
+    return text[m.end():] if m and text[m.end():].strip() else text
+
+
 def product_text(p):
     return f"{p['name']}. {p.get('description') or ''}"
 
@@ -135,10 +141,11 @@ def embed_bank(rows, embed, folder, workers=8):
 
 class BankRanker:
     def __init__(self, products, T, I, dataset, rows, vectors, embedder, concept_categories=(), concept_ids=(),
-                 concept_vectors=None, colours=None, details=None):
-        self.colours, self.details = colours, details
+                 concept_vectors=None, colours=None, details=None, sentences=None):
+        self.colours, self.details, self.sentences = colours, details, sentences
         self.rows, self.matrix = rows, common.normalize(np.asarray(vectors, np.float32))
         self.exact = {r["phrase"]: r for r in rows}
+        self.stored = {r["phrase"]: i for i, r in enumerate(rows)}
         self.embedder, self.pool, self.prefetch_pool = embedder, ThreadPoolExecutor(8), ThreadPoolExecutor(PREFETCH)
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
@@ -189,33 +196,35 @@ class BankRanker:
             return self.bank_colour(row)
         return self.colours.target(text, (vectors or {}).get(common.query_text(text)))
 
-    def route(self, phrase, category, vector, query=None, vectors=None):
+    def route(self, phrase, category, vector, query=None, vectors=None, lean=False):
         """How a phrase is scored. vector: its query-format embedding (unused for a phrase found in the bank);
         query: the whole query, to read a lightness word before a colour as a shade; vectors: the embeddings of
-        embed(), for the colour of a shade."""
+        embed(), for the colour of a shade. lean: only the bank and the concept names decide, the product colours
+        and details are not consulted (the sentence ranking)."""
+        colours, details = (None, None) if lean else (self.colours, self.details)
         text = normalize_phrase(phrase)
         shade = shade_phrase(text, query)
         if shade:
             return dict(phrase=phrase, match="colour", similarity=None, neighbour=None, kind="shade", concepts=[],
                         concepts_unavailable=[], skipped=False, negated=False, english=text, text_signals=True,
-                        colour=self.colour_target(shade, vectors))
+                        colour=self.colour_target(shade, vectors) if colours is not None else None)
         row, match, similarity, matched, colour = self.exact.get(text), "exact", None, [], None
         if row is None:
             sims = self.matrix @ vector
             j = int(np.argmax(sims))
             similarity = round(float(sims[j]), 3)
             row, match = (self.rows[j], "nearest") if sims[j] >= NEAREST else (None, "none")
-        if row is not None and row["kind"] == "shade" and self.colours is not None:
+        if row is not None and row["kind"] == "shade" and colours is not None:
             # a neighbour tells that the phrase is a shade, not which one ("ciemnozielona" is nearest to "ciemnoszary")
             colour = (self.colour_target(self.english(text), vectors) if match == "nearest" else None) \
                 or self.bank_colour(row)
-        if row is None and self.colours is not None:
+        if row is None and colours is not None:
             colour = self.colour_target(self.english(text), vectors)
             if colour:
                 match, similarity = "colour name", colour["similarity"]
         detail = None
-        if colour is None and self.details is not None and (row is None or row["kind"] in DETAIL_KINDS):
-            detail = self.details.target((vectors or {}).get(common.query_text(self.detail_text(text))))
+        if colour is None and details is not None and (row is None or row["kind"] in DETAIL_KINDS):
+            detail = details.target((vectors or {}).get(common.query_text(self.detail_text(text))))
             if row is None and detail:
                 match, similarity = "detail name", detail["similarity"]
         scored = self.scored.get(category, set())
@@ -287,10 +296,11 @@ class BankRanker:
         p = sum(w * s for w, s in parts) / sum(w for w, _ in parts)
         return 1 - p if r["negated"] else p
 
-    def prefetch(self, query):
+    def prefetch(self, query, lean=False):
         """Starts, before the parser returns the residual, the embeddings its phrases will probably need: every span
         of one to SPAN_WORDS words of the query (the shortest first, at most PREFETCH; a span without its negation is
-        a shorter span) and, for a span the bank knows as a detail, its English version. -> {text: future}."""
+        a shorter span) and, for a span the bank knows as a detail, its English version. lean: only the spans the
+        bank does not know, whose own embedding is stored with the bank (the sentence ranking). -> {text: future}."""
         words = [w.strip(".,;:!?()\"") for w in normalize_phrase(query).split()]
         words = [w for w in words if w]
         texts = []
@@ -302,7 +312,7 @@ class BankRanker:
                 row = self.exact.get(span)
                 if row is None:
                     texts.append(common.query_text(span))
-                elif self.details is not None and row["kind"] in DETAIL_KINDS:
+                elif not lean and self.details is not None and row["kind"] in DETAIL_KINDS:
                     texts.append(common.query_text(self.detail_text(span)))
         texts = list(dict.fromkeys(texts))[:PREFETCH]
         return {t: self.prefetch_pool.submit(self.embedder, t) for t in texts}
@@ -377,6 +387,40 @@ class BankRanker:
             else:
                 continue
             terms[r["term"]].append(column)
+        return terms, routes
+
+    def sentence_terms(self, residual, cand, category, query=None, prefetched=None, stats=None):
+        """Terms of the sentence ranking, one or two for every phrase that is not skipped: "concept", the z-scores of
+        the concept scores of an occasion, style or season phrase (or of a concept matched by name), and "sentence",
+        how well the candidate's best sentence matches the phrase (sentences.py). A negated phrase gets both with a
+        minus. A phrase of the bank uses its stored embedding, so only phrases the bank does not know are embedded.
+        -> ([(term, phrase, column)], routes)."""
+        residual = [p for p in residual if normalize_phrase(p)]
+        texts = set()
+        for phrase in residual:
+            text = normalize_phrase(phrase)
+            texts |= {common.query_text(t) for t in (text, bare_phrase(text)) if t not in self.stored}
+        vectors = self.fetch(texts, {}, prefetched, stats)
+
+        def vector(text):
+            return self.matrix[self.stored[text]] if text in self.stored else vectors[common.query_text(text)]
+
+        terms, routes = [], []
+        for phrase in residual:
+            text = normalize_phrase(phrase)
+            r = self.route(phrase, category, None if text in self.exact else vector(text), query, lean=True)
+            r["term"] = None
+            routes.append(r)
+            if r["skipped"]:
+                continue
+            sign = -1 if r["negated"] else 1
+            if r["concepts"] and (r["kind"] in ABSTRACT or r["match"] == "concept"):
+                scores = self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1)
+                terms.append(("concept", phrase, sign * zscore(scores)))
+                r["term"] = "concept"
+            if self.sentences is not None:
+                terms.append(("sentence", phrase, sign * self.sentences.phrase(vector(bare_phrase(text)), cand)))
+                r["sentence"] = True
         return terms, routes
 
     @staticmethod
