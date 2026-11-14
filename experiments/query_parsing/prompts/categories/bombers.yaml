@@ -12,7 +12,7 @@ few_shots:
       values:
       - Unlined
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: pattern
@@ -85,7 +85,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Blue
       - White
@@ -112,7 +112,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: hood

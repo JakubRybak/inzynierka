@@ -48,7 +48,7 @@ few_shots:
       values:
       - Camp Collar
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     residual:
@@ -59,7 +59,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - Red
@@ -80,7 +80,7 @@ few_shots:
       value: 160
     residual:
     - flannel
-  note: '''red and black'' uses contains_all; ''flannel'' stays in residual.'
+  note: '''red and black'' uses equals_set; ''flannel'' stays in residual.'
 - query: women's oversized button-down oxford shirt in cotton without polyester
   output:
     filters:

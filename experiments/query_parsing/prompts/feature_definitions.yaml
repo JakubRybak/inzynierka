@@ -83,7 +83,7 @@ feature_notes:
     ''heather grey'', ''forest green'', ''off-white'', ''cream'', ''ivory'', ''camel'', ''azul marino'', ''azul
     celeste'', ''jasnoniebieski'', ''granatowy'', ''bordowy'') map to their parent color family in filters AND MUST
     ALSO be kept in residual! However, an excluded shade (''not turquoise'') stays ONLY in residual (''not turquoise'')
-    with NO color family exclusion filter. ''all-black'' / ''only black'' uses equals_set [''Black''].'
+    with NO color family exclusion filter. ''black'' and ''all-black'' both use equals_set [''Black''].'
 substyle_rules:
   always:
   - '   - Specific pattern sub-styles that map to a broader pattern filter stay in residual: e.g. ''leopard print''

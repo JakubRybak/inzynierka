@@ -200,7 +200,7 @@ print(result)
 # {
 #   "category": "Dresses",
 #   "filters": [
-#     {"feature": "colors", "operator": "contains_any", "values": ["Black"]},
+#     {"feature": "colors", "operator": "equals_set", "values": ["Black"]},
 #     {"feature": "price", "operator": "lte", "value": 200.0}
 #   ],
 #   "residual": ["na wesele"]
@@ -233,6 +233,8 @@ res = parser.parse("white silk blouse with long sleeves", config="full_qwen")
 ---
 
 ## 📊 Wyniki benchmarku (Próba N = 250)
+
+Poniższe wyniki pochodzą sprzed zmian w parserze i są już nieaktualne.
 
 Zestawienie wyników na zrównoważonej próbie 250 zapytań ze wszystkich 22 kategorii oraz zapytań spoza katalogu:
 

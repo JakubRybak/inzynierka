@@ -119,7 +119,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `strap_style in ["Off-Shoulder"]`
 
 **Residual** — brak
@@ -130,7 +130,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `dress_silhouette in ["Fitted"]`
 
 **Residual** — `light pink`
@@ -141,7 +141,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `dress_silhouette in ["Straight"]`
 - `sleeve_length in ["Long Sleeve"]`
 
@@ -185,7 +185,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `dress_type contains_any ["Sweater Dress"]`
 - `gender in ["Women"]`
 
@@ -220,7 +220,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Yellow", "Black"]`
+- `colors equals_set ["Yellow", "Black"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -262,7 +262,7 @@
 **Filtry**
 
 - `gender in ["Women"]`
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `navy blue`
 
@@ -272,7 +272,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — `evening`
@@ -285,7 +285,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `strap_style in ["Strapless"]`
 
 **Residual** — `gown`
@@ -296,7 +296,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `ice blue` · `evening gown`
 
@@ -324,7 +324,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `bridesmaid`
 
@@ -334,7 +334,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 
 **Residual** — `champagne` · `wedding`
 
@@ -422,7 +422,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — `plus size`
@@ -433,7 +433,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `velvet` · `lace up`
 
@@ -443,7 +443,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `blush` · `ruffle sleeve`
 
@@ -506,7 +506,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `fushia` · `maternity`
 
@@ -516,7 +516,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `girls` · `ball gown` · `7-16`
 
@@ -528,7 +528,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `sleeve_length in ["Sleeveless"]`
 - `length in ["Maxi"]`
 
@@ -540,7 +540,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `dress_silhouette in ["Fitted"]`
 
 **Residual** — `bandage`
@@ -582,7 +582,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `lace` · `for maternity photoshooy`
 
@@ -620,7 +620,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `gender in ["Women"]`
 
 **Residual** — `navy blue` · `sexy`
@@ -631,7 +631,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `maternity`
 
@@ -669,7 +669,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `quinceanera` · `royal blue`
 
@@ -725,7 +725,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `boho` · `chifon`
 
@@ -737,7 +737,7 @@
 
 - `gender in ["Women"]`
 - `dress_silhouette in ["Fitted"]`
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `sexy`
 
@@ -789,7 +789,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `length in ["Midi"]`
 
 **Residual** — `turquoise` · `for a summer wedding`
@@ -821,7 +821,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red", "Blue"]`
+- `colors equals_any_set ["Red", "Blue"]`
 - `colors contains_none ["White"]`
 
 **Residual** — `navy`
@@ -998,7 +998,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `length in ["Midi"]`
 - `price lte 200`
 
@@ -1020,7 +1020,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Beige"]`
+- `colors equals_any_set ["White", "Beige"]`
 - `colors contains_none ["Red"]`
 - `dress_type contains_any ["Shirt Dress"]`
 

@@ -59,7 +59,7 @@ def build_full_system_prompt(
     full_cfg = load_full_extraction_prompt()
     cat_spec = catalog[category]
     single_feats = [f for f, s in cat_spec.items() if not s["multi"]]
-    multi_feats = [f for f, s in cat_spec.items() if s["multi"]]
+    multi_feats = [f for f, s in cat_spec.items() if s["multi"] and f != "colors"]
 
     defs = []
     for feature, spec in cat_spec.items():

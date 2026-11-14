@@ -35,7 +35,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — brak
 
@@ -150,7 +150,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `deep purple`
 
@@ -197,7 +197,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `length in ["Cropped"]`
 
 **Residual** — `light blue`
@@ -209,7 +209,7 @@
 **Filtry**
 
 - `length in ["Longline"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `closure_type in ["Open Front"]`
 
 **Residual** — brak
@@ -221,7 +221,7 @@
 **Filtry**
 
 - `length in ["Longline"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `plus size`
 
@@ -242,7 +242,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — brak
 
@@ -431,7 +431,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "Red"]`
+- `colors equals_any_set ["Black", "Red"]`
 - `colors contains_none ["Beige"]`
 
 **Residual** — `burgundy`
@@ -442,7 +442,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Black", "White"]`
+- `colors equals_set ["Black", "White"]`
 - `pattern in ["Striped"]`
 
 **Residual** — brak
@@ -518,7 +518,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `hood in ["Without Hood"]`
 
 **Residual** — `granatowy`

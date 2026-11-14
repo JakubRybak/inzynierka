@@ -14,7 +14,7 @@ few_shots:
       values:
       - Silk
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: neckline
@@ -35,7 +35,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - White
@@ -57,7 +57,7 @@ few_shots:
       values:
       - Polyester
     residual: []
-  note: '''black and white'' and ''cotton and viscose'' both use contains_all.'
+  note: '''black and white'' uses equals_set; ''cotton and viscose'' uses contains_all.'
 - query: sleeveless cropped leopard print blouse by Mango around $45, not oversized
   output:
     filters:
@@ -103,7 +103,7 @@ few_shots:
       values:
       - Three-Quarter Sleeve
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - White
     residual:
@@ -115,7 +115,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: pattern
