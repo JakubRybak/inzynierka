@@ -54,7 +54,8 @@ class SchemaTests(unittest.TestCase):
         validate_definition('pattern', pattern, {})
         after = prompt_builder.build_schema({'pattern': pattern}, 'T-shirts')
         self.assertEqual(before['properties']['features']['properties']['pattern']['type'], 'STRING')
-        self.assertEqual(after['properties']['features']['properties']['pattern']['type'], 'ARRAY')
+        variants = after['properties']['features']['properties']['pattern']['anyOf']
+        self.assertEqual([variant['type'] for variant in variants], ['ARRAY', 'ARRAY'])
         validate_value(['Striped', 'Floral'], pattern)
         with self.assertRaises(ValueError):
             validate_value(['Striped', 'Other'], pattern)
@@ -112,7 +113,11 @@ class SchemaTests(unittest.TestCase):
         with patch.object(prompt_builder, 'DEFINITIONS', definitions):
             requested = prompt_builder.requested_features(record)
             fields = prompt_builder.build_schema(requested, key[1])['properties']['features']['properties']
-            self.assertEqual(fields['closure_type']['type'], 'ARRAY')
+            ordinary, exclusive = fields['closure_type']['anyOf']
+            self.assertEqual(set(exclusive['items']['enum']), {'Other', 'Open Front'})
+            self.assertEqual(exclusive['maxItems'], 1)
+            self.assertEqual(set(ordinary['items']['enum']),
+                             set(schema['closure_type']['values']) - {'Other', 'Open Front'})
             response = {'product_status': 'ok', 'product_reason': '', 'features': {'closure_type': ['Zip', 'Button']}}
             self.assertEqual(validate_response(response, record)['closure_type'], ['Zip', 'Button'])
             for value in [['Other', 'Zip'], ['Open Front', 'Button'], 'Zip', ['Zip', 'Zip']]:
