@@ -32,7 +32,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -43,7 +43,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — `dressy`
@@ -54,7 +54,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "White"]`
+- `colors equals_set ["Red", "White"]`
 
 **Residual** — brak
 
@@ -134,7 +134,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 
 **Residual** — `lemon yellow`
 
@@ -144,7 +144,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `mauve`
 
@@ -164,7 +164,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 
 **Residual** — `mustard` · `saree` · `readymade`
 
@@ -205,7 +205,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -224,7 +224,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `ruffled`
@@ -268,7 +268,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `button down`
@@ -302,7 +302,7 @@
 **Filtry**
 
 - `gender in ["Women"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `button up`
 
@@ -312,7 +312,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `azul celeste`
 
@@ -409,7 +409,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Grey"]`
+- `colors equals_any_set ["White", "Grey"]`
 - `colors contains_none ["Red", "Orange"]`
 
 **Residual** — brak
@@ -420,7 +420,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Orange", "Brown"]`
+- `colors equals_set ["Orange", "Brown"]`
 - `colors contains_none ["Purple"]`
 
 **Residual** — brak
@@ -452,7 +452,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 - `pattern in ["Animal Print"]`
 
 **Residual** — `leopard print` · `for a night out`
@@ -463,7 +463,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `pattern in ["Camo"]`
 
 **Residual** — brak
@@ -475,7 +475,7 @@
 **Filtry**
 
 - `pattern in ["Solid"]`
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 - `price around 45`
 
 **Residual** — brak
@@ -574,7 +574,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `brand not_in ["Zara", "H&M"]`
 
 **Residual** — `navy`
@@ -595,7 +595,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `off-white` · `with a bow`
 
@@ -628,7 +628,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `neckline in ["Collared"]`
 
 **Residual** — `turkusowa` · `do pracy`

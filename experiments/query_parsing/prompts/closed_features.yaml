@@ -6,10 +6,11 @@ rules:
     NEVER excluded).
   - Exclusions require explicit negation ('without', 'no', 'not', 'bez', 'sin', '0%') targeting that specific value.
   - Negating a color shade ('not turquoise', 'not emerald') does NOT exclude its color family.
-  relation_rule_base: 'Multi-choice/composition relation: conjunction (''and''/''i''/''y'', blends) -> ALL; alternatives
-    (''or'') or single value or <100% share -> ANY; ''only'', ''exclusively'', ''pure'', ''100% <material>'', ''all-<color>'''
+  relation_rule_base: 'Multi-choice/composition relation for features other than colors: conjunction (''and''/''i''/''y'',
+    blends) -> ALL; alternatives (''or'') or single value or <100% share -> ANY; ''only'', ''exclusively'', ''pure'', ''100% <material>'''
   relation_rule_lining_suffix: ', or ''unlined'' -> EXACT.'
   relation_rule_default_suffix: ' -> EXACT.'
+  color_relation_rule: "For colors, select EXACT for a single color, ALL for colors required together, and ANY for alternatives."
   faux_leather_rule: Faux/vegan/PU leather is NOT Leather.
   insulation_rule: Down/feathers ('down', 'puch', 'plumas') is insulation=Down, not main_composition.
   leg_shape_rule: Do NOT map 'skinny', 'slim fit', or 'elasticized waistband' ('z gumką w pasie') to leg_shape=Tapered.
@@ -35,8 +36,12 @@ value_question:
 relation_question:
   instructions_template: How must the positively requested {feature} values be combined in CURRENT_QUERY for {category}?
     Ignore exclusions.
+  color_criteria:
+    ANY: Alternative colors, each allowed on its own, or no requested colors.
+    ALL: Multiple colors required together as the exact color set.
+    EXACT: One requested color, or an explicitly exact set of colors.
   criteria:
-    ANY: Alternatives ('or'), or a single value without 'only'/'100%'/'all-'/'unlined', or <100% material share,
+    ANY: Alternatives ('or'), or a single value without 'only'/'100%'/'unlined', or <100% material share,
       or none requested.
-    ALL: Multiple requested values that must all occur together ('and', blends, multi-color, combined closures).
-    EXACT: Explicit 'only', 'exclusively', 'pure', '100% <material>', 'all-<color>' ('all-black'), or 'unlined'.
+    ALL: Multiple requested values that must all occur together ('and', blends, combined closures).
+    EXACT: Explicit 'only', 'exclusively', 'pure', '100% <material>', or 'unlined'.

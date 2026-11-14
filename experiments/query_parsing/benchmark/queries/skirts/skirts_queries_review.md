@@ -32,7 +32,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — brak
 
@@ -42,7 +42,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `main_composition contains_any ["Leather"]`
 - `length in ["Mini"]`
 
@@ -64,7 +64,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `skirt_type contains_any ["Pleated"]`
 - `gender in ["Women"]`
 
@@ -76,7 +76,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 - `rise in ["High-Rise"]`
 
 **Residual** — brak
@@ -98,7 +98,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `length in ["Maxi"]`
 - `skirt_silhouette in ["Fitted"]`
 
@@ -120,7 +120,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Black", "White"]`
+- `colors equals_set ["Black", "White"]`
 - `pattern in ["Plaid"]`
 
 **Residual** — `2x`
@@ -131,7 +131,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `lace`
 
@@ -141,7 +141,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `length in ["Mini"]`
 - `gender in ["Women"]`
 
@@ -153,7 +153,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Women"]`
 
 **Residual** — `size large`
@@ -164,7 +164,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `cheerleader`
 
@@ -174,7 +174,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `gender in ["Women"]`
 
 **Residual** — `jean`
@@ -185,7 +185,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 
 **Residual** — brak
 
@@ -195,7 +195,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — `burgundy` · `dance`
 
@@ -300,7 +300,7 @@
 **Filtry**
 
 - `main_composition contains_any ["Leather"]`
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — brak
 
@@ -329,7 +329,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `gender in ["Women"]`
 
 **Residual** — `tulle`
@@ -340,7 +340,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 - `gender in ["Women"]`
 
 **Residual** — `pencil` · `plus size`
@@ -380,7 +380,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `kawaii`
 
@@ -390,7 +390,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `gender in ["Women"]`
 
 **Residual** — `khaki`
@@ -409,7 +409,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `light blue`
 
@@ -419,7 +419,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `light pink` · `pencil`
 
@@ -451,7 +451,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `skirt_type contains_any ["Ruffled"]`
 
 **Residual** — `magenta`
@@ -524,7 +524,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -565,7 +565,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `pattern in ["Plaid"]`
 
 **Residual** — `plus size`
@@ -586,7 +586,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `glitter` · `tulle`
 
@@ -596,7 +596,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "White"]`
+- `colors equals_set ["Red", "White"]`
 
 **Residual** — `tennis`
 
@@ -606,7 +606,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `gender in ["Women"]`
 
 **Residual** — `sequin`
@@ -617,7 +617,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `skirt_silhouette in ["Fitted"]`
 
 **Residual** — brak
@@ -681,7 +681,7 @@
 **Filtry**
 
 - `skirt_silhouette in ["Fitted"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `length in ["Mini"]`
 
 **Residual** — `slit`
@@ -700,7 +700,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `denim`
@@ -711,7 +711,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `feather`
 
@@ -743,7 +743,7 @@
 
 - `gender in ["Women"]`
 - `main_composition contains_any ["Leather"]`
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 
 **Residual** — brak
 
@@ -763,7 +763,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `skirt_type contains_any ["Pleated"]`
 
 **Residual** — brak
@@ -777,7 +777,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `skirt_type contains_any ["Pleated"]`
 
 **Residual** — brak
@@ -886,7 +886,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue", "Beige"]`
+- `colors equals_any_set ["Blue", "Beige"]`
 - `colors contains_none ["White"]`
 
 **Residual** — `navy`
@@ -976,7 +976,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `turquoise` · `for a beach wedding`
 
@@ -994,7 +994,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `length in ["Midi"]`
 - `rise in ["High-Rise"]`
 
@@ -1017,7 +1017,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `skirt_type contains_none ["Ruffled"]`
 
 **Residual** — `granatowa`

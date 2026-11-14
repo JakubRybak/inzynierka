@@ -42,7 +42,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — brak
 
@@ -52,7 +52,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — brak
 
@@ -73,7 +73,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `sleeve_length in ["Long Sleeve"]`
 
 **Residual** — `lace`
@@ -84,7 +84,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `neckline in ["V-Neck"]`
 - `gender in ["Women"]`
 
@@ -119,7 +119,7 @@
 **Filtry**
 
 - `brand in ["Spanx"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — brak
 
@@ -193,7 +193,7 @@
 **Filtry**
 
 - `sleeve_length in ["Long Sleeve"]`
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -314,7 +314,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `mesh`
 
@@ -342,7 +342,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `tank top`
 
@@ -353,7 +353,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `neckline in ["Crewneck"]`
 
 **Residual** — brak
@@ -364,7 +364,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Grey"]`
+- `colors equals_any_set ["White", "Grey"]`
 - `sleeve_length in ["Long Sleeve"]`
 
 **Residual** — brak
@@ -375,7 +375,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue", "Beige"]`
+- `colors equals_any_set ["Blue", "Beige"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — `navy`
@@ -386,7 +386,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Black", "White"]`
+- `colors equals_set ["Black", "White"]`
 - `colors contains_none ["Pink"]`
 
 **Residual** — brak
@@ -632,7 +632,7 @@
 **Filtry**
 
 - `pattern in ["Solid"]`
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 - `price lte 40`
 
 **Residual** — brak
@@ -676,7 +676,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `brand not_in ["Spanx"]`
 
 **Residual** — brak
@@ -687,7 +687,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `not jet black`
 
@@ -697,7 +697,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `with a snap closure` · `for dance`
 
@@ -717,7 +717,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 
 **Residual** — `with an open back`
 
@@ -727,7 +727,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `sleeve_length in ["Long Sleeve"]`
 
 **Residual** — brak
@@ -760,7 +760,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Beige"]`
+- `colors equals_any_set ["White", "Beige"]`
 - `main_composition contains_none ["Polyester"]`
 
 **Residual** — brak
@@ -771,7 +771,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `strap_style in ["Strapless"]`
 
 **Residual** — `turkusowe` · `na imprezę`
@@ -782,7 +782,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `sleeve_length in ["Long Sleeve"]`
 - `gender in ["Women"]`
 

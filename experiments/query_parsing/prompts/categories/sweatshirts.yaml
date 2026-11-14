@@ -13,7 +13,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Grey
     - feature: brand
@@ -86,7 +86,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Blue
       - White
@@ -106,12 +106,12 @@ few_shots:
       value: 200
     residual:
     - navy
-  note: '''navy and white'' maps to contains_all [''Blue'', ''White''] and keeps ''navy'' in residual.'
+  note: '''navy and white'' maps to equals_set [''Blue'', ''White''] and keeps ''navy'' in residual.'
 - query: green short-sleeve sweatshirt without polyester, not emerald
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: sleeve_length

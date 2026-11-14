@@ -43,6 +43,7 @@ def build_closed_features_rules(category: str, catalog: Dict[str, Dict[str, Dict
         parts[-1] += rules_cfg["relation_rule_lining_suffix"]
     else:
         parts[-1] += rules_cfg["relation_rule_default_suffix"]
+    parts.append(rules_cfg["color_relation_rule"])
     parts.append(rules_cfg["faux_leather_rule"])
     if "insulation" in cat_features:
         parts.append(rules_cfg["insulation_rule"])
@@ -132,7 +133,7 @@ def closed_features_payload(
             questions[f"{feature}_relation"] = {
                 "type": "choice",
                 "instructions": rel_instr + (f"\nExamples ({category}): {examples}" if examples != "[]" else ""),
-                "criteria": dict(rel_q_cfg["criteria"]),
+                "criteria": dict(rel_q_cfg["color_criteria"] if feature == "colors" else rel_q_cfg["criteria"]),
             }
     payload = {
         "model": MODEL,
@@ -169,7 +170,10 @@ def filters_from_answers(
         pos_vals = positive.get(feature, [])
         if pos_vals:
             op = "in"
-            if spec["multi"]:
+            if feature == "colors":
+                relation = answers["colors_relation"]["choice"]
+                op = "equals_any_set" if relation == "ANY" and len(pos_vals) > 1 else "equals_set"
+            elif spec["multi"]:
                 relation = answers[f"{feature}_relation"]["choice"]
                 op = {"ANY": "contains_any", "ALL": "contains_all", "EXACT": "equals_set"}[relation]
                 if op == "contains_all" and len(pos_vals) == 1:

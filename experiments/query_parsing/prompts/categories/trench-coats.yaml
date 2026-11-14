@@ -12,7 +12,7 @@ few_shots:
       values:
       - Women
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Beige
     - feature: closure_type
@@ -41,7 +41,7 @@ few_shots:
       values:
       - Unlined
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     - feature: length
@@ -95,7 +95,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - Green
@@ -123,7 +123,7 @@ few_shots:
       value: 500
     residual:
     - olive
-  note: '''olive and black'' -> contains_all [''Black'', ''Green''] + residual [''olive''].'
+  note: '''olive and black'' -> equals_set [''Black'', ''Green''] + residual [''olive''].'
 - query: uninsulated green trench coat without polyester, not emerald, not oversized
   output:
     filters:
@@ -132,7 +132,7 @@ few_shots:
       values:
       - Uninsulated
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: main_composition

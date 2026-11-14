@@ -95,7 +95,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `neckline in ["V-Neck"]`
 
 **Residual** — brak
@@ -188,7 +188,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `strap_style not_in ["Strapless"]`
 
 **Residual** — brak
@@ -199,7 +199,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Brown"]`
+- `colors equals_set ["Brown"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -329,7 +329,7 @@
 **Filtry**
 
 - `length in ["Longline"]`
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `navy`
 
@@ -401,7 +401,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `gender in ["Women"]`
 
 **Residual** — `mustard`
@@ -412,7 +412,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `navy` · `plus size`
 
@@ -491,7 +491,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — brak
 
@@ -514,7 +514,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 - `gender in ["Women"]`
 
 **Residual** — `cute`
@@ -582,7 +582,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `strap_style in ["Strapless"]`
 
 **Residual** — `lime green`
@@ -630,7 +630,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -641,7 +641,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `paint splash graphic`
@@ -652,7 +652,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `ruffle`
@@ -663,7 +663,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `5x`
@@ -685,7 +685,7 @@
 **Filtry**
 
 - `gender in ["Women"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — brak
 
@@ -726,7 +726,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -747,7 +747,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `main_composition contains_any ["Cotton"]`
 - `strap_width in ["Wide"]`
 
@@ -784,7 +784,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Beige"]`
+- `colors equals_any_set ["White", "Beige"]`
 - `colors contains_none ["Pink"]`
 
 **Residual** — brak
@@ -795,7 +795,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Pink", "Blue"]`
+- `colors equals_set ["Pink", "Blue"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — brak
@@ -828,7 +828,7 @@
 **Filtry**
 
 - `neckline in ["Scoop Neck"]`
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `pale pink`
 
@@ -945,7 +945,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `price gte 20`
 - `price lte 40`
 
@@ -979,7 +979,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `strap_width in ["Spaghetti"]`
 
 **Residual** — brak
@@ -1002,7 +1002,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `do biegania`
 
@@ -1012,7 +1012,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 - `strap_style in ["Strapless"]`
 
 **Residual** — `turkusowy` · `na wakacje`
@@ -1035,7 +1035,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `strap_width in ["Spaghetti"]`
 - `gender in ["Women"]`
 
@@ -1057,7 +1057,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — brak
 

@@ -200,7 +200,7 @@ print(result)
 # {
 #   "category": "Dresses",
 #   "filters": [
-#     {"feature": "colors", "operator": "contains_any", "values": ["Black"]},
+#     {"feature": "colors", "operator": "equals_set", "values": ["Black"]},
 #     {"feature": "price", "operator": "lte", "value": 200.0}
 #   ],
 #   "residual": ["na wesele"]

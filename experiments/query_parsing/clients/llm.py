@@ -82,7 +82,7 @@ def build_full_system_prompt(
     full_cfg = load_full_extraction_prompt()
     cat_spec = catalog[category]
     single_feats = [f for f, s in cat_spec.items() if not s["multi"]]
-    multi_feats = [f for f, s in cat_spec.items() if s["multi"]]
+    multi_feats = [f for f, s in cat_spec.items() if s["multi"] and f != "colors"]
 
     defs = []
     for feature, spec in cat_spec.items():
@@ -430,7 +430,7 @@ class CerebrasClient:
         res = self.extract_open(
             "black t-shirt",
             "T-shirts",
-            [{"feature": "colors", "operator": "contains_any", "values": ["Black"]}],
+            [{"feature": "colors", "operator": "equals_set", "values": ["Black"]}],
             catalog,
         )
         return res.latency_seconds
