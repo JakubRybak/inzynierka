@@ -223,6 +223,19 @@ class PromptTests(unittest.TestCase):
                 if category == 'Dresses':
                     self.assertNotIn('length', fields)
 
+    def test_unrequested_outside_schema_reasons_must_be_empty(self):
+        record, _, response = self.category_case('Skirts')
+        features = validate_response(response, record)
+        pattern = features.pop('pattern')
+        record['features'] = features
+        response = {'product_status': 'ok', 'product_reason': '', 'features': {'pattern': pattern}}
+        expected = validate_response(response, record)
+        self.assertEqual(validate_response({**response, 'outside_schema_reasons': {}}, record), expected)
+        for reasons in ({'pattern': 'Unexpected reason'}, None, []):
+            with self.subTest(reasons=reasons):
+                with self.assertRaisesRegex(ValueError, 'Unexpected response keys'):
+                    validate_response({**response, 'outside_schema_reasons': reasons}, record)
+
     def test_keywords_cannot_be_overwritten_by_extra_output_fields(self):
         source = dict(product_id='1', name='Black tee', description='', brand='Brand', section='Tops',
                       category='T-shirts', gender='Men', composition='100% cotton')

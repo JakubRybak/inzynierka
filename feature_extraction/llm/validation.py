@@ -8,7 +8,7 @@ def validate_response(response, record):
     category = record['category']
     reason_field = any('Other' not in choices(category, f, rule) for f, rule in rules.items())
     expected = {'product_status', 'product_reason', 'features'}
-    if reason_field:
+    if reason_field or response.get('outside_schema_reasons') == {}:
         expected.add('outside_schema_reasons')
     if set(response) != expected:
         raise ValueError('Unexpected response keys')
