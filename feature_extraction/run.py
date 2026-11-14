@@ -8,13 +8,14 @@ if __package__ in {None, ''}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from feature_extraction.pipeline import run
-from feature_extraction.settings import load_settings
+from feature_extraction.settings import add_selection_arguments, load_settings, select_product_scope
 from feature_extraction.schema import load_schemas
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path)
+    add_selection_arguments(parser)
     parser.add_argument('--run-name', required=True)
     parser.add_argument('--stage', choices=['keywords', 'llm', 'all'], default='all')
     parser.add_argument('--limit', type=int)
@@ -22,7 +23,6 @@ def main():
     parser.add_argument('--batch-size', type=int, help='Maximum requests per batch; omit for one job')
     parser.add_argument('--all-categories', action='store_true',
                         help='Use all supported categories; requires --all-products')
-    parser.add_argument('--all-products', action='store_true', help='Process all configured categories instead of the saved sample')
     parser.add_argument('--build-embeddings', action='store_true',
                         help='Prepare the selected products and references before LLM extraction')
     parser.add_argument('--execute', action='store_true', help='Authorize paid embedding and LLM calls')
@@ -38,8 +38,7 @@ def main():
     if args.all_categories and not args.all_products:
         parser.error('--all-categories requires --all-products')
     settings = load_settings(args.config)
-    if args.all_products:
-        settings['selection'] = None
+    select_product_scope(parser, args, settings)
     if args.all_categories:
         schemas, _ = load_schemas()
         settings['categories'] = sorted({category for _, category in schemas})

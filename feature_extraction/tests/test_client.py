@@ -178,8 +178,6 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(default_cfg['embedding_api']['concurrency'], 10)
         self.assertEqual(default_cfg['embedding_api']['max_rate_limit_retries'], 5)
         self.assertEqual(default_cfg['embedding_api']['max_auth_retries'], 2)
-        pilot_cfg = load_settings(Path('feature_extraction/artifacts/configs/pilot_9922.yaml'))
-        self.assertEqual(pilot_cfg['embedding_api']['concurrency'], 10)
 
     def test_parallel_calls_reuse_per_worker_sessions_and_reduce_4_to_3_to_2_to_1_with_wave_dedup(self):
         settings = make_embedding_settings(concurrency=4, max_rate_limit_retries=5)
@@ -493,13 +491,11 @@ class ClientTests(unittest.TestCase):
         settings = load_settings(pilot_path)
         self.assertEqual(settings['embedding_api']['concurrency'], 10)
         summary = build(settings, execute=False)
-        # 10,134 products (9,922 selected + 212 external references) -> 20,268 total vectors.
-        # 1,800 from pilot_900 + 8,245 from pilot_9922 = 10,045 cached; 10,223 missing (8,245 of 18,468 done).
+        # The local cache advances as the pilot runs.
         self.assertEqual(summary['selected_products_including_references'], 10134)
-        self.assertEqual(summary['missing_vectors_before_run'], 10223)
-        self.assertEqual(sum(summary['cached_vectors'].values()), 10045)
-        run_folder = Path(settings['artifacts']) / 'runs/pilot_9922'
-        self.assertFalse((run_folder / 'batch').exists())
+        self.assertEqual(summary['missing_vectors_before_run'] + sum(summary['cached_vectors'].values()),
+                         2 * summary['selected_products_including_references'])
+        self.assertFalse(summary['execute'])
 
 
 if __name__ == '__main__':

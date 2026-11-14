@@ -14,7 +14,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from ..data import load_inputs
-from ..settings import load_settings, validate_embedding_settings
+from ..settings import add_selection_arguments, load_settings, select_product_scope, validate_embedding_settings
 from ..storage import digest, write_json
 from .client import EmbeddingClient, EmbeddingRejected
 
@@ -371,12 +371,15 @@ def run_online_embeddings(api_cfg, cfg, fingerprint, ledger_path, ledger, pendin
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path)
+    add_selection_arguments(parser)
     parser.add_argument('--limit', type=int)
     parser.add_argument('--execute', action='store_true', help='Authorize paid embedding requests')
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:
         parser.error('--limit must be positive')
-    print(json.dumps(build(load_settings(args.config), args.limit, args.execute), indent=2))
+    settings = load_settings(args.config)
+    select_product_scope(parser, args, settings)
+    print(json.dumps(build(settings, args.limit, args.execute), indent=2))
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ every product are written as a short text (feature_text.py) and embedded into da
 per product whose text is new; about $0.07 for the pilot).
 
     python search_ui/prepare.py
-    python search_ui/prepare.py --features feature_extraction/outputs/pilot_9922/products.parquet --status ready
+    python search_ui/prepare.py --features data/processed/fashiongen/pilot_9922/products.parquet --status ready
     python search_ui/prepare.py --no-concepts
 """
 import argparse
