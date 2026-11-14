@@ -11,7 +11,7 @@ generative model at search time. It uses five kinds of signals:
   given offline by Gemini;
 - **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
-This is the state of 2026-11-13. The default ranking is `hybrid`; the other rankings stay available in the page.
+This is the state of 2026-11-14. The default ranking is `hybrid`; the other rankings stay available in the page.
 
 ## Rankings
 
@@ -80,8 +80,8 @@ dictionary of 547 names.
 A phrase gets detail names when the bank reads it as a detail or as "other", or does not know it. It takes the most
 similar name, when the cosine is at least 0.80, and with it every name whose cosine to that name is at least 0.82.
 Gemini names one detail in several ways and the similarity between two names is steadier than between a phrase and
-a name, so "with graphic" → graphic, bunny graphic, skull graphic and about 160 more, "dress with pockets" → pockets
-and 26 other kinds of pockets. Each name weighs by its closeness: 1 for the most similar name, 0.5 at 0.82. A negated
+a name, so "graphic print" reaches about 100 graphic prints named by their subject (skull, bunny, star, …) and
+"pockets" reaches 9 kinds of pockets (patch, cargo, welt, chest, …). Each name weighs by its closeness: 1 for the most similar name, 0.5 at 0.82. A negated
 phrase is matched without its negation ("without pockets" → pockets). A candidate scores by its best detail among
 these names: 1 for all-over, 0.7 for part, 0.4 for small, times the weight of the name.
 
@@ -173,16 +173,16 @@ To change the concepts:
 
 - **Negations and excluded colours.** "no red" is a filter on the main colours; a navy hoodie with a red logo
   passes it. Only about four dev queries are negated, so the negation terms are not measured.
-
 - **Shades split by the parser.** For "light pink dress" the parser returns the filter `colors: Pink` and the
   residual "light". The shade rule works around this; keeping "light pink" together in the residual would be
   cleaner.
 - **"light" alone.** Without a colour after it, "light" is read as lightweight ("light coat"), as the bank says.
-- **Term weights.** The detail weight 0.25 was chosen among 0.25, 0.5 and 1.0 on the dev queries of the benchmark;
-  a larger one lets a wrong match ("denim" as a detail, "two buttons" as decorative buttons) push the right products
-  down. The colour weight 1.0 is not measured.
-- **Detail names.** Closeness cannot tell every neighbour from the same detail: "lace" also reaches "lace-up" and
-  "lacing", "buckle" also reaches "belt", at a lower weight. The front photo is enlarged by an upscaling
+- **Term weights.** The detail weight 0.25 was chosen among 0.25, 0.5 and 1.0 on the dev queries of the benchmark,
+  with the details of 2026-11-13; a larger one let a wrong match ("two buttons" as decorative buttons, "denim" before
+  denim became a detail of every denim product) push the right products down. The colour weight 1.0 is not
+  measured.
+- **Detail names.** Closeness cannot tell every neighbour from the same detail: "lace" also reaches "lace up",
+  "buckle" also reaches "belt" and "strap", at a lower weight. The front photo is enlarged by an upscaling
   model that can draw textures, so the prompt takes fine textures from the description.
 - **1024 px photos.** The front photos enlarged to 1024 px (`images_enhanced/`) were embedded too
   (`offline/image_embeddings.py`, `embeddings/image_enhanced.parquet` of the pilot, $1.14). On the dev queries they

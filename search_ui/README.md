@@ -121,6 +121,7 @@ available; other views use their original PNGs. The rankings use the embeddings 
 | `concepts.py` | concept scores in the index and the `concepts` ranking |
 | `bank.py` | the phrase bank, the `bank` ranking and the terms of `hybrid` and `sentences` |
 | `sentences.py` | the names and description sentences of the products, for the `sentences` ranking |
+| `jev_reranker.py` | the Jev 1.14 second stage of the `*_jev` rankings |
 | `colours.py` | product colours and the colour dictionary, for shade phrases |
 | `details.py` | product details and the detail dictionary, for detail phrases |
 | `feature_text.py` | a product's features as a short text for its embedding |

@@ -15,7 +15,7 @@ import common
 PRODUCTS = common.SEARCH_UI / "ranking_data/product_details.parquet"
 VECTORS = "detail_embeddings.npz"
 MATCH = 0.80  # chosen on the phrase bank: 58% of its detail phrases and 5% of its "other" phrases reach it
-NEIGHBOUR = 0.82  # names of one detail: "graphic" reaches 167 of the 189 "... graphic" names, "lace" 25 lace names
+NEIGHBOUR = 0.82  # names of one detail: "graphic print" reaches about 100 subject graphic prints, "pocket" 9 kinds
 EXTENT = {"all-over": 1.0, "part": 0.7, "small": 0.4}
 
 
