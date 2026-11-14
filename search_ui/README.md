@@ -67,7 +67,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
 
 ## Using the page
 
-The server uses the enhanced WebP from `images_enhanced/pilot_9922` in the FashionGen dataset when available.
+The server uses the enhanced WebP from `pilot_9922/images_enhanced/` in the FashionGen dataset when available.
 Other views use their original PNGs.
 
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
