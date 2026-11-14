@@ -6,7 +6,7 @@ Z katalogu głównego repozytorium:
 
 ```bash
 python -m pip install -r image_processing/requirements.txt
-python -m image_processing feature_extraction/config/samples/pilot_9922.csv output/photos --photos main
+python -m image_processing data/processed/fashiongen/pilot_9922/selection.csv output/photos --photos main
 ```
 
 Wejście może być plikiem CSV, Parquet lub JSONL. Jedyna wymagana kolumna to `product_id`. Zdjęcia są wybierane z manifestów `images_train.csv` i `images_validation.csv` w `data/processed/fashiongen/`.

@@ -4,7 +4,7 @@
 
 - Query parsing turns a shopping query into one product category, hard filters, and a list of residual concepts.
 - English is the main language, followed by Polish and Spanish. The intended weighting is 94% English, 5% Polish, and 1% Spanish.
-- Category, feature, and value names follow the [taxonomy](../categories_and_features.md). Filters reflect requirements expressed in the query.
+- Category, feature, and value names follow the [taxonomy](../../../docs/catalog/categories_and_features.md). Filters reflect requirements expressed in the query.
 
 ## Category
 

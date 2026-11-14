@@ -1,6 +1,6 @@
 dataset: data/processed/fashiongen
 splits: [train, validation]
-selection: feature_extraction/config/samples/pilot_900.csv
+selection: null
 categories: [T-shirts, Dresses, Tank tops & Camisoles]
 references: feature_extraction/reference/products.jsonl
 embeddings: feature_extraction/artifacts/embeddings

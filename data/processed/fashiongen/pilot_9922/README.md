@@ -4,6 +4,8 @@ Opublikowany zbiór wyekstrahowanych cech oraz embeddingów multimodalnych (Gemi
 
 ## Zawartość katalogu
 
+- **`selection.csv`** – lista 9 922 produktów i kryteria wyboru opisane w [dokumentacji próbki](../../../../docs/catalog/pilot_selections.md).
+- **`images_enhanced/`** – ulepszone zdjęcia główne w formacie WebP, w folderach produktów.
 - **`products.parquet` (1.5 MB)** – główny, zoptymalizowany plik z cechami produktów w formacie Parquet.
 - **`products.jsonl` (47 MB)** – pełne rekordy JSONL zawierające przypisane cechy (`features`), pochodzenie każdej cechy (`feature_metadata`), powody ewentualnych wykluczeń (`outside_schema_reasons`) oraz metadane modelu Gemini (`llm_metadata`).
 - **`summary.json`** – podsumowanie metryk runu (9 796 `ready`, 31 `pending`, 95 `needs_review`).
@@ -20,7 +22,7 @@ import pandas as pd
 import json
 
 # Wczytanie z Parquet (zalecane, błyskawiczne)
-df = pd.read_parquet('feature_extraction/outputs/pilot_9922/products.parquet')
+df = pd.read_parquet('data/processed/fashiongen/pilot_9922/products.parquet')
 
 # Pola 'features' i 'feature_metadata' są zserializowane jako JSON
 df['features'] = df['features'].apply(json.loads)
@@ -32,7 +34,7 @@ print(df[['product_id', 'category', 'status', 'features']].head())
 import pyarrow.parquet as pq
 
 # Wczytanie wektorów zdjęć lub tekstów
-image_table = pq.read_table('feature_extraction/outputs/pilot_9922/embeddings/image.parquet')
+image_table = pq.read_table('data/processed/fashiongen/pilot_9922/embeddings/image.parquet')
 df_embeddings = image_table.to_pandas()
 print(df_embeddings.head())
 ```
