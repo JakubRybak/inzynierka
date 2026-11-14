@@ -79,10 +79,13 @@ def heldout_rows(rows):
     return [i for i, row in enumerate(rows) if row["queries"] > seen[row["phrase"]]]
 
 
+ENHANCED_IMAGES = False  # --enhanced-images: the embeddings of the 1024 px photos
+
+
 def engines():
     """{ranking: engine}: one engine with the full bank, one with the bank without benchmark-only phrases."""
     products, meta = common.load_index()
-    T, I = server.load_product_embeddings(products, meta)
+    T, I = server.load_product_embeddings(products, meta, enhanced=ENHANCED_IMAGES)
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])
     ranker = concepts.load(common.DATA, meta, products, embedder, threshold=0.72)
     rows = bank.load_rows()
@@ -155,22 +158,24 @@ def order(engine, q, ranking):
     return [engine.products[cand[i]]["product_id"] for i in idx[:K]], ms, [r["match"] for r in routes]
 
 
-def run(split, limit, workers, only=None):
-    """only: rerun just these rankings and keep the other runs and the pool of earlier runs."""
+def run(split, limit, workers, only=None, suffix=""):
+    """only: rerun just these rankings and keep the other runs and the pool of earlier runs; suffix: store them under
+    their name with this suffix, to compare with the same rankings on earlier data."""
     by_ranking_engine = engines()
     engine = by_ranking_engine["combined"]
     queries = load_queries(engine.products, engine.vocabulary, split)[:limit]
     DATA.mkdir(exist_ok=True)
     keep_runs, keep_pool = [], {}
     if only:
-        keep_runs = [r for r in map(json.loads, RUNS.open(encoding="utf-8")) if r["ranking"] not in only]
+        keep_runs = [r for r in map(json.loads, RUNS.open(encoding="utf-8")) if r["ranking"] not in
+                     {n + suffix for n in only}]
         keep_pool = {r["id"]: r for r in map(json.loads, POOL.open(encoding="utf-8"))}
 
     def one(q):
         out = {r: order(by_ranking_engine[r], q, r) for r in BASE if not only or r in only}
         if not only or any(r.startswith("hybrid") for r in only):
             out |= {r: v for r, v in hybrids(by_ranking_engine, q).items() if not only or r in only}
-        return q, out
+        return q, {r + suffix: v for r, v in out.items()}
 
     with ThreadPoolExecutor(workers) as pool:
         results = list(pool.map(one, queries))
@@ -248,7 +253,7 @@ def report(split, baseline):
         for group in ("all", "concept categories" if q["category"] in scored else "other categories",
                       f"candidates {size}"):
             rows[r["ranking"], group].append(m)
-    names = [n for n in RANKINGS if n in per_query]
+    names = [n for n in RANKINGS if n in per_query] + sorted(n for n in per_query if n not in RANKINGS)
     groups = ["all", "concept categories", "other categories", "candidates 2-9", "candidates 10-49", "candidates 50+"]
     lines = ["# Ranking evaluation on the pilot", "",
              f"Split: {split}. nDCG@{K}, MRR and P@1 with grade >= {RELEVANT} as relevant; products without a grade "
@@ -293,6 +298,9 @@ if __name__ == "__main__":
     ap.add_argument("--limit", type=int, help="run: at most this many queries")
     ap.add_argument("--workers", type=int, default=4, help="run: queries in parallel")
     ap.add_argument("--only", nargs="+", choices=RANKINGS, help="run: rerun just these rankings, keep the other runs")
+    ap.add_argument("--suffix", default="", help="run: store the rerun rankings under their name with this suffix")
+    ap.add_argument("--enhanced-images", action="store_true", help="run: use the embeddings of the 1024 px photos")
     ap.add_argument("--baseline", default="combined", help="report: ranking the differences are measured against")
     a = ap.parse_args()
-    run(a.split, a.limit, a.workers, a.only) if a.command == "run" else report(a.split, a.baseline)
+    ENHANCED_IMAGES = a.enhanced_images
+    run(a.split, a.limit, a.workers, a.only, a.suffix) if a.command == "run" else report(a.split, a.baseline)

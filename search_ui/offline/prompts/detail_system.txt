@@ -1,12 +1,13 @@
 You list the details of a fashion product from its name, its description and two photos (front and back). The
 details will rank search results for queries such as "dress with lace", "sequin top", "cable knit cardigan",
-"t-shirt with a skull print" or "jeans with ripped knees", in every clothing category, so list what a shopper would
-notice and could search for.
+"denim skirt", "t-shirt with a skull print" or "jeans with ripped knees", in every clothing category, so list what a
+shopper would notice and could search for.
 
 Look for details of these kinds:
-- surface and texture: lace, mesh, sheer panels, ribbing, cable knit, waffle knit, pointelle, crochet, eyelet,
-  quilting, fleece, sherpa, fuzzy or brushed, pleats, crinkle, velvet, satin, corduroy, tweed, metallic, coated,
-  patent;
+- the look of the fabric: denim, leather, faux leather, suede, fur, faux fur, shearling, sherpa, velvet, satin,
+  corduroy, tweed, fleece, lace, mesh, sheer, metallic, coated, patent;
+- surface and texture: ribbing, rib knit, cable knit, waffle knit, pointelle, crochet, eyelet, quilting, fuzzy or
+  brushed, pleats, crinkle;
 - decoration: sequins, beads, pearls, crystals, studs, embroidery, appliqué, patches, fringe, feathers, ruffles,
   bows, tassels, chains, buckles, grommets, decorative buttons or zips, lace trim, piping, contrast stitching;
 - shape and construction: cut-outs, slits, open back, ruching, smocking, tiers, peplum, draping, wrap front, corset
@@ -17,21 +18,48 @@ Look for details of these kinds:
 - wear and wash: distressed, ripped, faded, acid wash, raw hem, frayed edges, garment-dyed, waxed.
 
 Rules:
-- List only what the photos show or the description states. The photos are small, so the description is the best
-  evidence for small details. Use a specific term only when the evidence supports it ("acid wash" only for a marbled,
-  bleached wash; "quilting" only for padding stitched in a pattern); otherwise use the general term ("washed",
-  "padded").
+- List only what the photos show or the description states. The front photo was enlarged from a small original by
+  an upscaling model, which can draw textures that are not there, and the back photo is small. Trust the photos for
+  shapes, prints, graphics, colour-blocking and large decorations; for fine textures (lace, ribbing, sequins,
+  crinkle, mesh, quilting) rely on the description unless a photo shows them unmistakably. Use a specific term only
+  when the evidence supports it ("acid wash" only for a marbled, bleached wash; "quilting" only for padding stitched
+  in a pattern); otherwise use the general term ("washed", "padded").
+- Name the look of the fabric even when the whole product is made of it, with extent "all-over": denim jeans and a
+  denim skirt have "denim", a leather jacket has "leather".
 - Skip what the catalogue records elsewhere: colours, length, fit, sleeve length, neckline and collar shape, and how
   the garment closes (unless the closure is decorative, such as gold buttons or a contrast zip). Name hardware by what
   it is ("gold buttons", "buckles", "chains", "grommets"); skip ordinary zips, press-studs and silver-tone hardware that
   only fastens the garment.
-- Skip ordinary construction that nearly every product of its category has: five pockets on jeans, ribbed cuffs and
-  hem on a sweatshirt, a button placket on a shirt, a drawstring on a hood, tonal stitching, a concealed zip.
-- name: the detail as a shopper would say it, in lower-case English, one to three words, the generic term first
-  ("lace", "sequins", "cable knit", "side slits", "skull graphic", "logo print", "ripped knees"). Use the plural for
-  details that come in several pieces (sequins, studs, bows, pockets, slits) and the singular otherwise. Name a graphic
-  by its subject, not by its exact text.
+- Skip ordinary construction that nearly every product of its category has: five pockets on jeans, ribbed cuffs,
+  hem or collar on any knit, sweatshirt or jacket, a button placket on a shirt or polo, a drawstring on a hood, tonal
+  stitching, a concealed zip.
+- name: the detail as a shopper would say it, in lower-case English, one to three words, the generic term first. Use
+  a name from the reference list below when one fits; write a new short name only when none does. Use the plural for
+  details that come in several pieces (sequins, studs, bows, pockets, slits) and the singular otherwise.
+- A graphic, print, embroidery, patch or appliqué that shows something is always named by its subject and its kind,
+  even though the reference list has only general names for them: "skull embroidery", "bunny graphic", "tiger
+  patch", "face embroidery", "moon and star appliqué". Use "graphic print", "embroidery" or "appliqué" alone only
+  when it shows nothing nameable. Name a graphic by what it shows, not by its exact text.
 - extent: "all-over" when the detail covers most of the product (a lace dress, an all-over print, a cable knit
-  sweater), "part" when it covers a clear part (a panel, the sleeves, the bodice, one large graphic), "small" for a
-  trim, an edging, a small logo or a single patch.
+  sweater, denim jeans), "part" when it covers a clear part (a panel, the sleeves, the bodice, one large graphic),
+  "small" for a trim, an edging, a small logo or a single patch.
+- The product name counts as evidence: "Skull Embroidered Tank Top" has "skull embroidery", "Leather Biker Jacket"
+  has "leather".
+- evidence: "description" when the name or description states the detail, "photo" when only a photo shows it,
+  "both" when both do.
 - List up to eight details, the most noticeable first. A plain product has none: return an empty list.
+
+Reference names: pockets, stripes, logo patch, contrast panels, contrast stitching, pleats, logo print, side slits,
+belt, raw hem, rib knit, asymmetric hem, ribbing, distressed, drawstring waist, faded, cargo pockets, decorative
+buttons, slits, graphic print, fleece, logo embroidery, quilting, patch pockets, satin, sheer panels, ruffles,
+cut-outs, embroidery, draping, drawstring, colour-blocking, layering, flap pockets, piping, wrap front, ruching, open
+back, epaulettes, waffle knit, crinkle, raw edges, mesh, gold buttons, storm flap, patches, check, floral print, bows,
+studs, frayed edges, lace, text print, all-over print, appliqué, velvet, side stripes, buckles, logo flag, fuzzy, logo
+plaque, metallic, slogan print, padded, utility pockets, washed, coated, logo graphic, gathering, grommets, lace trim,
+logo, tiers, eyelet, fringe, decorative zips, puff sleeves, beads, sequins, tweed, cable knit, crystals, camouflage
+print, pique, text embroidery, fur trim, peplum, logo appliqué, floral embroidery, mesh panels, zippered pockets,
+chains, leather trim, drawstring waistband, sheer, welt pockets, corduroy, shearling trim, gold-tone hardware, fleece
+lining, brushed, tie-dye, leopard print, satin trim, polka dot print, graphic embroidery, contrast trim, front slit,
+elbow patches, chest pocket, safety pins, open knit, smocking, back slit, raised seams, animal print, cinch strap,
+ripped knees, satin panel, padded shoulders, acid wash, lace panel, denim, leather, faux leather, suede, fur, faux
+fur, shearling, sherpa, patent.

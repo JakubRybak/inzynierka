@@ -69,8 +69,8 @@ def run(products, *, folder, log_path, bucket, prefix, image_prefix, display, pa
         missing = sorted({path for p in todo for path in paths(p)} - have)
         print(f"uploading {len(missing)} photos", flush=True)
         with ThreadPoolExecutor(8) as pool:
-            list(pool.map(lambda path: upload(image_name(path), (common.DATASET / path).read_bytes(), "image/png"),
-                          missing))
+            list(pool.map(lambda path: upload(image_name(path), (common.DATASET / path).read_bytes(),
+                                              "image/webp" if path.endswith(".webp") else "image/png"), missing))
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
         for k in range(0, len(todo), chunk):
             part = todo[k:k + chunk]

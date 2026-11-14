@@ -17,6 +17,7 @@ PILOT = DATASET / "pilot_9922"
 FEATURES = PILOT / "products.parquet"
 EMBEDDINGS = PILOT / "embeddings"
 INDEX = "index.parquet"
+ENHANCED_IMAGE_VECTORS = "image_embeddings_enhanced.npz"
 META = "meta.json"
 JSON_COLUMNS = ["features", "feature_metadata", "exclusion_reasons"]
 

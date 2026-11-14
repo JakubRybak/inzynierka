@@ -404,8 +404,15 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
     return ThreadingHTTPServer(("127.0.0.1", port), Handler)
 
 
-def load_product_embeddings(products, meta):
+def load_product_embeddings(products, meta, enhanced=False, folder=common.DATA):
+    """Description and photo embeddings of the products; with enhanced, the photo embeddings of the 1024 px front
+    photos (offline/image_embeddings.py) replace the original ones where they exist."""
     _, text, image = common.load_embeddings(meta["embeddings"])
+    path = Path(folder) / common.ENHANCED_IMAGE_VECTORS
+    if enhanced and path.exists():
+        stored = np.load(path)
+        image = dict(image) | dict(zip(stored["ids"].tolist(), stored["vectors"]))
+        print(f"Photo embeddings: {len(stored['ids'])} from the 1024 px photos")
     missing = [p["product_id"] for p in products
                if p["product_id"] not in text or (p["images"] and p["product_id"] not in image)]
     if missing:
@@ -455,11 +462,13 @@ def main():
     ap.add_argument("--no-bank", action="store_true", help="do not load the phrase-bank ranking")
     ap.add_argument("--no-warmup", action="store_true", help="skip the test embedding call at startup")
     ap.add_argument("--no-browser", action="store_true")
+    # the 1024 px photos lowered MRR and P@1 on the dev queries, so the original ones stay the default
+    ap.add_argument("--enhanced-images", action="store_true", help="use the embeddings of the 1024 px photos")
     args = ap.parse_args()
 
     t = time.perf_counter()
     products, meta = common.load_index(args.data)
-    T, I = load_product_embeddings(products, meta)
+    T, I = load_product_embeddings(products, meta, enhanced=args.enhanced_images, folder=args.data)
     print(f"Index: {len(products)} products ({', '.join(f'{k} {v}' for k, v in meta['categories'].items())}) "
           f"· embeddings {meta['model']}, {meta['dim']} dims · {ms(t):.0f} ms")
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])
