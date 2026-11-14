@@ -491,7 +491,7 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
     return ThreadingHTTPServer(("127.0.0.1", port), Handler)
 
 
-def load_product_embeddings(products, meta, enhanced=False):
+def load_product_embeddings(products, meta, enhanced=True):
     """Description and photo embeddings of the products; with enhanced, the photo embeddings of the 1024 px front
     photos (offline/image_embeddings.py, embeddings/image_enhanced.parquet of the pilot) replace the original ones
     where they exist."""
@@ -552,13 +552,13 @@ def main():
     ap.add_argument("--no-bank", action="store_true", help="do not load the phrase-bank ranking")
     ap.add_argument("--no-warmup", action="store_true", help="skip the test embedding call at startup")
     ap.add_argument("--no-browser", action="store_true")
-    # the 1024 px photos lowered MRR and P@1 on the dev queries, so the original ones stay the default
-    ap.add_argument("--enhanced-images", action="store_true", help="use the embeddings of the 1024 px photos")
+    ap.add_argument("--original-images", action="store_true",
+                    help="use the embeddings of the original 256 px photos instead of the 1024 px ones")
     args = ap.parse_args()
 
     t = time.perf_counter()
     products, meta = common.load_index(args.data)
-    T, I = load_product_embeddings(products, meta, enhanced=args.enhanced_images)
+    T, I = load_product_embeddings(products, meta, enhanced=not args.original_images)
     print(f"Index: {len(products)} products ({', '.join(f'{k} {v}' for k, v in meta['categories'].items())}) "
           f"· embeddings {meta['model']}, {meta['dim']} dims · {ms(t):.0f} ms")
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])

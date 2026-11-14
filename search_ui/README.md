@@ -74,8 +74,8 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
 ## Using the page
 
 The page shows the enhanced 1024 px WebP front photos from `pilot_9922/images_enhanced/` in the dataset when
-available; other views use their original PNGs. The rankings use the embeddings of the original photos (see
-[README_ranking.md](README_ranking.md)).
+available; other views use their original PNGs. The rankings use the embeddings of the 1024 px front photos
+(`--original-images` for the original ones; see [README_ranking.md](README_ranking.md)).
 
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
   category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.

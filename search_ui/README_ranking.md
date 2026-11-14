@@ -186,5 +186,5 @@ To change the concepts:
   model that can draw textures, so the prompt takes fine textures from the description.
 - **1024 px photos.** The front photos enlarged to 1024 px (`images_enhanced/`) were embedded too
   (`offline/image_embeddings.py`, `embeddings/image_enhanced.parquet` of the pilot, $1.14). On the dev queries they
-  left nDCG@10 the same but lowered MRR and P@1 (`combined`: P@1 −0.047 [−0.081, −0.016]), so the rankings use the
-  original photo embeddings; `server.py --enhanced-images` switches to them.
+  left nDCG@10 the same but lowered MRR and P@1 (`combined`: P@1 −0.047 [−0.081, −0.016]). The rankings use them
+  anyway; `server.py --original-images` switches back to the original photo embeddings.

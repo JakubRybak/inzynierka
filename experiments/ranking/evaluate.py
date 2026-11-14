@@ -79,13 +79,13 @@ def heldout_rows(rows):
     return [i for i, row in enumerate(rows) if row["queries"] > seen[row["phrase"]]]
 
 
-ENHANCED_IMAGES = False  # --enhanced-images: the embeddings of the 1024 px photos
+ORIGINAL_IMAGES = False  # --original-images: the embeddings of the original 256 px photos
 
 
 def engines():
     """{ranking: engine}: one engine with the full bank, one with the bank without benchmark-only phrases."""
     products, meta = common.load_index()
-    T, I = server.load_product_embeddings(products, meta, enhanced=ENHANCED_IMAGES)
+    T, I = server.load_product_embeddings(products, meta, enhanced=not ORIGINAL_IMAGES)
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])
     ranker = concepts.load(common.DATA, meta, products, embedder, threshold=0.72)
     rows = bank.load_rows()
@@ -299,8 +299,8 @@ if __name__ == "__main__":
     ap.add_argument("--workers", type=int, default=4, help="run: queries in parallel")
     ap.add_argument("--only", nargs="+", choices=RANKINGS, help="run: rerun just these rankings, keep the other runs")
     ap.add_argument("--suffix", default="", help="run: store the rerun rankings under their name with this suffix")
-    ap.add_argument("--enhanced-images", action="store_true", help="run: use the embeddings of the 1024 px photos")
+    ap.add_argument("--original-images", action="store_true", help="run: use the embeddings of the original photos")
     ap.add_argument("--baseline", default="combined", help="report: ranking the differences are measured against")
     a = ap.parse_args()
-    ENHANCED_IMAGES = a.enhanced_images
+    ORIGINAL_IMAGES = a.original_images
     run(a.split, a.limit, a.workers, a.only, a.suffix) if a.command == "run" else report(a.split, a.baseline)
