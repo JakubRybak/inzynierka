@@ -234,6 +234,8 @@ res = parser.parse("white silk blouse with long sleeves", config="full_qwen")
 
 ## 📊 Wyniki benchmarku (Próba N = 250)
 
+Poniższe wyniki pochodzą sprzed zmian w parserze i są już nieaktualne.
+
 Zestawienie wyników na zrównoważonej próbie 250 zapytań ze wszystkich 22 kategorii oraz zapytań spoza katalogu:
 
 | Konfiguracja | Kategoria Acc | Zestaw filtrów Acc | Exact Match zapytania | Klauzule F1 | Residual F1 | Opóźnienie p50 | % < 1.0s SLA | Śr. koszt / zap. |
