@@ -15,7 +15,7 @@ import common
 ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
 MODEL = "typesafe/jev-1.14"
 DEPTH = 30
-BLEND = 0.25  # jev_text_d30_b0.25 in experiments/ranking/RESULTS_2026-11-14.md
+BLEND = 0.25  # weight of the first-stage z-score, chosen on the dev queries
 CRITERIA = {
     "3": "excellent: the product matches everything the query asks for, including any style, occasion, season, "
          "detail, material or colour shade the query mentions",

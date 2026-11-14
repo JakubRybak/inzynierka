@@ -1,8 +1,7 @@
 # Ranking
 
-The ranking orders the products that passed the filters; it never adds or removes any. The base rankings use
-embeddings and precomputed signals; the optional Jev variants also call a model at search time. The base ranking
-uses six kinds of signals:
+The ranking orders the products that passed the filters; it never adds or removes any. The default ranking runs no
+generative model at search time. It uses five kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
@@ -10,9 +9,7 @@ uses six kinds of signals:
 - **product colours**: one to three colours of every product with their share, given offline by Gemini;
 - **product details**: the details of every product (lace, sequins, cable knit, a skull graphic) with their extent,
   given offline by Gemini;
-- **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for;
-- **product sentences**: the name and every sentence of the description of each product, embedded in advance one
-  by one.
+- **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
 
 This is the state of 2026-11-13. The default ranking is `hybrid`; the other rankings stay available in the page.
 
@@ -28,45 +25,9 @@ This is the state of 2026-11-13. The default ranking is `hybrid`; the other rank
 | `concepts` | the scores of the concepts that the residual phrases name |
 | `bank` | one signal per residual phrase, picked with the phrase bank |
 | `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
-| `sentences` | description, best sentences, image and feature text for the whole query, plus the concept scores and the best sentence of every phrase; fitted weights |
-| `sentences_jev` (optional) | `sentences` selects the top 30; Jev grades their texts and reorders them by expected grade + 0.25 × their standardized first-stage score |
-| `hybrid_jev` (optional) | `hybrid` selects the top 30; the same Jev second stage reorders them by expected grade + 0.25 × their standardized first-stage score |
-| `hybrid_jev_vision` (optional, slow) | `hybrid` selects the top 30; Jev grades their text and main photo, using the same expected-grade blend |
-
-## Optional Jev second stage
-
-`core/jev_reranker.py` shares the prompt and scoring code with `experiments/ranking/rerank.py`. It implements the
-experiment's `jev_text_d30_b0.25` variant: Jev 1.14 reads the query and each product's name, brand, description and
-composition, with shuffled product labels. It returns probabilities for grades 0–3 in one OpenRouter request.
-The expected grade plus 0.25 times the first-stage z-score determines the order of the first 30. Ties preserve
-their first-stage order. All remaining candidates stay behind those 30 in their previous order; no product is
-added or removed. The UI shows Jev grades and scores separately from the first-stage score breakdown.
-
-`sentences_jev` needs the sentence embeddings, fitted weights, feature embeddings and phrase bank, just like
-`sentences`. `hybrid_jev` starts with the original hybrid signals, including colour, detail and negation terms,
-and requires only the assets needed by `hybrid`; sentence embeddings and fitted sentence weights are not needed.
-`hybrid_jev` has not yet been benchmarked; the Jev quality results in
-`experiments/ranking/RESULTS_2026-11-14.md` use the sentence-based first stage.
-
-`hybrid_jev_vision` adds one photo per product to the text, keeping the same model, grades and blend. It needs
-the same ranking assets as `hybrid`, plus local product photos and Pillow. It first tries
-`pilot_9922/images_enhanced/<id>/<id>_id_gridfs_1.webp` under `meta["dataset"]`, keeping the enhanced photo's
-full 1024 × 1024 resolution. If unavailable or unreadable, it falls back to indexed originals, preferring
-`*_id_gridfs_1`. It corrects EXIF orientation and converts to JPEG (quality 90), caps the longest side at
-1024 px and preserves smaller originals except for Jev's 280 px minimum. White padding preserves proportions;
-source files stay unchanged. Image bytes are embedded in each product's state object as an inline data URL, following
-[OpenRouter's multimodal decisions format](https://openrouter.ai/docs/guides/community/multimodal-decisions).
-The prompt asks Jev to use photos for visible colour, pattern, silhouette and decoration, text for composition,
-and to treat details hidden from the photo as unknown. It focuses on the garment being sold, not the background
-or other clothes. Products with no readable photo are graded from text and marked as such in the UI; if no
-candidate has a readable photo, there is no Jev call and the full hybrid order is retained. This variant has
-not been benchmarked for quality, cost or latency. The text-only measurements do not describe vision.
-
-All three options use `OPENROUTER_API_KEY`. They make no Jev calls at startup or for other rankings. Calls are
-uncached, have connect/read timeouts of 3.05/5 seconds (3.05/15 for vision) and are not retried automatically. A missing key, network
-error or invalid answer leaves the complete base ranking order intact and produces a warning. Fewer than two
-candidates or an empty query skip the call. The text-only offline measurements were about $0.0003 per call and 0.32 s
-median added latency; the UI displays the actual call time and cost when returned by the API.
+| `sentences` (option) | the query and its phrases compared with single sentences of the description, with fitted weights |
+| `sentences_jev`, `hybrid_jev` (options) | Jev 1.14 regrades the first 30 of `sentences` or `hybrid` |
+| `hybrid_jev_vision` (option, slow) | the same as `hybrid_jev`, with the main photo |
 
 ## Concepts
 
@@ -182,52 +143,6 @@ parts, and in the product view their values.
 In `bank` and `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
 for a colour when it has a colour filter or a phrase read as a shade.
 
-## Sentences
-
-SSENSE descriptions are lists of short sentences, each about one thing: "Short sleeve cotton jersey t-shirt in
-'blush' pink.", "Two-button placket at front.", "Velcro tabs at cuffs.". The embedding of a whole description blurs
-them. `prepare.py` therefore embeds the name and every sentence of every product on its own, verbatim like the
-descriptions (`core/sentences.py`). Most sentences repeat across products ("Tonal stitching." occurs 9,147 times), so
-the pilot has 30,977 unique ones. HTML tags left in some descriptions (`<br>`) are dropped first. Only the first 768
-dimensions of the embeddings are kept; on the dev queries the ranking is as good with 768 dimensions as with all
-3,072.
-
-Two scores come from them:
-- **the whole query**: the mean similarity of the query to the two most similar sentences of a candidate;
-- **a residual phrase**: the similarity of the phrase to the candidate's best sentence, counted only as far as it is
-  above the phrase's median similarity to all sentences. "with two buttons" is 0.68 to "Two-button placket." and 0.41
-  to a typical sentence, so a polo with that sentence gets 0.27, while the median polo, whose best sentence is about
-  other buttons, gets 0.17. A phrase that no sentence speaks about, such as "for work", is about as far from every
-  sentence: all coats get 0.11 give or take 0.01, which hardly changes their order. This replaces a threshold.
-
-## `sentences`
-
-```
-sentences = 1.00 × z(description) + 1.40 × z(best sentences) + 2.52 × z(image) + 0.26 × z(features)
-          + 2.94 × z(concept scores of each occasion, style or season phrase)
-          + 43.0 × (best sentence of each phrase, above the phrase's median)
-```
-
-- The first four parts compare the whole query with the candidate; `z` is the z-score within the candidates.
-- A phrase is read with the phrase bank only for three things: its concepts when it is an occasion, style or season
-  (or names a concept), whether it is negated, and whether it is a size or audience phrase, which is skipped. The
-  colour and detail routes of `hybrid` are not used. A negated phrase counts with a minus in both of its terms.
-- **Details** are found in the sentences, where the description states them.
-- **Colours** have no part of their own. The colour family is a filter of the parser. A shade is separated by the
-  parts of the whole query: mostly by the photo, which has the largest weight of them, and by the description and
-  the sentences when they name the shade ("in 'fuchsia' pink"). The sentence term of a shade phrase adds little.
-- A phrase of the bank uses the embedding stored with the bank, so only the spans of the query that the bank does
-  not know are embedded while the parser parses.
-- **The weights are fitted**, not set by hand (`experiments/ranking/learn.py`, written to
-  `ranking_data/sentence_weights.json`): a pairwise logistic regression on the judge's grades of the dev queries of
-  the benchmark. Of two graded products of a query, the one with the higher grade should score higher. The last
-  weight is large because its part is a raw similarity difference (0 to about 0.4), not a z-score.
-
-The measurements are in `experiments/ranking/RESULTS_2026-11-14.md`. With weights fitted without the query being
-ranked, `sentences` reaches nDCG@10 0.855 on the dev queries against 0.837 for `hybrid` (+0.018, 95% interval
-+0.005 to +0.031), with the same MRR and P@1; a second judge from another model family gives +0.022. It is weaker
-than `hybrid` on occasion phrases (0.859 against 0.879).
-
 ## Where the data comes from
 
 The scripts in `offline/` made the files in `ranking_data/`. They do not run at search time. Without `--execute`,
@@ -243,7 +158,7 @@ what is missing.
 | `product_details.parquet` | `product_details.py` (Batch API); Gemini 3.5 Flash-Lite with the product name, description and two photos; relabelled on 2026-11-14 | $3.99 + $5.53 |
 | `color_names.parquet` | `product_colors.py`: the colour names of the products; Gemini left out names that are not colours ("leopard print", "grey knit") | $0.01 |
 | `concept_names.parquet` | `prepare.py`: embeddings of the concept names | |
-| `sentence_weights.json` | `experiments/ranking/learn.py --write`: the weights of `sentences`, fitted on the judge's grades of the dev queries | |
+| `sentence_weights.json` | the weights of `sentences`, fitted on the judge's grades of the dev queries | |
 | `esci_clothing_queries.csv` | 10,454 Amazon ESCI queries from the earlier proof of concept | |
 
 To change the concepts:
@@ -252,22 +167,10 @@ To change the concepts:
 3. Relabel the bank: `python search_ui/offline/phrase_bank.py --execute`.
 4. Rebuild the index: `python search_ui/prepare.py`.
 
-The sentence embeddings are not in `ranking_data/`: `prepare.py` writes them to `data/sentence_embeddings.npz`
-(68 MB, about 31,000 embedding calls and $0.06 for the pilot).
+`prepare.py` writes the sentence embeddings of `sentences` to `data/sentence_embeddings.npz` (about $0.06).
 
 ## Open issues
 
-- **Fitted weights.** The weights of `sentences` come from 313 dev queries and one judge. They vary between the five
-  folds of the cross-validation (for example the image 2.2 to 3.2 times the description), and the test split of the
-  benchmark has not been used to confirm them. Refit them with `learn.py` when the signals or the grades change.
-- **Phrases that are not spans of the query.** A residual phrase that the bank does not know and that is not a span
-  of one to three words of the query (4% of the dev queries) is embedded after the parsing, which costs one more
-  round trip.
-- **Shades.** On queries with a shade phrase `sentences` is above `hybrid` (0.879 against 0.845), mostly because the
-  colour term of `hybrid`, with the hex values of the bank, did harm there. A lightness word ("light blue") is handled
-  worse than by `hybrid`, which orders the candidates by the lightness of their colours: 0.965 against 0.998 on the
-  5 such dev queries. Descriptions say "in pink", not "in light pink", so only the photo tells. The LLM reranker
-  reaches 0.959 on shade phrases, so colours remain the weakest part.
 - **Negations and excluded colours.** "no red" is a filter on the main colours; a navy hoodie with a red logo
   passes it. Only about four dev queries are negated, so the negation terms are not measured.
 

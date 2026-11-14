@@ -42,7 +42,7 @@ RERANK_BASES = dict(sentences_jev="sentences", hybrid_jev="hybrid", hybrid_jev_v
 # detail 0.25: chosen on the dev queries of the benchmark (0.25, 0.5 and 1.0 measured); colour 1.0 is not measured
 HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
-# the weights of the sentence ranking, fitted on the judge's grades (experiments/ranking/learn.py)
+# the weights of the sentence ranking, fitted on the judge's grades of the dev queries
 SENTENCE_WEIGHTS = common.SEARCH_UI / "ranking_data/sentence_weights.json"
 SENTENCE_PARTS = ("description", "sentences", "image", "features", "concept", "phrase")
 # the query embeddings a ranking needs, started together with the parser

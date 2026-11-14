@@ -7,23 +7,9 @@ filters by hand, switches between rankings and shows how long each stage took.
 
 How the results are ordered, and where the ranking data comes from: [README_ranking.md](README_ranking.md).
 
-Select **sentences + Jev** or **hybrid + Jev** in the Ranking menu to regrade the first 30 results of the chosen
-base ranking with Jev 1.14. The default is `hybrid`; the other rankings are marked with "?" in the menu. Both options use `OPENROUTER_API_KEY` from the environment or the
-repository `.env`, including with the mock or benchmark parser. One extra call costs about $0.0003 and took
-about 0.32 s in the offline experiment. The page shows its time, reported cost and product grades. If the call
-fails, the base ranking's order is shown with a warning. With fewer than two candidates or an empty query, no Jev call
-is made. Repeated searches and filter changes with a nonempty query make a fresh call when this option is selected.
-You can also open `/?q=dress+for+a+wedding&ranking=sentences_jev` or use `ranking=hybrid_jev`.
-
-Select **hybrid + Jev vision** (`ranking=hybrid_jev_vision`) to include one main product photo alongside the
-text for each of the top 30 hybrid results. It uses the same API key. Photos are read from the dataset path in
-`data/meta.json`, preferring `pilot_9922/images_enhanced/<id>/<id>_id_gridfs_1.webp`. These enhanced photos are
-sent at their full 1024 × 1024 resolution, converted to JPEG. If an enhanced photo is missing or unreadable,
-an indexed original photo is used. Images above 1024 px are reduced; smaller images keep their resolution
-except for Jev's 280 px minimum. Proportions are preserved with white padding. The page reports how many photos
-were used, and marks each graded product as `text + photo` or `text only`. Missing individual photos fall back
-to text; if none can be read, the hybrid order is kept without a Jev call. Vision cost, latency and quality have
-not been benchmarked; the text-only figures above do not apply to it. Actual cost and time appear after a search.
+The Ranking menu also offers `sentences` and three rankings in which Jev 1.14 regrades the first 30 results:
+`sentences_jev`, `hybrid_jev` and `hybrid_jev_vision` (with the main photo, slow). They need `OPENROUTER_API_KEY`
+and are marked with "?" in the menu; the default is `hybrid`.
 
 ## Quick start
 
