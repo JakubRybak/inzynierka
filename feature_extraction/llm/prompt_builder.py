@@ -72,11 +72,19 @@ def build_schema(rules, category, assigned=None):
         values = choices(category, feature, rule, assigned)
         has_other = 'Other' in allowed_values(rule)
         if is_multi_value(rule):
-            _, max_items = list_constraints(rule)
-            value_schema = {'type': 'ARRAY', 'items': enum(values), 'minItems': 1,
-                            'maxItems': max_items}
+            exclusive, max_items = list_constraints(rule)
+            ordinary_values = [value for value in values if value not in exclusive]
+            exclusive_values = [value for value in values if value in exclusive]
+            variants = []
+            if ordinary_values:
+                variants.append({'type': 'ARRAY', 'items': enum(ordinary_values),
+                                 'minItems': 1, 'maxItems': max_items})
+            if exclusive_values:
+                variants.append({'type': 'ARRAY', 'items': enum(exclusive_values),
+                                 'minItems': 1, 'maxItems': 1})
             if not has_other:
-                value_schema = {'anyOf': [value_schema, enum(['outside_schema'])]}
+                variants.append(enum(['outside_schema']))
+            value_schema = variants[0] if len(variants) == 1 else {'anyOf': variants}
         elif rule['type'] == 'composition':
             specials = rule.get('special_values', [])
             materials = {value: {'type': 'NUMBER', 'minimum': 0, 'maximum': rule['total']}

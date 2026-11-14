@@ -127,8 +127,11 @@ class PromptTests(unittest.TestCase):
     def test_skirt_type_accepts_multiple_values_and_other_alone(self):
         record, prompt, response = self.category_case('Skirts')
         schema = prompt['generation_config']['responseSchema']['properties']['features']['properties']
-        self.assertEqual(schema['skirt_type']['type'], 'ARRAY')
-        self.assertEqual(schema['skirt_type']['maxItems'], 5)
+        ordinary, exclusive = schema['skirt_type']['anyOf']
+        self.assertEqual(ordinary['maxItems'], 5)
+        self.assertEqual(set(ordinary['items']['enum']), {'Pleated', 'Wrap', 'Asymmetric', 'Tiered', 'Ruffled'})
+        self.assertEqual(exclusive, {'type': 'ARRAY', 'items': {'type': 'STRING', 'enum': ['Other']},
+                                     'minItems': 1, 'maxItems': 1})
         for value in [['Pleated', 'Asymmetric'], ['Wrap', 'Tiered', 'Ruffled'], ['Other']]:
             with self.subTest(value=value):
                 response['features']['skirt_type'] = value
