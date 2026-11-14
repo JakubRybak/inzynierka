@@ -18,7 +18,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Blue
     - feature: brand
@@ -73,7 +73,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: fit
@@ -131,7 +131,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Black
       - White
@@ -146,4 +146,4 @@ few_shots:
     residual:
     - for volleyball
     - not emerald
-  note: '''black and white'' -> contains_all; ''not emerald'' stays in residual.'
+  note: '''black and white'' -> equals_set; ''not emerald'' stays in residual.'

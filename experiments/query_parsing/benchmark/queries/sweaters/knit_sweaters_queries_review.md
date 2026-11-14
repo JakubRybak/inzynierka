@@ -14,7 +14,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — brak
 
@@ -24,7 +24,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Red", "Grey"]`
+- `colors equals_set ["Red", "Grey"]`
 
 **Residual** — `burgundy`
 
@@ -44,7 +44,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 
 **Residual** — brak
 
@@ -54,7 +54,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 - `gender in ["Women"]`
 - `neckline in ["High Neck"]`
 
@@ -87,7 +87,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `argyle`
 
@@ -108,7 +108,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -171,7 +171,7 @@
 
 - `main_composition contains_any ["Wool"]`
 - `gender in ["Women"]`
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `light blue`
 
@@ -199,7 +199,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `boys` · `cream`
 
@@ -417,7 +417,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "Blue"]`
+- `colors equals_any_set ["Black", "Blue"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — `navy`
@@ -493,7 +493,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 - `neckline in ["V-Neck"]`
 - `price lte 150`
 
@@ -516,6 +516,6 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `turkusowy` · `na jesień`

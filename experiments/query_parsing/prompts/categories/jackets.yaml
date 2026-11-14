@@ -78,7 +78,7 @@ few_shots:
       values:
       - Unlined
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Blue
       - White
@@ -106,13 +106,13 @@ few_shots:
       value: 300
     residual:
     - navy
-  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; ''navy and white'' -> contains_all [''Blue'',
+  note: '''unlined'' -> lining_composition equals_set [''Unlined'']; ''navy and white'' -> equals_set [''Blue'',
     ''White''] + residual [''navy''].'
 - query: burgundy faux leather jacket with silk lining and stand collar, without polyester
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: lining_composition
@@ -135,7 +135,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: insulation

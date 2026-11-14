@@ -1,5 +1,4 @@
-equals_set_base: '''only'', ''exclusively'', ''pure'', ''100% <material>'' (''100% cotton'' -> equals_set [''Cotton'']),
-  or ''all-<color>'' (''all-black'' -> equals_set [''Black''])'
+equals_set_base: '''only'', ''exclusively'', ''pure'', ''100% <material>'' (''100% cotton'' -> equals_set [''Cotton''])'
 equals_set_lining_suffix: ', or ''unlined'' (lining_composition equals_set [''Unlined''])'
 system_template: |-
   You convert a shopping query (in English, Polish, or Spanish) for the ALREADY selected category '{category}' into hard catalog filters for '{category}' and a list of residual ranking concepts.
@@ -15,13 +14,18 @@ system_template: |-
   1. Extract only requirements explicitly expressed in the query. Never infer unmentioned features from the garment category or from another feature.
   2. Single-choice features ({single_feats}) and 'brand' use 'in' (positive, OR for multiple values) and 'not_in' (explicit exclusions).
   3. Multi-choice / composition features ({multi_feats}) use:
-     - 'contains_any': single requested value, OR alternatives ('white or black', 'cotton or linen'), or material percentage between 0% and 100% ('30% wool').
-     - 'contains_all': conjunctions requiring all listed values together ('black and white', 'cotton and elastane').
-     - 'contains_none': explicit exclusions ('without polyester', 'no red', '0% wool').
+     - 'contains_any': single requested value, OR alternatives ('cotton or linen'), or material percentage between 0% and 100% ('30% wool').
+     - 'contains_all': conjunctions requiring all listed values together ('cotton and elastane').
+     - 'contains_none': explicit exclusions ('without polyester', '0% wool').
      - 'equals_set': exact set required via {equals_set_examples}.
-  4. Positive and negative clauses on the same feature are separate filter objects combined with AND.
-  5. Brand: use conventional brand capitalization (e.g. 'Nike', 'Adidas', 'Calvin Klein', 'Levi\'s', 'Under Armour', 'ASICS'). 'Off-White' in 'by Off-White' is a brand; 'off-white' as a color is a shade (White + residual 'off-white').
-  6. Price: preserve decimal numbers, ignore currency symbols/names without conversion:
+  4. Colors use exact sets:
+     - 'black' or 'all-black': equals_set ['Black'].
+     - 'black and white' or 'black and white and orange': equals_set with all named color families.
+     - 'black or white': equals_any_set ['Black', 'White']. Each value is a separate singleton alternative.
+     - 'no red': contains_none ['Red']. An excluded shade stays in residual.
+  5. Positive and negative clauses on the same feature are separate filter objects combined with AND.
+  6. Brand: use conventional brand capitalization (e.g. 'Nike', 'Adidas', 'Calvin Klein', 'Levi\'s', 'Under Armour', 'ASICS'). 'Off-White' in 'by Off-White' is a brand; 'off-white' as a color is a shade (White + residual 'off-white').
+  7. Price: preserve decimal numbers, ignore currency symbols/names without conversion:
      - up to / under / below / less than / at most / do / <= X -> 'lte'
      - at least / over / above / more than / minimum / od / >= X -> 'gte'
      - between X and Y / from X to Y -> two clauses: 'gte' X and 'lte' Y

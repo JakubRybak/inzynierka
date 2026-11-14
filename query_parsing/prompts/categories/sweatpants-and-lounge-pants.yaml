@@ -8,7 +8,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Grey
     - feature: brand
@@ -92,7 +92,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Blue
       - White
@@ -114,7 +114,7 @@ few_shots:
     residual:
     - navy
     - track pants
-  note: '''navy and white'' and ''cotton and elastane'' both use contains_all.'
+  note: '''navy and white'' uses equals_set; ''cotton and elastane'' uses contains_all.'
 - query: cropped green sweatpants with elasticized cuffs, not emerald
   output:
     filters:
@@ -123,7 +123,7 @@ few_shots:
       values:
       - Cropped
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: cuff_style

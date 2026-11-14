@@ -40,10 +40,13 @@ Each price filter has exactly `feature` (always `"price"`), `operator`, and `val
 | --- | --- | --- |
 | Single-choice features, including `gender`, and `brand` | `in` | Matches any listed value (OR). |
 | Single-choice features, including `gender`, and `brand` | `not_in` | Matches only if the value is absent from the list. |
-| `colors` and other multi-choice features | `contains_any` | Contains at least one listed value (OR). Also used for a single requested value. |
-| `colors` and other multi-choice features | `contains_all` | Contains every listed value (AND). |
-| `colors` and other multi-choice features | `contains_none` | Contains none of the listed values. |
-| `colors` and other multi-choice features | `equals_set` | Contains exactly the listed values, in any order. |
+| Other multi-choice features | `contains_any` | Contains at least one listed value (OR). Also used for a single requested value. |
+| Other multi-choice features | `contains_all` | Contains every listed value (AND). |
+| Other multi-choice features | `contains_none` | Contains none of the listed values. |
+| Other multi-choice features | `equals_set` | Contains exactly the listed values, in any order. |
+| `colors` | `equals_set` | Requires exactly the listed color families. |
+| `colors` | `equals_any_set` | Requires exactly one of the listed color families, with no additional colors. |
+| `colors` | `contains_none` | Excludes every listed color family. |
 | `main_composition` | `contains_any` | Contains at least one listed material. Also used for a single requested material. |
 | `main_composition` | `contains_all` | Contains every listed material. |
 | `main_composition` | `contains_none` | Contains none of the listed materials. |
@@ -62,7 +65,7 @@ Encode `between X and Y` as two price clauses, `gte` for X and `lte` for Y.
   "filters": [
     {"feature": "gender", "operator": "in", "values": ["Women"]},
     {"feature": "brand", "operator": "in", "values": ["Nike"]},
-    {"feature": "colors", "operator": "contains_any", "values": ["Blue"]},
+    {"feature": "colors", "operator": "equals_set", "values": ["Blue"]},
     {"feature": "main_composition", "operator": "contains_any", "values": ["Cotton"]},
     {"feature": "main_composition", "operator": "contains_none", "values": ["Polyester"]},
     {"feature": "price", "operator": "gte", "value": 50},
@@ -89,7 +92,7 @@ Encode `between X and Y` as two price clauses, `gte` for X and `lte` for Y.
 - All categories support explicit exclusions for the single-choice and multi-choice features they expose as filters, as well as for brand. Exclusions use the same allowed values as positive filters. A category must still be selected from the product the user wants.
 - Positive and negative requirements can apply to the same feature. Return separate clauses combined with `AND`.
 - `slim or regular T-shirt, but not oversized` gives `fit in ["Slim", "Regular"]` and `fit not_in ["Oversized"]`.
-- `white T-shirt with no red` gives `colors contains_any ["White"]` and `colors contains_none ["Red"]`.
+- `white T-shirt with no red` gives `colors equals_set ["White"]` and `colors contains_none ["Red"]`.
 
 **Outside scope**
 
@@ -127,10 +130,9 @@ Encode `between X and Y` as two price clauses, `gte` for X and `lte` for Y.
 
 **Allowed operators**
 
-- `AND` — all named colors. `white and black and red` extracts all three.
-- `OR` — any named color. `white or black` extracts both alternatives.
-- `contains_none` — excludes every listed color. `no red or black` excludes both colors individually.
-- `equals_set` — requires exactly the specified colors. `all-black T-shirt` gives `equals_set ["Black"]`. `black T-shirt` gives `contains_any ["Black"]`.
+- `equals_set` — `black T-shirt` and `all-black T-shirt` give `["Black"]`. `black and white T-shirt` gives `["Black", "White"]`.
+- `equals_any_set` — `white or black T-shirt` allows a white-only or a black-only T-shirt.
+- `contains_none` — `no red or black` excludes both colors individually.
 
 **Outside scope**
 

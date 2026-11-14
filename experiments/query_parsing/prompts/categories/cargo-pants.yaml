@@ -12,7 +12,7 @@ few_shots:
       values:
       - Men
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: fit
@@ -37,7 +37,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Black
     - feature: waistband_type
@@ -117,7 +117,7 @@ few_shots:
   output:
     filters:
     - feature: colors
-      operator: contains_all
+      operator: equals_set
       values:
       - Beige
       - Green
@@ -131,4 +131,4 @@ few_shots:
       - Open Hem
     residual:
     - not emerald
-  note: '''green and beige'' -> contains_all; ''not emerald'' stays in residual.'
+  note: '''green and beige'' -> equals_set; ''not emerald'' stays in residual.'

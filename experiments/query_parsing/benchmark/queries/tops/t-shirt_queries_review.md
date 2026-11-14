@@ -22,7 +22,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `main_composition contains_any ["Cotton"]`
 
 **Residual** — `to wear with jeans`
@@ -54,7 +54,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `unisex`
 
@@ -64,7 +64,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Blue", "Red"]`
+- `colors equals_set ["Blue", "Red"]`
 - `brand in ["Champion"]`
 
 **Residual** — `retro`
@@ -138,7 +138,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 - `gender in ["Women"]`
 
 **Residual** — `soft` · `heather grey`
@@ -149,7 +149,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Grey"]`
+- `colors equals_set ["Grey"]`
 
 **Residual** — `large` · `soft`
 
@@ -169,7 +169,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 
 **Residual** — brak
 
@@ -235,7 +235,7 @@
 **Filtry**
 
 - `fit in ["Slim"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `neckline in ["Crewneck"]`
 - `gender in ["Men"]`
 
@@ -247,7 +247,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `not turquoise`
 
@@ -267,7 +267,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Green"]`
+- `colors equals_set ["Green"]`
 - `gender in ["Men"]`
 
 **Residual** — `forest green`
@@ -280,7 +280,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Pink", "Blue"]`
+- `colors equals_set ["Pink", "Blue"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -303,7 +303,7 @@
 **Filtry**
 
 - `pattern in ["Solid"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `fit not_in ["Oversized"]`
 
 **Residual** — brak
@@ -325,7 +325,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Pink"]`
+- `colors equals_set ["Pink"]`
 
 **Residual** — `rose pink`
 
@@ -414,7 +414,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `price lte 19.99`
 
 **Residual** — `graphic`
@@ -436,7 +436,7 @@
 **Filtry**
 
 - `brand in ["Adidas"]`
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 
 **Residual** — brak
 
@@ -458,7 +458,7 @@
 
 - `gender in ["Women"]`
 - `fit in ["Slim"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `ivory`
 
@@ -519,7 +519,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Orange"]`
+- `colors equals_set ["Orange"]`
 
 **Residual** — `graphic`
 
@@ -551,7 +551,7 @@
 **Filtry**
 
 - `gender in ["Women"]`
-- `colors contains_any ["Yellow"]`
+- `colors equals_set ["Yellow"]`
 - `main_composition contains_any ["Cotton"]`
 
 **Residual** — brak
@@ -592,7 +592,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Pink", "Blue"]`
+- `colors equals_set ["Pink", "Blue"]`
 - `gender in ["Women"]`
 - `colors contains_none ["Red"]`
 
@@ -726,7 +726,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `brand not_in ["Nike"]`
 
 **Residual** — brak
@@ -780,7 +780,7 @@
 **Filtry**
 
 - `sleeve_length in ["Long Sleeve"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — `ivory`
@@ -792,7 +792,7 @@
 **Filtry**
 
 - `brand in ["Gildan"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — brak
 
@@ -861,7 +861,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Multicolor"]`
+- `colors equals_set ["Multicolor"]`
 
 **Residual** — `graphic`
 
@@ -901,7 +901,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "Blue"]`
+- `colors equals_any_set ["Black", "Blue"]`
 
 **Residual** — `navy` · `with a front pocket`
 
@@ -922,7 +922,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Blue", "Brown"]`
+- `colors equals_set ["Blue", "Brown"]`
 
 **Residual** — `twisted` · `navy`
 
@@ -942,7 +942,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `brand in ["Nautica"]`
 - `gender in ["Men"]`
 
@@ -986,7 +986,7 @@
 **Filtry**
 
 - `pattern in ["Solid"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Men"]`
 
 **Residual** — brak
@@ -998,7 +998,7 @@
 **Filtry**
 
 - `brand in ["Fruit of the Loom"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 
 **Residual** — `xlt`
 
@@ -1008,7 +1008,7 @@
 
 **Filtry**
 
-- `colors contains_all ["Pink", "Blue"]`
+- `colors equals_set ["Pink", "Blue"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — `graphic`
@@ -1094,7 +1094,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `main_composition contains_any ["Cotton"]`
 - `neckline in ["V-Neck"]`
 - `gender in ["Women"]`
@@ -1119,7 +1119,7 @@
 
 - `gender in ["Women"]`
 - `fit in ["Slim", "Regular"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — brak
 
@@ -1157,7 +1157,7 @@
 
 - `gender in ["Women"]`
 - `sleeve_length in ["Long Sleeve"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `price gte 20`
 - `price lte 40`
 
@@ -1212,7 +1212,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `gender in ["Men"]`
 
 **Residual** — brak
@@ -1278,7 +1278,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Purple"]`
+- `colors equals_set ["Purple"]`
 
 **Residual** — `unisex`
 
@@ -1342,7 +1342,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `distressed` · `disney`
 
@@ -1370,7 +1370,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `sleeve_length in ["Long Sleeve"]`
 - `gender in ["Men"]`
 - `price lte 30`
@@ -1445,7 +1445,7 @@
 **Filtry**
 
 - `neckline in ["V-Neck"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `gender in ["Women"]`
 
 **Residual** — brak
@@ -1518,7 +1518,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `graphic`
 
@@ -1627,7 +1627,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Blue"]`
+- `colors equals_set ["Blue"]`
 
 **Residual** — `turkusowa` · `na wakacje`
 
@@ -1648,7 +1648,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `main_composition contains_any ["Cotton"]`
 
 **Residual** — `off-white` · `with no graphics`
@@ -1670,7 +1670,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `neckline in ["Crewneck"]`
 - `price lte 30`
 
@@ -1755,7 +1755,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Grey"]`
+- `colors equals_any_set ["White", "Grey"]`
 - `brand in ["Nike"]`
 
 **Residual** — brak
@@ -1808,7 +1808,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 
 **Residual** — `lace` · `juniors`
 
@@ -1912,7 +1912,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White", "Grey"]`
+- `colors equals_any_set ["White", "Grey"]`
 - `sleeve_length in ["Long Sleeve"]`
 - `gender in ["Women"]`
 
@@ -1946,7 +1946,7 @@
 
 **Filtry**
 
-- `colors contains_any ["White"]`
+- `colors equals_set ["White"]`
 - `neckline in ["V-Neck"]`
 - `gender in ["Women"]`
 
@@ -1969,7 +1969,7 @@
 **Filtry**
 
 - `brand in ["Hanes"]`
-- `colors contains_any ["Red"]`
+- `colors equals_set ["Red"]`
 
 **Residual** — brak
 
@@ -1991,7 +1991,7 @@
 **Filtry**
 
 - `gender in ["Men"]`
-- `colors contains_any ["Black"]`
+- `colors equals_set ["Black"]`
 - `neckline in ["Crewneck"]`
 - `price lte 120`
 
@@ -2055,7 +2055,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Black", "White"]`
+- `colors equals_any_set ["Black", "White"]`
 - `colors contains_none ["Red"]`
 
 **Residual** — brak
@@ -2088,7 +2088,7 @@
 
 **Filtry**
 
-- `colors contains_any ["Beige"]`
+- `colors equals_set ["Beige"]`
 - `neckline in ["Scoop Neck"]`
 
 **Residual** — brak
