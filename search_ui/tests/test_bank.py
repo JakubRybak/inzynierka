@@ -203,6 +203,7 @@ class ColourWeight(unittest.TestCase):
 
     def test_colour_is_asked_by_a_colour_filter_or_a_shade_phrase(self):
         self.assertTrue(server.asks_colour([{"feature": "colors", "operator": "contains_any", "values": ["Pink"]}], []))
+        self.assertTrue(server.asks_colour([{"feature": "colors", "operator": "equals_any_set", "values": ["Pink", "Red"]}], []))
         self.assertFalse(server.asks_colour([{"feature": "colors", "operator": "contains_none", "values": ["Red"]}], []))
         self.assertTrue(server.asks_colour([], [dict(kind="shade", skipped=False)]))
         self.assertFalse(server.asks_colour([], [dict(kind="detail", skipped=False)]))

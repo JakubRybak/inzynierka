@@ -8,7 +8,9 @@ ranking (one call per phrase not embedded there yet; under $0.01 for the whole b
 ranking_data/color_names.parquet into data/color_embeddings.npz, and the detail names of
 ranking_data/product_details.parquet into data/detail_embeddings.npz. The extracted features of
 every product are written as a short text (feature_text.py) and embedded into data/feature_embeddings.npz (one call
-per product whose text is new; about $0.07 for the pilot).
+per product whose text is new; about $0.07 for the pilot). The name and every description sentence of the products
+are embedded into data/sentence_embeddings.npz for the sentence ranking (sentences.py; one call per unique sentence
+not embedded there yet, about 31,000 calls and $0.06 for the pilot).
 
     python search_ui/prepare.py
     python search_ui/prepare.py --features data/processed/fashiongen/pilot_9922/products.parquet --status ready
@@ -30,6 +32,7 @@ import common  # noqa: E402
 import concepts  # noqa: E402
 import details  # noqa: E402
 import feature_text  # noqa: E402
+import sentences  # noqa: E402
 
 
 def build_index(features, dataset, limit=None, statuses=None):
@@ -63,6 +66,7 @@ def main():
     ap.add_argument("--no-concepts", action="store_true", help="build the index without concept scores")
     ap.add_argument("--no-bank", action="store_true", help="do not embed the phrase bank")
     ap.add_argument("--no-feature-embeddings", action="store_true", help="do not embed the feature texts")
+    ap.add_argument("--no-sentences", action="store_true", help="do not embed the names and description sentences")
     args = ap.parse_args()
 
     dataset = args.dataset.resolve()
@@ -123,6 +127,11 @@ def main():
         texts = [feature_text.feature_text(r) for r in d.to_dict("records")]
         new = common.embed_texts(list(d["product_id"]), texts, embedder, args.output / common.FEATURE_VECTORS)
         print(f"Feature texts: {len(texts)} embedded ({new} new calls) -> {args.output / common.FEATURE_VECTORS}")
+    if not args.no_sentences:
+        embedder = common.QueryEmbedder(manifest["model"], manifest["output_dimensionality"])
+        count, new = sentences.embed(d.to_dict("records"), embedder, args.output)
+        print(f"Sentences: {count} unique names and description sentences embedded ({new} new calls) -> "
+              f"{args.output / sentences.VECTORS}")
 
 
 if __name__ == "__main__":

@@ -33,14 +33,20 @@ import common  # noqa: E402
 import concepts  # noqa: E402
 import conditions  # noqa: E402
 import facets  # noqa: E402
+import jev_reranker  # noqa: E402
 import parser_adapter  # noqa: E402
 
-RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid")
+RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid", "sentences",
+            "sentences_jev", "hybrid_jev", "hybrid_jev_vision")
+RERANK_BASES = dict(sentences_jev="sentences", hybrid_jev="hybrid", hybrid_jev_vision="hybrid")
 # detail 0.25: chosen on the dev queries of the benchmark (0.25, 0.5 and 1.0 measured); colour 1.0 is not measured
 HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
+# the weights of the sentence ranking, fitted on the judge's grades (experiments/ranking/learn.py)
+SENTENCE_WEIGHTS = common.SEARCH_UI / "ranking_data/sentence_weights.json"
+SENTENCE_PARTS = ("description", "sentences", "image", "features", "concept", "phrase")
 # the query embeddings a ranking needs, started together with the parser
-QUERY_EMBEDDINGS = dict(hybrid="combined", bank="combined", concepts="combined")
+QUERY_EMBEDDINGS = dict(hybrid="combined", bank="combined", concepts="combined", sentences="combined")
 POSITIVE = {"in", "contains_any", "contains_all", "equals_set", "equals_any_set"}
 
 
@@ -52,6 +58,13 @@ PAGE = common.SEARCH_UI / "static/index.html"
 EXAMPLES = common.SEARCH_UI / "static/example_queries.yaml"
 EXAMPLES_SHOWN = 5
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/(?P<product>[A-Za-z0-9_-]+)/(?P<stem>[A-Za-z0-9_-]+)\.png")
+
+
+def load_sentence_weights(path=SENTENCE_WEIGHTS):
+    """{part: weight} of the sentence ranking, or None when the file is missing."""
+    if not Path(path).exists():
+        return None
+    return json.loads(Path(path).read_text(encoding="utf-8"))["weights"]
 
 
 def ms(t):
@@ -84,12 +97,21 @@ def _z(s, mask):
 
 class SearchEngine:
     def __init__(self, products, T, I, parser, embedder, concept_ranker=None, bank=None, F=None, weights=HYBRID,
-                 attributes=None):
-        """attributes: {product_id: {"colours": [...], "details": [...]}} shown with a product."""
+                 attributes=None, sentences=None, sentence_weights=None, reranker=None,
+                 image_dir=common.DATASET, vision_reranker=None):
+        """attributes: {product_id: {"colours": [...], "details": [...]}} shown with a product. sentences: the
+        sentence embeddings (sentences.py); sentence_weights: {part: weight} of the sentence ranking."""
         self.products = [conditions.prepare_product(p) for p in products]
         self.attributes = attributes or {}
         self.concepts, self.bank, self.F, self.weights = concept_ranker, bank, F, dict(weights)
-        needs = dict(concepts=concept_ranker, bank=bank, hybrid=bank, features=F, combined_features=F)
+        self.sentences, self.sentence_weights = sentences, sentence_weights
+        self.reranker = reranker if reranker is not None else jev_reranker.JevReranker()
+        self.vision_reranker = vision_reranker if vision_reranker is not None else \
+            jev_reranker.JevReranker(image_dir=image_dir, timeout=15.0)
+        ready = bank is not None and F is not None and sentences is not None and sentence_weights is not None
+        needs = dict(concepts=concept_ranker, bank=bank, hybrid=bank, features=F, combined_features=F,
+                     sentences=True if ready else None)
+        needs.update({r: needs[base] for r, base in RERANK_BASES.items()})
         self.rankings = [r for r in RANKINGS if needs.get(r, True) is not None]
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
@@ -140,6 +162,17 @@ class SearchEngine:
                     sign = -1 if r["term"] == "negation" else 1
                     parts[f"{r['term']} · {r['phrase']}"] = sign * self.weights[r["term"]] * next(columns[r["term"]])
             return self.combine(base, terms), s_t, s_i, None
+        if ranking == "sentences":
+            t = time.perf_counter()
+            jobs = jobs or self.query_vectors(q, "combined", timings)
+            columns, s_t, s_i = self.sentence_columns(jobs, q, cand, category, timings, out, t, prefetched)
+            w = self.sentence_weights
+            out["_parts"] = {label: w[part] * column for part, label, column in columns if w.get(part)}
+            names = dict(sentences="best sentences", concept="concepts of each phrase",
+                         phrase="best sentence of each phrase")
+            out["formula"] = " + ".join(f"{w[k]:.3g} × {names.get(k, k)}" for k in SENTENCE_PARTS if w.get(k)) \
+                + "; a negated phrase counts with a minus"
+            return sum(out["_parts"].values(), np.zeros(len(cand))), s_t, s_i, None
         if ranking == "concepts":
             job = self.pool.submit(self.concepts.match, out["parsed"]["residual"], category, q)
             combined, s_t, s_i, _ = self.rank(q, "combined", cand, category, timings, out, jobs)
@@ -155,6 +188,30 @@ class SearchEngine:
         out["_parts"] = {}
         return self.embedding_scores(jobs or self.query_vectors(q, ranking, timings), ranking, cand, timings, t,
                                      parts=out["_parts"])
+
+    def sentence_columns(self, jobs, q, cand, category, timings, out, t, prefetched=None):
+        """The parts of the sentence ranking before their weights, [(part, label, column over the candidates)]:
+        the z-scores of the similarity of the whole query to the description, to the two best sentences, to the
+        image and to the feature text; and for every residual phrase its concept scores and its best sentence
+        (bank.sentence_terms). -> (columns, description similarity, image similarity)."""
+        terms, out["bank"] = self.bank.sentence_terms(out["parsed"]["residual"], cand, category, query=q,
+                                                      prefetched=prefetched, stats=timings)
+        timings["bank_ms"] = ms(t)
+        v = {k: common.normalize(f.result()) for k, f in jobs.items()}
+        timings["embedding_wait_ms"] = ms(t)
+        s_t, s_i = self.T[cand] @ v["t"], self.I[cand] @ v["i"]
+        mask, everyone = self.has_image[cand], np.ones(len(cand), bool)
+        z_i = _z(s_i, mask)
+        z_i[~mask] = z_i[mask].min() - 1 if mask.any() else 0
+        out["image_weight"] = 1.0
+        columns = [("description", "description", _z(s_t, everyone)),
+                   ("sentences", "sentences", _z(self.sentences.whole(v["t"], cand), everyone)),
+                   ("image", "image", z_i),
+                   ("features", "features", _z(self.F[cand] @ v["t"], everyone))]
+        # a sentence term is shown around the mean of the candidates, like the z-scores; the order stays the same
+        columns += [("concept", f"{term} · {phrase}", column) if term == "concept" else
+                    ("phrase", f"{term} · {phrase}", column - column.mean()) for term, phrase, column in terms]
+        return columns, s_t, s_i
 
     def combine(self, base, terms, weights=None):
         """Hybrid score: the similarity of the whole query plus the concept, colour and detail terms minus the
@@ -211,6 +268,7 @@ class SearchEngine:
         timings = {}
         out = dict(query=q, parser=self.parser.name, ranking=ranking, timings=timings,
                    counts=dict(index=len(self.products)), warnings=[])
+        base_ranking = RERANK_BASES.get(ranking, ranking)
 
         def fail(stage, e):
             timings["total_ms"] = ms(t0)
@@ -219,10 +277,10 @@ class SearchEngine:
             return out
 
         # the query embeddings do not depend on the parser, so they run while it parses
-        jobs = self.query_vectors(q, QUERY_EMBEDDINGS.get(ranking, ranking), timings) if q else None
+        jobs = self.query_vectors(q, QUERY_EMBEDDINGS.get(base_ranking, base_ranking), timings) if q else None
         # so do the embeddings of the spans of the query, which the residual phrases usually are
-        prefetched = self.bank.prefetch(q) if q and manual is None and self.bank is not None \
-            and ranking in ("hybrid", "bank") else None
+        prefetched = self.bank.prefetch(q, lean=base_ranking == "sentences") if q and manual is None \
+            and self.bank is not None and base_ranking in ("hybrid", "bank", "sentences") else None
         t = time.perf_counter()
         try:
             if manual is None:
@@ -259,14 +317,42 @@ class SearchEngine:
 
         t = time.perf_counter()
         s_t = s_i = None
+        rerank_parts = {}
         if len(cand) and q:
             try:
-                score, s_t, s_i, tie = self.rank(q, ranking, cand, out["parsed"]["category"], timings, out, jobs,
+                score, s_t, s_i, tie = self.rank(q, base_ranking, cand, out["parsed"]["category"], timings, out, jobs,
                                                  prefetched)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)
             order = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
+            if ranking in RERANK_BASES:
+                start = time.perf_counter()
+                vision = ranking == "hybrid_jev_vision"
+                try:
+                    top = order[:jev_reranker.DEPTH]
+                    products = [self.products[int(cand[j])] for j in top]
+                    reranker = self.vision_reranker if vision else self.reranker
+                    ids, rerank_parts, out["rerank"] = reranker(q, out["parsed"]["category"], products, score[top])
+                    positions = {p["product_id"]: j for p, j in zip(products, top)}
+                    if len(ids) != len(top) or set(ids) != set(positions):
+                        raise ValueError("Reranker changed the candidate set")
+                    if vision and out["rerank"].get("status") == "applied" and out["rerank"]["images"] < len(top):
+                        out["warnings"].append(f"Jev vision received photos for {out['rerank']['images']} of "
+                                               f"{len(top)} products; the others were evaluated from text only.")
+                    order = np.concatenate(([positions[pid] for pid in ids], order[len(top):]))
+                except Exception as e:
+                    rerank_parts = {}
+                    out["rerank"] = dict(status="fallback", count=0)
+                    if isinstance(e, jev_reranker.NoProductImages):
+                        reason = "No readable product photos for Jev vision."
+                    else:
+                        reason = "Check OPENROUTER_API_KEY and the connection to OpenRouter."
+                        if vision:
+                            reason += " Also check local photos and Pillow."
+                    out["warnings"].append(f"Jev reranking unavailable; showing the {base_ranking} ranking. {reason}")
+                out["rerank"]["base_ranking"] = base_ranking
+                timings["rerank_ms"] = ms(start)
         else:
             score, order = np.zeros(len(cand)), np.arange(len(cand))
         timings["ranking_ms"] = ms(t)
@@ -275,7 +361,7 @@ class SearchEngine:
         parts = out.pop("_parts", None) or {}
         if parts and len(cand):
             out["score_parts"] = [dict(label=k, spread=round(float(np.std(v)), 3)) for k, v in parts.items()]
-            out["weights"] = dict(self.weights) if ranking == "hybrid" else None
+            out["weights"] = dict(self.weights) if base_ranking == "hybrid" else None
         asked = {n for r in out.get("bank") or [] if r.get("detail") for n in r["detail"]["names"]}
         results = []
         for j in order:
@@ -288,6 +374,7 @@ class SearchEngine:
                 price=_show_price(p),
                 image=f"/images/{p['images'][0]}" if p["images"] else "",
                 score=round(float(score[j]), 4),
+                rerank=rerank_parts.get(p["product_id"]),
                 score_text=None if s_t is None else round(float(s_t[j]), 4),
                 score_image=None if s_i is None else round(float(s_i[j]), 4),
                 features={k: _show_value(v) for k, v in sorted(p["features"].items())},
@@ -404,15 +491,16 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
     return ThreadingHTTPServer(("127.0.0.1", port), Handler)
 
 
-def load_product_embeddings(products, meta, enhanced=False, folder=common.DATA):
+def load_product_embeddings(products, meta, enhanced=False):
     """Description and photo embeddings of the products; with enhanced, the photo embeddings of the 1024 px front
-    photos (offline/image_embeddings.py) replace the original ones where they exist."""
+    photos (offline/image_embeddings.py, embeddings/image_enhanced.parquet of the pilot) replace the original ones
+    where they exist."""
     _, text, image = common.load_embeddings(meta["embeddings"])
-    path = Path(folder) / common.ENHANCED_IMAGE_VECTORS
+    path = common.ENHANCED_IMAGE_EMBEDDINGS
     if enhanced and path.exists():
-        stored = np.load(path)
-        image = dict(image) | dict(zip(stored["ids"].tolist(), stored["vectors"]))
-        print(f"Photo embeddings: {len(stored['ids'])} from the 1024 px photos")
+        stored = pd.read_parquet(path, columns=["product_id", "embedding"])
+        image = dict(image) | {pid: np.asarray(v, np.float32) for pid, v in zip(stored["product_id"], stored["embedding"])}
+        print(f"Photo embeddings: {len(stored)} from the 1024 px photos")
     missing = [p["product_id"] for p in products
                if p["product_id"] not in text or (p["images"] and p["product_id"] not in image)]
     if missing:
@@ -453,7 +541,9 @@ def load_feature_embeddings(products, folder):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--parser", default="llm", help="llm, mock or module:function")
-    ap.add_argument("--ranking", choices=RANKINGS, help="default ranking in the page (hybrid, or combined without the phrase bank)")
+    ap.add_argument("--ranking", choices=RANKINGS,
+                    help="default ranking in the page (sentences; hybrid without the sentence embeddings; combined "
+                         "without the phrase bank)")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--data", type=Path, default=common.DATA)
     ap.add_argument("--concept-threshold", type=float, default=0.72, help="minimum phrase-concept cosine similarity")
@@ -468,7 +558,7 @@ def main():
 
     t = time.perf_counter()
     products, meta = common.load_index(args.data)
-    T, I = load_product_embeddings(products, meta, enhanced=args.enhanced_images, folder=args.data)
+    T, I = load_product_embeddings(products, meta, enhanced=args.enhanced_images)
     print(f"Index: {len(products)} products ({', '.join(f'{k} {v}' for k, v in meta['categories'].items())}) "
           f"· embeddings {meta['model']}, {meta['dim']} dims · {ms(t):.0f} ms")
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])
@@ -486,7 +576,7 @@ def main():
         print(f"Concepts: {len(ranker.ids)}, all used in {', '.join(info['categories']) or 'no category'}"
               + "".join(f"; {c}: {a} of {b} concepts" for c, (a, b) in info.get("partial", {}).items())
               + f" · threshold {ranker.threshold}, {ranker.combine} of phrases")
-    bank_ranker = None
+    bank_ranker = sentence_data = None
     if not args.no_bank:
         t = time.perf_counter()
         vectors = args.data / "bank_embeddings.npz"
@@ -494,25 +584,29 @@ def main():
             import bank
             import colours
             import details
+            import sentences
             rows = bank.load_rows()
             stored = np.load(vectors)
             if stored["phrases"].tolist() != [r["phrase"] for r in rows]:
                 raise OSError("the phrase bank changed since prepare.py; rerun it")
             colour_data, detail_data = colours.load(products, args.data), details.load(products, args.data)
+            sentence_data = sentences.load(products, args.data)
             bank_ranker = bank.BankRanker(products, T, I, Path(meta["dataset"]), rows, stored["vectors"], embedder,
                                           concepts.scored_concepts(meta.get("concepts") or {}),
                                           ranker.ids if ranker else (), ranker.E if ranker else None, colour_data,
-                                          detail_data)
+                                          detail_data, sentence_data)
             print(f"Phrase bank: {len(rows)} phrases · colours: "
                   f"{f'{len(colour_data.names)} names' if colour_data else 'missing, run prepare.py'} · details: "
-                  f"{f'{len(detail_data.names)} names' if detail_data else 'missing, run prepare.py'} · {ms(t):.0f} ms")
+                  f"{f'{len(detail_data.names)} names' if detail_data else 'missing, run prepare.py'} · sentences: "
+                  f"{f'{len(sentence_data.E)}' if sentence_data else 'missing, run prepare.py'} · {ms(t):.0f} ms")
         except (ImportError, OSError) as e:
             print(f"Phrase bank ranking unavailable ({type(e).__name__}: {str(e)[:200]}); run prepare.py")
     F = load_feature_embeddings(products, args.data)
     print(f"Feature embeddings: {'loaded' if F is not None else 'missing, run prepare.py'}")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))
-    engine = SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker, F, attributes=product_attributes())
-    args.ranking = args.ranking or ("hybrid" if "hybrid" in engine.rankings else "combined")
+    engine = SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker, F, attributes=product_attributes(),
+                          sentences=sentence_data, sentence_weights=load_sentence_weights(), image_dir=meta["dataset"])
+    args.ranking = args.ranking or next(r for r in ("hybrid", "sentences", "combined") if r in engine.rankings)
     if args.ranking not in engine.rankings:
         sys.exit(f"--ranking {args.ranking} is not available; available: {', '.join(engine.rankings)}")
     print(f"Parser: {engine.parser.name} · ranking: {args.ranking}")

@@ -166,11 +166,15 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num = n => Number(n).toLocaleString("en-US");
 const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
-const RANKING_NAMES = {combined: "embedding combined (description + image)", text: "embedding description",
-                       image: "embedding image", concepts: "concepts (residual → nearest concept name)",
-                       bank: "phrase bank (concepts + text, combined breaks ties)", features: "embedding features",
-                       combined_features: "embedding description + image + features",
-                       hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)"};
+const RANKING_NAMES = {hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)",
+                       combined: "? embedding combined (description + image)", text: "? embedding description",
+                       image: "? embedding image", concepts: "? concepts (residual → nearest concept name)",
+                       bank: "? phrase bank (concepts + text, combined breaks ties)", features: "? embedding features",
+                       combined_features: "? embedding description + image + features",
+                       sentences: "? sentences (description + image + features + best sentences, + concepts; fitted weights)",
+                       sentences_jev: "? sentences + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
+                       hybrid_jev: "? hybrid + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
+                       hybrid_jev_vision: "? hybrid + Jev vision (top 30 · text + photos) · slow version"};
 const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};
@@ -368,6 +372,7 @@ function drawTimings() {
         extra: [t.embedding_wait_ms !== undefined ? `waited for the query embedding ${fmtMs(t.embedding_wait_ms)}` : "",
                 t.concepts_ms !== undefined ? `concept matching ${fmtMs(t.concepts_ms)}` : "",
                 t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : "",
+                t.rerank_ms !== undefined ? `Jev reranking ${fmtMs(t.rerank_ms)}` : "",
                 t.phrase_embeddings_early || t.phrase_embeddings_late ? `phrase embeddings: ${t.phrase_embeddings_early || 0} ready from before, ${t.phrase_embeddings_late || 0} after parsing` : ""].filter(Boolean).join(" · ")}) +
     `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
   $("timings").innerHTML = html;
@@ -443,7 +448,7 @@ function bankLine() {
   const b = D && D.bank;
   if (!b) return "";
   const colour = D.image_weight > 1 ? `<div class="residual"><span class="meta">Colour in the query: the image counts ${D.image_weight}× in the base and for shade phrases.</span></div>` : "";
-  if (!b.length) return colour + `<div class="residual"><span class="meta">Phrase bank:</span> no residual – ranked by combined</div>`;
+  if (!b.length) return colour + `<div class="residual"><span class="meta">Phrase bank:</span> no residual – ranked by the whole query</div>`;
   return colour + `<div class="residual"><span class="meta">Phrase bank:</span></div>` + b.map(r => {
     const how = r.match === "exact" ? "known phrase"
       : r.match === "nearest" ? `nearest: “${esc(r.neighbour)}” ${r.similarity.toFixed(2)}`
@@ -457,6 +462,8 @@ function bankLine() {
       : c && c.hex ? `colour <span style="display:inline-block;width:14px;height:14px;background:${esc(c.hex)};border:1px solid #999;vertical-align:middle"></span> <b>${esc(c.name)}</b> ${esc(c.hex)}`
       : c ? `colour: ${c.lightness === "light" ? "lighter" : "darker"} shades first`
       : r.detail ? `details <b>${r.detail.names.slice(0, 8).map(esc).join(", ")}</b>${r.detail.names.length > 8 ? ` and ${r.detail.names.length - 8} more` : ""}`
+      : r.sentence ? [r.term === "concept" ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : "",
+                      "its best sentence in the name and description"].filter(Boolean).join(" + ")
       : r.whole_query ? `<span class="meta">nothing special – the whole query (combined) decides</span>`
       : [r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>${r.text_signals ? "" : " only"}` : "",
          r.text_signals ? `text “${esc(r.english)}”` : "",
@@ -469,7 +476,7 @@ function bankLine() {
 
 function partKind(label) {
   const k = label.split(" · ")[0];
-  return k === "concept" ? "k-con" : k === "colour" ? "k-col" : k === "detail" ? "k-det" : k === "negation" ? "k-neg" : "k-emb";
+  return k === "concept" ? "k-con" : k === "colour" ? "k-col" : k === "detail" || k === "sentence" ? "k-det" : k === "negation" ? "k-neg" : "k-emb";
 }
 
 // how much each part of the score moves the ranking: its spread (standard deviation) over the candidates
@@ -477,8 +484,9 @@ function partsPanel() {
   const sp = D && D.score_parts;
   if (!sp || !sp.length) return "";
   const max = Math.max(...sp.map(x => x.spread)) || 1, w = D.weights;
-  const formula = w ? `similarity of the whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "similarity of the whole query";
-  return `<div class="parts"><div><b>Score</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
+  const formula = D.formula || (w ? `similarity of the whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "similarity of the whole query");
+  const title = D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score";
+  return `<div class="parts"><div><b>${title}</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
     sp.map(x => `<div class="pr"><span class="lab" title="${esc(x.label)}">${esc(x.label)}</span><span class="v">±${x.spread.toFixed(2)}</span>` +
       `<div class="bar"><i class="${partKind(x.label)}" style="width:${Math.max(2, 100 * x.spread / max)}%"></i></div></div>`).join("") + `</div>`;
 }
@@ -508,6 +516,11 @@ function drawParserTop() {
 
 function drawNotes() {
   let h = "";
+  if (D.rerank && D.rerank.status === "applied") {
+    const r = D.rerank, cost = r.cost_usd == null ? "" : ` · $${r.cost_usd.toFixed(6)}`;
+    h += `<div class="meta">Jev${r.vision ? ` vision (${num(r.images)} photos)` : ""} reordered the first ${num(r.count)} results · ${fmtMs(D.timings.rerank_ms)}${cost}. ` +
+      `Score: expected grade (0–3) + ${r.blend} × standardized first-stage score. The remaining results keep their ${esc(r.base_ranking)} order.</div>`;
+  }
   if (D.error) h += `<div class="errorbox"><b>Error – stage: ${esc(D.error.stage)}</b><br>${esc(D.error.message)}</div>`;
   if (D.parsed && D.parsed.source === "manual" && "tree" in D)
     h += `<div class="meta">Filters applied by hand:</div>${treeLines(D.tree)}`;
@@ -543,6 +556,7 @@ function card(p, i) {
     `<div class="photo-frame">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : ""}</div>` +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
+      ${p.rerank ? `<div class="meta">Jev grade: ${p.rerank.grade.toFixed(2)}/3 · rerank score: ${p.rerank.score.toFixed(2)}${p.rerank.image_used === undefined ? "" : p.rerank.image_used ? " · text + photo" : " · text only"}</div>` : ""}
       ${hit.length || p.concepts.length || (p.details || []).length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
         `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}` +
         `${(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : ""}
@@ -563,7 +577,8 @@ async function details(k) {
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
     `<div class="photos">${p.images.map(z => `<div class="photo-frame"><img src="${esc(z)}" alt=""></div>`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
-    (Object.keys(k.parts || {}).length ? `<h3>Score ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
+    (k.rerank ? `<h3>Jev reranking</h3><p>Expected grade: ${k.rerank.grade.toFixed(2)}/3 · rerank score: ${k.rerank.score.toFixed(2)}${k.rerank.image_used === undefined ? "" : k.rerank.image_used ? " · text + photo" : " · text only"}</p>` : "") +
+    (Object.keys(k.parts || {}).length ? `<h3>${D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score"} ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
       `<tr><td><span class="swatch ${partKind(l)}" style="border:0"></span>${esc(l)}</td><td>${v >= 0 ? "+" : ""}${v.toFixed(2)}</td></tr>`).join("")}</table>` : "") +
     ((p.details || []).length ? `<h3>Details (Gemini)</h3><div class="dlist">${p.details.map(x =>
       `<span class="chip dt${asked.has(x.name) ? " on" : ""}">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : "") +

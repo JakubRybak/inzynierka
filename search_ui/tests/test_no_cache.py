@@ -120,6 +120,18 @@ class HttpHeaders(unittest.TestCase):
                         self.assertEqual(r.headers["Cache-Control"], "no-store", path)
                 with urllib.request.urlopen(base + "/api/search?q=jeans") as r:
                     self.assertEqual(json.loads(r.read())["counts"]["candidates"], 2)
+                enhanced = Path(d) / "pilot_9922/images_enhanced/1/x.webp"
+                enhanced.parent.mkdir(parents=True)
+                enhanced.write_bytes(b"enhanced photo")
+                image_url = base + "/images/images/train/1/x.png"
+                with urllib.request.urlopen(image_url) as r:
+                    self.assertEqual(r.headers["Content-Type"], "image/webp")
+                    self.assertEqual(r.headers["Cache-Control"], "no-store")
+                    self.assertEqual(r.read(), b"enhanced photo")
+                enhanced.unlink()
+                with urllib.request.urlopen(image_url) as r:
+                    self.assertEqual(r.headers["Content-Type"], "image/png")
+                    self.assertEqual(r.read(), b"\x89PNG")
                 with self.assertRaises(urllib.error.HTTPError) as err:
                     urllib.request.urlopen(base + "/images/../../etc/passwd")
                 self.assertEqual(err.exception.headers["Cache-Control"], "no-store")

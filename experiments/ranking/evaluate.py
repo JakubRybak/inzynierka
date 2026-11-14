@@ -12,19 +12,27 @@ random, combined, combined_features, concepts, bank and bank_heldout (the bank w
 from benchmark queries, so its phrases are as often unknown as in new queries), and the hybrid ranking for every
 pair of weights in GRID, with both banks (hybrid_c<concept>_n<negation>, hybrid_heldout_...), and with the weights of
 the search UI: hybrid_colour without the detail term, hybrid_details with it, hybrid_details_w<weight> with other detail
-weights. The pool holds every candidate of queries with at most COMPLETE candidates and the union of the rankings'
-top K otherwise. Products without a grade count as 0.
+weights. The sentence ranking of the search UI comes with two sets of weights: sentences uses, for every query, the
+weights fitted without the queries of its fold (learn.py), so its metrics are out of fold; sentences_fitted uses the
+weights the search UI ships, fitted on all dev queries, so on dev it is in sample. hybrid_sentence is the hybrid
+ranking plus HYBRID_SENTENCE times the sentence term of every phrase, with no fitted weight. The pool holds every
+candidate of queries with at most COMPLETE candidates and the union of the rankings' top K otherwise. Products
+without a grade count as 0. The report also lists every other ranking found in data/runs.jsonl (the reference
+ceiling of ceiling.py and the experiments of variants.py).
 """
 import argparse
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 import json
+import os
 from pathlib import Path
 import sys
 import time
 import zlib
 
-import numpy as np
+# with cached embeddings the worker threads only compute, and threaded BLAS calls from several threads stall
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+import numpy as np  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 SEARCH_UI = HERE.parents[1] / "search_ui"
@@ -37,12 +45,15 @@ import common  # noqa: E402
 import concepts  # noqa: E402
 import conditions  # noqa: E402
 import parser_adapter  # noqa: E402
+import sentences  # noqa: E402
 import server  # noqa: E402
+from cache import CachedEmbedder  # noqa: E402
 
 DATA = HERE / "data"
 RUNS = DATA / "runs.jsonl"
 POOL = DATA / "pool.jsonl"
 JUDGMENTS = DATA / "judgments.jsonl"
+EMBEDDINGS = DATA / "embeddings.sqlite"
 BASE = ("random", "combined", "combined_features", "concepts", "bank", "bank_heldout")
 GRID = [dict(concept=c, negation=n) for c in (0.25, 0.5, 1.0) for n in (0.5, 1.0)]
 HYBRIDS = [f"hybrid{h}_c{w['concept']:g}_n{w['negation']:g}" for h in ("", "_heldout") for w in GRID]
@@ -50,7 +61,12 @@ COLOUR = ["hybrid_colour", "hybrid_colour_heldout"]
 DETAIL_WEIGHTS = (0.25, 0.5)
 DETAILS = ["hybrid_details", "hybrid_details_heldout"] + [f"hybrid_details{h}_w{w:g}" for h in ("", "_heldout")
                                                           for w in DETAIL_WEIGHTS]
-RANKINGS = BASE + tuple(HYBRIDS) + tuple(COLOUR) + tuple(DETAILS)
+SENTENCE = [f"{r}{h}" for r in ("sentences", "sentences_fitted", "hybrid_sentence") for h in ("", "_heldout")]
+RANKINGS = BASE + tuple(HYBRIDS) + tuple(COLOUR) + tuple(DETAILS) + tuple(SENTENCE)
+FOLD_WEIGHTS = DATA / "sentence_fold_weights.json"
+FOLDS = 5
+HYBRID_SENTENCE = 4.0
+BASELINES = ("combined", "hybrid_details_w0.25", "hybrid_details_heldout_w0.25")
 K = 10
 COMPLETE = 20
 RELEVANT = 2
@@ -82,28 +98,33 @@ def heldout_rows(rows):
 ENHANCED_IMAGES = False  # --enhanced-images: the embeddings of the 1024 px photos
 
 
-def engines():
-    """{ranking: engine}: one engine with the full bank, one with the bank without benchmark-only phrases."""
+def engines(embedder=None, parser=None):
+    """{ranking: engine}: one engine with the full bank, one with the bank without benchmark-only phrases.
+    embedder: the query embedder, by default the real one behind the disk cache; parser: the parser of the engines,
+    by default none (the benchmark parses are passed to the rankings directly)."""
     products, meta = common.load_index()
     T, I = server.load_product_embeddings(products, meta, enhanced=ENHANCED_IMAGES)
-    embedder = common.QueryEmbedder(meta["model"], meta["dim"])
+    embedder = embedder or CachedEmbedder(common.QueryEmbedder(meta["model"], meta["dim"]), EMBEDDINGS)
     ranker = concepts.load(common.DATA, meta, products, embedder, threshold=0.72)
     rows = bank.load_rows()
     vectors = np.load(common.DATA / bank.VECTORS)["vectors"]
     keep = heldout_rows(rows)
 
-    colour_data, detail_data = colours.load(products), details.load(products)
+    colour_data, detail_data, sentence_data = colours.load(products), details.load(products), sentences.load(products)
 
     def bank_ranker(rs, vs):
         return bank.BankRanker(products, T, I, Path(meta["dataset"]), rs, vs, embedder,
                                concepts.scored_concepts(meta["concepts"]), ranker.ids, ranker.E, colour_data,
-                               detail_data)
+                               detail_data, sentence_data)
 
-    parser = parser_adapter.Parser("benchmark", lambda q: None)
+    parser = parser or parser_adapter.Parser("benchmark", lambda q: None)
     F = server.load_feature_embeddings(products, common.DATA)
-    engine = server.SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker(rows, vectors), F)
+    shipped = server.load_sentence_weights()
+    engine = server.SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker(rows, vectors), F,
+                                 sentences=sentence_data, sentence_weights=shipped)
     heldout = server.SearchEngine(products, T, I, parser, embedder, ranker,
-                                  bank_ranker([rows[i] for i in keep], vectors[keep]), F)
+                                  bank_ranker([rows[i] for i in keep], vectors[keep]), F,
+                                  sentences=sentence_data, sentence_weights=shipped)
     print(f"bank {len(rows)} phrases, heldout bank {len(keep)}")
     return {r: heldout if "heldout" in r else engine for r in RANKINGS}
 
@@ -133,6 +154,12 @@ def hybrids(engines, q):
             out[name] = (top_k(engine, cand, engine.combine(base, terms, w)), ms, matches)
         colour = image_base if server.asks_colour(q["filters"], routes) else base
         suffix = prefix.removeprefix("hybrid")
+        if engine.sentences is not None:
+            phrase = sum((c for term, _, c in engine.bank.sentence_terms(q["residual"], cand, q["category"],
+                                                                         query=q["query"])[0] if term == "sentence"),
+                         np.zeros(len(cand)))
+            out["hybrid_sentence" + suffix] = (top_k(engine, cand, engine.combine(colour, terms, server.HYBRID)
+                                                     + HYBRID_SENTENCE * phrase), ms, matches)
         out["hybrid_colour" + suffix] = (top_k(engine, cand, engine.combine(colour, terms, dict(server.HYBRID, detail=0))),
                                          ms, matches)
         out["hybrid_details" + suffix] = (top_k(engine, cand, engine.combine(colour, terms, server.HYBRID)), ms, matches)
@@ -143,9 +170,46 @@ def hybrids(engines, q):
     return out
 
 
+def fold(query_id):
+    """The fold of a query; the weights it is ranked with were fitted without the queries of this fold."""
+    return zlib.crc32(query_id.encode()) % FOLDS
+
+
+def sentence_parts(engine, q):
+    """The parts of the sentence ranking for a query, summed by part: {part: column over the candidates}, and the
+    routes of its phrases."""
+    cand = np.array(q["candidates"])
+    out = dict(parsed=dict(category=q["category"], residual=q["residual"], filters=q["filters"]))
+    columns, _, _ = engine.sentence_columns(engine.query_vectors(q["query"], "combined"), q["query"], cand,
+                                            q["category"], {}, out, time.perf_counter())
+    parts = {k: np.zeros(len(cand)) for k in server.SENTENCE_PARTS}
+    for part, _, column in columns:
+        parts[part] = parts[part] + column
+    return parts, out["bank"]
+
+
+def weighted(parts, weights):
+    return sum(w * parts[k] for k, w in weights.items())
+
+
+def sentence_rankings(engines, q, fold_weights):
+    """The sentence ranking with the weights of the query's fold and with the shipped weights, for both banks."""
+    cand, out = np.array(q["candidates"]), {}
+    for suffix, engine, key in (("", engines["bank"], "full"), ("_heldout", engines["bank_heldout"], "heldout")):
+        start = time.perf_counter()
+        parts, routes = sentence_parts(engine, q)
+        ms, matches = (time.perf_counter() - start) * 1000, [r["match"] for r in routes]
+        if fold_weights:
+            out["sentences" + suffix] = (top_k(engine, cand, weighted(parts, fold_weights[key]["folds"][fold(q["id"])])),
+                                         ms, matches)
+        if engine.sentence_weights:
+            out["sentences_fitted" + suffix] = (top_k(engine, cand, weighted(parts, engine.sentence_weights)), ms, matches)
+    return out
+
+
 def order(engine, q, ranking):
     cand = np.array(q["candidates"])
-    out, timings = dict(parsed=dict(category=q["category"], residual=q["residual"])), {}
+    out, timings = dict(parsed=dict(category=q["category"], residual=q["residual"], filters=q["filters"])), {}
     start = time.perf_counter()
     if ranking == "random":
         score, tie = np.random.default_rng(zlib.crc32(q["id"].encode())).random(len(cand)), None
@@ -171,10 +235,19 @@ def run(split, limit, workers, only=None, suffix=""):
                      {n + suffix for n in only}]
         keep_pool = {r["id"]: r for r in map(json.loads, POOL.open(encoding="utf-8"))}
 
+    fold_weights = json.loads(FOLD_WEIGHTS.read_text(encoding="utf-8")) if FOLD_WEIGHTS.exists() else None
+    if engine.sentences is None:
+        print("no sentence embeddings (prepare.py): the sentence rankings are left out")
+    elif not fold_weights:
+        print(f"no {FOLD_WEIGHTS.name} (learn.py): the out-of-fold sentence rankings are left out")
+
     def one(q):
         out = {r: order(by_ranking_engine[r], q, r) for r in BASE if not only or r in only}
         if not only or any(r.startswith("hybrid") for r in only):
             out |= {r: v for r, v in hybrids(by_ranking_engine, q).items() if not only or r in only}
+        if engine.sentences is not None and (not only or any(r.startswith("sentences") for r in only)):
+            out |= {r: v for r, v in sentence_rankings(by_ranking_engine, q, fold_weights).items()
+                    if not only or r in only}
         return q, {r + suffix: v for r, v in out.items()}
 
     with ThreadPoolExecutor(workers) as pool:
@@ -235,7 +308,7 @@ def bootstrap(values, rounds=BOOTSTRAP, seed=0):
     return v.mean(), np.percentile(means, 2.5), np.percentile(means, 97.5)
 
 
-def report(split, baseline):
+def report(split, baselines=BASELINES):
     pool = {r["id"]: r for r in map(json.loads, POOL.open(encoding="utf-8")) if split == "all" or r["split"] == split}
     scored = set(concepts.scored_concepts(json.loads((common.DATA / common.META).read_text(encoding="utf-8"))["concepts"]))
     grades = load_grades()
@@ -253,7 +326,7 @@ def report(split, baseline):
         for group in ("all", "concept categories" if q["category"] in scored else "other categories",
                       f"candidates {size}"):
             rows[r["ranking"], group].append(m)
-    names = [n for n in RANKINGS if n in per_query] + sorted(n for n in per_query if n not in RANKINGS)
+    names = [n for n in RANKINGS if n in per_query] + [n for n in per_query if n not in RANKINGS]
     groups = ["all", "concept categories", "other categories", "candidates 2-9", "candidates 10-49", "candidates 50+"]
     lines = ["# Ranking evaluation on the pilot", "",
              f"Split: {split}. nDCG@{K}, MRR and P@1 with grade >= {RELEVANT} as relevant; products without a grade "
@@ -268,9 +341,9 @@ def report(split, baseline):
                 cells.append(f"{np.mean(values):.3f} ({len(values)})" if values else "-")
             lines.append(f"| {n} | " + " | ".join(cells) + " |")
         lines.append("")
-    if baseline in names:
-        lines += [f"## difference to {baseline} (mean and 95% bootstrap interval over queries)", "",
-                  "| ranking | ndcg | mrr | p1 |", "| --- | ---: | ---: | ---: |"]
+    for baseline in [b for b in baselines if b in names]:
+        lines += [f"## difference to {baseline} (mean and 95% bootstrap interval over queries; nDCG wins and losses)",
+                  "", "| ranking | ndcg | mrr | p1 | wins | losses |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
         base = per_query[baseline]
         for n in names:
             if n == baseline:
@@ -280,7 +353,9 @@ def report(split, baseline):
                 d = [m[metric] - base[qid][metric] for qid, m in per_query[n].items()
                      if qid in base and m[metric] is not None and base[qid][metric] is not None]
                 cells.append("{:+.3f} [{:+.3f}, {:+.3f}]".format(*bootstrap(d)) if d else "-")
-            lines.append(f"| {n} | " + " | ".join(cells) + " |")
+                if metric == "ndcg":
+                    wins, losses = sum(x > 1e-9 for x in d), sum(x < -1e-9 for x in d)
+            lines.append(f"| {n} | " + " | ".join(cells) + f" | {wins} | {losses} |")
         lines.append("")
     lines += ["## time per query (ms)", "", "| ranking | p50 | p95 |", "| --- | ---: | ---: |"]
     lines += [f"| {n} | {np.percentile(t, 50):.0f} | {np.percentile(t, 95):.0f} |" for n, t in times.items()]
@@ -300,7 +375,8 @@ if __name__ == "__main__":
     ap.add_argument("--only", nargs="+", choices=RANKINGS, help="run: rerun just these rankings, keep the other runs")
     ap.add_argument("--suffix", default="", help="run: store the rerun rankings under their name with this suffix")
     ap.add_argument("--enhanced-images", action="store_true", help="run: use the embeddings of the 1024 px photos")
-    ap.add_argument("--baseline", default="combined", help="report: ranking the differences are measured against")
+    ap.add_argument("--baseline", nargs="+", default=list(BASELINES),
+                    help="report: rankings the differences are measured against")
     a = ap.parse_args()
     ENHANCED_IMAGES = a.enhanced_images
     run(a.split, a.limit, a.workers, a.only, a.suffix) if a.command == "run" else report(a.split, a.baseline)

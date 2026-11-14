@@ -6,7 +6,7 @@ from pathlib import Path
 sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[1] / "core")]
 import conditions as c  # noqa: E402
 import parser_adapter as pa  # noqa: E402
-from test_conditions import P  # noqa: E402
+from test_conditions import P, product  # noqa: E402
 
 
 def parsed(category, *filters, residual=""):
@@ -35,6 +35,19 @@ class ToCondition(unittest.TestCase):
     def test_category_only(self):
         self.assertEqual(pa.to_condition(parsed("Dresses", residual="for a wedding")),
                          {"op": "and", "args": [{"feature": "category", "values": ["Dresses"]}]})
+
+    def test_color_modes_distinguish_single_colors_from_the_exact_combination(self):
+        colors = [["Black"], ["White"], ["Black", "White"], ["Black", "Red"], []]
+        products = [product(str(i), "Dresses", "Dresses", dict(colors=values)) for i, values in enumerate(colors)]
+        for operator, expected in (("equals_any_set", [0, 1]), ("equals_set", [2])):
+            with self.subTest(operator=operator):
+                tree = pa.to_condition(parsed("Dresses", ("colors", operator, ["black", "White"])))
+                self.assertEqual(c.filter_products(tree, products)["candidates"], expected)
+
+    def test_single_color_alternatives_reject_empty_or_wrong_features(self):
+        for feature, values in (("colors", []), ("brand", ["Acne Studios"]), ("colors", [None])):
+            with self.subTest(feature=feature, values=values), self.assertRaises(c.ConditionError):
+                pa.to_condition(parsed("Dresses", (feature, "equals_any_set", values)))
 
     def test_out_of_catalog(self):
         with self.assertRaises(pa.OutOfCatalog):

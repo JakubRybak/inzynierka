@@ -1,7 +1,8 @@
 """
 Embeddings of the enhanced front photos (`images_enhanced/` of the pilot, 1024 px) with the model and dimension of
-the product embeddings, kept next to the original ones in search_ui/data/image_embeddings_enhanced.npz. An image
-costs as many tokens as the original photo (258), so all products cost about $1.15.
+the product embeddings, written next to the original ones as embeddings/image_enhanced.parquet of the pilot (Git
+LFS); search_ui/data/image_embeddings_enhanced.npz keeps the progress. An image costs as many tokens as the original
+photo (258), so all products cost about $1.15.
 
     python search_ui/offline/image_embeddings.py             # plan only, no API calls
     python search_ui/offline/image_embeddings.py --execute   # paid calls
@@ -61,6 +62,7 @@ def main():
     print(f"{len(products)} products, {len(known)} embedded, {len(todo)} to embed (about ${estimate:.2f}), "
           f"{missing} without an enhanced photo; model {meta['model']}, {meta['dim']} dims")
     if not todo or not args.execute:
+        export(known)
         return
     if estimate > args.budget_usd:
         raise SystemExit(f"estimate ${estimate:.2f} is over --budget-usd {args.budget_usd}")
@@ -106,6 +108,22 @@ def main():
     save()
     print(f"done {state['done']}, errors {errors}; {state['tokens']} tokens, about "
           f"${state['tokens'] * USD_PER_MILLION / 1e6:.3f} -> {OUTPUT}")
+    export(known)
+
+
+def export(known):
+    """The embeddings as a Parquet file shaped like embeddings/image.parquet of the pilot."""
+    if not known:
+        return
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    ids = sorted(known)
+    pq.write_table(pa.table({
+        "product_id": ids,
+        "embedding": pa.array([known[i].astype(np.float32) for i in ids], type=pa.list_(pa.float32())),
+        "image_path": [f"{common.PILOT.name}/images_enhanced/{i}/{i}_id_gridfs_1.webp" for i in ids]}),
+        common.ENHANCED_IMAGE_EMBEDDINGS)
+    print(f"{len(ids)} embeddings -> {common.ENHANCED_IMAGE_EMBEDDINGS}")
 
 
 if __name__ == "__main__":
