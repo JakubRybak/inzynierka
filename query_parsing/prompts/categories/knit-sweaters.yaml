@@ -10,7 +10,7 @@ few_shots:
       values:
       - Wool
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Red
     - feature: neckline
@@ -111,7 +111,7 @@ few_shots:
       values:
       - Wool
     - feature: colors
-      operator: contains_any
+      operator: equals_set
       values:
       - Green
     - feature: sleeve_length
