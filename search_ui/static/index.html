@@ -2,17 +2,12 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Semantic search</title>
 <style>
-:root { --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
+:root { color-scheme:light; --bg:#fafaf9; --fg:#1c1917; --mut:#78716c; --line:#e7e5e4; --card:#fff; --acc:#1d4ed8; --soft:#f5f5f4;
         --hl:#fef3c7; --hlfg:#78350f; --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2;
         --c-parse:#7c3aed; --c-filter:#0f766e; --c-rank:#1d4ed8;
         --k-is:#15803d; --k-is-bg:#dcfce7; --k-not:#b91c1c; --k-not-bg:#fee2e2; --k-cat:#0e7490;
         --k-con:#6d28d9; --k-con-bg:#ede9fe;
         --p-emb:#60a5fa; --p-con:#8b5cf6; --p-col:#f59e0b; --p-det:#14b8a6; --p-neg:#ef4444; }
-@media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --mut:#a8a29e; --line:#44403c; --card:#292524; --acc:#93c5fd;
-        --soft:#231f1d; --hl:#422006; --hlfg:#fde68a; --ok:#86efac; --okbg:#14532d; --bad:#fca5a5; --badbg:#450a0a;
-        --c-parse:#c4b5fd; --c-filter:#5eead4; --c-rank:#93c5fd;
-        --k-is:#86efac; --k-is-bg:#14532d; --k-not:#fca5a5; --k-not-bg:#4c1414; --k-cat:#67e8f9;
-        --k-con:#c4b5fd; --k-con-bg:#2e1065; } }
 * { box-sizing:border-box; }
 body { margin:0; font:14px/1.45 -apple-system, system-ui, sans-serif; background:var(--bg); color:var(--fg); }
 .app { display:grid; grid-template-columns:400px minmax(0, 1fr); min-height:100vh; }
@@ -88,7 +83,7 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 #status { margin:4px 0 8px; font-size:14px; }
 #status b { font-weight:600; }
 .banner { background:var(--hl); color:var(--hlfg); border-radius:6px; padding:8px 12px; margin-bottom:10px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:10px; }
+.grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; }
 .p { background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; position:relative; cursor:pointer; }
 .p:hover { border-color:var(--acc); }
 #panel { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:10; }
@@ -100,13 +95,14 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 #panel td:first-child { color:var(--mut); width:40%; }
 #panel tr.on td:last-child { color:var(--ok); font-weight:600; }
 .photos { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:6px; margin:12px 0 0; }
-.photos img { width:100%; aspect-ratio:1/1; object-fit:contain; background:#fff; border-radius:6px; border:1px solid var(--line); }
+.photo-frame { isolation:isolate; overflow:hidden; aspect-ratio:3/5; background:#e2e4e8; }
+.photo-frame img { display:block; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; }
+.photos .photo-frame { border-radius:6px; border:1px solid var(--line); }
 .close { float:right; }
 .desc { margin:12px 0 0; font-size:13px; line-height:1.5; }
-.p img, .p .noimg { width:100%; aspect-ratio:1/1; object-fit:contain; display:block; background:#fff; }
 .p .t { padding:7px 9px 9px; font-size:12px; }
 .p .t > b { font-size:13px; }
-.p .nr { position:absolute; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
+.p .nr { position:absolute; z-index:1; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
 .residual { margin:6px 0 0; font-size:13px; }
@@ -137,7 +133,6 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .sbar i { position:absolute; top:0; bottom:0; }
 .sbar .zero { position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--mut); }
 .chip.dt { background:#ccfbf1; color:#0f766e; }
-@media (prefers-color-scheme: dark) { .chip.dt { background:#134e4a; color:#5eead4; } }
 .swatch { display:inline-block; width:14px; height:14px; border:1px solid #999; vertical-align:middle; margin-right:4px; border-radius:3px; }
 .dlist { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
 .dlist .chip { font-weight:500; }
@@ -539,7 +534,7 @@ function card(p, i) {
   const hit = p.matched.filter(f => f in p.features);
   const d = document.createElement("div"); d.className = "p";
   d.innerHTML = `<span class="nr">${i + 1}</span>` +
-    (p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : `<div class="noimg"></div>`) +
+    `<div class="photo-frame">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : ""}</div>` +
     `<div class="t"><b>${esc(p.name)}</b>
       <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
       ${hit.length || p.concepts.length || (p.details || []).length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
@@ -560,7 +555,7 @@ async function details(k) {
   const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name)), asked = new Set((k.details || []).map(x => x.name));
   $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
-    `<div class="photos">${p.images.map(z => `<img src="${esc(z)}" alt="">`).join("")}</div>` +
+    `<div class="photos">${p.images.map(z => `<div class="photo-frame"><img src="${esc(z)}" alt=""></div>`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
     (Object.keys(k.parts || {}).length ? `<h3>Score ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
       `<tr><td><span class="swatch ${partKind(l)}" style="border:0"></span>${esc(l)}</td><td>${v >= 0 ? "+" : ""}${v.toFixed(2)}</td></tr>`).join("")}</table>` : "") +

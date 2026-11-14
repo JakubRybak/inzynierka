@@ -66,6 +66,9 @@ embedded before, so a rerun with nothing new makes no paid calls.
 
 ## Using the page
 
+The server uses the enhanced WebP from `images_enhanced/pilot_9922` in the FashionGen dataset when available.
+Other views use their original PNGs.
+
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
   category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
 - **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
