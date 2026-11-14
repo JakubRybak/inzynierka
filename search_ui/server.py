@@ -41,7 +41,7 @@ HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
 # the query embeddings a ranking needs, started together with the parser
 QUERY_EMBEDDINGS = dict(hybrid="combined", bank="combined", concepts="combined")
-POSITIVE = {"in", "contains_any", "contains_all", "equals_set"}
+POSITIVE = {"in", "contains_any", "contains_all", "equals_set", "equals_any_set"}
 
 
 def asks_colour(filters, routes):

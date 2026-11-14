@@ -173,7 +173,10 @@ const RANKING_NAMES = {combined: "embedding combined (description + image)", tex
                        hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)"};
 const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
-const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact"};
+const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};
+const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact", equals_any_set: "exactAny"};
+const MULTI_OPERATORS = {any: "contains_any", all: "contains_all", exact: "equals_set", exactAny: "equals_any_set"};
+const defaultMode = feature => feature === "colors" ? "exact" : "any";
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
 let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0, SCALE = 1;
@@ -209,7 +212,10 @@ function panelFromParsed(p) {
     if (f.feature === "price") { PANEL.prices.push({...f}); return; }
     const s = PANEL.sel[f.feature] = PANEL.sel[f.feature] || {};
     if (EXCLUDE.has(f.operator)) f.values.forEach(v => s[v] = "out");
-    else { f.values.forEach(v => s[v] = "in"); PANEL.mode[f.feature] = INCLUDE[f.operator] || "any"; }
+    else { f.values.forEach(v => s[v] = "in"); const mode = INCLUDE[f.operator];
+      PANEL.mode[f.feature] = f.feature === "colors" && (mode === "any" || mode === "all")
+        ? (mode === "any" && f.values.length > 1 ? "exactAny" : "exact")
+        : mode || defaultMode(f.feature); }
   });
 }
 function applySoon() { clearTimeout(applyTimer); applyTimer = setTimeout(() => search(panelFilters()), 250); }
@@ -219,9 +225,9 @@ function panelFilters() {
     if (fc.kind === "number") return;
     const s = PANEL.sel[fc.feature] || {};
     const ins = Object.keys(s).filter(v => s[v] === "in"), outs = Object.keys(s).filter(v => s[v] === "out");
-    const multi = fc.kind === "multi", mode = PANEL.mode[fc.feature] || "any";
+    const multi = fc.kind === "multi", mode = PANEL.mode[fc.feature] || defaultMode(fc.feature);
     if (ins.length) filters.push({feature: fc.feature, values: ins,
-      operator: !multi ? "in" : mode === "all" ? "contains_all" : mode === "exact" ? "equals_set" : "contains_any"});
+      operator: multi ? MULTI_OPERATORS[mode] : "in"});
     if (outs.length) filters.push({feature: fc.feature, values: outs, operator: multi ? "contains_none" : "not_in"});
   });
   // features the panel does not show (not in the category schema) keep their parser filters
@@ -266,8 +272,8 @@ function drawPanel() {
       values = values.filter(([v]) => s[v] || (q ? v.toLowerCase().includes(q) : true)).slice(0, q ? 60 : 15);
     }
     h += `<div class="facet"><div class="fh"><b>${esc(fc.feature)}</b>` +
-      (fc.kind === "multi" ? `<select data-mode="${esc(fc.feature)}">` + Object.entries(MODES).map(([m, t]) =>
-        `<option value="${m}" ${(PANEL.mode[fc.feature] || "any") === m ? "selected" : ""}>${t}</option>`).join("") + `</select>` : "") +
+      (fc.kind === "multi" ? `<select data-mode="${esc(fc.feature)}">` + Object.entries(fc.feature === "colors" ? COLOR_MODES : MODES).map(([m, t]) =>
+        `<option value="${m}" ${(PANEL.mode[fc.feature] || defaultMode(fc.feature)) === m ? "selected" : ""}>${t}</option>`).join("") + `</select>` : "") +
       `</div>` + (fc.feature === "brand" ? `<input class="brandq" id="brandq" placeholder="search ${num(fc.values.length)} brands" value="${esc(brandQuery)}">` : "") +
       `<div class="vals">` + values.map(([v, n]) =>
         `<button type="button" class="val ${s[v] || ""} ${n ? "" : "zero"}" data-f="${esc(fc.feature)}" data-v="${esc(v)}">${esc(v)}<span class="n">${num(n)}</span></button>`).join("") +
@@ -392,7 +398,7 @@ function treeLines(c) {
   const args = c.op === "and" ? c.args : [c];
   return `<div class="lines">` + args.map((a, i) => {
     const neg = a.op === "not", prefix = [i ? "AND" : "", neg ? "NOT" : ""].filter(Boolean).join(" ");
-    return `<span class="op ${neg ? "k-not" : "k-is"}">${prefix}</span><span class="cond">${treeHtml(neg ? a.arg : a, neg)}</span>`;
+    return `<span class="op ${neg ? "k-not" : "k-is"}">${prefix}</span><span class="cond">${treeHtml(neg ? a.arg : a, neg, false)}</span>`;
   }).join("") + `</div>`;
 }
 

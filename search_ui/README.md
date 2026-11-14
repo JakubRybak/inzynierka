@@ -50,6 +50,7 @@ embedded before, so a rerun with nothing new makes no paid calls.
    | `not_in`, `contains_none` | the product has none of the values |
    | `contains_all` | the product has all the values |
    | `equals_set` | the product has exactly these values |
+   | `equals_any_set` | the product has exactly one of the listed colors and no other colors |
    | `lt`, `lte`, `gt`, `gte`, `eq` | price (`msrpUSD`) compared with `value` |
    | `around` | price within ±20% of `value` |
 
@@ -76,7 +77,7 @@ Other views use their original PNGs.
   every phrase was read.
 - **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
   - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
-    values.
+    values. Colors can require exactly the selected set or exactly one of the selected colors.
   - Price takes `<`, `<=`, `>`, `>=` or `=`; add two conditions for a range. Currency is not converted.
   - Every change searches again with these filters, without the parser. *Reset to parser* restores the parsed
     filters.
