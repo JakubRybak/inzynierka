@@ -169,8 +169,11 @@ sentences = 1.00 × z(description) + 1.40 × z(best sentences) + 2.52 × z(image
 - The first four parts compare the whole query with the candidate; `z` is the z-score within the candidates.
 - A phrase is read with the phrase bank only for three things: its concepts when it is an occasion, style or season
   (or names a concept), whether it is negated, and whether it is a size or audience phrase, which is skipped. The
-  colour and detail routes of `hybrid` are not used: a shade or a detail is found in the sentences, where the
-  description states it. A negated phrase counts with a minus in both of its terms.
+  colour and detail routes of `hybrid` are not used. A negated phrase counts with a minus in both of its terms.
+- **Details** are found in the sentences, where the description states them.
+- **Colours** have no part of their own. The colour family is a filter of the parser. A shade is separated by the
+  parts of the whole query: mostly by the photo, which has the largest weight of them, and by the description and
+  the sentences when they name the shade ("in 'fuchsia' pink"). The sentence term of a shade phrase adds little.
 - A phrase of the bank uses the embedding stored with the bank, so only the spans of the query that the bank does
   not know are embedded while the parser parses.
 - **The weights are fitted**, not set by hand (`experiments/ranking/learn.py`, written to
@@ -218,6 +221,11 @@ The sentence embeddings are not in `ranking_data/`: `prepare.py` writes them to 
 - **Phrases that are not spans of the query.** A residual phrase that the bank does not know and that is not a span
   of one to three words of the query (4% of the dev queries) is embedded after the parsing, which costs one more
   round trip.
+- **Shades.** On queries with a shade phrase `sentences` is above `hybrid` (0.879 against 0.845), mostly because the
+  colour term of `hybrid`, with the hex values of the bank, did harm there. A lightness word ("light blue") is handled
+  worse than by `hybrid`, which orders the candidates by the lightness of their colours: 0.965 against 0.998 on the
+  5 such dev queries. Descriptions say "in pink", not "in light pink", so only the photo tells. The LLM reranker
+  reaches 0.959 on shade phrases, so colours remain the weakest part.
 - **Negations and excluded colours.** "no red" is a filter on the main colours; a navy hoodie with a red logo
   passes it. Only about four dev queries are negated, so the negation terms are not measured.
 
