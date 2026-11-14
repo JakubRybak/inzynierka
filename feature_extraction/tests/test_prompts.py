@@ -15,12 +15,13 @@ KEYWORDS, _ = load_config(BASE / 'keywords/definitions', SCHEMAS)
 
 
 class PromptTests(unittest.TestCase):
-    def category_case(self, category):
+    def category_case(self, category, assigned=None):
         section = next(section for section, name in SCHEMAS if name == category)
         source = dict(product_id='target', name='Product', description='', brand='Brand',
                       section=section, category=category, gender='Women', composition='100% cotton',
                       original_category='SHORT SKIRTS' if category == 'Skirts' else 'SHORT DRESSES')
         record = extract_product(source, KEYWORDS[(section, category)], SCHEMAS[(section, category)])
+        record['features'].update(assigned or {})
         missing = requested_features(record)
         features = {}
         for feature, rule in missing.items():
@@ -155,6 +156,25 @@ class PromptTests(unittest.TestCase):
             response['features']['strap_width'] = 'Wide'
             with self.assertRaises(ValueError):
                 validate_response(response, record)
+
+    def test_assigned_strap_style_limits_target_width_options(self):
+        cases = (
+            ('Dresses', 'Off-Shoulder', {'Spaghetti', 'Wide', 'Other'}),
+            ('Bodysuits', 'Standard Sleeved', {'Not Applicable'}),
+            ('Tank tops & Camisoles', 'Strapless', {'Not Applicable'}),
+        )
+        for category, style, expected in cases:
+            with self.subTest(category=category, style=style):
+                _, prompt, _ = self.category_case(category, {'strap_style': style})
+                fields = prompt['generation_config']['responseSchema']['properties']['features']['properties']
+                self.assertEqual(set(fields['strap_width']['enum']), expected)
+                self.assertNotIn('strap_style', fields)
+                definitions = prompt['parts'][0]['text']
+                self.assertNotIn('\nstrap_style\n', definitions)
+                width_block = definitions.split('\nstrap_width\n')[1].split('\n\n')[0]
+                labels = {line[2:].split(':', 1)[0] for line in width_block.splitlines()
+                          if line.startswith('- ')}
+                self.assertEqual(labels, expected)
 
     def neckline_prompt(self, category):
         section = 'Dresses' if category == 'Dresses' else 'Tops'

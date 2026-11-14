@@ -53,20 +53,24 @@ def category_definitions(category):
     return {**COMMON_DEFINITIONS, **DEFINITIONS[category]}
 
 
-def choices(category, feature, rule):
+def choices(category, feature, rule, assigned=None):
     allowed = allowed_values(rule)
     definition = category_definitions(category)[feature]
     values = [v for v in definition['values'] if v in allowed]
     if set(values) != allowed:
         raise ValueError(f'Definition/taxonomy mismatch: {category}.{feature}')
+    dependency = rule.get('value_dependency')
+    if dependency and assigned is not None and dependency['feature'] in assigned:
+        applies = assigned[dependency['feature']] in dependency['in']
+        values = [value for value in values if (value == dependency['value']) == applies]
     return values
 
 
-def build_schema(rules, category):
+def build_schema(rules, category, assigned=None):
     fields, reasons = {}, {}
     for feature, rule in rules.items():
-        values = choices(category, feature, rule)
-        has_other = 'Other' in values
+        values = choices(category, feature, rule, assigned)
+        has_other = 'Other' in allowed_values(rule)
         if is_multi_value(rule):
             _, max_items = list_constraints(rule)
             value_schema = {'type': 'ARRAY', 'items': enum(values), 'minItems': 1,
@@ -118,11 +122,15 @@ def build_prompt(record, source, images, examples):
     definition_lines = ['REQUESTED FEATURES']
     for feature, rule in rules.items():
         definition_lines.extend(['', feature, definitions[feature]['instruction']])
-        for value in choices(category, feature, rule):
+        values = choices(category, feature, rule, record['features'])
+        for value in values:
             definition_lines.append(f"- {value}: {definitions[feature]['values'][value]}")
-        definition_lines.append('Other is available: only the listed values are allowed.'
-                                if 'Other' in choices(category, feature, rule)
-                                else 'Other is unavailable: outside_schema is permitted under the decision rules.')
+        if 'Other' in values:
+            definition_lines.append('Other is available: only the listed values are allowed.')
+        elif 'Other' in allowed_values(rule):
+            definition_lines.append('Only the listed value is allowed for the target.')
+        else:
+            definition_lines.append('Other is unavailable: outside_schema is permitted under the decision rules.')
     # Include a dependency only when both features are requested; assigned values stay hidden.
     for feature, definition in rules.items():
         dependency = definition.get('value_dependency')
@@ -153,6 +161,7 @@ def build_prompt(record, source, images, examples):
         'system_instruction': (PROMPTS / 'system.txt').read_text(),
         'parts': parts,
         'generation_config': {
-            'responseMimeType': 'application/json', 'responseSchema': build_schema(rules, category),
+            'responseMimeType': 'application/json',
+            'responseSchema': build_schema(rules, category, record['features']),
         },
     }
