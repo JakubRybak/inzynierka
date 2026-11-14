@@ -20,7 +20,8 @@ def main():
     parser.add_argument('--stage', choices=['keywords', 'llm', 'all'], default='all')
     parser.add_argument('--limit', type=int)
     parser.add_argument('--mode', choices=['online', 'batch'], default='online')
-    parser.add_argument('--batch-size', type=int, help='Maximum requests per batch; omit for one job')
+    parser.add_argument('--batch-size', type=int,
+                        help='Fixed maximum requests per batch; omit to scale with the reference bank')
     parser.add_argument('--all-categories', action='store_true',
                         help='Use all supported categories; requires --all-products')
     parser.add_argument('--build-embeddings', action='store_true',

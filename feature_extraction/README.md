@@ -278,8 +278,8 @@ python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name on
 # One Vertex job for a small sample
 python -m feature_extraction.run --selection PATH_TO_SELECTION.csv --run-name batch-smoke --mode batch --limit 5 --execute
 
-# Entire catalog in successive parts, after configuring embeddings and budget
-python -m feature_extraction.run --run-name batch-catalog --mode batch --batch-size 200 --all-products --all-categories --execute
+# Entire catalog in adaptive batches, after configuring embeddings and budget
+python -m feature_extraction.run --run-name batch-catalog --mode batch --all-products --all-categories --execute
 ```
 
 Omit `--execute` to prepare the first outstanding part locally, without
@@ -289,11 +289,22 @@ products and manual references. To prepare embeddings for the same scope, use a
 config with all required categories and explicitly pass `--all-products` with
 `python -m feature_extraction.embeddings.build --config PATH --all-products`.
 
-Without `--batch-size`, the selected requests go into one job. With
-`--batch-size N`, the limit applies to products requiring Gemini after keyword
-processing and seed reuse. The next part starts after the current part is
-collected and its eligible `ready` products enter the bank. The bank is fixed
-within a part.
+Without `--batch-size`, each new job uses the current total number of reference
+products to determine its request limit.
+
+| References in the bank | Maximum requests per job |
+| ---: | ---: |
+| 0–499 | 50 |
+| 500–999 | 100 |
+| 1,000–1,999 | 200 |
+| 2,000–4,999 | 500 |
+| 5,000–9,999 | 1,000 |
+| 10,000–19,999 | 2,000 |
+| 20,000 or more | 5,000 |
+
+Pass `--batch-size N` to use a fixed limit. Both modes count products requiring
+Gemini after keyword processing and seed reuse. The next job is prepared after
+the current job's eligible `ready` products enter the bank.
 
 Batch manifests, input JSONL and job IDs live under
 `artifacts/runs/<run-name>/batch/`. Re-run the same command to resume the
