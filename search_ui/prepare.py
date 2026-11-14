@@ -132,6 +132,18 @@ def main():
         count, new = sentences.embed(d.to_dict("records"), embedder, args.output)
         print(f"Sentences: {count} unique names and description sentences embedded ({new} new calls) -> "
               f"{args.output / sentences.VECTORS}")
+    try:
+        import jev_reranker
+    except ImportError:
+        return
+    products = [dict(r, images=json.loads(r["images"]) if isinstance(r["images"], str) else r["images"])
+                for r in d.to_dict("records")]
+    try:
+        made = jev_reranker.prepare_photos(products, dataset, args.output / jev_reranker.PHOTO_CACHE.name)
+        print(f"Jev photos: {made} new {jev_reranker.MAX_IMAGE_SIZE} px JPEGs -> "
+              f"{args.output / jev_reranker.PHOTO_CACHE.name}")
+    except ImportError:
+        print("Jev photos: skipped, Pillow is not installed")
 
 
 if __name__ == "__main__":

@@ -107,7 +107,8 @@ class SearchEngine:
         self.sentences, self.sentence_weights = sentences, sentence_weights
         self.reranker = reranker if reranker is not None else jev_reranker.JevReranker()
         self.vision_reranker = vision_reranker if vision_reranker is not None else \
-            jev_reranker.JevReranker(image_dir=image_dir, timeout=15.0)
+            jev_reranker.JevReranker(image_dir=image_dir, timeout=15.0, photo_cache=jev_reranker.PHOTO_CACHE
+                                     if Path(image_dir).resolve() == common.DATASET.resolve() else None)
         ready = bank is not None and F is not None and sentences is not None and sentence_weights is not None
         needs = dict(concepts=concept_ranker, bank=bank, hybrid=bank, features=F, combined_features=F,
                      sentences=True if ready else None)

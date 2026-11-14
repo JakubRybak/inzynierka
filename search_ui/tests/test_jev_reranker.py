@@ -52,14 +52,15 @@ class Photos(unittest.TestCase):
         original = (self.root / "p_id_gridfs_1.png").read_bytes()
         p = dict(images=["p_id_gridfs_2.png", "p_id_gridfs_1.png"])
         with decode_photo(jev.product_photo(p, self.root)) as im:
-            self.assertEqual((im.format, im.mode, im.size), ("JPEG", "RGB", (800, 800)))
-            self.assertEqual(im.getpixel((30, 256)), (255, 255, 255))
-            r, g, b = im.getpixel((256, 256))
+            side = jev.MAX_IMAGE_SIZE
+            self.assertEqual((im.format, im.mode, im.size), ("JPEG", "RGB", (side, side)))
+            self.assertEqual(im.getpixel((side // 12, side // 2)), (255, 255, 255))
+            r, g, b = im.getpixel((side // 2, side // 2))
             self.assertGreater(r, 240)
             self.assertLess(g + b, 10)
         self.assertEqual((self.root / "p_id_gridfs_1.png").read_bytes(), original)
 
-    def test_enhanced_photo_is_preferred_at_full_resolution(self):
+    def test_enhanced_photo_is_preferred_at_most_max_size(self):
         enhanced = self.root / "pilot_9922/images_enhanced/p/p_id_gridfs_1.webp"
         enhanced.parent.mkdir(parents=True)
         Image.new("RGB", (1024, 1024), "red").save(enhanced, lossless=True)
@@ -69,11 +70,22 @@ class Photos(unittest.TestCase):
             with self.subTest(images=images):
                 p = dict(product_id="p", images=images)
                 with decode_photo(jev.product_photo(p, self.root)) as im:
-                    self.assertEqual(im.size, (1024, 1024))
-                    r, g, b = im.getpixel((512, 512))
+                    self.assertEqual(im.size, (jev.MAX_IMAGE_SIZE, jev.MAX_IMAGE_SIZE))
+                    r, g, b = im.getpixel((jev.MAX_IMAGE_SIZE // 2, jev.MAX_IMAGE_SIZE // 2))
                     self.assertGreater(r, 240)
                     self.assertLess(g + b, 10)
         self.assertEqual(enhanced.read_bytes(), original)
+
+    def test_cached_photo_is_read_again_without_the_source(self):
+        Image.new("RGB", (256, 256), "green").save(self.root / "q_id_gridfs_1.png")
+        p = dict(product_id="q", images=["q_id_gridfs_1.png"])
+        cache = self.root / "cache"
+        first = jev.product_photo(p, self.root, cache)
+        self.assertTrue((cache / "q.jpg").is_file())
+        (self.root / "q_id_gridfs_1.png").unlink()
+        self.assertEqual(jev.product_photo(p, self.root, cache), first)
+        self.assertIsNone(jev.product_photo(p, self.root))
+        self.assertEqual(jev.prepare_photos([p], self.root, cache), 0)
 
     def test_unreadable_enhanced_photo_uses_original_at_minimum_size(self):
         enhanced = self.root / "pilot_9922/images_enhanced/p/p_id_gridfs_1.webp"
@@ -262,9 +274,10 @@ class Integration(unittest.TestCase):
         for label, product in call["json"]["state"]["PRODUCTS"].items():
             pid = product["text"].split(" | ")[0]
             with decode_photo(product["photo"]) as im:
-                self.assertEqual(im.size, (1024, 1024))
+                self.assertEqual(im.size, (jev.MAX_IMAGE_SIZE, jev.MAX_IMAGE_SIZE))
                 expected = (255, 0, 0) if pid == "d2" else (0, 0, 255)
-                self.assertLess(sum(abs(a - b) for a, b in zip(im.getpixel((512, 512)), expected)), 10)
+                middle = (jev.MAX_IMAGE_SIZE // 2, jev.MAX_IMAGE_SIZE // 2)
+                self.assertLess(sum(abs(a - b) for a, b in zip(im.getpixel(middle), expected)), 10)
             self.assertIn(f"Grade the product {label}.", call["json"]["questions"][label]["instructions"])
         json.dumps(out, allow_nan=False)
 
