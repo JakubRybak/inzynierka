@@ -51,7 +51,7 @@ def asks_colour(filters, routes):
 PAGE = common.SEARCH_UI / "static/index.html"
 EXAMPLES = common.SEARCH_UI / "static/example_queries.yaml"
 EXAMPLES_SHOWN = 5
-IMAGE_PATH = re.compile(r"images/(?:train|validation)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+\.png")
+IMAGE_PATH = re.compile(r"images/(?:train|validation)/(?P<product>[A-Za-z0-9_-]+)/(?P<stem>[A-Za-z0-9_-]+)\.png")
 
 
 def ms(t):
@@ -344,6 +344,7 @@ def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
 
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
+    enhanced_dir = image_dir / "images_enhanced" / "pilot_9922"
 
     class Handler(BaseHTTPRequestHandler):
         def send(self, code, body, content_type="application/json; charset=utf-8"):
@@ -384,9 +385,14 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                     return self.send(200, p) if p else self.send(404, {"error": dict(stage="product", message="no such product")})
                 if u.path.startswith("/images/"):
                     rel = u.path[len("/images/"):]
-                    path = image_dir / rel
-                    if IMAGE_PATH.fullmatch(rel) and path.is_file():
-                        return self.send(200, path.read_bytes(), "image/png")
+                    match = IMAGE_PATH.fullmatch(rel)
+                    if match:
+                        enhanced = enhanced_dir / match["product"] / (match["stem"] + ".webp")
+                        if enhanced.is_file():
+                            return self.send(200, enhanced.read_bytes(), "image/webp")
+                        original = image_dir / rel
+                        if original.is_file():
+                            return self.send(200, original.read_bytes(), "image/png")
                 self.send(404, {"error": dict(stage="request", message="not found")})
             except Exception as e:
                 traceback.print_exc()
