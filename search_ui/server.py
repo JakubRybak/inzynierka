@@ -433,6 +433,8 @@ def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
     enhanced_dir = image_dir / common.PILOT.name / "images_enhanced"
+    if not enhanced_dir.is_dir():
+        enhanced_dir = common.PILOT / "images_enhanced"
 
     class Handler(BaseHTTPRequestHandler):
         def send(self, code, body, content_type="application/json; charset=utf-8"):
