@@ -28,6 +28,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent / "core"))
 import common  # noqa: E402
 import concepts  # noqa: E402
@@ -35,6 +36,7 @@ import conditions  # noqa: E402
 import facets  # noqa: E402
 import jev_reranker  # noqa: E402
 import parser_adapter  # noqa: E402
+from image_processing.background_color import render_webp  # noqa: E402
 
 RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid", "sentences",
             "sentences_jev", "hybrid_jev", "hybrid_jev_vision")
@@ -432,9 +434,7 @@ def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
 
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
-    enhanced_dir = image_dir / common.PILOT.name / "images_enhanced"
-    if not enhanced_dir.is_dir():
-        enhanced_dir = common.PILOT / "images_enhanced"
+    pilot_dirs = tuple(dict.fromkeys((image_dir / common.PILOT.name, common.PILOT)))
 
     class Handler(BaseHTTPRequestHandler):
         def send(self, code, body, content_type="application/json; charset=utf-8"):
@@ -477,8 +477,14 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                     rel = u.path[len("/images/"):]
                     match = IMAGE_PATH.fullmatch(rel)
                     if match:
-                        enhanced = enhanced_dir / match["product"] / (match["stem"] + ".webp")
-                        if enhanced.is_file():
+                        photo = Path(match["product"]) / match["stem"]
+                        for pilot in pilot_dirs:
+                            enhanced = pilot / "images_enhanced" / photo.with_suffix(".webp")
+                            if not enhanced.is_file():
+                                continue
+                            mask = pilot / "image_masks" / photo.with_suffix(".png")
+                            if mask.is_file():
+                                return self.send(200, render_webp(enhanced, mask), "image/webp")
                             return self.send(200, enhanced.read_bytes(), "image/webp")
                         original = image_dir / rel
                         if original.is_file():
