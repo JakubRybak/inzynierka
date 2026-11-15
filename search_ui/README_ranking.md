@@ -15,19 +15,21 @@ This is the state of 2026-11-14. The default ranking is `hybrid`; the other rank
 
 ## Rankings
 
+The page offers these rankings:
+
 | Ranking | Score |
 | --- | --- |
+| `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
+| `combined` | mean of the z-scores of `text` and `image` |
 | `text` | cosine of the query and the description |
 | `image` | cosine of the query and the main image |
-| `combined` | mean of the z-scores of `text` and `image` |
-| `features` | cosine of the query and the feature text, e.g. "Dresses. For women. Black. 100% linen. Midi length." |
-| `combined_features` | mean of the z-scores of description, image and feature text |
-| `concepts` | the scores of the concepts that the residual phrases name |
-| `bank` | one signal per residual phrase, picked with the phrase bank |
-| `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
-| `sentences` (option) | the query and its phrases compared with single sentences of the description, with fitted weights |
-| `sentences_jev`, `hybrid_jev` (options) | Jev 1.14 regrades the first 30 of `sentences` or `hybrid` |
-| `hybrid_jev_vision` (option, slow) | the same as `hybrid_jev`, with the main photo |
+| `sentences` | the query and its phrases compared with single sentences of the description, with fitted weights |
+| `hybrid_jev` | Jev 1.14 regrades the first 30 of `hybrid` |
+| `hybrid_jev_vision`, `sentences_jev_vision` (slow) | Jev 1.14 regrades the first 30 of `hybrid` or `sentences` from their text and main photo |
+
+`combined_features` (the mean of the z-scores of description, image and feature text, such as "Dresses. For women.
+Black. 100% linen. Midi length."), `concepts` and `bank` are not in the page: they are parts of `hybrid` and rankings
+of the evaluation in `experiments/ranking/evaluate.py`.
 
 ## Concepts
 

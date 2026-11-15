@@ -7,8 +7,8 @@ filters by hand, switches between rankings and shows how long each stage took.
 
 How the results are ordered, and where the ranking data comes from: [README_ranking.md](README_ranking.md).
 
-The Ranking menu also offers `sentences` and three rankings in which Jev 1.14 regrades the first 30 results:
-`sentences_jev`, `hybrid_jev` and `hybrid_jev_vision` (with the main photo, slow). They need `OPENROUTER_API_KEY`
+The Ranking menu also offers `combined`, `text`, `image`, `sentences` and three rankings in which Jev 1.14 regrades
+the first 30 results: `hybrid_jev`, and `hybrid_jev_vision` and `sentences_jev_vision` with the main photo (slow). They need `OPENROUTER_API_KEY`
 and are marked with "?" in the menu; the default is `hybrid`.
 
 ## Quick start
@@ -80,7 +80,7 @@ available; other views use their original PNGs. The rankings use the embeddings 
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
   category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
 - **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
-  (red), the residual phrases and where the parse came from. With `concepts`, `bank`, `hybrid` or `sentences` it also
+  (red), the residual phrases and where the parse came from. With `hybrid` or `sentences` it also
   shows how every phrase was read.
 - **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
   - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
@@ -118,8 +118,8 @@ available; other views use their original PNGs. The rankings use the embeddings 
 | `benchmark_parser.py` | the reviewed benchmark parses of dev queries |
 | `conditions.py` | condition tree: validation, matching, matched features |
 | `facets.py` | filter panel values per category, from `feature_extraction/schema/` |
-| `concepts.py` | concept scores in the index and the `concepts` ranking |
-| `bank.py` | the phrase bank, the `bank` ranking and the terms of `hybrid` and `sentences` |
+| `concepts.py` | concept scores in the index and the concept names |
+| `bank.py` | the phrase bank and the terms of `hybrid` and `sentences` |
 | `sentences.py` | the names and description sentences of the products, for the `sentences` ranking |
 | `jev_reranker.py` | the Jev 1.14 second stage of the `*_jev` rankings |
 | `colours.py` | product colours and the colour dictionary, for shade phrases |
@@ -134,8 +134,8 @@ available; other views use their original PNGs. The rankings use the embeddings 
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` or `module:function` returning the parser output format |
 | `--ranking` | `hybrid` | default ranking in the page; `combined` when the phrase bank is not loaded |
-| `--concept-threshold` | `0.72` | minimum phrase–concept name cosine for `concepts` |
-| `--concept-combine` | `geo` | how `concepts` combines phrases: `geo`, `mean` or `min` |
+| `--concept-threshold` | `0.72` | minimum phrase–concept name cosine of the `concepts` ranking (evaluation only) |
+| `--concept-combine` | `geo` | how the `concepts` ranking (evaluation only) combines phrases: `geo`, `mean` or `min` |
 | `--no-bank` | | do not load the phrase bank (`bank`, `hybrid` and `sentences` disappear) |
 | `--port` | `8000` | |
 | `--data` | `search_ui/data` | index built by `prepare.py` |
@@ -168,7 +168,7 @@ A parser given as `module:function` can set three names in its module:
 A search response contains the following fields:
 - `parsed`, `tree`, `condition` and `warnings`;
 - `results`, with their scores, matched features, score parts (`parts`) and the details the query asked for;
-- `concepts` or `bank`, which say how each phrase was read;
+- `bank`, which says how each phrase was read;
 - `score_parts`, `weights` and `formula`: how much each part of the score moves the ranking, the `hybrid`
   weights, and the `sentences` score with its weights;
 - `timings`, in ms per stage;

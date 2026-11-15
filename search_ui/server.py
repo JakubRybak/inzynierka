@@ -36,9 +36,11 @@ import facets  # noqa: E402
 import jev_reranker  # noqa: E402
 import parser_adapter  # noqa: E402
 
-RANKINGS = ("combined", "text", "image", "features", "combined_features", "concepts", "bank", "hybrid", "sentences",
-            "sentences_jev", "hybrid_jev", "hybrid_jev_vision")
-RERANK_BASES = dict(sentences_jev="sentences", hybrid_jev="hybrid", hybrid_jev_vision="hybrid")
+# the rankings of the page; features, combined_features, concepts and bank stay as parts of hybrid and of the
+# evaluation (experiments/ranking/evaluate.py)
+RANKINGS = ("combined", "text", "image", "hybrid", "sentences", "hybrid_jev", "hybrid_jev_vision",
+            "sentences_jev_vision")
+RERANK_BASES = dict(hybrid_jev="hybrid", hybrid_jev_vision="hybrid", sentences_jev_vision="sentences")
 # detail 0.25: chosen on the dev queries of the benchmark (0.25, 0.5 and 1.0 measured); colour 1.0 is not measured
 HYBRID = dict(concept=0.5, negation=1.0, colour=1.0, detail=0.25)
 COLOUR_IMAGE_WEIGHT = 2.0
@@ -329,7 +331,7 @@ class SearchEngine:
             order = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
             if ranking in RERANK_BASES:
                 start = time.perf_counter()
-                vision = ranking == "hybrid_jev_vision"
+                vision = ranking.endswith("_vision")
                 try:
                     top = order[:jev_reranker.DEPTH]
                     products = [self.products[int(cand[j])] for j in top]

@@ -168,13 +168,11 @@ const num = n => Number(n).toLocaleString("en-US");
 const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
 const RANKING_NAMES = {hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)",
                        combined: "? embedding combined (description + image)", text: "? embedding description",
-                       image: "? embedding image", concepts: "? concepts (residual → nearest concept name)",
-                       bank: "? phrase bank (concepts + text, combined breaks ties)", features: "? embedding features",
-                       combined_features: "? embedding description + image + features",
+                       image: "? embedding image",
                        sentences: "? sentences (description + image + features + best sentences, + concepts; fitted weights)",
-                       sentences_jev: "? sentences + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
-                       hybrid_jev: "? hybrid + Jev (top 30 · ~+$0.0003/search · ~+0.32 s)",
-                       hybrid_jev_vision: "? hybrid + Jev vision (top 30 · text + photos) · slow version"};
+                       hybrid_jev: "? hybrid + Jev (top 30 · ~+$0.0004/search · ~+0.4 s)",
+                       hybrid_jev_vision: "? hybrid + Jev vision (top 30 · text + photos) · slow version",
+                       sentences_jev_vision: "? sentences + Jev vision (top 30 · text + photos) · slow version"};
 const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};

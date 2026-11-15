@@ -192,11 +192,11 @@ class Integration(unittest.TestCase):
         return response(kwargs["json"], {"d1": 0, "d2": 3, "d3": 1})
 
     def test_optional_ranking_reorders_results_and_separates_both_scores(self):
-        self.assertIn("sentences_jev", self.engine.rankings)
+        self.assertIn("sentences_jev_vision", self.engine.rankings)
         base = self.engine.search("dress with lace", "sentences")
         self.post.assert_not_called()
         self.key.assert_not_called()
-        out = self.engine.search("dress with lace", "sentences_jev")
+        out = self.engine.search("dress with lace", "sentences_jev_vision")
         self.assertNotIn("error", out)
         self.assertEqual(out["results"][0]["id"], "d2")
         self.assertEqual({r["id"] for r in out["results"]}, {r["id"] for r in base["results"]})
@@ -209,7 +209,7 @@ class Integration(unittest.TestCase):
         self.assertGreaterEqual(out["timings"]["ranking_ms"], out["timings"]["rerank_ms"])
         self.assertEqual(out["rerank"]["status"], "applied")
         json.dumps(out, allow_nan=False)
-        self.engine.search("dress with lace", "sentences_jev")
+        self.engine.search("dress with lace", "sentences_jev_vision")
         self.assertEqual(self.post.call_count, 2)
 
     def hybrid_engine(self):
@@ -222,7 +222,7 @@ class Integration(unittest.TestCase):
     def test_hybrid_jev_uses_hybrid_scores_without_sentence_assets(self):
         hybrid = self.hybrid_engine()
         self.assertIn("hybrid_jev", hybrid.rankings)
-        self.assertNotIn("sentences_jev", hybrid.rankings)
+        self.assertNotIn("sentences_jev_vision", hybrid.rankings)
         base = hybrid.search("dress with lace", "hybrid")
         self.post.assert_not_called()
         with patch.object(hybrid.bank, "prefetch", wraps=hybrid.bank.prefetch) as prefetch:
@@ -310,7 +310,7 @@ class Integration(unittest.TestCase):
     def test_filtering_happens_before_jev_and_no_match_skips_it(self):
         def manual(color):
             return dict(category="Dresses", filters=[dict(feature="colors", operator="contains_any", values=[color])])
-        for ranking in ("sentences_jev", "hybrid_jev", "hybrid_jev_vision"):
+        for ranking in ("sentences_jev_vision", "hybrid_jev", "hybrid_jev_vision"):
             with self.subTest(ranking=ranking):
                 out = self.engine.search("dress", ranking, manual("Black"))
                 self.assertEqual({r["id"] for r in out["results"]}, {"d1", "d3"})
@@ -326,7 +326,7 @@ class Integration(unittest.TestCase):
 
     def test_results_beyond_the_reranked_prefix_keep_their_order(self):
         scores = np.array([3.0, 2.0, 1.0])
-        for ranking in ("sentences_jev", "hybrid_jev", "hybrid_jev_vision"):
+        for ranking in ("sentences_jev_vision", "hybrid_jev", "hybrid_jev_vision"):
             with self.subTest(ranking=ranking):
                 with patch.object(jev, "DEPTH", 2), patch.object(self.engine, "rank", return_value=(scores, None, None, None)):
                     out = self.engine.search("dress", ranking)
@@ -345,7 +345,7 @@ class Integration(unittest.TestCase):
                 self.post.side_effect = case if isinstance(case, Exception) else None
                 self.post.return_value = case
                 self.post.reset_mock()
-                out = self.engine.search("lace dress", "sentences_jev")
+                out = self.engine.search("lace dress", "sentences_jev_vision")
                 self.assertNotIn("error", out)
                 self.assertEqual([r["id"] for r in out["results"]], original)
                 self.assertEqual(out["rerank"]["status"], "fallback")
@@ -355,7 +355,7 @@ class Integration(unittest.TestCase):
 
     def test_missing_key_falls_back_without_http(self):
         self.key.side_effect = RuntimeError("Missing OPENROUTER_API_KEY")
-        out = self.engine.search("dress", "sentences_jev")
+        out = self.engine.search("dress", "sentences_jev_vision")
         self.assertEqual(out["rerank"]["status"], "fallback")
         self.post.assert_not_called()
 
@@ -363,7 +363,7 @@ class Integration(unittest.TestCase):
         T = self.engine.T
         basic = server.SearchEngine(self.engine.products, T, np.zeros_like(T), self.engine.parser, self.embedder)
         self.addCleanup(basic.pool.shutdown)
-        self.assertNotIn("sentences_jev", basic.rankings)
+        self.assertNotIn("sentences_jev_vision", basic.rankings)
         self.assertNotIn("hybrid_jev", basic.rankings)
         self.assertNotIn("hybrid_jev_vision", basic.rankings)
 
