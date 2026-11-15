@@ -15,12 +15,13 @@ KEYWORDS, _ = load_config(BASE / 'keywords/definitions', SCHEMAS)
 
 
 class PromptTests(unittest.TestCase):
-    def category_case(self, category):
+    def category_case(self, category, assigned=None):
         section = next(section for section, name in SCHEMAS if name == category)
         source = dict(product_id='target', name='Product', description='', brand='Brand',
                       section=section, category=category, gender='Women', composition='100% cotton',
                       original_category='SHORT SKIRTS' if category == 'Skirts' else 'SHORT DRESSES')
         record = extract_product(source, KEYWORDS[(section, category)], SCHEMAS[(section, category)])
+        record['features'].update(assigned or {})
         missing = requested_features(record)
         features = {}
         for feature, rule in missing.items():
@@ -126,8 +127,11 @@ class PromptTests(unittest.TestCase):
     def test_skirt_type_accepts_multiple_values_and_other_alone(self):
         record, prompt, response = self.category_case('Skirts')
         schema = prompt['generation_config']['responseSchema']['properties']['features']['properties']
-        self.assertEqual(schema['skirt_type']['type'], 'ARRAY')
-        self.assertEqual(schema['skirt_type']['maxItems'], 5)
+        ordinary, exclusive = schema['skirt_type']['anyOf']
+        self.assertEqual(ordinary['maxItems'], 5)
+        self.assertEqual(set(ordinary['items']['enum']), {'Pleated', 'Wrap', 'Asymmetric', 'Tiered', 'Ruffled'})
+        self.assertEqual(exclusive, {'type': 'ARRAY', 'items': {'type': 'STRING', 'enum': ['Other']},
+                                     'minItems': 1, 'maxItems': 1})
         for value in [['Pleated', 'Asymmetric'], ['Wrap', 'Tiered', 'Ruffled'], ['Other']]:
             with self.subTest(value=value):
                 response['features']['skirt_type'] = value
@@ -155,6 +159,25 @@ class PromptTests(unittest.TestCase):
             response['features']['strap_width'] = 'Wide'
             with self.assertRaises(ValueError):
                 validate_response(response, record)
+
+    def test_assigned_strap_style_limits_target_width_options(self):
+        cases = (
+            ('Dresses', 'Off-Shoulder', {'Spaghetti', 'Wide', 'Other'}),
+            ('Bodysuits', 'Standard Sleeved', {'Not Applicable'}),
+            ('Tank tops & Camisoles', 'Strapless', {'Not Applicable'}),
+        )
+        for category, style, expected in cases:
+            with self.subTest(category=category, style=style):
+                _, prompt, _ = self.category_case(category, {'strap_style': style})
+                fields = prompt['generation_config']['responseSchema']['properties']['features']['properties']
+                self.assertEqual(set(fields['strap_width']['enum']), expected)
+                self.assertNotIn('strap_style', fields)
+                definitions = prompt['parts'][0]['text']
+                self.assertNotIn('\nstrap_style\n', definitions)
+                width_block = definitions.split('\nstrap_width\n')[1].split('\n\n')[0]
+                labels = {line[2:].split(':', 1)[0] for line in width_block.splitlines()
+                          if line.startswith('- ')}
+                self.assertEqual(labels, expected)
 
     def neckline_prompt(self, category):
         section = 'Dresses' if category == 'Dresses' else 'Tops'
@@ -222,6 +245,19 @@ class PromptTests(unittest.TestCase):
                 self.assertNotIn('\nsleeve_length\n', definitions)
                 if category == 'Dresses':
                     self.assertNotIn('length', fields)
+
+    def test_unrequested_outside_schema_reasons_must_be_empty(self):
+        record, _, response = self.category_case('Skirts')
+        features = validate_response(response, record)
+        pattern = features.pop('pattern')
+        record['features'] = features
+        response = {'product_status': 'ok', 'product_reason': '', 'features': {'pattern': pattern}}
+        expected = validate_response(response, record)
+        self.assertEqual(validate_response({**response, 'outside_schema_reasons': {}}, record), expected)
+        for reasons in ({'pattern': 'Unexpected reason'}, None, []):
+            with self.subTest(reasons=reasons):
+                with self.assertRaisesRegex(ValueError, 'Unexpected response keys'):
+                    validate_response({**response, 'outside_schema_reasons': reasons}, record)
 
     def test_keywords_cannot_be_overwritten_by_extra_output_fields(self):
         source = dict(product_id='1', name='Black tee', description='', brand='Brand', section='Tops',
