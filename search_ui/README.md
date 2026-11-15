@@ -27,7 +27,7 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
 **Requirements**
 
 - Python packages: `pandas`, `numpy`, `pyarrow`, `pyyaml`, `google-genai`, `google-auth`, `requests`, `httpx`,
-  `scikit-learn`, `scipy`; `Pillow` for Jev vision.
+  `scikit-learn`, `scipy`, `Pillow`.
 - Vertex AI access, because every search embeds the query:
   ```sh
   gcloud auth application-default login
@@ -74,7 +74,10 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
 ## Using the page
 
 The page shows the enhanced 1024 px WebP front photos from `pilot_9922/images_enhanced/` in the dataset when
-available; other views use their original PNGs. The rankings use the embeddings of the 1024 px front photos
+available; other views use their original PNGs. For enhanced photos with a matching
+`pilot_9922/image_masks/<product_id>/<image_stem>.png` mask, the server applies the
+`#F4F3F7` background tint on demand and sends a WebP without writing a new file.
+The rankings use the embeddings of the 1024 px front photos
 (`--original-images` for the original ones; see [README_ranking.md](README_ranking.md)).
 
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by

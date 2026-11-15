@@ -95,8 +95,8 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 #panel td:first-child { color:var(--mut); width:40%; }
 #panel tr.on td:last-child { color:var(--ok); font-weight:600; }
 .photos { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:6px; margin:12px 0 0; }
-.photo-frame { isolation:isolate; overflow:hidden; aspect-ratio:3/5; background:#e2e4e8; }
-.photo-frame img { display:block; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; }
+.photo-frame { isolation:isolate; overflow:hidden; aspect-ratio:3/5; background:#f4f3f7; }
+.photo-frame img { display:block; width:100%; height:100%; object-fit:cover; }
 .photos .photo-frame { border-radius:6px; border:1px solid var(--line); }
 .close { float:right; }
 .desc { margin:12px 0 0; font-size:13px; line-height:1.5; }
@@ -573,7 +573,7 @@ async function details(k) {
   const hit = new Set(k.matched), chosen = new Set(k.concepts.map(c => c.name)), asked = new Set((k.details || []).map(x => x.name));
   $("box").innerHTML = `<button class="close" onclick="document.getElementById('panel').classList.remove('on')">Close</button>` +
     `<h2>${esc(p.name)}</h2><div class="meta">${esc(p.brand)}${k.price ? " · " + esc(k.price) : ""} · ${esc(p.category)}</div>` +
-    `<div class="photos">${p.images.map(z => `<div class="photo-frame"><img src="${esc(z)}" alt=""></div>`).join("")}</div>` +
+    `<div class="photos">${p.images.map(z => `<div class="photo-frame"><img loading="lazy" src="${esc(z)}" alt=""></div>`).join("")}</div>` +
     (p.description ? `<p class="desc">${esc(p.description)}</p>` : "") +
     (k.rerank ? `<h3>Jev reranking</h3><p>Expected grade: ${k.rerank.grade.toFixed(2)}/3 · rerank score: ${k.rerank.score.toFixed(2)}${k.rerank.image_used === undefined ? "" : k.rerank.image_used ? " · text + photo" : " · text only"}</p>` : "") +
     (Object.keys(k.parts || {}).length ? `<h3>${D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score"} ${k.score.toFixed(2)}: its parts</h3><table>${Object.entries(k.parts).map(([l, v]) =>
