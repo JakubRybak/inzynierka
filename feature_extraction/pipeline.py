@@ -17,6 +17,13 @@ from .settings import BASE, validate_batch_settings
 from .storage import digest, export_products, read_jsonl, write_json, write_jsonl
 
 
+def adaptive_batch_size(reference_count):
+    for minimum, size in ((20_000, 5_000), (10_000, 2_000), (5_000, 1_000),
+                          (2_000, 500), (1_000, 200), (500, 100), (0, 50)):
+        if reference_count >= minimum:
+            return size
+
+
 def uniform(record, origin):
     columns = ['product_id', 'brand', 'section', 'category', 'features', 'feature_metadata', 'status', 'exclusion_reasons']
     return {**{key: record[key] for key in columns}, 'product_status': record.get('product_status', 'ok'),
@@ -223,7 +230,8 @@ def extract_batches(settings, folder, ids, source, images, keywords, records, ba
             else:
                 retry_ids.difference_update(records)
                 pending = [pid for pid in ids if pid not in records and (not retry_ids or pid in retry_ids)]
-                pending = pending[:batch_size]
+                limit = batch_size if batch_size is not None else adaptive_batch_size(len(bank.bank))
+                pending = pending[:limit]
                 prompts = ((pid, *prepare_request(keywords[pid], source, images, bank,
                                                  settings['api'], fingerprint)) for pid in pending)
                 manifest = client.prepare(batch_folder, prompts)

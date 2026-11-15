@@ -6,9 +6,11 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from io import BytesIO
 from pathlib import Path
 
 import numpy as np
+from PIL import Image
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(HERE), str(HERE / "core")]
@@ -128,6 +130,17 @@ class HttpHeaders(unittest.TestCase):
                     self.assertEqual(r.headers["Content-Type"], "image/webp")
                     self.assertEqual(r.headers["Cache-Control"], "no-store")
                     self.assertEqual(r.read(), b"enhanced photo")
+                Image.new("RGB", (2, 1), "white").save(enhanced, lossless=True)
+                mask_path = Path(d) / "pilot_9922/image_masks/1/x.png"
+                mask_path.parent.mkdir(parents=True)
+                mask = Image.new("L", (2, 1))
+                mask.putpixel((0, 0), 255)
+                mask.save(mask_path)
+                with urllib.request.urlopen(image_url) as response:
+                    self.assertEqual(response.headers["Content-Type"], "image/webp")
+                    with Image.open(BytesIO(response.read())) as rendered:
+                        self.assertEqual(rendered.getpixel((0, 0)), (255, 255, 255))
+                        self.assertEqual(rendered.getpixel((1, 0)), (244, 243, 247))
                 enhanced.unlink()
                 with urllib.request.urlopen(image_url) as r:
                     self.assertEqual(r.headers["Content-Type"], "image/png")
