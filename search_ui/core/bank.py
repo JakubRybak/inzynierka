@@ -13,7 +13,7 @@ product details (details.py), a detail phrase, an "other" phrase or a phrase the
 names it asks for ("z koronką" -> lace, lace trim), matched without its negation ("without pockets" -> pockets).
 A phrase is negated when the bank says so; a phrase the bank does not know is negated when it starts with a
 negation word followed by at most NEGATED_WORDS words (longer ones, such as "not in this lifetime tour", are
-usually slogans).
+usually slogans), and the rest of it is routed as a phrase of its own ("bez koronki" -> "koronki" -> lace).
 
 Every phrase gives one column of percentiles within the candidates:
 - an occasion, style or season phrase of the bank with concepts uses the concept scores only, when the category is
@@ -233,6 +233,13 @@ class BankRanker:
             return dict(phrase=phrase, match="colour", similarity=None, neighbour=None, kind="shade", concepts=[],
                         concepts_unavailable=[], skipped=False, negated=False, english=text, text_signals=True,
                         colour=self.colour_target(shade, vectors) if colours is not None else None)
+        if text not in self.exact and negated_text(text):
+            # the negation is read from the phrase: the rest is routed as a phrase of its own and counts with a minus
+            # ("bez koronki" -> "koronki" -> lace)
+            bare = bare_phrase(text)
+            r = self.route(bare, category, self.matrix[self.stored[bare]] if bare in self.stored else
+                           (vectors or {}).get(common.query_text(bare)), query, vectors, lean)
+            return r | dict(phrase=phrase, negated=True, bare=bare)
         row, match, similarity, matched, colour = self.exact.get(text), "exact", None, [], None
         if row is None:
             sims = self.matrix @ vector
@@ -350,6 +357,8 @@ class BankRanker:
         texts = set()
         for phrase in residual:
             text = normalize_phrase(phrase)
+            if text not in self.exact and negated_text(text):
+                text = bare_phrase(text)  # routed without its negation (route)
             shade = shade_phrase(text, query)
             if shade and self.colours is not None:
                 texts.add(common.query_text(shade))
@@ -433,7 +442,7 @@ class BankRanker:
         terms, routes = [], []
         for phrase in residual:
             text = normalize_phrase(phrase)
-            r = self.route(phrase, category, None if text in self.exact else vector(text), query, lean=True)
+            r = self.route(phrase, category, None if text in self.exact else vector(text), query, vectors, lean=True)
             r["term"] = None
             routes.append(r)
             if r["skipped"]:

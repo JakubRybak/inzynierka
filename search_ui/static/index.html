@@ -468,7 +468,8 @@ function bankLine() {
          r.text_signals ? `text “${esc(r.english)}”` : "",
          r.concepts_unavailable.length ? `<span class="meta">(no scores here for ${r.concepts_unavailable.map(esc).join(", ")})</span>` : ""]
         .filter(Boolean).join(" + ");
-    return `<div class="residual phrase"><span class="res">${r.negated ? "NOT " : ""}${esc(r.phrase)}</span> → ` +
+    const said = r.bare ? `NOT ${esc(r.bare)}</span> <span class="meta">(${esc(r.phrase)})` : `${r.negated ? "NOT " : ""}${esc(r.phrase)}`;
+    return `<div class="residual phrase"><span class="res">${said}</span> → ` +
       `${esc(r.kind || (r.match === "concept" ? "concept" : "no kind"))} <span class="meta">(${how})</span> · ${used}</div>`;
   }).join("");
 }

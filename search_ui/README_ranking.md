@@ -109,7 +109,9 @@ A phrase with no match is unknown. Two rules apply first:
 - **Shades.** A lightness word right before a colour of the query is a shade, for example "light" in "light pink
   dress".
 - **Negation.** An unknown phrase is negated when it starts with a negation word followed by at most three words, for
-  example "without pockets".
+  example "without pockets". The rest of it is matched as a phrase of its own and counts with a minus: "bez koronki"
+  → "koronki" → lace. The bank keeps no negated forms of its own, so the negation never depends on a neighbour; a
+  phrase the bank knows keeps its labels ("no me importa" is a slogan, not a negation).
 
 ## `bank`
 

@@ -126,6 +126,14 @@ class Bank(unittest.TestCase):
         _, routes = self.order(["no lace"], self.dresses, "Dresses")
         self.assertTrue(routes[0]["negated"])
 
+    def test_a_negation_is_read_from_the_phrase_unless_the_bank_knows_it(self):
+        rows = BANK + [dict(phrase="no me importa", kind="other", negated=False, english="i don't care", concepts=[])]
+        r, _ = ranker(Path(self.tmp.name), Embedder(), rows)
+        _, routes = r.rank(["no me importa", "not for a wedding"], self.dresses, "Dresses")
+        self.assertEqual([x["negated"] for x in routes], [False, True])
+        self.assertEqual((routes[1]["bare"], routes[1]["match"], routes[1]["concepts"]),
+                         ("for a wedding", "exact", ["wedding_guest"]))
+
     def test_only_concepts_scored_in_the_category_are_used(self):
         r = bank.BankRanker(self.products, self.ranker.T, self.ranker.I, Path(self.tmp.name), BANK, self.ranker.matrix,
                             self.embedder, {"Dresses": []}, ["wedding_guest"], np.stack([vector("wedding guest")]))
