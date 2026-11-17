@@ -1,7 +1,6 @@
 # Ranking
 
-The ranking orders the products that passed the filters; it never adds or removes any. The default ranking runs no
-generative model at search time. It uses five kinds of signals:
+The ranking orders the products that passed the filters; it never adds or removes any. It uses five kinds of signals:
 - **embeddings** (`gemini-embedding-2`, 3072 dims): the query, embedded at search time, compared with the
   description, main image and feature text of each product, embedded in advance;
 - **concept scores**: a score from 0 to 10 of every product for each of 37 occasions, styles and season needs, given
@@ -9,9 +8,10 @@ generative model at search time. It uses five kinds of signals:
 - **product colours**: one to three colours of every product with their share, given offline by Gemini;
 - **product details**: the details of every product (lace, sequins, cable knit, a skull graphic) with their extent,
   given offline by Gemini;
-- **the phrase bank**: 2,893 residual phrases, labelled offline with what they ask for.
+- **the phrase bank**: 7,493 residual phrases, labelled offline with what they ask for.
 
-This is the state of 2026-11-14. The default ranking is `hybrid`; the other rankings stay available in the page.
+The default ranking adds a second stage: Jev 1.14 regrades the first 30 products from their text and main photo.
+This is the state of 2026-11-17.
 
 ## Rankings
 
@@ -19,17 +19,20 @@ The page offers these rankings:
 
 | Ranking | Score |
 | --- | --- |
-| `hybrid` (default) | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
-| `combined` | mean of the z-scores of `text` and `image` |
-| `text` | cosine of the query and the description |
-| `image` | cosine of the query and the main image |
-| `sentences` | the query and its phrases compared with single sentences of the description (a phrase the bank knows by its English version), with fitted weights |
-| `hybrid_jev` | Jev 1.14 regrades the first 30 of `hybrid` |
-| `hybrid_jev_vision`, `sentences_jev_vision` (slow) | Jev 1.14 regrades the first 30 of `hybrid` or `sentences` from their text and main photo |
+| `hybrid_jev_vision` (default) | the Jev second stage on `hybrid` |
+| `hybrid` | `combined_features`, plus concept, colour and detail scores and minus negations, picked with the phrase bank |
+| `sentences_jev_vision` | the Jev second stage on `sentences`: the query and its phrases compared with single sentences of the description (a phrase the bank knows by its English version), with fitted weights |
 
-`combined_features` (the mean of the z-scores of description, image and feature text, such as "Dresses. For women.
-Black. 100% linen. Midi length."), `concepts` and `bank` are not in the page: they are parts of `hybrid` and rankings
-of the evaluation in `experiments/ranking/evaluate.py`.
+`combined_features` is the mean of the z-scores of the similarity of the query to the description, the image and the
+feature text, such as "Dresses. For women. Black. 100% linen. Midi length.". The rankings the evaluation compares
+them with (`combined`, `text`, `image`, `concepts` and `bank`) are in
+[experiments/ranking/baselines.py](../experiments/ranking/baselines.py).
+
+**Jev second stage.** Jev 1.14 (`typesafe/jev-1.14`, the decisions API of OpenRouter) grades each of the first 30
+products from 0 (wrong) to 3 (matches everything the query asks for), from its text and its main photo at 384 px.
+The new order is the expected grade plus 0.25 × the z-score of the first-stage score; the products after the first 30
+keep their order. It takes about 0.7 s and $0.001 per search. When Jev fails, the page shows the first-stage order
+with a warning.
 
 ## Concepts
 
@@ -42,9 +45,7 @@ Gemini scored every product for every concept from its text and two images. The 
 deserves to appear in a search for "<concept> <category>". It also says that usually fewer than one product in five
 of a category deserves 7 or more. The scores therefore rank products within their category.
 
-The `concepts` ranking gives each residual phrase the concept with the most similar name, when the cosine is at least
-0.72. The scores of the matched concepts are combined with a geometric mean, and `combined` breaks ties. When no
-phrase matches, the ranking is `combined`.
+A residual phrase gets its concepts from the phrase bank (see Phrase bank).
 
 ## Colours
 
@@ -99,9 +100,9 @@ The phrases come from Amazon ESCI clothing queries, typical needs listed per cat
 and Spanish versions of the most frequent ones. Phrases found only in benchmark test queries are left out.
 
 The bank also has the Polish forms of every detail name and colour name, and of light and dark basic colours, with
-and without diacritics ("z haftem", "bez haftu", "haftowana"; "jasnoczerwona", "w kolorze pudrowego różu"). Gemini
-wrote the forms; their labels come from the English name, so "bez haftu" excludes embroidery and "jasnoczerwona" takes
-the colour of light red. The parser keeps the residual in the language of the query, and a Polish word in another
+and without diacritics ("z haftem", "haftowana", "haftu"; "jasnoczerwona", "w kolorze pudrowego różu"). Gemini
+wrote the forms; their labels come from the English name, so "haftu" is embroidery ("bez haftu" excludes it, see
+Negation below) and "jasnoczerwona" takes the colour of light red. The parser keeps the residual in the language of the query, and a Polish word in another
 form ("haftu") is often too far from every English name to be matched.
 
 At search time a residual phrase takes the labels of the first match:
@@ -121,24 +122,6 @@ A phrase with no match is unknown. Two rules apply first:
   → "koronki" → lace. The bank keeps no negated forms of its own, so the negation never depends on a neighbour; a
   phrase the bank knows keeps its labels ("no me importa" is a slogan, not a negation).
 
-## `bank`
-
-Each phrase gives one column of percentiles within the candidates:
-
-| Phrase | Signal |
-| --- | --- |
-| occasion, style or season with concepts | its concept scores |
-| any other phrase with concepts | its text signals and concept scores |
-| shade with a target colour | the closeness of the candidate's colours to it |
-| phrase with detail names | the candidate's details |
-| shade without one | its text signals, with the image counted twice |
-| negated | its signal, inverted |
-| size or audience ("petite") | none: the catalog has no such information |
-| anything else (a print, a theme, an unknown phrase) | the `combined` similarity of the whole query |
-
-The text signals are TF-IDF over the name and description, and the similarity of the phrase to the description and
-image embeddings. The columns are combined with a geometric mean, which acts as a soft AND. `combined` breaks ties.
-
 ## `hybrid`
 
 ```
@@ -156,7 +139,7 @@ compares the full query (3 of the dev queries have a negated phrase). The page s
 the side panel how much each part moves the ranking (its spread over the candidates), on every result a bar of its
 parts, and in the product view their values.
 
-In `bank` and `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
+In `hybrid`, the image counts twice in the embedding part when the query asks for a colour. A query asks
 for a colour when it has a colour filter or a phrase read as a shade.
 
 ## Where the data comes from

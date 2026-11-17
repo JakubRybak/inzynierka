@@ -154,8 +154,8 @@ class Ranking(unittest.TestCase):
         self.assertEqual(e.search("dress without lace", "sentences")["base_query"], "dress")
 
     def test_ranking_is_offered_only_with_sentences_and_weights(self):
-        self.assertNotIn("sentences", self.engine(None).rankings)
-        self.assertIn("sentences", self.engine(dict(description=1.0)).rankings)
+        self.assertNotIn("sentences_jev_vision", self.engine(None).rankings)
+        self.assertIn("sentences_jev_vision", self.engine(dict(description=1.0)).rankings)
 
 
 if __name__ == "__main__":

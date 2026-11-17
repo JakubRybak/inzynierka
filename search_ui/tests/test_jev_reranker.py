@@ -219,14 +219,13 @@ class Integration(unittest.TestCase):
         self.addCleanup(hybrid.pool.shutdown)
         return hybrid
 
-    def test_hybrid_jev_uses_hybrid_scores_without_sentence_assets(self):
+    def test_hybrid_jev_vision_uses_hybrid_scores_without_sentence_assets(self):
         hybrid = self.hybrid_engine()
-        self.assertIn("hybrid_jev", hybrid.rankings)
-        self.assertNotIn("sentences_jev_vision", hybrid.rankings)
+        self.assertEqual(hybrid.rankings, ["hybrid", "hybrid_jev_vision"])
         base = hybrid.search("dress with lace", "hybrid")
         self.post.assert_not_called()
         with patch.object(hybrid.bank, "prefetch", wraps=hybrid.bank.prefetch) as prefetch:
-            out = hybrid.search("dress with lace", "hybrid_jev")
+            out = hybrid.search("dress with lace", "hybrid_jev_vision")
         self.assertNotIn("error", out)
         self.assertFalse(prefetch.call_args.kwargs["lean"])
         self.assertEqual(out["rerank"]["base_ranking"], "hybrid")
@@ -240,11 +239,11 @@ class Integration(unittest.TestCase):
             self.assertEqual(r["parts"], original[r["id"]]["parts"])
         self.post.assert_called_once()
 
-    def test_failed_hybrid_jev_falls_back_to_hybrid(self):
+    def test_failed_hybrid_jev_vision_falls_back_to_hybrid(self):
         hybrid = self.hybrid_engine()
         base = hybrid.search("lace dress", "hybrid")
         self.post.side_effect = requests.Timeout("timeout")
-        out = hybrid.search("lace dress", "hybrid_jev")
+        out = hybrid.search("lace dress", "hybrid_jev_vision")
         self.assertEqual(out["results"], base["results"])
         self.assertEqual(out["rerank"]["status"], "fallback")
         self.assertEqual(out["rerank"]["base_ranking"], "hybrid")
@@ -310,7 +309,7 @@ class Integration(unittest.TestCase):
     def test_filtering_happens_before_jev_and_no_match_skips_it(self):
         def manual(color):
             return dict(category="Dresses", filters=[dict(feature="colors", operator="contains_any", values=[color])])
-        for ranking in ("sentences_jev_vision", "hybrid_jev", "hybrid_jev_vision"):
+        for ranking in ("sentences_jev_vision", "hybrid_jev_vision"):
             with self.subTest(ranking=ranking):
                 out = self.engine.search("dress", ranking, manual("Black"))
                 self.assertEqual({r["id"] for r in out["results"]}, {"d1", "d3"})
@@ -326,9 +325,9 @@ class Integration(unittest.TestCase):
 
     def test_results_beyond_the_reranked_prefix_keep_their_order(self):
         scores = np.array([3.0, 2.0, 1.0])
-        for ranking in ("sentences_jev_vision", "hybrid_jev", "hybrid_jev_vision"):
+        for ranking in ("sentences_jev_vision", "hybrid_jev_vision"):
             with self.subTest(ranking=ranking):
-                with patch.object(jev, "DEPTH", 2), patch.object(self.engine, "rank", return_value=(scores, None, None, None)):
+                with patch.object(jev, "DEPTH", 2), patch.object(self.engine, "rank", return_value=(scores, None, None)):
                     out = self.engine.search("dress", ranking)
                 self.assertEqual([r["id"] for r in out["results"]], ["d2", "d1", "d3"])
                 self.assertIsNone(out["results"][-1]["rerank"])
@@ -363,20 +362,21 @@ class Integration(unittest.TestCase):
         T = self.engine.T
         basic = server.SearchEngine(self.engine.products, T, np.zeros_like(T), self.engine.parser, self.embedder)
         self.addCleanup(basic.pool.shutdown)
-        self.assertNotIn("sentences_jev_vision", basic.rankings)
-        self.assertNotIn("hybrid_jev", basic.rankings)
-        self.assertNotIn("hybrid_jev_vision", basic.rankings)
+        self.assertEqual(basic.rankings, ["hybrid", "hybrid_jev_vision"])
 
     def test_http_menu_and_search_expose_optional_ranking(self):
-        srv = server.build_server(self.engine, ".", port=0, ranking="sentences")
+        srv = server.build_server(self.engine, ".", port=0)
         worker = threading.Thread(target=srv.serve_forever, daemon=True)
         worker.start()
         base = f"http://127.0.0.1:{srv.server_address[1]}"
         try:
             with urllib.request.urlopen(base + "/api/info") as r:
                 info = json.load(r)
-            self.assertEqual(info["ranking"], "sentences")
+            self.assertEqual(info["ranking"], "hybrid_jev_vision")
+            self.assertEqual(info["rankings"], ["hybrid", "hybrid_jev_vision", "sentences_jev_vision"])
             for ranking, first_stage in server.RERANK_BASES.items():
+                if ranking not in server.RANKINGS:
+                    continue
                 with self.subTest(ranking=ranking):
                     self.assertIn(ranking, info["rankings"])
                     with urllib.request.urlopen(base + f"/api/search?q=dress&ranking={ranking}") as r:

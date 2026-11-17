@@ -49,8 +49,8 @@ def engine(parser=None):
 class RepeatedQuery(unittest.TestCase):
     def test_parser_and_api_called_every_time(self):
         e, embedder = engine()
-        a = e.search("black jeans", "combined")
-        b = e.search("black jeans", "combined")
+        a = e.search("black jeans", "hybrid")
+        b = e.search("black jeans", "hybrid")
         self.assertEqual(e.parser.function.n, 2)
         self.assertEqual(embedder.n, 4)
         self.assertEqual(a["counts"]["candidates"], 2)
@@ -68,16 +68,16 @@ class RepeatedQuery(unittest.TestCase):
     def test_manual_filters_skip_the_parser(self):
         e, embedder = engine()
         manual = {"category": "Jeans", "filters": [{"feature": "fit", "operator": "in", "values": ["Slim"]}]}
-        d = e.search("", "combined", manual)
+        d = e.search("", "hybrid", manual)
         self.assertEqual((e.parser.function.n, embedder.n, d["counts"]["candidates"]), (0, 0, 1))
         self.assertEqual(d["parsed"]["source"], "manual")
         self.assertNotIn("parsing_ms", d["timings"])
-        e.search("slim jeans", "combined", manual)
+        e.search("slim jeans", "hybrid", manual)
         self.assertEqual((e.parser.function.n, embedder.n), (0, 2))
 
     def test_no_match_gives_no_results(self):
         e, _ = engine()
-        d = e.search("", "combined", {"category": "Dresses", "filters": [{"feature": "colors", "operator": "contains_any",
+        d = e.search("", "hybrid", {"category": "Dresses", "filters": [{"feature": "colors", "operator": "contains_any",
                                                                          "values": ["White"]}]})
         self.assertEqual((d["match"], d["results"]), ("none", []))
 
@@ -85,13 +85,14 @@ class RepeatedQuery(unittest.TestCase):
         calls = []
         e, embedder = engine(pa.Parser("test", lambda q: {"category": "Dresses", "filters": [], "residual": "for a wedding"}))
         embedder.f = lambda text: calls.append(text) or np.ones(8, np.float32)
-        e.search("black dress for a wedding", "text")
-        self.assertEqual(calls, ["task: search result | query: black dress for a wedding"])
+        e.search("black dress for a wedding", "hybrid")
+        self.assertEqual(sorted(calls), ["black dress for a wedding",
+                                         "task: search result | query: black dress for a wedding"])
 
-    def test_text_ranking_one_call(self):
+    def test_the_query_is_embedded_for_the_descriptions_and_the_images(self):
         e, embedder = engine()
-        e.search("jeans", "text")
-        self.assertEqual(embedder.n, 1)
+        e.search("jeans", "hybrid")
+        self.assertEqual(embedder.n, 2)
 
     def test_parser_error_is_reported_with_timings(self):
         def broken(q):
@@ -117,10 +118,11 @@ class HttpHeaders(unittest.TestCase):
             threading.Thread(target=srv.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{srv.server_address[1]}"
             try:
-                for path in ("/", "/api/info", "/api/search?q=jeans", "/api/product?id=1", "/images/images/train/1/x.png"):
+                for path in ("/", "/api/info", "/api/search?q=jeans&ranking=hybrid", "/api/product?id=1",
+                             "/images/images/train/1/x.png"):
                     with urllib.request.urlopen(base + path) as r:
                         self.assertEqual(r.headers["Cache-Control"], "no-store", path)
-                with urllib.request.urlopen(base + "/api/search?q=jeans") as r:
+                with urllib.request.urlopen(base + "/api/search?q=jeans&ranking=hybrid") as r:
                     self.assertEqual(json.loads(r.read())["counts"]["candidates"], 2)
                 enhanced = Path(d) / "pilot_9922/images_enhanced/1/x.webp"
                 enhanced.parent.mkdir(parents=True)

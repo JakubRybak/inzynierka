@@ -59,7 +59,7 @@ class PriceTests(unittest.TestCase):
         engine = server.SearchEngine(copy.deepcopy(self.products), vectors, vectors,
                                      parser_adapter.Parser("test", lambda q: parsed), lambda q: np.ones(4))
         self.addCleanup(engine.pool.shutdown)
-        result = engine.search("black tee up to 100 euros")
+        result = engine.search("black tee up to 100 euros", "hybrid")
         self.assertNotIn("error", result)
         self.assertEqual([p["id"] for p in result["results"]], ["0", "1"])
         self.assertEqual(result["results"][0]["price"], "99.50 USD")

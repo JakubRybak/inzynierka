@@ -73,10 +73,9 @@ class BankDetails(unittest.TestCase):
         self.dresses = np.array([0, 1, 2])
 
     def test_unknown_phrase_gets_detail_names(self):
-        score, routes = self.r.rank(["koronkowa"], self.dresses, "Dresses")
+        _, routes = self.r.adjustments(["koronkowa"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["match"], routes[0]["kind"]), ("detail name", "detail"))
         self.assertEqual(routes[0]["detail"]["names"], ["lace", "lace trim"])
-        self.assertEqual(int(np.argmax(score)), 0)
 
     def test_hybrid_detail_and_negated_detail(self):
         terms, routes = self.r.adjustments(["koronkowa"], self.dresses, "Dresses")
@@ -102,7 +101,7 @@ class BankDetails(unittest.TestCase):
         self.assertEqual(int(np.argmax(terms["negation"][0])), 0)
 
     def test_no_detail_for_an_unrelated_phrase(self):
-        _, routes = self.r.rank(["na wesele"], self.dresses, "Dresses")
+        _, routes = self.r.adjustments(["na wesele"], self.dresses, "Dresses")
         self.assertIsNone(routes[0]["detail"])
 
 

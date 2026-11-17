@@ -8,11 +8,11 @@ a pool of products to judge and the metrics.
     python experiments/ranking/evaluate.py report --split test   # only at milestones, never for tuning
 
 Queries: benchmark queries with a category, a residual and at least 2 candidates after their filters. Rankings:
-random, combined, combined_features, concepts, bank and bank_heldout (the bank without the phrases that come only
-from benchmark queries, so its phrases are as often unknown as in new queries), and the hybrid ranking for every
-pair of weights in GRID, with both banks (hybrid_c<concept>_n<negation>, hybrid_heldout_...), and with the weights of
-the search UI: hybrid_colour without the detail term, hybrid_details with it, hybrid_details_w<weight> with other detail
-weights. The pool holds every candidate of queries with at most COMPLETE candidates and the union of the rankings'
+random; combined, combined_features, concepts, bank and bank_heldout (the bank without the phrases that come only
+from benchmark queries, so its phrases are as often unknown as in new queries), the rankings of baselines.py; and the
+hybrid ranking of the search UI for every pair of weights in GRID, with both banks (hybrid_c<concept>_n<negation>,
+hybrid_heldout_...), and with the weights of the search UI: hybrid_colour without the detail term, hybrid_details with
+it, hybrid_details_w<weight> with other detail weights. The pool holds every candidate of queries with at most COMPLETE candidates and the union of the rankings'
 top K otherwise. Products without a grade count as 0.
 """
 import argparse
@@ -29,6 +29,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 SEARCH_UI = HERE.parents[1] / "search_ui"
 sys.path[:0] = [str(SEARCH_UI), str(SEARCH_UI / "core")]
+import baselines  # noqa: E402
 import bank  # noqa: E402
 import colours  # noqa: E402
 import details  # noqa: E402
@@ -71,23 +72,25 @@ def load_queries(products, vocabulary, split="all"):
 
 
 def heldout_rows(rows):
-    """Bank rows seen in more queries than the benchmark has, so they also come from other sources."""
+    """Bank rows that do not come only from benchmark queries: seen in more queries than the benchmark has, or in no
+    benchmark residual at all (the Polish forms of detail and colour names, which come from no query)."""
     seen = defaultdict(int)
     for r in benchmark_parser.ROWS:
         for phrase in dict.fromkeys(bank.normalize_phrase(p) for p in r["residual"]):
             seen[phrase] += 1
-    return [i for i, row in enumerate(rows) if row["queries"] > seen[row["phrase"]]]
+    return [i for i, row in enumerate(rows) if not seen[row["phrase"]] or row["queries"] > seen[row["phrase"]]]
 
 
 ORIGINAL_IMAGES = False  # --original-images: the embeddings of the original 256 px photos
 
 
 def engines():
-    """{ranking: engine}: one engine with the full bank, one with the bank without benchmark-only phrases."""
+    """{"main": the search engine with the full bank, "heldout": the same with the bank without benchmark-only
+    phrases, "concepts": the concepts ranking}."""
     products, meta = common.load_index()
     T, I = server.load_product_embeddings(products, meta, enhanced=not ORIGINAL_IMAGES)
     embedder = common.QueryEmbedder(meta["model"], meta["dim"])
-    ranker = concepts.load(common.DATA, meta, products, embedder, threshold=0.72)
+    concept_data = concepts.load(common.DATA, meta, products)
     rows = bank.load_rows()
     vectors = np.load(common.DATA / bank.VECTORS)["vectors"]
     keep = heldout_rows(rows)
@@ -96,16 +99,16 @@ def engines():
 
     def bank_ranker(rs, vs):
         return bank.BankRanker(products, T, I, Path(meta["dataset"]), rs, vs, embedder,
-                               concepts.scored_concepts(meta["concepts"]), ranker.ids, ranker.E, colour_data,
-                               detail_data)
+                               concepts.scored_concepts(meta["concepts"]), concept_data.ids, concept_data.E,
+                               colour_data, detail_data)
 
     parser = parser_adapter.Parser("benchmark", lambda q: None)
     F = server.load_feature_embeddings(products, common.DATA)
-    engine = server.SearchEngine(products, T, I, parser, embedder, ranker, bank_ranker(rows, vectors), F)
-    heldout = server.SearchEngine(products, T, I, parser, embedder, ranker,
+    main = server.SearchEngine(products, T, I, parser, embedder, concept_data, bank_ranker(rows, vectors), F)
+    heldout = server.SearchEngine(products, T, I, parser, embedder, concept_data,
                                   bank_ranker([rows[i] for i in keep], vectors[keep]), F)
     print(f"bank {len(rows)} phrases, heldout bank {len(keep)}")
-    return {r: heldout if "heldout" in r else engine for r in RANKINGS}
+    return dict(main=main, heldout=heldout, concepts=baselines.ConceptRanking(concept_data, meta["concepts"], embedder))
 
 
 def top_k(engine, cand, score, tie=None):
@@ -117,13 +120,12 @@ def hybrids(engines, q):
     """Every hybrid variant from one base score and one set of terms per bank."""
     cand = np.array(q["candidates"])
     out, start = {}, time.perf_counter()
-    first = engines["combined"]
-    jobs = first.query_vectors(q["query"], "combined")
-    base = first.embedding_scores(jobs, "combined_features", cand, {}, start)[0]
-    image_base = first.embedding_scores(jobs, "combined_features", cand, {}, start,
-                                        image_weight=server.COLOUR_IMAGE_WEIGHT)[0]
+    first = engines["main"]
+    jobs = first.query_vectors(q["query"])
+    base = first.query_similarity(jobs, cand, {}, start)[0]
+    image_base = first.query_similarity(jobs, cand, {}, start, image_weight=server.COLOUR_IMAGE_WEIGHT)[0]
     base_ms = (time.perf_counter() - start) * 1000
-    for prefix, engine in (("hybrid", engines["bank"]), ("hybrid_heldout", engines["bank_heldout"])):
+    for prefix, engine in (("hybrid", engines["main"]), ("hybrid_heldout", engines["heldout"])):
         start = time.perf_counter()
         terms, routes = engine.bank.adjustments(q["residual"], cand, q["category"], query=q["query"])
         ms = base_ms + (time.perf_counter() - start) * 1000
@@ -143,26 +145,35 @@ def hybrids(engines, q):
     return out
 
 
-def order(engine, q, ranking):
+def order(engines, q, ranking):
+    """The top K of a ranking of BASE: random or a ranking of baselines.py."""
     cand = np.array(q["candidates"])
-    out, timings = dict(parsed=dict(category=q["category"], filters=q["filters"], residual=q["residual"])), {}
-    start = time.perf_counter()
+    start, matches = time.perf_counter(), []
+    engine = engines["heldout" if ranking == "bank_heldout" else "main"]
     if ranking == "random":
         score, tie = np.random.default_rng(zlib.crc32(q["id"].encode())).random(len(cand)), None
     else:
-        score, _, _, tie = engine.rank(q["query"], "bank" if ranking == "bank_heldout" else ranking, cand,
-                                       q["category"], timings, out)
+        v = baselines.query_vectors(engine, q["query"])
+        if ranking in baselines.EMBEDDING:
+            score, tie = baselines.embedding(engine, v, ranking, cand), None
+        elif ranking == "concepts":
+            score, tie = engines["concepts"].rank(q["residual"], q["category"], cand,
+                                                  baselines.embedding(engine, v, "combined", cand))
+        else:
+            def whole_query(routes):
+                weight = server.COLOUR_IMAGE_WEIGHT if server.asks_colour(q["filters"], routes) else 1.0
+                return baselines.embedding(engine, v, "combined", cand, image_weight=weight)
+            score, routes = baselines.bank_rank(engine.bank, q["residual"], cand, q["category"], q["query"], whole_query)
+            tie, matches = whole_query(routes), [r["match"] for r in routes]
     ms = (time.perf_counter() - start) * 1000
-    idx = np.lexsort((-tie, -score)) if tie is not None else np.argsort(-score, kind="stable")
-    routes = out.get("bank") or []
-    return [engine.products[cand[i]]["product_id"] for i in idx[:K]], ms, [r["match"] for r in routes]
+    return top_k(engine, cand, score, tie), ms, matches
 
 
 def run(split, limit, workers, only=None, suffix=""):
     """only: rerun just these rankings and keep the other runs and the pool of earlier runs; suffix: store them under
     their name with this suffix, to compare with the same rankings on earlier data."""
-    by_ranking_engine = engines()
-    engine = by_ranking_engine["combined"]
+    built = engines()
+    engine = built["main"]
     queries = load_queries(engine.products, engine.vocabulary, split)[:limit]
     DATA.mkdir(exist_ok=True)
     keep_runs, keep_pool = [], {}
@@ -172,9 +183,9 @@ def run(split, limit, workers, only=None, suffix=""):
         keep_pool = {r["id"]: r for r in map(json.loads, POOL.open(encoding="utf-8"))}
 
     def one(q):
-        out = {r: order(by_ranking_engine[r], q, r) for r in BASE if not only or r in only}
+        out = {r: order(built, q, r) for r in BASE if not only or r in only}
         if not only or any(r.startswith("hybrid") for r in only):
-            out |= {r: v for r, v in hybrids(by_ranking_engine, q).items() if not only or r in only}
+            out |= {r: v for r, v in hybrids(built, q).items() if not only or r in only}
         return q, {r + suffix: v for r, v in out.items()}
 
     with ThreadPoolExecutor(workers) as pool:

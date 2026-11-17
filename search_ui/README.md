@@ -7,9 +7,8 @@ filters by hand, switches between rankings and shows how long each stage took.
 
 How the results are ordered, and where the ranking data comes from: [README_ranking.md](README_ranking.md).
 
-The Ranking menu also offers `combined`, `text`, `image`, `sentences` and three rankings in which Jev 1.14 regrades
-the first 30 results: `hybrid_jev`, and `hybrid_jev_vision` and `sentences_jev_vision` with the main photo (slow). They need `OPENROUTER_API_KEY`
-and are marked with "?" in the menu; the default is `hybrid`.
+The Ranking menu offers three rankings: `hybrid_jev_vision` (the default), `hybrid` and `sentences_jev_vision`; the
+two that are not the default are marked with "?". The Jev rankings need `OPENROUTER_API_KEY`.
 
 ## Quick start
 
@@ -67,9 +66,9 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
    - when no product meets every condition, the result is empty.
 
 3. **Ranking** (`server.py`, `core/`). The chosen ranking orders all the candidates; it never adds or removes
-   products. The default, `hybrid`, compares the query embedding with the description, image and features of each
-   product and corrects it with the residual phrases (see [README_ranking.md](README_ranking.md)). `sentences` and
-   the Jev rankings are options.
+   products. `hybrid` compares the query embedding with the description, image and features of each product and
+   corrects it with the residual phrases. The default, `hybrid_jev_vision`, then lets Jev 1.14 regrade the first 30
+   from their text and main photo (about 0.7 s and $0.001 more per search). See [README_ranking.md](README_ranking.md).
 
 ## Using the page
 
@@ -136,10 +135,7 @@ The rankings use the embeddings of the 1024 px front photos
 | `server.py` option | Default | |
 | --- | --- | --- |
 | `--parser` | `llm` | `llm`, `mock` or `module:function` returning the parser output format |
-| `--ranking` | `hybrid` | default ranking in the page; `combined` when the phrase bank is not loaded |
-| `--concept-threshold` | `0.72` | minimum phrase–concept name cosine of the `concepts` ranking (evaluation only) |
-| `--concept-combine` | `geo` | how the `concepts` ranking (evaluation only) combines phrases: `geo`, `mean` or `min` |
-| `--no-bank` | | do not load the phrase bank (`bank`, `hybrid` and `sentences` disappear) |
+| `--ranking` | `hybrid_jev_vision` | default ranking in the page |
 | `--port` | `8000` | |
 | `--data` | `search_ui/data` | index built by `prepare.py` |
 | `--no-warmup` | | skip the test embedding call at startup |
@@ -196,8 +192,8 @@ The mock parser knows only the English values of the index, so `check_examples.p
   the parser and embeddings work once the network is back.
 - **An error reading `embeddings/*.parquet`.** The files are still Git LFS pointers; run `git lfs pull`.
 - **`No embeddings for N indexed products`.** The features file contains products outside the embedded set.
-- **`Phrase bank ranking unavailable`.** `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out
-  of date; run `prepare.py`.
+- **`Phrase bank unavailable`.** `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out of date;
+  run `prepare.py`. Until then `hybrid` ranks by the whole query only and `sentences_jev_vision` is not offered.
 - **`Missing OPENROUTER_API_KEY` or `Jev HTTP 401`.** `.env` at the repository root is missing a key, or a key spans
   several lines.
 - **`No readable product photos for Jev vision`.** Check that `dataset` in `search_ui/data/meta.json` points to
@@ -208,6 +204,6 @@ Typical latency per query:
 - parsing: about 0.7–1.1 s;
 - query embedding: 0.3–0.6 s, during the parsing, so it adds nothing when the parser is slower;
 - filtering: a few ms;
-- residual phrases (`bank`, `hybrid` and `sentences`): every span of one to three words of the query is embedded during the
+- residual phrases (`hybrid` and `sentences`): every span of one to three words of the query is embedded during the
   parsing too, because most residual phrases are such spans; only a phrase that is not one (about 3–8%) needs one
   more embedding call (about 0.3–0.6 s) after the parsing. The stage timings show how many were ready.

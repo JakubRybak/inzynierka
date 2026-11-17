@@ -1,10 +1,10 @@
 """
-Phrase-bank ranking: residual phrases seen before carry labels made offline by Gemini (ranking_data/phrase_bank.jsonl):
-their kind, negation, an English version and the concepts they ask for. Every residual phrase is embedded with the
-same model as the products (Gemini Embedding 2):
+The phrase bank: residual phrases seen before carry labels made offline by Gemini (ranking_data/phrase_bank.jsonl,
+offline/phrase_bank.py): their kind, negation, an English version and the concepts they ask for. Every residual phrase
+is embedded with the same model as the products (Gemini Embedding 2) and routed (route):
 - a phrase found in the bank takes its labels;
 - another phrase takes the labels of its nearest bank phrase when the similarity is at least NEAREST;
-- otherwise it takes the concept whose name is the most similar, when that similarity is at least CONCEPT_MATCH.
+- otherwise it takes the most similar colour name, detail names or concept name, each from its own threshold.
 A lightness word right before a colour in the query ("light" in "light pink dress", which a parser may split
 from the colour) is read as a shade, whatever the bank says about it alone ("light" there means lightweight). With the
 product colours (colours.py), a shade phrase gets a target colour: its bank hex, a colour name of the dictionary, or
@@ -18,19 +18,8 @@ A phrase is negated when the bank says so; a phrase the bank does not know is ne
 negation word followed by at most NEGATED_WORDS words (longer ones, such as "not in this lifetime tour", are
 usually slogans), and the rest of it is routed as a phrase of its own ("bez koronki" -> "koronki" -> lace).
 
-Every phrase gives one column of percentiles within the candidates:
-- an occasion, style or season phrase of the bank with concepts uses the concept scores only, when the category is
-  fully scored;
-- a shade with a target colour uses the closeness of the candidates' colours to it;
-- a phrase with detail names uses the candidates' details (their extent), with its concepts if it has any;
-- every other phrase uses text signals: TF-IDF over the name and description and the similarity of the phrase to
-  the description and image embeddings, averaged; concepts of such a phrase are added, a concept matched by name
-  with CONCEPT_WEIGHT against 1 for the text;
-- a negated phrase is inverted, a size or audience phrase is left out.
-The columns are combined with a soft AND (geometric mean). In the search UI the combined similarity of the query
-breaks ties (concept scores are integers, so many candidates share one) and orders queries without a usable
-phrase; on its own the ranker uses the typicality of a candidate (cosine to the mean of the candidates' description
-and image embeddings) instead.
+The routes give the terms the rankings add to the similarity of the whole query: adjustments() for hybrid (concept,
+colour, detail and negation terms) and sentence_terms() for the sentence ranking.
 """
 from concurrent.futures import ThreadPoolExecutor
 import csv
@@ -49,9 +38,7 @@ VECTORS = "bank_embeddings.npz"
 NEAREST = 0.86  # chosen in the bank: from 0.86 up, the nearest other phrase shares a concept and a kind in 80% of cases
 CONCEPT_MATCH = 0.80
 NEGATED_WORDS = 3
-CONCEPT_WEIGHT = 2.0
 SHADE_IMAGE_WEIGHT = 2.0
-FLOOR = 0.01
 ABSTRACT = {"occasion", "style", "season"}
 DETAIL_KINDS = {"detail", "other"}
 UNSATISFIABLE = re.compile(r"\b(plus[- ]?size|plus|petite|tall|big and tall|maternity|pregnan\w*|nursing|\d*x+l|xxs"
@@ -75,12 +62,6 @@ def percentiles(x):
     if np.ptp(x) == 0:
         return np.full(x.size, 0.5)
     return rankdata(x, method="average") / x.size
-
-
-def soft_and(columns):
-    """Geometric mean of per-phrase scores in [0, 1]. FLOOR keeps a single weak phrase from zeroing a product."""
-    s = np.clip(np.column_stack(columns), FLOOR, 1.0)
-    return np.exp(np.log(s).mean(axis=1))
 
 
 def zscore(x):
@@ -177,7 +158,6 @@ class BankRanker:
         self.embedder, self.pool, self.prefetch_pool = embedder, ThreadPoolExecutor(8), ThreadPoolExecutor(PREFETCH)
         self.T, self.I = T, I
         self.has_image = np.linalg.norm(I, axis=1) > 0
-        self.typical = common.normalize(T + I)
         corpus = []
         for split in ("train", "validation"):
             with (dataset / f"products_{split}.csv").open(newline="", encoding="utf-8") as f:
@@ -241,7 +221,7 @@ class BankRanker:
         shade = shade_phrase(text, query)
         if shade:
             return dict(phrase=phrase, match="colour", similarity=None, neighbour=None, kind="shade", concepts=[],
-                        concepts_unavailable=[], skipped=False, negated=False, english=text, text_signals=True,
+                        concepts_unavailable=[], skipped=False, negated=False, english=text,
                         colour=self.colour_target(shade, vectors) if colours is not None else None)
         if text not in self.exact and negated_text(text):
             # the negation is read from the phrase: the rest is routed as a phrase of its own and counts with a minus
@@ -292,7 +272,6 @@ class BankRanker:
                     or (row is None and bool(UNSATISFIABLE.search(text))),
                     negated=bool(negated),
                     english=self.english(text),
-                    text_signals=not (row and row["kind"] in ABSTRACT and asked and available),
                     colour=colour, detail=detail)
 
     def colour_score(self, r, cand):
@@ -325,23 +304,6 @@ class BankRanker:
         """A shade is judged mainly from the image."""
         return SHADE_IMAGE_WEIGHT if r["kind"] == "shade" else 1.0
 
-    def phrase_column(self, r, cand, vectors):
-        if r["skipped"]:
-            return None
-        colour = self.colour_score(r, cand)
-        if colour is not None:
-            return 1 - colour if r["negated"] else colour
-        detail = self.detail_raw(r, cand)
-        parts = [(1.0, percentiles(detail))] if detail is not None else \
-            [(1.0, self.text_score(r["english"], cand, vectors, self.image_weight(r)))] if r["text_signals"] else []
-        if r["concepts"]:
-            raw = self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1)
-            parts.append((CONCEPT_WEIGHT if parts and r["match"] == "concept" else 1.0, percentiles(raw)))
-        if not parts:
-            return None
-        p = sum(w * s for w, s in parts) / sum(w for w, _ in parts)
-        return 1 - p if r["negated"] else p
-
     def prefetch(self, query, lean=False):
         """Starts, before the parser returns the residual, the embeddings its phrases will probably need: every span
         of one to SPAN_WORDS words of the query (the shortest first, at most PREFETCH; a span without its negation is
@@ -366,11 +328,10 @@ class BankRanker:
         texts = list(dict.fromkeys(texts))[:PREFETCH]
         return {t: self.prefetch_pool.submit(self.embedder, t) for t in texts}
 
-    def embed(self, residual, query=None, text_signals=True, prefetched=None, stats=None):
+    def embed(self, residual, query=None, prefetched=None, stats=None):
         """The embeddings the phrases need, in parallel: a phrase the bank does not know (for the bank, colour, detail
-        and concept names, with and without its negation), a lightness word with the colour after it ("light pink")
-        for the colour names, a known detail phrase for the detail names, and with text_signals the English version
-        for the descriptions (query format) and the images (plain); text_score() embeds those later when needed."""
+        and concept names), a lightness word with the colour after it ("light pink") for the colour names and a known
+        detail phrase for the detail names; text_score() embeds what it needs later."""
         texts = set()
         for phrase in residual:
             text = normalize_phrase(phrase)
@@ -384,9 +345,6 @@ class BankRanker:
                 texts |= {common.query_text(text), common.query_text(self.english(text))}
             if self.details is not None and (row is None or row["kind"] in DETAIL_KINDS):
                 texts.add(common.query_text(self.detail_text(text)))
-            if text_signals:
-                english = self.english(text)
-                texts |= {common.query_text(english), english}
         return self.fetch(texts, {}, prefetched, stats)
 
     def fetch(self, texts, vectors, prefetched=None, stats=None):
@@ -416,7 +374,7 @@ class BankRanker:
         for a shade with a target colour, "detail" for a phrase with detail names. Other phrases add nothing. Every
         route gets "term": the term it went to, or None. -> (terms, routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual, query, text_signals=False, prefetched=prefetched, stats=stats)
+        vectors = self.embed(residual, query, prefetched=prefetched, stats=stats)
         routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
                   for p in residual]
         terms = dict(concept=[], negation=[], colour=[], detail=[])
@@ -508,35 +466,3 @@ class BankRanker:
     @staticmethod
     def negation_variants(query):
         return negation_variants(query)
-
-    @staticmethod
-    def own_signal(r):
-        """The bank scores a phrase itself only when it knows something about it: its concepts, a negation or a
-        shade or detail names. Any other phrase (a theme, an unknown phrase) is better judged by the whole query."""
-        return bool(r["concepts"]) or r["negated"] or r["kind"] == "shade" or bool(r.get("detail"))
-
-    def rank(self, residual, cand, category, typicality=True, query=None, whole_query=None, prefetched=None,
-             stats=None):
-        """-> (scores of the candidates, routes of the phrases). typicality=False leaves ties (and all candidates when
-        no phrase is usable) to the caller. whole_query(routes) -> similarity of the whole query to the candidates:
-        when given, a phrase without its own signal takes that column instead of its text signals."""
-        residual = [p for p in residual if normalize_phrase(p)]
-        vectors = self.embed(residual, query, prefetched=prefetched, stats=stats)
-        routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
-                  for p in residual]
-        whole = None
-        columns = []
-        for r in routes:
-            if whole_query is not None and not r["skipped"] and not self.own_signal(r):
-                whole = percentiles(whole_query(routes)) if whole is None else whole
-                r["whole_query"] = True
-                columns.append(whole)
-            else:
-                c = self.phrase_column(r, cand, vectors)
-                if c is not None:
-                    columns.append(c)
-        score = soft_and(columns) if columns else np.zeros(len(cand))
-        if typicality:
-            m = self.typical[cand]
-            score = score + (1e-3 if columns else 1) * percentiles(m @ common.normalize(m.mean(axis=0)))
-        return score, routes

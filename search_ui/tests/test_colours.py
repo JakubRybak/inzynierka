@@ -91,9 +91,8 @@ class BankColours(unittest.TestCase):
         self.dresses = np.array([0, 1, 2])
 
     def test_lightness_word_takes_the_colour_after_it(self):
-        score, routes = self.r.rank(["light"], self.dresses, "Dresses", query="light pink dress")
+        _, routes = self.r.adjustments(["light"], self.dresses, "Dresses", query="light pink dress")
         self.assertEqual(routes[0]["colour"]["hex"], "#FFB6C1")
-        self.assertEqual(int(np.argmax(score)), 0)
 
     def test_a_neighbour_gives_a_shade_only_its_lightness(self):
         r = self.r.route("jasnoczerwona", "Dresses", self.r.matrix[0], vectors={})
@@ -102,12 +101,12 @@ class BankColours(unittest.TestCase):
         self.assertNotIn("hex", r["colour"])
 
     def test_unknown_colour_name_and_negation(self):
-        score, routes = self.r.rank(["burgundy"], self.dresses, "Dresses")
-        self.assertEqual((routes[0]["match"], routes[0]["kind"]), ("colour name", "shade"))
-        self.assertEqual(int(np.argmax(score)), 2)
-        score, routes = self.r.rank(["not burgundy"], self.dresses, "Dresses")
-        self.assertTrue(routes[0]["negated"])
-        self.assertEqual(int(np.argmin(score)), 2)
+        terms, routes = self.r.adjustments(["burgundy"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["match"], routes[0]["kind"], routes[0]["term"]), ("colour name", "shade", "colour"))
+        self.assertEqual(int(np.argmax(terms["colour"][0])), 2)
+        terms, routes = self.r.adjustments(["not burgundy"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["negated"], routes[0]["term"]), (True, "negation"))
+        self.assertEqual(int(np.argmax(terms["negation"][0])), 2)  # d3, burgundy, loses the most
 
     def test_hybrid_colour_term(self):
         terms, _ = self.r.adjustments(["light"], self.dresses, "Dresses", query="light pink dress")
@@ -129,13 +128,13 @@ class BankColours(unittest.TestCase):
         r.colours = colours.Colours(ps, pd.DataFrame(COLOURS, columns=["product_id", "rank", "name", "family", "hex",
                                                                          "share"]), names,
                                     np.stack([embed(colours.common.query_text(n)) for n in names["name"]]))
-        _, routes = r.rank(["ciemnozielona"], self.dresses, "Dresses")
+        _, routes = r.adjustments(["ciemnozielona"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["match"], routes[0]["neighbour"]), ("nearest", "ciemnoszary"))
         self.assertEqual(routes[0]["colour"]["name"], "dark green")
 
-    def test_no_colours_keeps_text_signals(self):
+    def test_without_colours_a_shade_gets_no_colour(self):
         self.r.colours = None
-        _, routes = self.r.rank(["burgundy"], self.dresses, "Dresses")
+        _, routes = self.r.adjustments(["burgundy"], self.dresses, "Dresses")
         self.assertIsNone(routes[0]["colour"])
 
 

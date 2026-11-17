@@ -65,10 +65,6 @@ class Bank(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def order(self, residual, cand, category):
-        score, routes = self.ranker.rank(residual, cand, category)
-        return [self.products[i]["product_id"] for i in cand[np.argsort(-score, kind="stable")]], routes
-
     def test_prefetched_spans_save_calls_after_parsing(self):
         query = "black dress with pockets"
         pre = self.ranker.prefetch(query)
@@ -84,30 +80,30 @@ class Bank(unittest.TestCase):
         self.ranker.adjustments(["deep pockets"], self.dresses, "Dresses", query=query, prefetched=pre, stats=stats)
         self.assertEqual(stats, dict(phrase_embeddings_early=0, phrase_embeddings_late=1))
 
-    def test_bank_occasion_uses_only_concepts_in_a_scored_category(self):
-        order, routes = self.order(["For a  wedding"], self.dresses, "Dresses")
-        self.assertEqual(order, ["d2", "d3", "d1"])
-        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["text_signals"]),
-                         ("exact", ["wedding_guest"], False))
+    def test_bank_occasion_uses_its_concept_scores(self):
+        terms, routes = self.ranker.adjustments(["For a  wedding"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["term"]),
+                         ("exact", ["wedding_guest"], "concept"))
+        self.assertEqual(int(np.argmax(terms["concept"][0])), 1)  # d2 has the highest wedding score
 
-    def test_occasion_falls_back_to_text_without_scores(self):
-        order, routes = self.order(["for a wedding"], self.jeans, "Jeans")
-        self.assertEqual(order, ["j2", "j1"])
-        self.assertEqual((routes[0]["concepts"], routes[0]["concepts_unavailable"], routes[0]["text_signals"]),
-                         ([], ["wedding_guest"], True))
+    def test_occasion_without_scores_adds_nothing(self):
+        terms, routes = self.ranker.adjustments(["for a wedding"], self.jeans, "Jeans")
+        self.assertEqual((routes[0]["concepts"], routes[0]["concepts_unavailable"], routes[0]["term"]),
+                         ([], ["wedding_guest"], None))
+        self.assertFalse(any(terms.values()))
 
-    def test_known_phrase_uses_its_english_version_and_negation_inverts(self):
-        self.assertEqual(self.order(["z koronką"], self.dresses, "Dresses")[0][0], "d1")
-        self.assertIn("with lace", self.embedder.texts)
-        order, routes = self.order(["without lace"], self.dresses, "Dresses")
-        self.assertTrue(routes[0]["negated"])
-        self.assertEqual(order[-1], "d1")
+    def test_known_phrase_uses_its_english_version_and_a_negation_is_subtracted(self):
+        _, routes = self.ranker.adjustments(["z koronką"], self.dresses, "Dresses")
+        self.assertEqual(routes[0]["english"], "with lace")
+        terms, routes = self.ranker.adjustments(["without lace"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["negated"], routes[0]["term"]), (True, "negation"))
+        self.assertEqual(int(np.argmax(terms["negation"][0])), 0)  # d1, in black lace, loses the most
 
     def test_unknown_phrase_takes_a_concept_by_name(self):
-        _, routes = self.order(["wedding guest outfit"], self.dresses, "Dresses")
-        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["text_signals"]),
-                         ("concept", ["wedding_guest"], True))
-        _, routes = self.order(["with pockets"], self.dresses, "Dresses")
+        _, routes = self.ranker.adjustments(["wedding guest outfit"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["term"]),
+                         ("concept", ["wedding_guest"], "concept"))
+        _, routes = self.ranker.adjustments(["with pockets"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["match"], routes[0]["concepts"]), ("none", []))
 
     def test_a_lightness_word_before_a_colour_is_a_shade(self):
@@ -121,15 +117,15 @@ class Bank(unittest.TestCase):
         self.assertEqual(routes[0]["concepts"], ["wedding_guest"])
 
     def test_a_long_phrase_after_not_is_a_slogan(self):
-        _, routes = self.order(["not in this lifetime tour"], self.dresses, "Dresses")
+        _, routes = self.ranker.adjustments(["not in this lifetime tour"], self.dresses, "Dresses")
         self.assertFalse(routes[0]["negated"])
-        _, routes = self.order(["no lace"], self.dresses, "Dresses")
+        _, routes = self.ranker.adjustments(["no lace"], self.dresses, "Dresses")
         self.assertTrue(routes[0]["negated"])
 
     def test_a_negation_is_read_from_the_phrase_unless_the_bank_knows_it(self):
         rows = BANK + [dict(phrase="no me importa", kind="other", negated=False, english="i don't care", concepts=[])]
         r, _ = ranker(Path(self.tmp.name), Embedder(), rows)
-        _, routes = r.rank(["no me importa", "not for a wedding"], self.dresses, "Dresses")
+        _, routes = r.adjustments(["no me importa", "not for a wedding"], self.dresses, "Dresses")
         self.assertEqual([x["negated"] for x in routes], [False, True])
         self.assertEqual((routes[1]["bare"], routes[1]["match"], routes[1]["concepts"]),
                          ("for a wedding", "exact", ["wedding_guest"]))
@@ -137,7 +133,7 @@ class Bank(unittest.TestCase):
     def test_only_concepts_scored_in_the_category_are_used(self):
         r = bank.BankRanker(self.products, self.ranker.T, self.ranker.I, Path(self.tmp.name), BANK, self.ranker.matrix,
                             self.embedder, {"Dresses": []}, ["wedding_guest"], np.stack([vector("wedding guest")]))
-        _, routes = r.rank(["for a wedding"], self.dresses, "Dresses")
+        _, routes = r.adjustments(["for a wedding"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["concepts"], routes[0]["concepts_unavailable"]), ([], ["wedding_guest"]))
 
     def test_a_shade_is_judged_mainly_from_the_image(self):
@@ -150,21 +146,10 @@ class Bank(unittest.TestCase):
         plain, image = r.text_score("pink", self.dresses, vectors), r.text_score("pink", self.dresses, vectors, 2.0)
         self.assertGreater(image[1] - image[0], plain[1] - plain[0])
 
-    def test_a_phrase_without_own_signal_takes_the_whole_query(self):
-        whole = np.array([0.1, 0.9, 0.5])
-        score, routes = self.ranker.rank(["harry potter"], self.dresses, "Dresses", typicality=False,
-                                         whole_query=lambda routes: whole)
-        self.assertTrue(routes[0]["whole_query"])
-        self.assertEqual(int(np.argmax(score)), 1)
-        score, routes = self.ranker.rank(["for a wedding"], self.dresses, "Dresses", typicality=False,
-                                         whole_query=lambda routes: whole)
-        self.assertNotIn("whole_query", routes[0])
-        self.assertEqual(int(np.argmax(score)), 1)
-
-    def test_size_phrase_is_skipped_and_typicality_orders(self):
-        score, routes = self.ranker.rank(["plus size"], self.dresses, "Dresses")
-        self.assertTrue(routes[0]["skipped"])
-        np.testing.assert_allclose(score, self.ranker.rank([], self.dresses, "Dresses")[0])
+    def test_size_phrase_is_skipped(self):
+        terms, routes = self.ranker.adjustments(["plus size"], self.dresses, "Dresses")
+        self.assertEqual((routes[0]["skipped"], routes[0]["term"]), (True, None))
+        self.assertFalse(any(terms.values()))
 
     def test_embed_bank_embeds_only_new_phrases(self):
         folder, embedder = Path(self.tmp.name), Embedder()
@@ -172,23 +157,6 @@ class Bank(unittest.TestCase):
         self.assertEqual((vectors.shape[0], new), (2, 2))
         vectors, new = bank.embed_bank(BANK, embedder, folder)
         self.assertEqual((vectors.shape[0], new, len(embedder.texts)), (3, 1, 3))
-
-
-class TiesInSearch(unittest.TestCase):
-    """In the search engine the combined similarity of the query orders candidates with equal concept scores."""
-
-    def test_combined_breaks_equal_concept_scores(self):
-        ps = [dict(product_id=pid, category="Dresses", section="Dresses", name=pid, brand="Acne Studios",
-                   description=text, features={}, images=[], concept__wedding_guest=score)
-              for pid, text, score in [("d1", "red dress", 9.0), ("d2", "blue dress", 9.0), ("d3", "green dress", 2.0)]]
-        with tempfile.TemporaryDirectory() as tmp:
-            r, ps = ranker(Path(tmp), Embedder(), scores=ps)
-            parser = pa.Parser("test", lambda q: dict(category="Dresses", filters=[], residual=["for a wedding"]))
-            T = np.stack([vector(p["description"]) for p in ps])
-            e = server.SearchEngine(ps, T, np.zeros_like(T), parser, lambda text: vector("blue"), bank=r)
-            d = e.search("blue dress for a wedding", "bank")
-        self.assertEqual([x["id"] for x in d["results"]], ["d2", "d1", "d3"])
-        self.assertIn("query_embedding_ms", d["timings"])
 
 
 class ColourWeight(unittest.TestCase):
@@ -199,13 +167,14 @@ class ColourWeight(unittest.TestCase):
         T = np.array([[1, 0], [0, 1]], np.float32)
         I = np.array([[0, 1], [1, 0]], np.float32)
         e = server.SearchEngine(ps, T, I, pa.Parser("test", lambda q: None), lambda text: np.ones(2))
+        self.addCleanup(e.pool.shutdown)
         jobs = {}
         for k, v in (("t", [1, 0.2]), ("i", [1, 0.1])):
             jobs[k] = Future()
             jobs[k].set_result(np.array(v, np.float32))
         cand = np.array([0, 1])
-        plain = e.embedding_scores(jobs, "combined", cand, {}, 0)[0]
-        colour = e.embedding_scores(jobs, "combined", cand, {}, 0, image_weight=2.0)[0]
+        plain = e.query_similarity(jobs, cand, {}, 0)[0]
+        colour = e.query_similarity(jobs, cand, {}, 0, image_weight=2.0)[0]
         self.assertEqual(int(np.argmax(colour)), 1)
         self.assertLess(colour[0], plain[0])
 

@@ -110,12 +110,6 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .residual b { color:var(--k-con); font-weight:600; }
 .residual.phrase { margin-top:2px; padding-left:12px; }
 .chip.cc { background:var(--k-con-bg); color:var(--k-con); }
-.clh { margin:8px 0 0; font-size:12px; font-weight:600; }
-.clist { margin:6px 0 0; max-height:200px; overflow:auto; border:1px solid var(--line); border-radius:6px; background:var(--card); font-size:12px; }
-.clist .c { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:8px; padding:1px 8px; }
-.clist .c span + span { text-align:right; font-variant-numeric:tabular-nums; }
-.clist .c.on { background:var(--k-con-bg); color:var(--k-con); font-weight:600; }
-.clist .cut { border-top:1px dashed var(--mut); color:var(--mut); font-size:11px; padding:0 8px; text-align:right; }
 #panel h3 { font-size:13px; margin:16px 0 0; }
 .empty { color:var(--mut); padding:40px 0; text-align:center; }
 .loading { grid-column:1/-1; display:flex; justify-content:center; padding:80px 0; }
@@ -166,14 +160,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num = n => Number(n).toLocaleString("en-US");
 const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
-const RANKING_NAMES = {hybrid: "hybrid (description + image + features, + concepts, colour, details, − negations)",
-                       combined: "? embedding combined (description + image)", text: "? embedding description",
-                       image: "? embedding image",
-                       sentences: "? sentences (description + image + features + best sentences, + concepts; fitted weights)",
-                       hybrid_jev: "? hybrid + Jev (top 30 · ~+$0.0004/search · ~+0.4 s)",
-                       hybrid_jev_vision: "? hybrid + Jev vision (top 30 · text + photos) · slow version",
-                       sentences_jev_vision: "? sentences + Jev vision (top 30 · text + photos) · slow version"};
-const COMBINE_NAMES = {geo: "geometric mean", mean: "mean", min: "minimum"};
+const RANKING_NAMES = {hybrid: "? hybrid (description + image + features, + concepts, colour, details, − negations)",
+                       hybrid_jev_vision: "hybrid + Jev vision (Jev regrades the top 30 from text + photos · ~+0.7 s)",
+                       sentences_jev_vision: "? sentences + Jev vision (best sentences of the description · top 30 regraded · ~+0.7 s)"};
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact", equals_any_set: "exactAny"};
@@ -368,7 +357,6 @@ function drawTimings() {
   html += row("Filtering", t.filtering_ms, "c-filter", {start: p}) +
     row("Ranking", t.ranking_ms, "c-rank", {start: p + f,
         extra: [t.embedding_wait_ms !== undefined ? `waited for the query embedding ${fmtMs(t.embedding_wait_ms)}` : "",
-                t.concepts_ms !== undefined ? `concept matching ${fmtMs(t.concepts_ms)}` : "",
                 t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : "",
                 t.rerank_ms !== undefined ? `Jev reranking ${fmtMs(t.rerank_ms)}` : "",
                 t.phrase_embeddings_early || t.phrase_embeddings_late ? `phrase embeddings: ${t.phrase_embeddings_early || 0} ready from before, ${t.phrase_embeddings_late || 0} after parsing` : ""].filter(Boolean).join(" · ")}) +
@@ -412,36 +400,7 @@ function residualLine() {
     ? r.map(x => `<span class="res">${esc(x)}</span>`).join(`<span class="meta"> · </span>`) : `<span class="meta">–</span>`) + `</div>`;
 }
 
-// "concepts": the concept of every residual phrase; phrases without a concept do not take part in the ranking
-function conceptLine() {
-  const c = D && D.concepts;
-  if (!c) return "";
-  if (!c.selected.length)
-    return `<div class="residual"><span class="meta">Concepts:</span> none – ranked by combined <span class="meta">(${esc(c.fallback)})</span></div>`;
-  const matched = c.phrases.filter(p => p.selected.length).length;
-  return `<div class="residual"><span class="meta">Concepts${matched > 1 ? ` (${COMBINE_NAMES[c.combine]} of ${matched} phrases)` : ""}:</span></div>` +
-    c.phrases.map(p => `<div class="residual phrase"><span class="res">${esc(p.text)}</span> → ` + (p.selected.length
-      ? p.selected.map(s => `<b>${esc(s.name)}</b> ${s.sim.toFixed(2)}`).join(" · ")
-      : `<span class="meta">none, skipped</span>`) + `</div>`).join("");
-}
-
-// similarity of every phrase to every concept, the chosen one highlighted, a dashed line at the threshold
-function conceptList() {
-  const c = D && D.concepts;
-  if (!c || !c.phrases.length) return "";
-  return c.phrases.map(p => (c.phrases.length > 1 ? `<div class="clh">${esc(p.text)}</div>` : "") + phraseList(c, p)).join("");
-}
-
-function phraseList(c, p) {
-  const chosen = new Set(p.selected.map(s => s.id));
-  let cut = false;
-  return `<div class="clist">` + p.sims.map(x => {
-    const line = !cut && x.sim < c.threshold ? (cut = true, `<div class="cut">threshold ${c.threshold.toFixed(2)}</div>`) : "";
-    return line + `<div class="c${chosen.has(x.id) ? " on" : ""}"><span>${esc(x.name)}</span><span>${x.sim.toFixed(3)}</span></div>`;
-  }).join("") + `</div>`;
-}
-
-// "bank": how the phrase bank scored every residual phrase: its kind, concepts and the text the text signals saw
+// how the phrase bank read every residual phrase: its kind, how it was matched and what the ranking uses of it
 function bankLine() {
   const b = D && D.bank;
   if (!b) return "";
@@ -462,12 +421,9 @@ function bankLine() {
       : c ? `colour: ${c.lightness === "light" ? "lighter" : "darker"} shades first`
       : r.detail ? `details <b>${r.detail.names.slice(0, 8).map(esc).join(", ")}</b>${r.detail.names.length > 8 ? ` and ${r.detail.names.length - 8} more` : ""}`
       : r.sentence ? [r.term === "concept" ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : "",
-                      "its best sentence in the name and description"].filter(Boolean).join(" + ")
-      : r.whole_query ? `<span class="meta">nothing special – the whole query (combined) decides</span>`
-      : [r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>${r.text_signals ? "" : " only"}` : "",
-         r.text_signals ? `text “${esc(r.english)}”` : "",
-         r.concepts_unavailable.length ? `<span class="meta">(no scores here for ${r.concepts_unavailable.map(esc).join(", ")})</span>` : ""]
-        .filter(Boolean).join(" + ");
+                      `its best sentence in the name and description (“${esc(r.sentence_text)}”)`].filter(Boolean).join(" + ")
+      : r.term ? (r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : `text “${esc(r.english)}”`)
+      : `<span class="meta">nothing of its own – the whole query covers it${r.concepts_unavailable.length ? `; no scores here for ${r.concepts_unavailable.map(esc).join(", ")}` : ""}</span>`;
     const said = r.bare ? `NOT ${esc(r.bare)}</span> <span class="meta">(${esc(r.phrase)})` : `${r.negated ? "NOT " : ""}${esc(r.phrase)}`;
     return `<div class="residual phrase"><span class="res">${said}</span> → ` +
       `${esc(r.kind || (r.match === "concept" ? "concept" : "no kind"))} <span class="meta">(${how})</span> · ${used}</div>`;
@@ -511,7 +467,7 @@ function sourceLine() {
 }
 
 function drawParserTop() {
-  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + sourceLine() + conceptLine() + conceptList() + bankLine() + partsPanel();
+  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + sourceLine() + bankLine() + partsPanel();
 }
 
 function drawNotes() {
