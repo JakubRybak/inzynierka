@@ -55,6 +55,7 @@ UNSATISFIABLE = re.compile(r"\b(plus[- ]?size|plus|petite|tall|big and tall|mate
                            r"|sizes?|kids?|child(ren)?|toddlers?|boys?|girls?(?! night)|juniors?|teens?|youth|baby)\b")
 NEGATION = re.compile(r"^(with\s+no|without|not|no|non|bez|nie|sin)\b[\s-]*")
 PREFETCH = 30  # spans of the query embedded while the parser parses
+NEGATION_VARIANTS = 6  # queries without a span that could be a negated phrase, embedded while the parser parses
 SPAN_WORDS = 3  # 92% of the residual phrases of the parser benchmark have at most 3 words, 97% are spans of the query
 LONE_WORDS = {"a", "an", "the", "with", "for", "and", "or", "in", "on", "of", "to", "z", "w", "na", "i", "do", "dla"}
 SHADE_WORDS = {"light", "dark", "pale", "bright", "deep", "soft", "dusty", "pastel", "neon", "hot", "baby", "ice",
@@ -108,6 +109,30 @@ def bare_phrase(text):
     """A normalized phrase without a leading negation word, when anything is left."""
     m = NEGATION.match(text)
     return text[m.end():] if m and text[m.end():].strip() else text
+
+
+def without_phrases(query, phrases):
+    """The query without the phrases, each matched as whole words in any case, or None when none of them is in it or
+    no word would be left."""
+    text, found = query, False
+    for phrase in phrases:
+        words = normalize_phrase(phrase).split()
+        if words:
+            pattern = r"(?<!\w)" + r"[\s-]+".join(map(re.escape, words)) + r"(?!\w)"
+            text, n = re.subn(pattern, " ", text, flags=re.IGNORECASE)
+            found = found or n > 0
+    text = " ".join(text.split()).strip(" ,;:.!?-")
+    return text if found and re.search(r"\w", text) else None
+
+
+def negation_variants(query):
+    """The query without each span that a negated residual phrase could be: a negation word followed by one to
+    NEGATED_WORDS words ("bez pufiastych", "bez pufiastych rekawow"); at most NEGATION_VARIANTS."""
+    words = [w for w in (w.strip(".,;:!?()\"") for w in normalize_phrase(query).split()) if w]
+    spans = [" ".join(words[k:e]) for k in range(len(words))
+             for e in range(k + 1, min(len(words), k + 2 + NEGATED_WORDS) + 1)]
+    variants = (without_phrases(query, [s]) for s in spans if negated_text(s))
+    return list(dict.fromkeys(v for v in variants if v))[:NEGATION_VARIANTS]
 
 
 def product_text(p):
@@ -422,6 +447,17 @@ class BankRanker:
                 terms.append(("sentence", phrase, sign * self.sentences.phrase(vector(bare_phrase(text)), cand)))
                 r["sentence"] = True
         return terms, routes
+
+    @staticmethod
+    def base_query(query, routes):
+        """The query the similarity of the whole query is computed for when it has negated phrases: the query without
+        them, since an embedding does not read a negation ("dress without puff sleeves" is close to dresses with
+        them). None when no negated phrase is found in the query or nothing else would be left."""
+        return without_phrases(query, [r["phrase"] for r in routes if r["negated"] and not r["skipped"]])
+
+    @staticmethod
+    def negation_variants(query):
+        return negation_variants(query)
 
     @staticmethod
     def own_signal(r):

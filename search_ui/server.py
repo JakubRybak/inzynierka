@@ -125,14 +125,24 @@ class SearchEngine:
         self.facets = facets.load(self.products)
         self.by_id = {p["product_id"]: p for p in self.products}
         self.position = {p["product_id"]: i for i, p in enumerate(self.products)}
-        self.pool = ThreadPoolExecutor(3)
+        self.pool = ThreadPoolExecutor(8)
         self.examples = pick_examples(parser.examples, parser, self.products, self.vocabulary) \
             if getattr(parser, "examples", None) else None
 
-    def rank(self, q, ranking, cand, category, timings, out, jobs=None, prefetched=None):
+    def base_jobs(self, q, routes, jobs, variants, timings, out):
+        """The query embeddings of the similarity of the whole query in hybrid and sentences: of the query without its
+        negated phrases when it has any (bank.base_query), from variants when started earlier, otherwise jobs."""
+        base = self.bank.base_query(q, routes)
+        if base is None:
+            return jobs
+        out["base_query"] = base
+        return (variants or {}).get(base) or self.query_vectors(base, "combined", timings)
+
+    def rank(self, q, ranking, cand, category, timings, out, jobs=None, prefetched=None, variants=None):
         """-> (score, text similarity, image similarity, tie-breaker or None) for the candidates. combined is the
         mean of the z-scores of both similarities; products without an image come last in the image ranking.
-        jobs: the query embeddings, when started earlier; prefetched: phrase embeddings started earlier (bank)."""
+        jobs: the query embeddings, when started earlier; prefetched: phrase embeddings started earlier (bank);
+        variants: {query without a negated span: its query embeddings}, started earlier (base_jobs)."""
         if ranking == "bank":
             t = time.perf_counter()
             jobs = jobs or self.query_vectors(q, "combined", timings)
@@ -157,6 +167,7 @@ class SearchEngine:
             terms, out["bank"] = self.bank.adjustments(out["parsed"]["residual"], cand, category, query=q,
                                                        prefetched=prefetched, stats=timings)
             timings["bank_ms"] = ms(t)
+            jobs = self.base_jobs(q, out["bank"], jobs, variants, timings, out)
             out["image_weight"] = COLOUR_IMAGE_WEIGHT if asks_colour(out["parsed"]["filters"], out["bank"]) else 1.0
             parts = out["_parts"] = {}
             base, s_t, s_i, _ = self.embedding_scores(jobs, "combined_features" if self.F is not None else "combined",
@@ -170,7 +181,7 @@ class SearchEngine:
         if ranking == "sentences":
             t = time.perf_counter()
             jobs = jobs or self.query_vectors(q, "combined", timings)
-            columns, s_t, s_i = self.sentence_columns(jobs, q, cand, category, timings, out, t, prefetched)
+            columns, s_t, s_i = self.sentence_columns(jobs, q, cand, category, timings, out, t, prefetched, variants)
             w = self.sentence_weights
             out["_parts"] = {label: w[part] * column for part, label, column in columns if w.get(part)}
             names = dict(sentences="best sentences", concept="concepts of each phrase",
@@ -194,7 +205,7 @@ class SearchEngine:
         return self.embedding_scores(jobs or self.query_vectors(q, ranking, timings), ranking, cand, timings, t,
                                      parts=out["_parts"])
 
-    def sentence_columns(self, jobs, q, cand, category, timings, out, t, prefetched=None):
+    def sentence_columns(self, jobs, q, cand, category, timings, out, t, prefetched=None, variants=None):
         """The parts of the sentence ranking before their weights, [(part, label, column over the candidates)]:
         the z-scores of the similarity of the whole query to the description, to the two best sentences, to the
         image and to the feature text; and for every residual phrase its concept scores and its best sentence
@@ -202,6 +213,7 @@ class SearchEngine:
         terms, out["bank"] = self.bank.sentence_terms(out["parsed"]["residual"], cand, category, query=q,
                                                       prefetched=prefetched, stats=timings)
         timings["bank_ms"] = ms(t)
+        jobs = self.base_jobs(q, out["bank"], jobs, variants, timings, out)
         v = {k: common.normalize(f.result()) for k, f in jobs.items()}
         timings["embedding_wait_ms"] = ms(t)
         s_t, s_i = self.T[cand] @ v["t"], self.I[cand] @ v["i"]
@@ -286,6 +298,9 @@ class SearchEngine:
         # so do the embeddings of the spans of the query, which the residual phrases usually are
         prefetched = self.bank.prefetch(q, lean=base_ranking == "sentences") if q and manual is None \
             and self.bank is not None and base_ranking in ("hybrid", "bank", "sentences") else None
+        # and so does the query without each span that could be a negated phrase (base_jobs)
+        variants = {v: self.query_vectors(v, "combined") for v in self.bank.negation_variants(q)} \
+            if q and self.bank is not None and base_ranking in ("hybrid", "sentences") else None
         t = time.perf_counter()
         try:
             if manual is None:
@@ -326,7 +341,7 @@ class SearchEngine:
         if len(cand) and q:
             try:
                 score, s_t, s_i, tie = self.rank(q, base_ranking, cand, out["parsed"]["category"], timings, out, jobs,
-                                                 prefetched)
+                                                 prefetched, variants)
             except Exception as e:
                 timings["ranking_ms"] = ms(t)
                 return fail("ranking", e)

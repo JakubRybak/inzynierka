@@ -139,6 +139,14 @@ class Ranking(unittest.TestCase):
         self.assertEqual([x["label"] for x in d["score_parts"]], ["sentence · lace"])
         self.assertIn("phrase", d["formula"])
 
+    def test_the_whole_query_leaves_out_a_negated_phrase(self):
+        T = np.stack([vector(p["description"]) for p in self.products])
+        parser = pa.Parser("test", lambda q: dict(category="Dresses", filters=[], residual=["without lace"]))
+        e = server.SearchEngine(self.products, T, np.zeros_like(T), parser, self.embedder, bank=self.ranker, F=T,
+                                sentences=self.ranker.sentences, sentence_weights=dict(description=1.0))
+        self.addCleanup(e.pool.shutdown)
+        self.assertEqual(e.search("dress without lace", "sentences")["base_query"], "dress")
+
     def test_ranking_is_offered_only_with_sentences_and_weights(self):
         self.assertNotIn("sentences", self.engine(None).rankings)
         self.assertIn("sentences", self.engine(dict(description=1.0)).rankings)

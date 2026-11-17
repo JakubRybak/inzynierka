@@ -138,7 +138,11 @@ hybrid = combined_features + 0.5 × z(concept scores of each occasion, style or 
                            − 1.0 × z(what each negated phrase excludes)
 ```
 
-Other phrases add nothing, because the whole query already covers them. The page shows every part of the score: in
+Other phrases add nothing, because the whole query already covers them. An embedding does not read a negation:
+"sukienka bez pufiastych rękawów" is close to dresses with puff sleeves. So when the residual has a negated phrase,
+`combined_features` compares the query without it ("sukienka"), and so do the whole-query parts of `sentences`. The
+query without each span that starts with a negation word is embedded while the parser parses. The evaluation still
+compares the full query (3 of the dev queries have a negated phrase). The page shows every part of the score: in
 the side panel how much each part moves the ranking (its spread over the candidates), on every result a bar of its
 parts, and in the product view their values.
 

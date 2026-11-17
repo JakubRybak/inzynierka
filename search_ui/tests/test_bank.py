@@ -209,5 +209,40 @@ class ColourWeight(unittest.TestCase):
         self.assertFalse(server.asks_colour([], [dict(kind="detail", skipped=False)]))
 
 
+class NegationInTheBase(unittest.TestCase):
+    """The similarity of the whole query leaves out its negated phrases."""
+
+    def test_query_without_phrases(self):
+        self.assertEqual(bank.without_phrases("Sukienka, bez pufiastych rekawow!", ["bez pufiastych rekawow"]),
+                         "Sukienka")
+        self.assertEqual(bank.without_phrases("dress WITHOUT lace for work", ["without lace"]), "dress for work")
+        self.assertIsNone(bank.without_phrases("dress without lace", ["no pockets"]))
+        self.assertIsNone(bank.without_phrases("dress without laces", ["without lace"]))
+        self.assertIsNone(bank.without_phrases("without lace", ["without lace"]))
+
+    def test_variants_leave_out_the_spans_after_a_negation_word(self):
+        self.assertEqual(bank.negation_variants("sukienka bez pufiastych rekawow"), ["sukienka rekawow", "sukienka"])
+        self.assertEqual(bank.negation_variants("black dress with lace"), [])
+
+    def test_hybrid_compares_the_query_without_the_negated_phrase(self):
+        query, base = "black midi dress for work without lace", "black midi dress for work"
+        with tempfile.TemporaryDirectory() as tmp:
+            embedder = Embedder()
+            r, ps = ranker(Path(tmp), embedder)
+            parser = pa.Parser("test", lambda q: dict(category="Dresses", filters=[],
+                                                      residual=["without lace"] if "without" in q else []))
+            T = np.stack([vector(p["description"]) for p in ps])
+            e = server.SearchEngine(ps, T, np.zeros_like(T), parser, embedder, bank=r)
+            self.addCleanup(e.pool.shutdown)
+            d = e.search(query, "hybrid")
+            plain = e.search("black midi dress", "hybrid")
+        self.assertEqual(d["base_query"], base)
+        self.assertEqual(embedder.texts.count(common.query_text(base)), 1)  # started with the parser, not again
+        position = {p["product_id"]: i for i, p in enumerate(ps)}
+        for x in d["results"]:
+            self.assertAlmostEqual(x["score_text"], float(T[position[x["id"]]] @ vector(base)), places=3)
+        self.assertNotIn("base_query", plain)
+
+
 if __name__ == "__main__":
     unittest.main()

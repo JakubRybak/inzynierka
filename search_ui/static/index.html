@@ -447,7 +447,8 @@ function bankLine() {
   if (!b) return "";
   const colour = D.image_weight > 1 ? `<div class="residual"><span class="meta">Colour in the query: the image counts ${D.image_weight}× in the base and for shade phrases.</span></div>` : "";
   if (!b.length) return colour + `<div class="residual"><span class="meta">Phrase bank:</span> no residual – ranked by the whole query</div>`;
-  return colour + `<div class="residual"><span class="meta">Phrase bank:</span></div>` + b.map(r => {
+  const base = D.base_query ? `<div class="residual"><span class="meta">Whole query compared without its negations:</span> ${esc(D.base_query)}</div>` : "";
+  return colour + base + `<div class="residual"><span class="meta">Phrase bank:</span></div>` + b.map(r => {
     const how = r.match === "exact" ? "known phrase"
       : r.match === "nearest" ? `nearest: “${esc(r.neighbour)}” ${r.similarity.toFixed(2)}`
       : r.match === "concept" ? `concept name ${r.similarity.toFixed(2)}`
