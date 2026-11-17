@@ -6,9 +6,12 @@ concepts, labelled offline by Gemini.
     python search_ui/offline/phrase_bank.py --execute    # paid calls, then the bank
 
 Phrases: the current bank, the soft phrases of real ESCI clothing queries and of the category lists
-(concept_candidates.py), and Polish and Spanish versions of the most frequent ones. A phrase found in a residual of a
-benchmark test query is left out, so the test split stays unseen. Calls are logged in search_ui/data/phrase_bank/; a rerun
-labels only what is missing for the current prompt and concept list.
+(concept_candidates.py), and Polish and Spanish versions of the most frequent ones. Polish forms of every detail name
+(details.py) and colour name (colours.py), and of light and dark basic colours, come labelled from their English
+name: "z haftem" and "haftu" ask for embroidery, "jasnoczerwona" is light red with its colour. The bank keeps no
+negated forms: a negation is read from the phrase at search time ("bez haftu" -> "haftu", with a minus). A phrase
+found in a residual of a benchmark test query is left out, so the test split stays unseen. Calls are logged in
+search_ui/data/phrase_bank/; a rerun labels only what is missing for the current prompt and concept list.
 """
 import argparse
 from collections import Counter
@@ -18,14 +21,17 @@ import json
 from pathlib import Path
 import sys
 
+import pandas as pd
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "core"))
 import bank  # noqa: E402
 import benchmark_parser  # noqa: E402
+import colours as colour_names  # noqa: E402
 import common  # noqa: E402
 import concept_candidates  # noqa: E402
 import concepts  # noqa: E402
+import details  # noqa: E402
 import product_colors  # noqa: E402
 import vertex  # noqa: E402
 
@@ -34,9 +40,14 @@ OLD_BANK = OUT / "phrase_bank_v1.jsonl"
 LABELS = OUT / "labels.jsonl"
 VARIANTS = OUT / "variants.jsonl"
 SHADES = OUT / "shades.jsonl"
+POLISH = OUT / "polish_forms.jsonl"
 KINDS = ["detail", "shade", "occasion", "style", "season", "size_or_audience", "other"]
 BATCH = 50
 TOP_FOR_VARIANTS = 150
+DETAIL_FORMS, EXCLUDING_FORMS, COLOUR_FORMS = 5, 2, 8
+LIGHTNESS_COLOURS = [f"{lightness} {c}" for lightness in ("light", "dark") for c in
+                     ("red", "pink", "orange", "yellow", "green", "blue", "purple", "brown", "grey", "beige")]
+WITHOUT_DIACRITICS = str.maketrans("ąćęłńóśźż", "acelnoszz")
 
 LABEL = """You label phrases that shoppers add to clothing searches in an online store selling designer clothing. Each
 phrase is the part of a search query that no product filter covers. For every phrase return:
@@ -180,6 +191,80 @@ def shades(phrases, execute, budget, spent):
     return done
 
 
+POLISH_DETAILS = f"""For every English name of a garment detail below, write how Polish shoppers type it in a clothing
+search, lower case with Polish diacritics:
+- forms: up to {DETAIL_FORMS} forms that ask for the detail: the noun ("haft"), with "z" ("z haftem"), and an adjective
+  when Polish has one, masculine and feminine ("haftowany", "haftowana");
+- without: up to {EXCLUDING_FORMS} forms that exclude it, with "bez" ("bez haftu").
+Return one result per input name, in the input order."""
+
+POLISH_COLOURS = f"""For every English colour name below, write how Polish shoppers type it in a clothing search, lower
+case with Polish diacritics. forms: up to {COLOUR_FORMS} forms: the colour as an adjective in the forms used with
+garments, masculine, feminine, neuter, plural and after "w" ("jasnoczerwony", "jasnoczerwona", "jasnoczerwone",
+"jasnoczerwonej", "w jasnoczerwonym kolorze"), and the noun when Polish names the colour with one ("pudrowy róż",
+"w kolorze pudrowego różu"). without: an empty list.
+Return one result per input name, in the input order."""
+
+
+def polish_body(names, system):
+    item = {"type": "OBJECT", "required": ["name", "forms", "without"],
+            "properties": {"name": {"type": "STRING"}, "forms": {"type": "ARRAY", "items": {"type": "STRING"}},
+                           "without": {"type": "ARRAY", "items": {"type": "STRING"}}}}
+    text = "Names:\n" + "\n".join(f"{i + 1}. {n}" for i, n in enumerate(names))
+    return {"systemInstruction": {"parts": [{"text": system}]}, "contents": [{"role": "user", "parts": [{"text": text}]}],
+            "generationConfig": {"temperature": 0, "maxOutputTokens": 16384, "responseMimeType": "application/json",
+                                 "responseSchema": {"type": "OBJECT", "required": ["results"],
+                                                    "properties": {"results": {"type": "ARRAY", "items": item}}},
+                                 "thinkingConfig": {"thinkingLevel": "MINIMAL"}}}
+
+
+def polish_forms(label, names, system, execute, budget, spent):
+    """Polish forms of English detail or colour names: {name: {"forms": [...], "without": [...]}}."""
+    v = version(system)
+    done = {x["name"]: x for r in logged(POLISH, v) for x in r["items"]}
+    todo = [n for n in names if n not in done]
+    tasks = [dict(id=f"{label}-{k}", names=todo[k:k + BATCH]) for k in range(0, len(todo), BATCH)]
+    costs = [vertex.estimate(len(system) + 30 * len(t["names"]), 100 * len(t["names"])) for t in tasks]
+    print(f"Polish {label}: {len(todo)} names in {len(tasks)} calls (up to ${sum(costs):.3f})")
+    if execute and tasks:
+        def work(task, client):
+            response = client(polish_body(task["names"], system))
+            results = json.loads(vertex.response_text(response))["results"]
+            if len(results) != len(task["names"]):
+                raise ValueError(f"{len(results)} results for {len(task['names'])} names")
+            items = [dict(name=n, forms=r.get("forms", [])[:max(DETAIL_FORMS, COLOUR_FORMS)],
+                          without=r.get("without", [])[:EXCLUDING_FORMS]) for n, r in zip(task["names"], results)]
+            return dict(id=task["id"], prompt_version=v, items=items, usage=response.get("usageMetadata", {}), at=stamp())
+        vertex.run(tasks, costs, work, POLISH, budget, spent)
+        done = {x["name"]: x for r in logged(POLISH, v) for x in r["items"]}
+    return {n: done[n] for n in names if n in done}
+
+
+def polish_rows(detail_forms, colour_forms, colour_of, known):
+    """Bank rows of the Polish forms, labelled from their English names: a detail form asks for its name ("z haftem"
+    -> embroidery), and so does a form after "bez" without it ("bez haftu" -> "haftu": the case that follows a
+    negation); a colour form is a shade with the colour of its name. Every form also comes without diacritics; a form
+    in known (the bank, the test phrases) or of an earlier name is left out."""
+    rows = {}
+
+    def add(form, colour=None, **row):
+        form = bank.normalize_phrase(form)
+        for f in dict.fromkeys([form, form.translate(WITHOUT_DIACRITICS)]):
+            if f and f not in known and f not in rows:
+                rows[f] = dict(phrase=f, **row, concepts=[], queries=0, **(colour or {}))
+
+    for name, x in detail_forms.items():
+        for f in x["forms"][:DETAIL_FORMS]:
+            add(f, kind="detail", negated=False, english=name)
+        for f in x["without"][:EXCLUDING_FORMS]:
+            add(bank.bare_phrase(bank.normalize_phrase(f)), kind="detail", negated=False, english=name)
+    for name, x in colour_forms.items():
+        if name in colour_of:
+            for f in x["forms"][:COLOUR_FORMS]:
+                add(f, kind="shade", negated=False, english=name, colour=colour_of[name])
+    return list(rows.values())
+
+
 def stamp():
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -239,22 +324,41 @@ def main():
             return dict(id=task["id"], prompt_version=v, items=items, usage=response.get("usageMetadata", {}), at=stamp())
         vertex.run(tasks, costs, work, LABELS, args.budget_usd, vertex.spent_in(LABELS) + vertex.spent_in(VARIANTS))
         done = {x["phrase"]: x for r in logged(LABELS, v) for x in r["items"]}
-    spent = vertex.spent_in(LABELS) + vertex.spent_in(VARIANTS) + vertex.spent_in(SHADES)
-    colours = shades(sorted(p for p in counts if p in done and done[p]["kind"] == "shade"), args.execute,
-                     args.budget_usd, spent)
+    def spent():
+        return sum(vertex.spent_in(path) for path in (LABELS, VARIANTS, SHADES, POLISH))
+
+    dictionary = pd.read_parquet(colour_names.NAMES).set_index("name")
+    colour_list = list(dictionary.index) + [c for c in LIGHTNESS_COLOURS if c not in dictionary.index]
+    shade_phrases = [p for p in counts if p in done and done[p]["kind"] == "shade"]
+    colours = shades(sorted(set(shade_phrases) | set(colour_list)), args.execute, args.budget_usd, spent())
+    # a dictionary name keeps the typical colour of its products; Gemini gives the lightness (and the colour of a
+    # light or dark basic colour)
+    colour_of = {n: dict(hex=dictionary.at[n, "hex"] if n in dictionary.index else colours[n]["hex"],
+                         family=dictionary.at[n, "family"] if n in dictionary.index else colours[n]["family"],
+                         lightness=colours[n]["lightness"])
+                 for n in colour_list if n in colours and (n in dictionary.index or colours[n]["hex"])}
+    detail_forms = polish_forms("details", details.names(pd.read_parquet(details.PRODUCTS)), POLISH_DETAILS,
+                                args.execute, args.budget_usd, spent())
+    colour_forms = polish_forms("colours", colour_list, POLISH_COLOURS, args.execute, args.budget_usd, spent())
     if args.execute:
         if not OLD_BANK.exists():
             OLD_BANK.write_bytes(bank.BANK.read_bytes())
-        rows = [dict(done[p], queries=n) for p, n in sorted(counts.items()) if p in done]
+        rows = []
+        for p, n in sorted(counts.items()):
+            if p in done:
+                row = {k: dict(done[p], queries=n)[k] for k in ("phrase", "kind", "negated", "english", "concepts",
+                                                                 "queries")}
+                if row["kind"] == "shade" and p in colours:
+                    row |= {k: colours[p][k] for k in ("hex", "family", "lightness")}
+                rows.append(row)
+        polish = polish_rows(detail_forms, colour_forms, colour_of, {r["phrase"] for r in rows} | test)
+        rows = sorted(rows + polish, key=lambda r: r["phrase"])
         with bank.BANK.open("w", encoding="utf-8") as out:
-            for r in rows:
-                row = {k: r[k] for k in ("phrase", "kind", "negated", "english", "concepts", "queries")}
-                if r["kind"] == "shade" and r["phrase"] in colours:
-                    row |= {k: colours[r["phrase"]][k] for k in ("hex", "family", "lightness")}
+            for row in rows:
                 out.write(json.dumps(row, ensure_ascii=False) + "\n")
         kinds = Counter(r["kind"] for r in rows)
-        print(f"{len(rows)} phrases -> {bank.BANK}; kinds {dict(kinds)}; with a concept {sum(bool(r['concepts']) for r in rows)}")
-
+        print(f"{len(rows)} phrases ({len(polish)} Polish forms of detail and colour names) -> {bank.BANK}; "
+              f"kinds {dict(kinds)}; with a concept {sum(bool(r['concepts']) for r in rows)}")
 
 if __name__ == "__main__":
     main()

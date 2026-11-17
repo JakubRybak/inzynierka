@@ -98,6 +98,12 @@ Each phrase of `ranking_data/phrase_bank.jsonl` has the following labels:
 The phrases come from Amazon ESCI clothing queries, typical needs listed per category, an earlier bank, and Polish
 and Spanish versions of the most frequent ones. Phrases found only in benchmark test queries are left out.
 
+The bank also has the Polish forms of every detail name and colour name, and of light and dark basic colours, with
+and without diacritics ("z haftem", "bez haftu", "haftowana"; "jasnoczerwona", "w kolorze pudrowego różu"). Gemini
+wrote the forms; their labels come from the English name, so "bez haftu" excludes embroidery and "jasnoczerwona" takes
+the colour of light red. The parser keeps the residual in the language of the query, and a Polish word in another
+form ("haftu") is often too far from every English name to be matched.
+
 At search time a residual phrase takes the labels of the first match:
 1. the same phrase in the bank;
 2. its nearest bank phrase, when the cosine is at least 0.86. The neighbour gives the kind and the concepts; a
