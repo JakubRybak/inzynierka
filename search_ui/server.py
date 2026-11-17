@@ -108,9 +108,10 @@ class SearchEngine:
     def __init__(self, products, T, I, parser, embedder, concept_data=None, bank=None, F=None, weights=HYBRID,
                  attributes=None, sentences=None, sentence_weights=None, image_dir=common.DATASET, reranker=None):
         """concept_data: the concepts (concepts.py); bank: the phrase bank (bank.py), without which hybrid ranks by
-        the whole query only; F: the feature text embeddings; attributes: {product_id: {"colours": [...],
-        "details": [...]}} shown with a product; sentences: the sentence embeddings (sentences.py) and
-        sentence_weights: {part: weight}, both needed by the sentence ranking; reranker: the Jev second stage."""
+        the whole query only (main() does not start the server without it); F: the feature text embeddings;
+        attributes: {product_id: {"colours": [...], "details": [...]}} shown with a product; sentences: the sentence
+        embeddings (sentences.py) and sentence_weights: {part: weight}, both needed by the sentence ranking;
+        reranker: the Jev second stage."""
         self.products = [conditions.prepare_product(p) for p in products]
         self.attributes = attributes or {}
         self.concepts, self.bank, self.F, self.weights = concept_data, bank, F, dict(weights)
@@ -569,8 +570,8 @@ def main():
               f"{f'{len(detail_data.names)} names' if detail_data else 'missing, run prepare.py'} · sentences: "
               f"{f'{len(sentence_data.E)}' if sentence_data else 'missing, run prepare.py'} · {ms(t):.0f} ms")
     except (ImportError, OSError) as e:
-        print(f"Phrase bank unavailable ({type(e).__name__}: {str(e)[:200]}): hybrid ranks by the whole query only; "
-              "run prepare.py")
+        sys.exit(f"No phrase bank ({type(e).__name__}: {str(e)[:200]}). Every ranking needs it: run "
+                 "python search_ui/prepare.py and start the server again.")
     F = load_feature_embeddings(products, args.data)
     print(f"Feature embeddings: {'loaded' if F is not None else 'missing, run prepare.py'}")
     parser = parser_adapter.load_parser(args.parser, conditions.Vocabulary(products))

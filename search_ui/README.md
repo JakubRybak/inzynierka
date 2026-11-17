@@ -192,8 +192,8 @@ The mock parser knows only the English values of the index, so `check_examples.p
   the parser and embeddings work once the network is back.
 - **An error reading `embeddings/*.parquet`.** The files are still Git LFS pointers; run `git lfs pull`.
 - **`No embeddings for N indexed products`.** The features file contains products outside the embedded set.
-- **`Phrase bank unavailable`.** `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out of date;
-  run `prepare.py`. Until then `hybrid` ranks by the whole query only and `sentences_jev_vision` is not offered.
+- **`No phrase bank`.** The server stops: `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out
+  of date, for example after pulling a new phrase bank; run `prepare.py`.
 - **`Missing OPENROUTER_API_KEY` or `Jev HTTP 401`.** `.env` at the repository root is missing a key, or a key spans
   several lines.
 - **`No readable product photos for Jev vision`.** Check that `dataset` in `search_ui/data/meta.json` points to
