@@ -21,6 +21,15 @@ ENHANCED_IMAGE_VECTORS = "image_embeddings_enhanced.npz"
 ENHANCED_IMAGE_EMBEDDINGS = EMBEDDINGS / "image_enhanced.parquet"
 META = "meta.json"
 JSON_COLUMNS = ["features", "feature_metadata", "exclusion_reasons"]
+EXCLUDED_PRODUCTS = SEARCH_UI / "ranking_data" / "excluded_products.csv"
+
+
+def excluded_product_ids():
+    return set(pd.read_csv(EXCLUDED_PRODUCTS, dtype=str)["product_id"])
+
+
+def exclude_products(products):
+    return products.loc[~products["product_id"].astype(str).isin(excluded_product_ids())].copy()
 
 
 def _from_json(v):
@@ -121,7 +130,10 @@ def load_index(folder=DATA):
     if not (folder / INDEX).is_file():
         raise FileNotFoundError(f"{folder / INDEX} not found, run prepare.py first")
     d = pd.read_parquet(folder / INDEX)
+    d = exclude_products(d)
     for k in ("features", "images"):
         d[k] = d[k].map(json.loads)
     meta = json.loads((folder / META).read_text(encoding="utf-8"))
+    meta["products"] = len(d)
+    meta["categories"] = d["category"].value_counts().to_dict()
     return d.to_dict("records"), meta

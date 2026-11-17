@@ -37,6 +37,7 @@ import sentences  # noqa: E402
 
 def build_index(features, dataset, limit=None, statuses=None):
     f = features[features["status"].isin(statuses) if statuses else features["status"] != "excluded"].copy()
+    f = common.exclude_products(f)
     meta = pd.concat([pd.read_csv(dataset / f"products_{s}.csv", dtype={"product_id": str}).assign(split=s)
                       for s in ("train", "validation")], ignore_index=True)
     images = pd.concat([pd.read_csv(dataset / f"images_{s}.csv", dtype={"product_id": str})
@@ -72,7 +73,7 @@ def main():
     dataset = args.dataset.resolve()
     features = common.load_features(args.features)
     d, skipped = build_index(features, dataset, args.limit, args.status)
-    print(f"Features file: {len(features)} products, skipped by status: {skipped}, indexed: {len(d)}")
+    print(f"Features file: {len(features)} products, skipped by status/exclusion list: {skipped}, indexed: {len(d)}")
     print("  " + ", ".join(f"{k} {v}" for k, v in d["category"].value_counts().items()))
 
     manifest, text, image = common.load_embeddings(args.embeddings)
