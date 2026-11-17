@@ -1,0 +1,22 @@
+{
+  "category": "Polos",
+  "features": {
+    "sleeve_length": {
+      "instruction": "Return one value for the garment sleeve itself, not an undershirt, gloves, or sleeves rolled up for styling. Consider the original sleeve endpoint. If the design has genuinely incompatible sleeve lengths and no single label describes it, outside_schema is permitted.",
+      "values": {
+        "Sleeveless": "No sleeve extends over the upper arm; shoulder straps are not sleeves.",
+        "Short Sleeve": "A sleeve covering part of the upper arm and ending above the elbow, including cap sleeves.",
+        "Three-Quarter Sleeve": "A sleeve ending below the elbow and before the wrist. In this project, an explicit cropped sleeve description also maps here.",
+        "Long Sleeve": "A full-length sleeve reaching the wrist or beyond."
+      }
+    },
+    "fit": {
+      "instruction": "Return one value for the intended fit of the target garment, considering torso ease and shoulder construction together. Do not infer Slim just from a slim model, or Oversized just from garment length. Explicit garment fit descriptions are useful evidence.",
+      "values": {
+        "Slim": "Close-fitting through the torso with little ease; fitted, form-fitting or body-hugging.",
+        "Regular": "Conventional ease, neither close-fitting nor deliberately loose.",
+        "Oversized": "Deliberately loose, relaxed, boxy or oversized through the torso; not merely a normal fit on a slender model."
+      }
+    }
+  }
+}

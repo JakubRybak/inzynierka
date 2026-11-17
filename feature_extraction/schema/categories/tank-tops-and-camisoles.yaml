@@ -1,0 +1,53 @@
+section: Tops
+category: Tank tops & Camisoles
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  neckline:
+    type: single_choice
+    values:
+    - Crewneck
+    - Scoop Neck
+    - V-Neck
+    - High Neck
+    - Other
+  fit:
+    type: single_choice
+    values:
+    - Slim
+    - Regular
+    - Oversized
+  length:
+    type: single_choice
+    values:
+    - Cropped
+    - Regular
+    - Longline
+  strap_style:
+    type: single_choice
+    values:
+    - Standard
+    - Racerback
+    - Halter
+    - One-Shoulder
+    - Strapless
+    - Off-Shoulder
+    - Other
+  strap_width:
+    type: single_choice
+    values:
+    - Wide
+    - Spaghetti
+    - Other
+    - Not Applicable
+    value_dependency:
+      feature: strap_style
+      in:
+      - Strapless
+      value: Not Applicable

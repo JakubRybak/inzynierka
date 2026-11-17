@@ -1,0 +1,33 @@
+{
+  "colors": {
+    "instruction": "Return one or two distinct color families, or [Multicolor] alone. Assess the target garment itself, including meaningful prints and panels; ignore lighting, skin, background and separate styling garments. More than two discernible color families or an explicit multicolor design means Multicolor. Do not rank colors by dominance.",
+    "values": {
+      "Black": "Black shades.",
+      "White": "White, off-white, ivory, cream and ecru.",
+      "Grey": "Grey, charcoal and anthracite.",
+      "Blue": "Blue shades including navy, midnight blue, cobalt, indigo and turquoise.",
+      "Red": "Red including burgundy, maroon, bordeaux, crimson and scarlet.",
+      "Green": "Green including olive, khaki and emerald.",
+      "Pink": "Pink including fuchsia and rose pink.",
+      "Beige": "Beige, tan, sand and taupe.",
+      "Brown": "Brown including chocolate and camel.",
+      "Yellow": "Yellow including mustard.",
+      "Orange": "Orange including rust.",
+      "Purple": "Purple including violet, lilac, lavender and mauve.",
+      "Multicolor": "More than two color families, or an explicitly multicolored design; must appear alone."
+    }
+  },
+  "pattern": {
+    "instruction": "Return one value describing the target garment design as a whole. Plain means Solid. Ribbing, melange, fabric texture, seams and small construction trims do not by themselves create a pattern. A localized decorative print still counts: classify its actual motif. Do not classify the whole garment as Striped merely because a narrow construction trim has stripes. For multiple substantial different pattern families, choose Other.",
+    "values": {
+      "Solid": "No decorative print or recognizable patterned motif; plain, ribbed or heathered material can be Solid.",
+      "Striped": "A recognizable repeated stripe design, horizontal, vertical or diagonal, including broad stripes.",
+      "Plaid": "Checks, tartan, gingham or another repeated intersecting grid.",
+      "Floral": "Recognizable flowers, leaves or botanical motifs, whether printed or embroidered.",
+      "Camo": "A camouflage design, including stylized camouflage.",
+      "Animal Print": "A pattern imitating animal markings or skin, e.g. leopard spots, zebra stripes or snakeskin; a picture of an animal is not automatically Animal Print.",
+      "Polka Dot": "A recognizable repeated pattern of dots.",
+      "Other": "Graphics, lettering, logos, abstract motifs, fruit prints, color blocking without a repeated stripe pattern, mixed substantial pattern families, or another design outside the specific labels."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+section: Pants
+category: Sweatpants & Lounge Pants
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  fit:
+    type: single_choice
+    values:
+    - Skinny
+    - Slim
+    - Regular
+    - Relaxed
+  leg_shape:
+    type: single_choice
+    values:
+    - Straight
+    - Tapered
+    - Wide-Leg
+    - Flared
+    - Other
+  length:
+    type: single_choice
+    values:
+    - Cropped
+    - Full-Length
+  rise:
+    type: single_choice
+    values:
+    - High-Rise
+    - Mid-Rise
+    - Low-Rise
+  waistband_type:
+    type: single_choice
+    values:
+    - Elasticized
+    - Other
+    - Structured
+  cuff_style:
+    type: single_choice
+    values:
+    - Zippered Cuff
+    - Elasticized Cuff
+    - Other
+    - Open Hem

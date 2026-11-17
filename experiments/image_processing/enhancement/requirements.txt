@@ -1,0 +1,28 @@
+# ==============================================================================
+# Requirements for Super-Resolution Master Suite (Fashion E-Commerce)
+# Python: >= 3.10
+# Hardware: Apple Silicon (MPS), NVIDIA GPU (CUDA), or CPU
+# ==============================================================================
+
+# Core Deep Learning Framework
+torch>=2.1.0
+torchvision>=0.16.0
+numpy>=1.24.0
+
+# Image Processing & Computer Vision
+pillow>=10.0.0
+opencv-python>=4.8.0
+
+# Super-Resolution & Neural Architectures
+spandrel>=0.4.0          # Model loader for DAT-2 and GFPGAN
+facexlib>=0.3.0          # RetinaFace detector & ParseNet/BiSeNet face segmentation
+
+# Diffusion Models (Stable Diffusion x4)
+diffusers>=0.28.0
+transformers>=4.40.0
+accelerate>=0.30.0
+safetensors>=0.4.0
+huggingface-hub>=0.23.0
+
+# HTML Report Generation
+jinja2>=3.1.0

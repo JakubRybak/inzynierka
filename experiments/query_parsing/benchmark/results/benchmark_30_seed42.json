@@ -1,0 +1,4543 @@
+{
+  "timestamp_utc": "2026-11-08T21:11:02.729093+00:00",
+  "sample_size": 30,
+  "seed": 42,
+  "queries": [
+    {
+      "index": 0,
+      "query": "brown leopard-print shirt",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Brown"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Animal Print"
+            ]
+          }
+        ],
+        "residual": [
+          "leopard print"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.2356,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Animal Print"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4036,
+          "cost_usd": 0.001021
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Animal Print"
+              ]
+            }
+          ],
+          "residual": [
+            "leopard-print"
+          ],
+          "latency_seconds": 0.8898,
+          "cost_usd": 0.001896
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Animal Print"
+              ]
+            }
+          ],
+          "residual": [
+            "leopard-print"
+          ],
+          "latency_seconds": 0.6086,
+          "cost_usd": 0.001587
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "leopard-print"
+          ],
+          "latency_seconds": 0.4042,
+          "cost_usd": 0.000678
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Animal Print"
+              ]
+            }
+          ],
+          "residual": [
+            "leopard"
+          ],
+          "latency_seconds": 0.3865,
+          "cost_usd": 0.001345
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "leopard-print"
+          ],
+          "latency_seconds": 0.4217,
+          "cost_usd": 0.000611
+        }
+      }
+    },
+    {
+      "index": 1,
+      "query": "elegant outfit for a wedding",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": null,
+        "filters": [],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": null,
+          "latency_seconds": 0.2125,
+          "cost_usd": 0.000106
+        }
+      }
+    },
+    {
+      "index": 2,
+      "query": "biker jeans for men skinny fit",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Jeans",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Skinny"
+            ]
+          }
+        ],
+        "residual": [
+          "biker"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Jeans",
+          "latency_seconds": 0.3071,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Skinny"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4039,
+          "cost_usd": 0.001264
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Skinny"
+              ]
+            }
+          ],
+          "residual": [
+            "biker"
+          ],
+          "latency_seconds": 0.7468,
+          "cost_usd": 0.002149
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Skinny"
+              ]
+            }
+          ],
+          "residual": [
+            "biker"
+          ],
+          "latency_seconds": 0.5529,
+          "cost_usd": 0.00193
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "biker"
+          ],
+          "latency_seconds": 0.329,
+          "cost_usd": 0.000713
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Skinny"
+              ]
+            }
+          ],
+          "residual": [
+            "biker"
+          ],
+          "latency_seconds": 0.392,
+          "cost_usd": 0.001583
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "biker"
+          ],
+          "latency_seconds": 0.4639,
+          "cost_usd": 0.000623
+        }
+      }
+    },
+    {
+      "index": 3,
+      "query": "T-shirt in black and white only",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black",
+              "White"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2247,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3272,
+          "cost_usd": 0.001069
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8535,
+          "cost_usd": 0.001788
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5324,
+          "cost_usd": 0.001554
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3368,
+          "cost_usd": 0.000669
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3566,
+          "cost_usd": 0.001344
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3706,
+          "cost_usd": 0.000593
+        }
+      }
+    },
+    {
+      "index": 4,
+      "query": "collared cardigan with no buttons",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cardigans",
+        "filters": [
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Collared"
+            ]
+          },
+          {
+            "feature": "closure_type",
+            "operator": "not_in",
+            "values": [
+              "Button"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cardigans",
+          "latency_seconds": 0.3017,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "closure_type",
+              "operator": "not_in",
+              "values": [
+                "Button"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Collared"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3512,
+          "cost_usd": 0.001181
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Collared"
+              ]
+            }
+          ],
+          "residual": [
+            "with no buttons"
+          ],
+          "latency_seconds": 0.947,
+          "cost_usd": 0.001983
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Collared"
+              ]
+            },
+            {
+              "feature": "closure_type",
+              "operator": "in",
+              "values": [
+                "Open Front"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5732,
+          "cost_usd": 0.001736
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3117,
+          "cost_usd": 0.0007
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Collared"
+              ]
+            },
+            {
+              "feature": "closure_type",
+              "operator": "not_in",
+              "values": [
+                "Button"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5463,
+          "cost_usd": 0.001473
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.5969,
+          "cost_usd": 0.000637
+        }
+      }
+    },
+    {
+      "index": 5,
+      "query": "czarne bojówki z gumką w pasie do 200 zł",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cargo Pants",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "waistband_type",
+            "operator": "in",
+            "values": [
+              "Elasticized"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 200
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cargo Pants",
+          "latency_seconds": 0.2128,
+          "cost_usd": 0.000107
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "waistband_type",
+              "operator": "in",
+              "values": [
+                "Elasticized"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3494,
+          "cost_usd": 0.00121
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "waistband_type",
+              "operator": "in",
+              "values": [
+                "Elasticized"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8855,
+          "cost_usd": 0.002238
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "waistband_type",
+              "operator": "in",
+              "values": [
+                "Elasticized"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5481,
+          "cost_usd": 0.001852
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4073,
+          "cost_usd": 0.000716
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "waistband_type",
+              "operator": "in",
+              "values": [
+                "Elasticized"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5933,
+          "cost_usd": 0.001546
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6972,
+          "cost_usd": 0.000647
+        }
+      }
+    },
+    {
+      "index": 6,
+      "query": "bodysuit with spaghetti straps and a V-neck",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "strap_width",
+            "operator": "in",
+            "values": [
+              "Spaghetti"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "V-Neck"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2101,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            },
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3423,
+          "cost_usd": 0.001165
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.9031,
+          "cost_usd": 0.001912
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5159,
+          "cost_usd": 0.00162
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.5305,
+          "cost_usd": 0.000689
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5068,
+          "cost_usd": 0.001341
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.2607,
+          "cost_usd": 0.000619
+        }
+      }
+    },
+    {
+      "index": 7,
+      "query": "silk bodysuit long sleevetops",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Silk"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2159,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Silk"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4093,
+          "cost_usd": 0.001165
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Silk"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "residual": [
+            "tops"
+          ],
+          "latency_seconds": 1.1189,
+          "cost_usd": 0.001934
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Silk"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.7568,
+          "cost_usd": 0.001621
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.2925,
+          "cost_usd": 0.000689
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Silk"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "residual": [
+            "tops"
+          ],
+          "latency_seconds": 0.7052,
+          "cost_usd": 0.001392
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "tops"
+          ],
+          "latency_seconds": 0.5008,
+          "cost_usd": 0.000626
+        }
+      }
+    },
+    {
+      "index": 8,
+      "query": "jean a line skirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "skirt_silhouette",
+            "operator": "in",
+            "values": [
+              "A-Line"
+            ]
+          }
+        ],
+        "residual": [
+          "jean"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.2908,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "skirt_silhouette",
+              "operator": "in",
+              "values": [
+                "A-Line"
+              ]
+            }
+          ],
+          "latency_seconds": 0.5196,
+          "cost_usd": 0.001307
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "skirt_silhouette",
+              "operator": "in",
+              "values": [
+                "A-Line"
+              ]
+            }
+          ],
+          "residual": [
+            "jean"
+          ],
+          "latency_seconds": 1.0198,
+          "cost_usd": 0.001852
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "skirt_silhouette",
+              "operator": "in",
+              "values": [
+                "A-Line"
+              ]
+            }
+          ],
+          "residual": [
+            "jean"
+          ],
+          "latency_seconds": 0.493,
+          "cost_usd": 0.001612
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "jean"
+          ],
+          "latency_seconds": 0.5157,
+          "cost_usd": 0.0007
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            },
+            {
+              "feature": "skirt_silhouette",
+              "operator": "in",
+              "values": [
+                "A-Line"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4181,
+          "cost_usd": 0.001445
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "jean"
+          ],
+          "latency_seconds": 0.3734,
+          "cost_usd": 0.000633
+        }
+      }
+    },
+    {
+      "index": 9,
+      "query": "navy jacket, any brand except Zara or H&M",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jackets",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "brand",
+            "operator": "not_in",
+            "values": [
+              "Zara",
+              "H&M"
+            ]
+          }
+        ],
+        "residual": [
+          "navy"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Jackets",
+          "latency_seconds": 0.3077,
+          "cost_usd": 0.000107
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4188,
+          "cost_usd": 0.001825
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.9186,
+          "cost_usd": 0.002517
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.6771,
+          "cost_usd": 0.002147
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.3602,
+          "cost_usd": 0.000773
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.5043,
+          "cost_usd": 0.001786
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.2846,
+          "cost_usd": 0.000697
+        }
+      }
+    },
+    {
+      "index": 10,
+      "query": "men's black pleated skirt",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "skirt_type",
+            "operator": "contains_any",
+            "values": [
+              "Pleated"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.31,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_any",
+              "values": [
+                "Pleated"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3594,
+          "cost_usd": 0.001307
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_any",
+              "values": [
+                "Pleated"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8845,
+          "cost_usd": 0.00202
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_any",
+              "values": [
+                "Pleated"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5487,
+          "cost_usd": 0.001651
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.2988,
+          "cost_usd": 0.000712
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_any",
+              "values": [
+                "Pleated"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.2958,
+          "cost_usd": 0.001377
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.4646,
+          "cost_usd": 0.000629
+        }
+      }
+    },
+    {
+      "index": 11,
+      "query": "long workout tops for women loose fit",
+      "language": "en",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Longline"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": [
+          "workout"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.2018,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Oversized"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Longline"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3502,
+          "cost_usd": 0.00115
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Longline"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Oversized"
+              ]
+            }
+          ],
+          "residual": [
+            "workout"
+          ],
+          "latency_seconds": 1.0206,
+          "cost_usd": 0.002068
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Oversized"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Longline"
+              ]
+            }
+          ],
+          "residual": [
+            "for workout"
+          ],
+          "latency_seconds": 0.7087,
+          "cost_usd": 0.001679
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "long",
+            "for workout",
+            "loose fit"
+          ],
+          "latency_seconds": 0.4076,
+          "cost_usd": 0.000689
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Oversized"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Longline"
+              ]
+            }
+          ],
+          "residual": [
+            "workout"
+          ],
+          "latency_seconds": 0.496,
+          "cost_usd": 0.001491
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "workout"
+          ],
+          "latency_seconds": 0.3903,
+          "cost_usd": 0.000684
+        }
+      }
+    },
+    {
+      "index": 12,
+      "query": "pink plaid gilet",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Vests",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Pink"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Plaid"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Vests",
+          "latency_seconds": 0.2075,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4815,
+          "cost_usd": 0.001643
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8425,
+          "cost_usd": 0.002266
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 1.028,
+          "cost_usd": 0.001956
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3904,
+          "cost_usd": 0.000735
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3928,
+          "cost_usd": 0.001627
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.4931,
+          "cost_usd": 0.00064
+        }
+      }
+    },
+    {
+      "index": 13,
+      "query": "plaid wool bomber jacket",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bombers",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Plaid"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bombers",
+          "latency_seconds": 0.2037,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "latency_seconds": 0.4195,
+          "cost_usd": 0.001631
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.9215,
+          "cost_usd": 0.002254
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6155,
+          "cost_usd": 0.001941
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3965,
+          "cost_usd": 0.00072
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            }
+          ],
+          "residual": [
+            "plaid"
+          ],
+          "latency_seconds": 0.5945,
+          "cost_usd": 0.00162
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3621,
+          "cost_usd": 0.000644
+        }
+      }
+    },
+    {
+      "index": 14,
+      "query": "casual dresses for women solid colors",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Solid"
+            ]
+          }
+        ],
+        "residual": [
+          "casual"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2019,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3968,
+          "cost_usd": 0.001565
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "residual": [
+            "casual"
+          ],
+          "latency_seconds": 0.9145,
+          "cost_usd": 0.00228
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "residual": [
+            "casual"
+          ],
+          "latency_seconds": 0.5262,
+          "cost_usd": 0.00193
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "casual"
+          ],
+          "latency_seconds": 0.3346,
+          "cost_usd": 0.000772
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "residual": [
+            "casual"
+          ],
+          "latency_seconds": 0.5537,
+          "cost_usd": 0.001613
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "casual"
+          ],
+          "latency_seconds": 0.3702,
+          "cost_usd": 0.000714
+        }
+      }
+    },
+    {
+      "index": 15,
+      "query": "pink and blue camisole, no red",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_all",
+            "values": [
+              "Pink",
+              "Blue"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_none",
+            "values": [
+              "Red"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.2835,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Blue",
+                "Pink"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_none",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3493,
+          "cost_usd": 0.00115
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Pink",
+                "Blue"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_none",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.7565,
+          "cost_usd": 0.001857
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Pink",
+                "Blue"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_none",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3431,
+          "cost_usd": 0.001654
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.5038,
+          "cost_usd": 0.000678
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Pink",
+                "Blue"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_none",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3784,
+          "cost_usd": 0.001396
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3002,
+          "cost_usd": 0.000627
+        }
+      }
+    },
+    {
+      "index": 16,
+      "query": "asidas womens hoodies",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Hoodies & Zipups",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Adidas"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "With Hood"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Hoodies & Zipups",
+          "latency_seconds": 0.2164,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3239,
+          "cost_usd": 0.001194
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [
+            "asidas"
+          ],
+          "latency_seconds": 0.8656,
+          "cost_usd": 0.00194
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.625,
+          "cost_usd": 0.001727
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3808,
+          "cost_usd": 0.000721
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [
+            "asidas"
+          ],
+          "latency_seconds": 0.5086,
+          "cost_usd": 0.001425
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Asidas"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6708,
+          "cost_usd": 0.000666
+        }
+      }
+    },
+    {
+      "index": 17,
+      "query": "100% cotton shorts women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shorts",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "equals_set",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Shorts",
+          "latency_seconds": 0.2121,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "equals_set",
+              "values": [
+                "Cotton"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_none",
+              "values": [
+                "Elastane"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3473,
+          "cost_usd": 0.001231
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "equals_set",
+              "values": [
+                "Cotton"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.9219,
+          "cost_usd": 0.002049
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "equals_set",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4923,
+          "cost_usd": 0.001747
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3159,
+          "cost_usd": 0.00071
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "equals_set",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5931,
+          "cost_usd": 0.001438
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.2866,
+          "cost_usd": 0.000644
+        }
+      }
+    },
+    {
+      "index": 18,
+      "query": "polyester sweatshirt for sublimation",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatshirts",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Polyester"
+            ]
+          }
+        ],
+        "residual": [
+          "for sublimation"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatshirts",
+          "latency_seconds": 0.3464,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Polyester"
+              ]
+            }
+          ],
+          "latency_seconds": 0.328,
+          "cost_usd": 0.001079
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Polyester"
+              ]
+            }
+          ],
+          "residual": [
+            "for sublimation"
+          ],
+          "latency_seconds": 1.0331,
+          "cost_usd": 0.001861
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Polyester"
+              ]
+            }
+          ],
+          "residual": [
+            "for sublimation"
+          ],
+          "latency_seconds": 0.4857,
+          "cost_usd": 0.001613
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "for sublimation"
+          ],
+          "latency_seconds": 0.3905,
+          "cost_usd": 0.000677
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Polyester"
+              ]
+            }
+          ],
+          "residual": [
+            "sublimation"
+          ],
+          "latency_seconds": 0.4868,
+          "cost_usd": 0.001339
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "sublimation"
+          ],
+          "latency_seconds": 0.4041,
+          "cost_usd": 0.000609
+        }
+      }
+    },
+    {
+      "index": 19,
+      "query": "blusas azul celeste",
+      "language": "es",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Blouses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Blue"
+            ]
+          }
+        ],
+        "residual": [
+          "azul celeste"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Blouses",
+          "latency_seconds": 0.1933,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3367,
+          "cost_usd": 0.001142
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "residual": [
+            "azul celeste"
+          ],
+          "latency_seconds": 0.665,
+          "cost_usd": 0.001736
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "residual": [
+            "azul celeste"
+          ],
+          "latency_seconds": 0.5428,
+          "cost_usd": 0.001612
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "azul celeste"
+          ],
+          "latency_seconds": 0.506,
+          "cost_usd": 0.000687
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "residual": [
+            "azul celeste"
+          ],
+          "latency_seconds": 0.5116,
+          "cost_usd": 0.001328
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "azul celeste"
+          ],
+          "latency_seconds": 0.6984,
+          "cost_usd": 0.000622
+        }
+      }
+    },
+    {
+      "index": 20,
+      "query": "pink polka-dot coat",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Classic Coats",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Pink"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Polka Dot"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Classic Coats",
+          "latency_seconds": 0.2097,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Polka Dot"
+              ]
+            }
+          ],
+          "latency_seconds": 0.5706,
+          "cost_usd": 0.001907
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Polka Dot"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.9424,
+          "cost_usd": 0.002413
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Polka Dot"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8153,
+          "cost_usd": 0.002182
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.3931,
+          "cost_usd": 0.000799
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Polka Dot"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.406,
+          "cost_usd": 0.001805
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.7008,
+          "cost_usd": 0.000695
+        }
+      }
+    },
+    {
+      "index": 21,
+      "query": "mens lacoste polo red",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Lacoste"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "Red"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2307,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3763,
+          "cost_usd": 0.000894
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lacoste"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 1.0206,
+          "cost_usd": 0.001722
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lacoste"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6148,
+          "cost_usd": 0.001395
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lacoste"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3076,
+          "cost_usd": 0.000628
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lacoste"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.56,
+          "cost_usd": 0.00116
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lacoste"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3535,
+          "cost_usd": 0.000557
+        }
+      }
+    },
+    {
+      "index": 22,
+      "query": "red and black plaid dress shirt women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_all",
+            "values": [
+              "Red",
+              "Black"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Plaid"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "dress"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.3015,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Black",
+                "Red"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3182,
+          "cost_usd": 0.001021
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Black",
+                "Red"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 1.0139,
+          "cost_usd": 0.001991
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Black",
+                "Red"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.8049,
+          "cost_usd": 0.001612
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.2613,
+          "cost_usd": 0.000684
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_all",
+              "values": [
+                "Black",
+                "Red"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            }
+          ],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.2698,
+          "cost_usd": 0.00132
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.3877,
+          "cost_usd": 0.000598
+        }
+      }
+    },
+    {
+      "index": 23,
+      "query": "polo golf shirts adidas",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Adidas"
+            ]
+          }
+        ],
+        "residual": [
+          "golf"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2911,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [],
+          "latency_seconds": 0.2955,
+          "cost_usd": 0.000894
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [
+            "golf"
+          ],
+          "latency_seconds": 0.7506,
+          "cost_usd": 0.001554
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [
+            "golf"
+          ],
+          "latency_seconds": 0.4408,
+          "cost_usd": 0.001355
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [
+            "golf"
+          ],
+          "latency_seconds": 0.3032,
+          "cost_usd": 0.000617
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [
+            "golf"
+          ],
+          "latency_seconds": 0.5529,
+          "cost_usd": 0.001124
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            }
+          ],
+          "residual": [
+            "golf shirts"
+          ],
+          "latency_seconds": 0.6952,
+          "cost_usd": 0.000564
+        }
+      }
+    },
+    {
+      "index": 24,
+      "query": "open back sweater for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Knit Sweaters",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "open back"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Knit Sweaters",
+          "latency_seconds": 0.2125,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3444,
+          "cost_usd": 0.001123
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "open back"
+          ],
+          "latency_seconds": 0.8738,
+          "cost_usd": 0.001879
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "open back"
+          ],
+          "latency_seconds": 0.6111,
+          "cost_usd": 0.001637
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "open back"
+          ],
+          "latency_seconds": 0.5005,
+          "cost_usd": 0.000687
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "open back"
+          ],
+          "latency_seconds": 0.5257,
+          "cost_usd": 0.00136
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "open back"
+          ],
+          "latency_seconds": 0.3807,
+          "cost_usd": 0.000598
+        }
+      }
+    },
+    {
+      "index": 25,
+      "query": "tshirt with thumb holes men",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": [
+          "with thumb holes"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2504,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3494,
+          "cost_usd": 0.001069
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [
+            "with thumb holes"
+          ],
+          "latency_seconds": 0.7205,
+          "cost_usd": 0.001795
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [
+            "with thumb holes"
+          ],
+          "latency_seconds": 0.4088,
+          "cost_usd": 0.001556
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "with thumb holes"
+          ],
+          "latency_seconds": 0.2722,
+          "cost_usd": 0.000669
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [
+            "thumb holes"
+          ],
+          "latency_seconds": 0.2937,
+          "cost_usd": 0.001321
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "thumb holes"
+          ],
+          "latency_seconds": 0.2722,
+          "cost_usd": 0.000596
+        }
+      }
+    },
+    {
+      "index": 26,
+      "query": "white trench cout",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Trench Coats",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "contains_any",
+            "values": [
+              "White"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Trench Coats",
+          "latency_seconds": 0.3072,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "latency_seconds": 0.5186,
+          "cost_usd": 0.001752
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.8755,
+          "cost_usd": 0.002273
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5542,
+          "cost_usd": 0.002023
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.4859,
+          "cost_usd": 0.00075
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "contains_any",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4791,
+          "cost_usd": 0.001667
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "cout"
+          ],
+          "latency_seconds": 0.2813,
+          "cost_usd": 0.000662
+        }
+      }
+    },
+    {
+      "index": 27,
+      "query": "high waist sweatpants women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatpants & Lounge Pants",
+        "filters": [
+          {
+            "feature": "rise",
+            "operator": "in",
+            "values": [
+              "High-Rise"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatpants & Lounge Pants",
+          "latency_seconds": 0.1909,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "rise",
+              "operator": "in",
+              "values": [
+                "High-Rise"
+              ]
+            }
+          ],
+          "latency_seconds": 0.406,
+          "cost_usd": 0.001228
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "rise",
+              "operator": "in",
+              "values": [
+                "High-Rise"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.9319,
+          "cost_usd": 0.002165
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "rise",
+              "operator": "in",
+              "values": [
+                "High-Rise"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.777,
+          "cost_usd": 0.001852
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [],
+          "latency_seconds": 0.534,
+          "cost_usd": 0.000725
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "rise",
+              "operator": "in",
+              "values": [
+                "High-Rise"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6006,
+          "cost_usd": 0.001553
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "high waist"
+          ],
+          "latency_seconds": 0.3854,
+          "cost_usd": 0.00066
+        }
+      }
+    },
+    {
+      "index": 28,
+      "query": "coctail dress",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [],
+        "residual": [
+          "coctail"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2197,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [],
+          "latency_seconds": 0.4593,
+          "cost_usd": 0.001564
+        },
+        "full_gemini": {
+          "filters": [],
+          "residual": [
+            "coctail"
+          ],
+          "latency_seconds": 0.8164,
+          "cost_usd": 0.002065
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "coctail"
+          ],
+          "latency_seconds": 0.4093,
+          "cost_usd": 0.001885
+        },
+        "open_qwen": {
+          "filters": [],
+          "residual": [
+            "coctail"
+          ],
+          "latency_seconds": 0.3486,
+          "cost_usd": 0.00076
+        },
+        "full_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "coctail"
+          ],
+          "latency_seconds": 0.6961,
+          "cost_usd": 0.00157
+        },
+        "open_gpt_oss": {
+          "filters": [],
+          "residual": [
+            "coctail"
+          ],
+          "latency_seconds": 0.5994,
+          "cost_usd": 0.000678
+        }
+      }
+    },
+    {
+      "index": 29,
+      "query": "lee slacks for women relaxed fit",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Trousers",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Lee"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Relaxed"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Trousers",
+          "latency_seconds": 0.2692,
+          "cost_usd": 0.000106
+        },
+        "closed_features": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Relaxed"
+              ]
+            }
+          ],
+          "latency_seconds": 0.3565,
+          "cost_usd": 0.001226
+        },
+        "full_gemini": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Relaxed"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lee"
+              ]
+            }
+          ],
+          "residual": [
+            "slacks"
+          ],
+          "latency_seconds": 1.0186,
+          "cost_usd": 0.002264
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lee"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Relaxed"
+              ]
+            }
+          ],
+          "residual": [
+            "slacks"
+          ],
+          "latency_seconds": 0.5596,
+          "cost_usd": 0.001865
+        },
+        "open_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lee"
+              ]
+            }
+          ],
+          "residual": [
+            "slacks"
+          ],
+          "latency_seconds": 0.4107,
+          "cost_usd": 0.000723
+        },
+        "full_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lee"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Relaxed"
+              ]
+            }
+          ],
+          "residual": [
+            "slacks"
+          ],
+          "latency_seconds": 0.9056,
+          "cost_usd": 0.001548
+        },
+        "open_gpt_oss": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Lee"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.38,
+          "cost_usd": 0.000668
+        }
+      }
+    }
+  ],
+  "summaries": {
+    "full_gemini": {
+      "num_queries": 30,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 30,
+      "complete_filter_set_accuracy_pct": 96.7,
+      "complete_filter_set_correct": 29,
+      "closed_filter_set_accuracy_pct": 96.7,
+      "closed_filter_set_correct": 29,
+      "aux_filter_set_accuracy_pct": 100.0,
+      "aux_filter_set_correct": 30,
+      "all_clauses": {
+        "tp": 54,
+        "fp_redundant": 0,
+        "fn_missing": 1,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.033,
+        "precision_pct": 100.0,
+        "recall_pct": 98.2,
+        "f1_pct": 99.1
+      },
+      "closed_clauses": {
+        "tp": 48,
+        "fp_redundant": 0,
+        "fn_missing": 1,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.033,
+        "precision_pct": 100.0,
+        "recall_pct": 98.0,
+        "f1_pct": 99.0
+      },
+      "aux_clauses": {
+        "tp": 6,
+        "fp_redundant": 0,
+        "fn_missing": 0,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.0,
+        "precision_pct": 100.0,
+        "recall_pct": 100.0,
+        "f1_pct": 100.0
+      },
+      "residual_exact_order_pct": 86.7,
+      "residual_set_accuracy_pct": 86.7,
+      "residual_set_correct": 26,
+      "empty_residual_accuracy_pct": 76.5,
+      "residual_concepts": {
+        "tp": 13,
+        "fp_redundant": 4,
+        "fn_missing": 0,
+        "redundant_per_query": 0.133,
+        "missing_per_query": 0.0,
+        "precision_pct": 76.5,
+        "recall_pct": 100.0,
+        "f1_pct": 86.7
+      },
+      "full_query_exact_pct": 86.7,
+      "full_query_exact": 26,
+      "total_cost_usd": 0.061903,
+      "avg_cost_per_query_usd": 0.002063,
+      "latency": {
+        "total_all_queries": {
+          "count": 30,
+          "mean": 1.115,
+          "min": 0.2125,
+          "p50": 1.124,
+          "p80": 1.2492,
+          "p90": 1.3111,
+          "p95": 1.3261,
+          "max": 1.3795,
+          "under_0_7s": 1,
+          "under_0_7s_pct": 3.3,
+          "under_1_0s": 3,
+          "under_1_0s_pct": 10.0
+        },
+        "total_supported_queries": {
+          "count": 29,
+          "mean": 1.1462,
+          "min": 0.8583,
+          "p50": 1.1252,
+          "p80": 1.2497,
+          "p90": 1.3116,
+          "p95": 1.327,
+          "max": 1.3795,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 2,
+          "under_1_0s_pct": 6.9
+        },
+        "step1_jev_category": {
+          "count": 30,
+          "mean": 0.2459,
+          "min": 0.1909,
+          "p50": 0.2222,
+          "p80": 0.3015,
+          "p90": 0.3073,
+          "p95": 0.309,
+          "max": 0.3464,
+          "under_0_7s": 30,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 30,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 0,
+          "mean": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p80": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 0,
+          "under_1_0s_pct": 0.0
+        },
+        "step2_llm": {
+          "count": 29,
+          "mean": 0.8991,
+          "min": 0.665,
+          "p50": 0.9031,
+          "p80": 1.0158,
+          "p90": 1.0206,
+          "p95": 1.0281,
+          "max": 1.1189,
+          "under_0_7s": 1,
+          "under_0_7s_pct": 3.4,
+          "under_1_0s": 22,
+          "under_1_0s_pct": 75.9
+        }
+      }
+    },
+    "full_qwen": {
+      "num_queries": 30,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 30,
+      "complete_filter_set_accuracy_pct": 93.3,
+      "complete_filter_set_correct": 28,
+      "closed_filter_set_accuracy_pct": 93.3,
+      "closed_filter_set_correct": 28,
+      "aux_filter_set_accuracy_pct": 100.0,
+      "aux_filter_set_correct": 30,
+      "all_clauses": {
+        "tp": 54,
+        "fp_redundant": 2,
+        "fn_missing": 1,
+        "redundant_per_query": 0.067,
+        "missing_per_query": 0.033,
+        "precision_pct": 96.4,
+        "recall_pct": 98.2,
+        "f1_pct": 97.3
+      },
+      "closed_clauses": {
+        "tp": 48,
+        "fp_redundant": 2,
+        "fn_missing": 1,
+        "redundant_per_query": 0.067,
+        "missing_per_query": 0.033,
+        "precision_pct": 96.0,
+        "recall_pct": 98.0,
+        "f1_pct": 97.0
+      },
+      "aux_clauses": {
+        "tp": 6,
+        "fp_redundant": 0,
+        "fn_missing": 0,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.0,
+        "precision_pct": 100.0,
+        "recall_pct": 100.0,
+        "f1_pct": 100.0
+      },
+      "residual_exact_order_pct": 93.3,
+      "residual_set_accuracy_pct": 93.3,
+      "residual_set_correct": 28,
+      "empty_residual_accuracy_pct": 94.1,
+      "residual_concepts": {
+        "tp": 12,
+        "fp_redundant": 2,
+        "fn_missing": 1,
+        "redundant_per_query": 0.067,
+        "missing_per_query": 0.033,
+        "precision_pct": 85.7,
+        "recall_pct": 92.3,
+        "f1_pct": 88.9
+      },
+      "full_query_exact_pct": 86.7,
+      "full_query_exact": 26,
+      "total_cost_usd": 0.053713,
+      "avg_cost_per_query_usd": 0.00179,
+      "latency": {
+        "total_all_queries": {
+          "count": 30,
+          "mean": 0.8183,
+          "min": 0.2125,
+          "p50": 0.8304,
+          "p80": 0.922,
+          "p90": 0.9888,
+          "p95": 1.0698,
+          "max": 1.2355,
+          "under_0_7s": 4,
+          "under_0_7s_pct": 13.3,
+          "under_1_0s": 27,
+          "under_1_0s_pct": 90.0
+        },
+        "total_supported_queries": {
+          "count": 29,
+          "mean": 0.8392,
+          "min": 0.6266,
+          "p50": 0.8321,
+          "p80": 0.9335,
+          "p90": 0.9928,
+          "p95": 1.0738,
+          "max": 1.2355,
+          "under_0_7s": 3,
+          "under_0_7s_pct": 10.3,
+          "under_1_0s": 26,
+          "under_1_0s_pct": 89.7
+        },
+        "step1_jev_category": {
+          "count": 30,
+          "mean": 0.2459,
+          "min": 0.1909,
+          "p50": 0.2222,
+          "p80": 0.3015,
+          "p90": 0.3073,
+          "p95": 0.309,
+          "max": 0.3464,
+          "under_0_7s": 30,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 30,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 0,
+          "mean": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p80": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 0,
+          "under_1_0s_pct": 0.0
+        },
+        "step2_llm": {
+          "count": 29,
+          "mean": 0.5921,
+          "min": 0.3431,
+          "p50": 0.5542,
+          "p80": 0.6897,
+          "p90": 0.7826,
+          "p95": 0.8111,
+          "max": 1.028,
+          "under_0_7s": 23,
+          "under_0_7s_pct": 79.3,
+          "under_1_0s": 28,
+          "under_1_0s_pct": 96.6
+        }
+      }
+    },
+    "full_gpt_oss": {
+      "num_queries": 30,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 30,
+      "complete_filter_set_accuracy_pct": 93.3,
+      "complete_filter_set_correct": 28,
+      "closed_filter_set_accuracy_pct": 96.7,
+      "closed_filter_set_correct": 29,
+      "aux_filter_set_accuracy_pct": 96.7,
+      "aux_filter_set_correct": 29,
+      "all_clauses": {
+        "tp": 54,
+        "fp_redundant": 1,
+        "fn_missing": 1,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.033,
+        "precision_pct": 98.2,
+        "recall_pct": 98.2,
+        "f1_pct": 98.2
+      },
+      "closed_clauses": {
+        "tp": 49,
+        "fp_redundant": 1,
+        "fn_missing": 0,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.0,
+        "precision_pct": 98.0,
+        "recall_pct": 100.0,
+        "f1_pct": 99.0
+      },
+      "aux_clauses": {
+        "tp": 5,
+        "fp_redundant": 0,
+        "fn_missing": 1,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.033,
+        "precision_pct": 100.0,
+        "recall_pct": 83.3,
+        "f1_pct": 90.9
+      },
+      "residual_exact_order_pct": 73.3,
+      "residual_set_accuracy_pct": 73.3,
+      "residual_set_correct": 22,
+      "empty_residual_accuracy_pct": 76.5,
+      "residual_concepts": {
+        "tp": 9,
+        "fp_redundant": 7,
+        "fn_missing": 4,
+        "redundant_per_query": 0.233,
+        "missing_per_query": 0.133,
+        "precision_pct": 56.2,
+        "recall_pct": 69.2,
+        "f1_pct": 62.1
+      },
+      "full_query_exact_pct": 73.3,
+      "full_query_exact": 22,
+      "total_cost_usd": 0.045519,
+      "avg_cost_per_query_usd": 0.001517,
+      "latency": {
+        "total_all_queries": {
+          "count": 30,
+          "mean": 0.7296,
+          "min": 0.2125,
+          "p50": 0.7316,
+          "p80": 0.8162,
+          "p90": 0.8548,
+          "p95": 0.9187,
+          "max": 1.1748,
+          "under_0_7s": 11,
+          "under_0_7s_pct": 36.7,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 96.7
+        },
+        "total_supported_queries": {
+          "count": 29,
+          "mean": 0.7474,
+          "min": 0.5441,
+          "p50": 0.7382,
+          "p80": 0.8205,
+          "p90": 0.8616,
+          "p95": 0.919,
+          "max": 1.1748,
+          "under_0_7s": 10,
+          "under_0_7s_pct": 34.5,
+          "under_1_0s": 28,
+          "under_1_0s_pct": 96.6
+        },
+        "step1_jev_category": {
+          "count": 30,
+          "mean": 0.2459,
+          "min": 0.1909,
+          "p50": 0.2222,
+          "p80": 0.3015,
+          "p90": 0.3073,
+          "p95": 0.309,
+          "max": 0.3464,
+          "under_0_7s": 30,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 30,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 0,
+          "mean": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p80": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 0,
+          "under_1_0s_pct": 0.0
+        },
+        "step2_llm": {
+          "count": 29,
+          "mean": 0.5003,
+          "min": 0.2698,
+          "p50": 0.5068,
+          "p80": 0.5932,
+          "p90": 0.6197,
+          "p95": 0.7016,
+          "max": 0.9056,
+          "under_0_7s": 27,
+          "under_0_7s_pct": 93.1,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 100.0
+        }
+      }
+    },
+    "split_qwen": {
+      "num_queries": 30,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 30,
+      "complete_filter_set_accuracy_pct": 96.7,
+      "complete_filter_set_correct": 29,
+      "closed_filter_set_accuracy_pct": 96.7,
+      "closed_filter_set_correct": 29,
+      "aux_filter_set_accuracy_pct": 100.0,
+      "aux_filter_set_correct": 30,
+      "all_clauses": {
+        "tp": 55,
+        "fp_redundant": 1,
+        "fn_missing": 0,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.0,
+        "precision_pct": 98.2,
+        "recall_pct": 100.0,
+        "f1_pct": 99.1
+      },
+      "closed_clauses": {
+        "tp": 49,
+        "fp_redundant": 1,
+        "fn_missing": 0,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.0,
+        "precision_pct": 98.0,
+        "recall_pct": 100.0,
+        "f1_pct": 99.0
+      },
+      "aux_clauses": {
+        "tp": 6,
+        "fp_redundant": 0,
+        "fn_missing": 0,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.0,
+        "precision_pct": 100.0,
+        "recall_pct": 100.0,
+        "f1_pct": 100.0
+      },
+      "residual_exact_order_pct": 93.3,
+      "residual_set_accuracy_pct": 93.3,
+      "residual_set_correct": 28,
+      "empty_residual_accuracy_pct": 94.1,
+      "residual_concepts": {
+        "tp": 12,
+        "fp_redundant": 4,
+        "fn_missing": 1,
+        "redundant_per_query": 0.133,
+        "missing_per_query": 0.033,
+        "precision_pct": 75.0,
+        "recall_pct": 92.3,
+        "f1_pct": 82.8
+      },
+      "full_query_exact_pct": 90.0,
+      "full_query_exact": 27,
+      "total_cost_usd": 0.060629,
+      "avg_cost_per_query_usd": 0.002021,
+      "latency": {
+        "total_all_queries": {
+          "count": 30,
+          "mean": 0.994,
+          "min": 0.2125,
+          "p50": 1.0236,
+          "p80": 1.0837,
+          "p90": 1.1403,
+          "p95": 1.2495,
+          "max": 1.3261,
+          "under_0_7s": 1,
+          "under_0_7s_pct": 3.3,
+          "under_1_0s": 14,
+          "under_1_0s_pct": 46.7
+        },
+        "total_supported_queries": {
+          "count": 29,
+          "mean": 1.021,
+          "min": 0.872,
+          "p50": 1.0276,
+          "p80": 1.0844,
+          "p90": 1.144,
+          "p95": 1.2564,
+          "max": 1.3261,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 13,
+          "under_1_0s_pct": 44.8
+        },
+        "step1_jev_category": {
+          "count": 30,
+          "mean": 0.2459,
+          "min": 0.1909,
+          "p50": 0.2222,
+          "p80": 0.3015,
+          "p90": 0.3073,
+          "p95": 0.309,
+          "max": 0.3464,
+          "under_0_7s": 30,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 30,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 29,
+          "mean": 0.3866,
+          "min": 0.2955,
+          "p50": 0.3565,
+          "p80": 0.4191,
+          "p90": 0.4889,
+          "p95": 0.5192,
+          "max": 0.5706,
+          "under_0_7s": 29,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_llm": {
+          "count": 29,
+          "mean": 0.3872,
+          "min": 0.2613,
+          "p50": 0.3904,
+          "p80": 0.4917,
+          "p90": 0.5079,
+          "p95": 0.5246,
+          "max": 0.534,
+          "under_0_7s": 29,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 100.0
+        }
+      }
+    },
+    "split_gpt_oss": {
+      "num_queries": 30,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 30,
+      "complete_filter_set_accuracy_pct": 93.3,
+      "complete_filter_set_correct": 28,
+      "closed_filter_set_accuracy_pct": 96.7,
+      "closed_filter_set_correct": 29,
+      "aux_filter_set_accuracy_pct": 96.7,
+      "aux_filter_set_correct": 29,
+      "all_clauses": {
+        "tp": 54,
+        "fp_redundant": 2,
+        "fn_missing": 1,
+        "redundant_per_query": 0.067,
+        "missing_per_query": 0.033,
+        "precision_pct": 96.4,
+        "recall_pct": 98.2,
+        "f1_pct": 97.3
+      },
+      "closed_clauses": {
+        "tp": 49,
+        "fp_redundant": 1,
+        "fn_missing": 0,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.0,
+        "precision_pct": 98.0,
+        "recall_pct": 100.0,
+        "f1_pct": 99.0
+      },
+      "aux_clauses": {
+        "tp": 5,
+        "fp_redundant": 1,
+        "fn_missing": 1,
+        "redundant_per_query": 0.033,
+        "missing_per_query": 0.033,
+        "precision_pct": 83.3,
+        "recall_pct": 83.3,
+        "f1_pct": 83.3
+      },
+      "residual_exact_order_pct": 80.0,
+      "residual_set_accuracy_pct": 80.0,
+      "residual_set_correct": 24,
+      "empty_residual_accuracy_pct": 82.4,
+      "residual_concepts": {
+        "tp": 10,
+        "fp_redundant": 6,
+        "fn_missing": 3,
+        "redundant_per_query": 0.2,
+        "missing_per_query": 0.1,
+        "precision_pct": 62.5,
+        "recall_pct": 76.9,
+        "f1_pct": 69.0
+      },
+      "full_query_exact_pct": 73.3,
+      "full_query_exact": 22,
+      "total_cost_usd": 0.0586,
+      "avg_cost_per_query_usd": 0.001953,
+      "latency": {
+        "total_all_queries": {
+          "count": 30,
+          "mean": 1.0479,
+          "min": 0.2125,
+          "p50": 1.036,
+          "p80": 1.2146,
+          "p90": 1.2613,
+          "p95": 1.2803,
+          "max": 1.4811,
+          "under_0_7s": 1,
+          "under_0_7s_pct": 3.3,
+          "under_1_0s": 12,
+          "under_1_0s_pct": 40.0
+        },
+        "total_supported_queries": {
+          "count": 29,
+          "mean": 1.0767,
+          "min": 0.8131,
+          "p50": 1.0609,
+          "p80": 1.218,
+          "p90": 1.2632,
+          "p95": 1.2804,
+          "max": 1.4811,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 11,
+          "under_1_0s_pct": 37.9
+        },
+        "step1_jev_category": {
+          "count": 30,
+          "mean": 0.2459,
+          "min": 0.1909,
+          "p50": 0.2222,
+          "p80": 0.3015,
+          "p90": 0.3073,
+          "p95": 0.309,
+          "max": 0.3464,
+          "under_0_7s": 30,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 30,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 29,
+          "mean": 0.3866,
+          "min": 0.2955,
+          "p50": 0.3565,
+          "p80": 0.4191,
+          "p90": 0.4889,
+          "p95": 0.5192,
+          "max": 0.5706,
+          "under_0_7s": 29,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_llm": {
+          "count": 29,
+          "mean": 0.443,
+          "min": 0.2607,
+          "p50": 0.3877,
+          "p80": 0.5979,
+          "p90": 0.6956,
+          "p95": 0.6979,
+          "max": 0.7008,
+          "under_0_7s": 28,
+          "under_0_7s_pct": 96.6,
+          "under_1_0s": 29,
+          "under_1_0s_pct": 100.0
+        }
+      }
+    }
+  },
+  "dataset": "query_parsing/benchmark/queries",
+  "selected_configs": [
+    "full_qwen",
+    "full_gpt_oss",
+    "full_gemini",
+    "split_qwen",
+    "split_gpt_oss"
+  ]
+}

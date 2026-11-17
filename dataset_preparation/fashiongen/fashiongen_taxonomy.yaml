@@ -1,0 +1,142 @@
+# Fashion-Gen clothing taxonomy: section -> category -> source entries.
+# Source entries use input_category / input_subcategory.
+# Name rules run first; desc_not rejects conflicting descriptions.
+# DOWN and FUR & SHEARLING require a matching name rule.
+# Exclusions apply only to products left unassigned.
+
+taxonomy:
+  Tops:
+    T-shirts:
+      - TOPS / T-SHIRTS
+    Polos:
+      - TOPS / POLOS
+    Tank tops & Camisoles:
+      - TOPS / TANK TOPS & CAMISOLES
+      - TOPS / TANK TOPS
+    Bodysuits:
+      - TOPS / BODYSUITS
+
+  Shirts & Blouses:
+    Shirts:
+      - TOPS / SHIRTS
+      - SHIRTS / SHIRTS
+    Blouses:
+      - TOPS / BLOUSES
+
+  Sweaters:
+    Knit Sweaters:
+      - SWEATERS / CREWNECKS
+      - SWEATERS / TURTLENECKS
+      - SWEATERS / V-NECKS
+    Sweatshirts:
+      - SWEATERS / SWEATSHIRTS
+    Hoodies & Zipups:
+      - SWEATERS / HOODIES & ZIPUPS
+    Cardigans:
+      - SWEATERS / CARDIGANS
+
+  Jackets & Coats:
+    Classic Coats:
+      - JACKETS & COATS / COATS
+      - {from: "JACKETS & COATS / DOWN", name: '^(?!.*\b(?:bomber|vest|gilet|jacket)s?\b).*\bcoats?\b', desc_not: '\b(?:bomber|vest|gilet|jacket)s?\b', label: "name: coat"}
+      - {from: "JACKETS & COATS / FUR & SHEARLING", name: '^(?!.*\b(?:bomber|vest|gilet|jacket)s?\b).*\bcoats?\b', desc_not: '\b(?:bomber|vest|gilet|jacket)s?\b', label: "name: coat"}
+    Trench Coats:
+      - JACKETS & COATS / TRENCH COATS
+    Jackets:
+      - JACKETS & COATS / JACKETS
+      - JACKETS & COATS / DENIM JACKETS
+      - JACKETS & COATS / LEATHER JACKETS
+      - {from: "JACKETS & COATS / DOWN", name: '^(?!.*\b(?:coat|bomber|vest|gilet)s?\b).*\bjackets?\b', desc_not: '\b(?:coat|bomber|vest|gilet)s?\b', label: "name: jacket"}
+      - {from: "JACKETS & COATS / FUR & SHEARLING", name: '^(?!.*\b(?:coat|bomber|vest|gilet)s?\b).*\bjackets?\b', desc_not: '\b(?:coat|bomber|vest|gilet)s?\b', label: "name: jacket"}
+    Bombers:
+      - JACKETS & COATS / BOMBERS
+      - {from: "JACKETS & COATS / DOWN", name: '^(?!.*\b(?:coat|vest|gilet)s?\b).*\bbombers?\b', desc_not: '\b(?:coat|vest|gilet)s?\b', label: "name: bomber"}
+      - {from: "JACKETS & COATS / FUR & SHEARLING", name: '^(?!.*\b(?:coat|vest|gilet)s?\b).*\bbombers?\b', desc_not: '\b(?:coat|vest|gilet)s?\b', label: "name: bomber"}
+    Vests:
+      - JACKETS & COATS / VESTS
+      - {from: "JACKETS & COATS / DOWN", name: '^(?!.*\b(?:coat|bomber|jacket)s?\b).*\b(?:vest|gilet)s?\b', desc_not: '\b(?:coat|bomber|jacket)s?\b', label: "name: vest / gilet"}
+      - {from: "JACKETS & COATS / FUR & SHEARLING", name: '^(?!.*\b(?:coat|bomber|jacket)s?\b).*\b(?:vest|gilet)s?\b', desc_not: '\b(?:coat|bomber|jacket)s?\b', label: "name: vest / gilet"}
+
+  Pants:
+    Trousers:
+      - PANTS / TROUSERS
+      - PANTS / LEATHER PANTS
+    Cargo Pants:
+      - PANTS / CARGO PANTS
+    Sweatpants & Lounge Pants:
+      - PANTS / SWEATPANTS
+      - PANTS / LOUNGE PANTS
+    Jeans:
+      - JEANS / JEANS
+
+  Shorts:
+    Shorts:
+      - SHORTS / SHORTS
+
+  Skirts:
+    Skirts:
+      - SKIRTS / SHORT SKIRTS
+      - SKIRTS / MID LENGTH SKIRTS
+      - SKIRTS / LONG SKIRTS
+
+  Dresses:
+    Dresses:
+      - DRESSES / SHORT DRESSES
+      - DRESSES / MID LENGTH DRESSES
+      - DRESSES / LONG DRESSES
+
+
+# Not in the project – grouped by reason.
+excluded:
+  Accessories & bags:
+    - HATS
+    - SHOULDER BAGS
+    - JEWELRY
+    - EYEWEAR
+    - BACKPACKS
+    - SCARVES
+    - TOTE BAGS
+    - DUFFLE & TOP HANDLE BAGS
+    - CLUTCHES & POUCHES
+    - BELTS & SUSPENDERS
+    - FINE JEWELRY
+    - MESSENGER BAGS & SATCHELS
+    - TIES
+    - KEYCHAINS
+    - BAG ACCESSORIES
+    - POUCHES & DOCUMENT HOLDERS
+    - GLOVES
+    - DUFFLE BAGS
+    - MESSENGER BAGS
+    - BRIEFCASES
+    - POCKET SQUARES & TIE BARS
+    - TRAVEL BAGS
+  Shoes (out of scope for now):
+    - SNEAKERS
+    - BOOTS
+    - FLATS
+    - SANDALS
+    - HEELS
+    - LACE UPS
+    - LOAFERS
+    - ESPADRILLES
+    - MONKSTRAPS
+    - BOAT SHOES & MOCCASINS
+  Underwear, socks & swimwear:
+    - LINGERIE
+    - UNDERWEAR & LOUNGEWEAR
+    - SOCKS
+    - SWIMWEAR
+  Non-fashion:
+    - BLANKETS
+  DOWN / FUR – type unclear:
+    - JACKETS & COATS / DOWN
+    - JACKETS & COATS / FUR & SHEARLING
+  Clothing left out:
+    - TOPS / HENLEYS
+    - SWEATERS / SHAWLNECKS
+    - JACKETS & COATS / BLAZERS
+    - JACKETS & COATS / PEACOATS
+    - SUITS & BLAZERS
+    - PANTS / LEGGINGS
+    - JUMPSUITS

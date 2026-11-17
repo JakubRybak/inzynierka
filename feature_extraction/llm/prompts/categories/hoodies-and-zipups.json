@@ -1,0 +1,46 @@
+{
+  "category": "Hoodies & Zipups",
+  "features": {
+    "sleeve_length": {
+      "instruction": "Return one value for the garment sleeve itself, not an undershirt, gloves, or sleeves rolled up for styling. Consider the original sleeve endpoint. If the design has genuinely incompatible sleeve lengths and no single label describes it, outside_schema is permitted.",
+      "values": {
+        "Sleeveless": "No sleeve extends over the upper arm; shoulder straps are not sleeves.",
+        "Short Sleeve": "A sleeve covering part of the upper arm and ending above the elbow, including cap sleeves.",
+        "Three-Quarter Sleeve": "A sleeve ending below the elbow and before the wrist. In this project, an explicit cropped sleeve description also maps here.",
+        "Long Sleeve": "A full-length sleeve reaching the wrist or beyond."
+      }
+    },
+    "fit": {
+      "instruction": "Return one value for the intended fit of the target garment, considering torso ease and shoulder construction together. Do not infer Slim just from a slim model, or Oversized just from garment length. Explicit garment fit descriptions are useful evidence.",
+      "values": {
+        "Slim": "Close-fitting through the torso with little ease; fitted, form-fitting or body-hugging.",
+        "Regular": "Conventional ease, neither close-fitting nor deliberately loose.",
+        "Oversized": "Deliberately loose, relaxed, boxy or oversized through the torso; not merely a normal fit on a slender model."
+      }
+    },
+    "length": {
+      "instruction": "Return one value for the body length of the top, not sleeve length. Use untucked views when available. A tucked hem alone does not establish a cropped design.",
+      "values": {
+        "Cropped": "A deliberately shortened top ending around or above the natural waist, rather than reaching the usual hip area.",
+        "Regular": "A conventional top length reaching around the waistband or hips, without an intentionally extended body.",
+        "Longline": "An intentionally elongated body extending clearly below the usual hip length, toward the upper thigh or beyond."
+      }
+    },
+    "hood": {
+      "instruction": "Return one value for whether the target garment itself has a hood. Do not count a hood belonging to a separate layer or an accessory. A category name does not establish hood presence; Hoodies & Zipups also contains garments without hoods.",
+      "values": {
+        "With Hood": "The garment has an attached or detachable hood supplied as part of the garment.",
+        "Without Hood": "The garment has no hood; a stand collar, turtleneck or large collar alone is not a hood."
+      }
+    },
+    "closure_type": {
+      "instruction": "Return one value for the main front opening of the target garment. Ignore pocket, sleeve, back and decorative zippers. Use the intended construction, not how far a zipper is opened in the photo. A partial neck zipper takes precedence over the fact that the garment is pulled over the head.",
+      "values": {
+        "Pullover": "No functional front opening; the garment is pulled over the head. Decorative zippers or zippered pockets do not change this label.",
+        "Zip": "A full-length front zipper allows the garment to open completely at the front.",
+        "Half-Zip": "A partial front zipper opens the neckline or upper chest but does not fully separate the front. Includes quarter-zip and other short front neck zippers.",
+        "Other": "A main front opening outside the offered labels, for example buttons or press-studs instead of a zipper, or an open front without a closure."
+      }
+    }
+  }
+}

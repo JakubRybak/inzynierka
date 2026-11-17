@@ -1,0 +1,155 @@
+section: Shorts
+category: Shorts
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  fit:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Skinny:
+      - skinny
+      - skinny-fit
+      - super skinny
+      Slim:
+      - slim
+      - slim-fit
+      - slim-cut
+      Regular:
+      - regular fit
+      - regular-fit
+      - classic fit
+      - standard fit
+      Relaxed:
+      - relaxed
+      - relaxed-fit
+      - loose
+      - loose-fit
+      - loose-fitting
+      - baggy
+      - oversized
+      - oversize
+      - boyfriend
+      - slouchy
+  waistband_type:
+    strategy: single
+    columns:
+    - description
+    keywords:
+      Elasticized:
+      - elasticized waistband
+      - elasticised waistband
+      - elastic waistband
+      - elasticized waist
+      - elasticised waist
+      - rib knit waistband
+      - ribbed waistband
+      - ribbed knit waistband
+      - drawstring
+      - drawstrings
+      - bungee
+      - pull-on
+      Other:
+      - paperbag
+      - paper bag
+      - tie-waist
+      - tie waist
+      - wrap waist
+      Structured:
+      - zip-fly
+      - zip fly
+      - button-fly
+      - button fly
+      - belt loop
+      - belt loops
+      - hook-and-eye
+      - hook and eye
+      - hook-and-bar
+      - hook and bar
+  length:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Short:
+      - short shorts
+      - short-length shorts
+      - short length shorts
+      - mini shorts
+      - hot pants
+      - hotpants
+      Mid-Length:
+      - mid-length
+      - mid length
+      - mid-thigh
+      - mid thigh
+      Long:
+      - long shorts
+      - long-length shorts
+      - long length shorts
+      - knee-length
+      - knee length
+      - bermuda
+      - bermudas
+  rise:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      High-Rise:
+      - high-rise
+      - high rise
+      - high-waisted
+      - high waisted
+      - high-waist
+      - high waist
+      Mid-Rise:
+      - mid-rise
+      - mid rise
+      - medium rise
+      - regular rise
+      Low-Rise:
+      - low-rise
+      - low rise
+      - low-waisted
+      - low waisted
+      - low-waist
+      - low waist
+  shorts_type:
+    strategy: single
+    columns:
+    - name
+    - description
+    keywords:
+      Denim:
+      - denim
+      - jean shorts
+      Cargo:
+      - cargo
+      Sweatshorts:
+      - sweatshorts
+      - sweat shorts
+      - sweat-shorts
+      - terry shorts
+      - terrycloth shorts
+      - fleece shorts
+      - lounge shorts
+      Athletic:
+      - athletic shorts
+      - running shorts
+      - training shorts
+      - gym shorts
+      - basketball shorts
+      - track shorts
+      Tailored:
+      - tailored
+      - dress shorts
+      - formal shorts

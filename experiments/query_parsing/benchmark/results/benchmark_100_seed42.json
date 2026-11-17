@@ -1,0 +1,5453 @@
+{
+  "timestamp_utc": "2026-11-14T12:33:35.919284+00:00",
+  "dataset": "experiments/query_parsing/benchmark/queries",
+  "sample_size": 100,
+  "seed": 42,
+  "selected_configs": [
+    "full_qwen"
+  ],
+  "queries": [
+    {
+      "index": 0,
+      "query": "floral dress shirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Floral"
+            ]
+          }
+        ],
+        "residual": [
+          "dress"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.2381,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Floral"
+              ]
+            }
+          ],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.4679,
+          "cost_usd": 0.00158
+        }
+      }
+    },
+    {
+      "index": 1,
+      "query": "crewneck tshirt men",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Crewneck"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2415,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Crewneck"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.509,
+          "cost_usd": 0.00159
+        }
+      }
+    },
+    {
+      "index": 2,
+      "query": "women's sleeveless floral golf polo",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Sleeveless"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Floral"
+            ]
+          }
+        ],
+        "residual": [
+          "golf"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.3284,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Sleeveless"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Floral"
+              ]
+            }
+          ],
+          "residual": [
+            "golf"
+          ],
+          "latency_seconds": 0.5353,
+          "cost_usd": 0.001419
+        }
+      }
+    },
+    {
+      "index": 3,
+      "query": "one-shoulder bodysuit with a long sleeve",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "One-Shoulder"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2121,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "strap_style",
+              "operator": "in",
+              "values": [
+                "One-Shoulder"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4809,
+          "cost_usd": 0.001638
+        }
+      }
+    },
+    {
+      "index": 4,
+      "query": "wełniany płaszcz bez kaptura do 500 zł",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Classic Coats",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          },
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "Without Hood"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 500
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Classic Coats",
+          "latency_seconds": 0.2879,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "Without Hood"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 500
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.7003,
+          "cost_usd": 0.002221
+        }
+      }
+    },
+    {
+      "index": 5,
+      "query": "green trench coat with roomy pockets, up to $85",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trench Coats",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Green"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 85
+          }
+        ],
+        "residual": [
+          "with roomy pockets"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Trench Coats",
+          "latency_seconds": 0.2164,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Green"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 85
+            }
+          ],
+          "residual": [
+            "roomy pockets"
+          ],
+          "latency_seconds": 0.5665,
+          "cost_usd": 0.002066
+        }
+      }
+    },
+    {
+      "index": 6,
+      "query": "sukienka maxi z dekoltem w serek na cienkich ramiączkach",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Maxi"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "V-Neck"
+            ]
+          },
+          {
+            "feature": "strap_width",
+            "operator": "in",
+            "values": [
+              "Spaghetti"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2953,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Maxi"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            },
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 1.3668,
+          "cost_usd": 0.00197
+        }
+      }
+    },
+    {
+      "index": 7,
+      "query": "blue off the shoulder dress",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "Off-Shoulder"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.203,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "strap_style",
+              "operator": "in",
+              "values": [
+                "Off-Shoulder"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5095,
+          "cost_usd": 0.001943
+        }
+      }
+    },
+    {
+      "index": 8,
+      "query": "black and white button down shirt men",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black",
+              "White"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": [
+          "button down"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.2065,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [
+            "button down"
+          ],
+          "latency_seconds": 0.4007,
+          "cost_usd": 0.001606
+        }
+      }
+    },
+    {
+      "index": 9,
+      "query": "asidas womens hoodies",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Hoodies & Zipups",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Adidas"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "With Hood"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Hoodies & Zipups",
+          "latency_seconds": 0.3074,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6114,
+          "cost_usd": 0.001743
+        }
+      }
+    },
+    {
+      "index": 10,
+      "query": "under armour sweatshirt women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatshirts",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Under Armour"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatshirts",
+          "latency_seconds": 0.2324,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Under Armour"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5183,
+          "cost_usd": 0.001642
+        }
+      }
+    },
+    {
+      "index": 11,
+      "query": "orange down-filled jacket with a nylon shell",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jackets",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Orange"
+            ]
+          },
+          {
+            "feature": "insulation",
+            "operator": "in",
+            "values": [
+              "Down"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Nylon"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jackets",
+          "latency_seconds": 0.2836,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Orange"
+              ]
+            },
+            {
+              "feature": "insulation",
+              "operator": "in",
+              "values": [
+                "Down"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Nylon"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6226,
+          "cost_usd": 0.002177
+        }
+      }
+    },
+    {
+      "index": 12,
+      "query": "white bridesmaid dress",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "White"
+            ]
+          }
+        ],
+        "residual": [
+          "bridesmaid"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2106,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "residual": [
+            "bridesmaid"
+          ],
+          "latency_seconds": 0.9929,
+          "cost_usd": 0.001925
+        }
+      }
+    },
+    {
+      "index": 13,
+      "query": "double-breasted bomber jacket with buttons",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bombers",
+        "filters": [
+          {
+            "feature": "closure_type",
+            "operator": "contains_all",
+            "values": [
+              "Double-Breasted",
+              "Button"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bombers",
+          "latency_seconds": 0.3064,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "closure_type",
+              "operator": "contains_all",
+              "values": [
+                "Button",
+                "Double-Breasted"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5883,
+          "cost_usd": 0.00194
+        }
+      }
+    },
+    {
+      "index": 14,
+      "query": "navy shorts, any brand except Zara or H&M",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Shorts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "brand",
+            "operator": "not_in",
+            "values": [
+              "Zara",
+              "H&M"
+            ]
+          }
+        ],
+        "residual": [
+          "navy"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shorts",
+          "latency_seconds": 0.2341,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "brand",
+              "operator": "not_in",
+              "values": [
+                "Zara",
+                "H&M"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.6249,
+          "cost_usd": 0.001772
+        }
+      }
+    },
+    {
+      "index": 15,
+      "query": "beige cargo pants for work at least $35",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cargo Pants",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Beige"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 35
+          }
+        ],
+        "residual": [
+          "for work"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Cargo Pants",
+          "latency_seconds": 0.2832,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Beige"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "gte",
+              "value": 35
+            }
+          ],
+          "residual": [
+            "for work"
+          ],
+          "latency_seconds": 0.5573,
+          "cost_usd": 0.001847
+        }
+      }
+    },
+    {
+      "index": 16,
+      "query": "harvard sweatshirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatshirts",
+        "filters": [],
+        "residual": [
+          "harvard"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatshirts",
+          "latency_seconds": 0.2437,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "harvard"
+          ],
+          "latency_seconds": 0.2727,
+          "cost_usd": 0.001593
+        }
+      }
+    },
+    {
+      "index": 17,
+      "query": "abrigo plumas mujer largo",
+      "language": "es",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Classic Coats",
+        "filters": [
+          {
+            "feature": "insulation",
+            "operator": "in",
+            "values": [
+              "Down"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Long"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Classic Coats",
+          "latency_seconds": 0.2645,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "insulation",
+              "operator": "in",
+              "values": [
+                "Down"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Long"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5801,
+          "cost_usd": 0.002218
+        }
+      }
+    },
+    {
+      "index": 18,
+      "query": "bike shorts for men without padding",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shorts",
+        "filters": [
+          {
+            "feature": "shorts_type",
+            "operator": "in",
+            "values": [
+              "Athletic"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": [
+          "bike",
+          "without padding"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shorts",
+          "latency_seconds": 0.2623,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "shorts_type",
+              "operator": "in",
+              "values": [
+                "Athletic"
+              ]
+            }
+          ],
+          "residual": [
+            "bike",
+            "without padding"
+          ],
+          "latency_seconds": 0.3308,
+          "cost_usd": 0.00177
+        }
+      }
+    },
+    {
+      "index": 19,
+      "query": "all-white polo shirt",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "White"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2586,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4239,
+          "cost_usd": 0.00135
+        }
+      }
+    },
+    {
+      "index": 20,
+      "query": "slim or regular fit sweatshirt, but not oversized",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Sweatshirts",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Slim",
+              "Regular"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "not_in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatshirts",
+          "latency_seconds": 0.2077,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Slim",
+                "Regular"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "not_in",
+              "values": [
+                "Oversized"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.301,
+          "cost_usd": 0.00162
+        }
+      }
+    },
+    {
+      "index": 21,
+      "query": "plain brown jacket for travel",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jackets",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Solid"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Brown"
+            ]
+          }
+        ],
+        "residual": [
+          "for travel"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Jackets",
+          "latency_seconds": 0.3122,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "residual": [
+            "for travel"
+          ],
+          "latency_seconds": 0.4541,
+          "cost_usd": 0.002157
+        }
+      }
+    },
+    {
+      "index": 22,
+      "query": "plain brown shorts for travel",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Shorts",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Solid"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Brown"
+            ]
+          }
+        ],
+        "residual": [
+          "for travel"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shorts",
+          "latency_seconds": 0.2214,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Brown"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            }
+          ],
+          "residual": [
+            "for travel"
+          ],
+          "latency_seconds": 0.5062,
+          "cost_usd": 0.001765
+        }
+      }
+    },
+    {
+      "index": 23,
+      "query": "men's black crew neck t-shirt up to $30",
+      "language": "en",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Crewneck"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 30
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2881,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Crewneck"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 30
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5065,
+          "cost_usd": 0.001632
+        }
+      }
+    },
+    {
+      "index": 24,
+      "query": "graphic workout tops",
+      "language": "en",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [],
+        "residual": [
+          "graphic",
+          "workout"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.3015,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "graphic",
+            "for workout"
+          ],
+          "latency_seconds": 0.5606,
+          "cost_usd": 0.001619
+        }
+      }
+    },
+    {
+      "index": 25,
+      "query": "3 inseam volleyball shorts women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shorts",
+        "filters": [
+          {
+            "feature": "shorts_type",
+            "operator": "in",
+            "values": [
+              "Athletic"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "3 inseam",
+          "volleyball"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shorts",
+          "latency_seconds": 0.2193,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "shorts_type",
+              "operator": "in",
+              "values": [
+                "Athletic"
+              ]
+            }
+          ],
+          "residual": [
+            "3 inseam",
+            "volleyball"
+          ],
+          "latency_seconds": 0.4437,
+          "cost_usd": 0.001772
+        }
+      }
+    },
+    {
+      "index": 26,
+      "query": "funny sweatshirts for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatshirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "funny"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatshirts",
+          "latency_seconds": 0.2112,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "funny"
+          ],
+          "latency_seconds": 0.4042,
+          "cost_usd": 0.001625
+        }
+      }
+    },
+    {
+      "index": 27,
+      "query": "pantalones de vestir negros de pierna recta",
+      "language": "es",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trousers",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "leg_shape",
+            "operator": "in",
+            "values": [
+              "Straight"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Trousers",
+          "latency_seconds": 0.1993,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "leg_shape",
+              "operator": "in",
+              "values": [
+                "Straight"
+              ]
+            }
+          ],
+          "residual": [
+            "de vestir"
+          ],
+          "latency_seconds": 0.6261,
+          "cost_usd": 0.001861
+        }
+      }
+    },
+    {
+      "index": 28,
+      "query": "unlined denim jacket",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jackets",
+        "filters": [
+          {
+            "feature": "lining_composition",
+            "operator": "equals_set",
+            "values": [
+              "Unlined"
+            ]
+          },
+          {
+            "feature": "jacket_style",
+            "operator": "in",
+            "values": [
+              "Denim"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jackets",
+          "latency_seconds": 0.2851,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "lining_composition",
+              "operator": "equals_set",
+              "values": [
+                "Unlined"
+              ]
+            },
+            {
+              "feature": "jacket_style",
+              "operator": "in",
+              "values": [
+                "Denim"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3808,
+          "cost_usd": 0.002155
+        }
+      }
+    },
+    {
+      "index": 29,
+      "query": "black oxford shirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          }
+        ],
+        "residual": [
+          "oxford"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.2183,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            }
+          ],
+          "residual": [
+            "oxford"
+          ],
+          "latency_seconds": 0.3345,
+          "cost_usd": 0.001581
+        }
+      }
+    },
+    {
+      "index": 30,
+      "query": "100% cotton tee for a family reunion",
+      "language": "en",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "equals_set",
+            "values": [
+              "Cotton"
+            ]
+          }
+        ],
+        "residual": [
+          "for a family reunion"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2627,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "equals_set",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": [
+            "for a family reunion"
+          ],
+          "latency_seconds": 0.3384,
+          "cost_usd": 0.001577
+        }
+      }
+    },
+    {
+      "index": 31,
+      "query": "gauze skirts for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "gauze"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.41,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "gauze"
+          ],
+          "latency_seconds": 0.527,
+          "cost_usd": 0.001626
+        }
+      }
+    },
+    {
+      "index": 32,
+      "query": "blouses red and white",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Blouses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Red",
+              "White"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Blouses",
+          "latency_seconds": 0.2197,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Red",
+                "White"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6123,
+          "cost_usd": 0.001603
+        }
+      }
+    },
+    {
+      "index": 33,
+      "query": "polos manga larga mujer",
+      "language": "es",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2584,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3995,
+          "cost_usd": 0.00139
+        }
+      }
+    },
+    {
+      "index": 34,
+      "query": "4x sweat pants for men",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatpants & Lounge Pants",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": [
+          "4x"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatpants & Lounge Pants",
+          "latency_seconds": 0.3206,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [
+            "4x"
+          ],
+          "latency_seconds": 0.5635,
+          "cost_usd": 0.001851
+        }
+      }
+    },
+    {
+      "index": 35,
+      "query": "wool blend sweater women ligbt blue",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Knit Sweaters",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          }
+        ],
+        "residual": [
+          "light blue"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Knit Sweaters",
+          "latency_seconds": 0.2497,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "residual": [
+            "light blue"
+          ],
+          "latency_seconds": 0.5471,
+          "cost_usd": 0.0017
+        }
+      }
+    },
+    {
+      "index": 36,
+      "query": "turquoise trousers around 89.99 euros",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trousers",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "around",
+            "value": 89.99
+          }
+        ],
+        "residual": [
+          "turquoise"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Trousers",
+          "latency_seconds": 0.1951,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "around",
+              "value": 89.99
+            }
+          ],
+          "residual": [
+            "turquoise"
+          ],
+          "latency_seconds": 1.0219,
+          "cost_usd": 0.001858
+        }
+      }
+    },
+    {
+      "index": 37,
+      "query": "cotton or linen tank top without polyester",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton",
+              "Linen"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_none",
+            "values": [
+              "Polyester"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.2481,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton",
+                "Linen"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_none",
+              "values": [
+                "Polyester"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5051,
+          "cost_usd": 0.001675
+        }
+      }
+    },
+    {
+      "index": 38,
+      "query": "sexy cheetah body suit for women halloween",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Animal Print"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "sexy",
+          "cheetah",
+          "halloween"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2016,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Animal Print"
+              ]
+            }
+          ],
+          "residual": [
+            "cheetah",
+            "sexy",
+            "halloween"
+          ],
+          "latency_seconds": 0.5059,
+          "cost_usd": 0.001646
+        }
+      }
+    },
+    {
+      "index": 39,
+      "query": "pink polka-dot trench coat",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trench Coats",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Pink"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Polka Dot"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Trench Coats",
+          "latency_seconds": 0.3138,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Polka Dot"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3501,
+          "cost_usd": 0.002063
+        }
+      }
+    },
+    {
+      "index": 40,
+      "query": "regular-fit or slim-fit blouse, but not oversized",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Blouses",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Regular",
+              "Slim"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "not_in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Blouses",
+          "latency_seconds": 0.2266,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Regular",
+                "Slim"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "not_in",
+              "values": [
+                "Oversized"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.449,
+          "cost_usd": 0.001627
+        }
+      }
+    },
+    {
+      "index": 41,
+      "query": "long black open cardigan",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Cardigans",
+        "filters": [
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Longline"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "closure_type",
+            "operator": "in",
+            "values": [
+              "Open Front"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cardigans",
+          "latency_seconds": 0.2886,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Longline"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "closure_type",
+              "operator": "in",
+              "values": [
+                "Open Front"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5154,
+          "cost_usd": 0.001773
+        }
+      }
+    },
+    {
+      "index": 42,
+      "query": "oversized striped polo",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Oversized"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Striped"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2886,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Oversized"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Striped"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3427,
+          "cost_usd": 0.001389
+        }
+      }
+    },
+    {
+      "index": 43,
+      "query": "black or white coat, no red or pink",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Classic Coats",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_any_set",
+            "values": [
+              "Black",
+              "White"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "contains_none",
+            "values": [
+              "Red",
+              "Pink"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Classic Coats",
+          "latency_seconds": 0.2189,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_any_set",
+              "values": [
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "contains_none",
+              "values": [
+                "Red",
+                "Pink"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3701,
+          "cost_usd": 0.002205
+        }
+      }
+    },
+    {
+      "index": 44,
+      "query": "champion sweatpants",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Sweatpants & Lounge Pants",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Champion"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatpants & Lounge Pants",
+          "latency_seconds": 0.2734,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Champion"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4988,
+          "cost_usd": 0.001845
+        }
+      }
+    },
+    {
+      "index": 45,
+      "query": "bomber with synthetic padding and a cotton lining",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bombers",
+        "filters": [
+          {
+            "feature": "insulation",
+            "operator": "in",
+            "values": [
+              "Synthetic Padding"
+            ]
+          },
+          {
+            "feature": "lining_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bombers",
+          "latency_seconds": 0.2418,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "insulation",
+              "operator": "in",
+              "values": [
+                "Synthetic Padding"
+              ]
+            },
+            {
+              "feature": "lining_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5956,
+          "cost_usd": 0.00196
+        }
+      }
+    },
+    {
+      "index": 46,
+      "query": "aesthetic t shirts",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [],
+        "residual": [
+          "aesthetic"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.23,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "aesthetic"
+          ],
+          "latency_seconds": 0.5051,
+          "cost_usd": 0.00154
+        }
+      }
+    },
+    {
+      "index": 47,
+      "query": "jeans in grey and purple only",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jeans",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Grey",
+              "Purple"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jeans",
+          "latency_seconds": 0.2876,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Grey",
+                "Purple"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5023,
+          "cost_usd": 0.001922
+        }
+      }
+    },
+    {
+      "index": 48,
+      "query": "jeans with elastic ankle cuffs and a zip fly",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jeans",
+        "filters": [
+          {
+            "feature": "cuff_style",
+            "operator": "in",
+            "values": [
+              "Elasticized Cuff"
+            ]
+          },
+          {
+            "feature": "waistband_type",
+            "operator": "in",
+            "values": [
+              "Structured"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jeans",
+          "latency_seconds": 0.2523,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "cuff_style",
+              "operator": "in",
+              "values": [
+                "Elasticized Cuff"
+              ]
+            }
+          ],
+          "residual": [
+            "zip fly"
+          ],
+          "latency_seconds": 0.3298,
+          "cost_usd": 0.001928
+        }
+      }
+    },
+    {
+      "index": 49,
+      "query": "next level tanks",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Next Level"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.2612,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Next Level"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3251,
+          "cost_usd": 0.001628
+        }
+      }
+    },
+    {
+      "index": 50,
+      "query": "turquoise linen shirt for a summer wedding",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Shirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Linen"
+            ]
+          }
+        ],
+        "residual": [
+          "turquoise",
+          "for a summer wedding"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Shirts",
+          "latency_seconds": 0.2113,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Linen"
+              ]
+            }
+          ],
+          "residual": [
+            "turquoise",
+            "for a summer wedding"
+          ],
+          "latency_seconds": 0.3166,
+          "cost_usd": 0.00161
+        }
+      }
+    },
+    {
+      "index": 51,
+      "query": "top blanco de tirantes finos para mujer",
+      "language": "es",
+      "source": "synthetic",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "White"
+            ]
+          },
+          {
+            "feature": "strap_width",
+            "operator": "in",
+            "values": [
+              "Spaghetti"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.3033,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "White"
+              ]
+            },
+            {
+              "feature": "strap_width",
+              "operator": "in",
+              "values": [
+                "Spaghetti"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5306,
+          "cost_usd": 0.00169
+        }
+      }
+    },
+    {
+      "index": 52,
+      "query": "green plaid flannel hoodie",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Hoodies & Zipups",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Green"
+            ]
+          },
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Plaid"
+            ]
+          },
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "With Hood"
+            ]
+          }
+        ],
+        "residual": [
+          "flannel"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Hoodies & Zipups",
+          "latency_seconds": 0.2255,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Green"
+              ]
+            },
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Plaid"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [
+            "flannel"
+          ],
+          "latency_seconds": 0.3472,
+          "cost_usd": 0.001749
+        }
+      }
+    },
+    {
+      "index": 53,
+      "query": "bakugo hoodie",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Hoodies & Zipups",
+        "filters": [
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "With Hood"
+            ]
+          }
+        ],
+        "residual": [
+          "bakugo"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Hoodies & Zipups",
+          "latency_seconds": 0.2925,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "With Hood"
+              ]
+            }
+          ],
+          "residual": [
+            "bakugo"
+          ],
+          "latency_seconds": 0.361,
+          "cost_usd": 0.001704
+        }
+      }
+    },
+    {
+      "index": 54,
+      "query": "tapered cargo pants with elastic ankle cuffs",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cargo Pants",
+        "filters": [
+          {
+            "feature": "leg_shape",
+            "operator": "in",
+            "values": [
+              "Tapered"
+            ]
+          },
+          {
+            "feature": "cuff_style",
+            "operator": "in",
+            "values": [
+              "Elasticized Cuff"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cargo Pants",
+          "latency_seconds": 0.3158,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "leg_shape",
+              "operator": "in",
+              "values": [
+                "Tapered"
+              ]
+            },
+            {
+              "feature": "cuff_style",
+              "operator": "in",
+              "values": [
+                "Elasticized Cuff"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4157,
+          "cost_usd": 0.001848
+        }
+      }
+    },
+    {
+      "index": 55,
+      "query": "regular-length uninsulated vest with button closure",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Vests",
+        "filters": [
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Regular"
+            ]
+          },
+          {
+            "feature": "insulation",
+            "operator": "in",
+            "values": [
+              "Uninsulated"
+            ]
+          },
+          {
+            "feature": "closure_type",
+            "operator": "contains_any",
+            "values": [
+              "Button"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Vests",
+          "latency_seconds": 0.2247,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Regular"
+              ]
+            },
+            {
+              "feature": "insulation",
+              "operator": "in",
+              "values": [
+                "Uninsulated"
+              ]
+            },
+            {
+              "feature": "closure_type",
+              "operator": "contains_any",
+              "values": [
+                "Button"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5382,
+          "cost_usd": 0.001997
+        }
+      }
+    },
+    {
+      "index": 56,
+      "query": "granatowa spódnica bez falban",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "skirt_type",
+            "operator": "contains_none",
+            "values": [
+              "Ruffled"
+            ]
+          }
+        ],
+        "residual": [
+          "granatowa"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.211,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_none",
+              "values": [
+                "Ruffled"
+              ]
+            }
+          ],
+          "residual": [
+            "granatowa"
+          ],
+          "latency_seconds": 0.4562,
+          "cost_usd": 0.001653
+        }
+      }
+    },
+    {
+      "index": 57,
+      "query": "czarna kamizelka na zatrzaski do 200 zł",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Vests",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "closure_type",
+            "operator": "contains_any",
+            "values": [
+              "Press-Stud"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 200
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Vests",
+          "latency_seconds": 0.274,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "closure_type",
+              "operator": "contains_any",
+              "values": [
+                "Press-Stud"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 200
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5043,
+          "cost_usd": 0.001996
+        }
+      }
+    },
+    {
+      "index": 58,
+      "query": "halter bodysuit for a night out",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "Halter"
+            ]
+          }
+        ],
+        "residual": [
+          "for a night out"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2152,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "strap_style",
+              "operator": "in",
+              "values": [
+                "Halter"
+              ]
+            }
+          ],
+          "residual": [
+            "for a night out"
+          ],
+          "latency_seconds": 0.3135,
+          "cost_usd": 0.001618
+        }
+      }
+    },
+    {
+      "index": 59,
+      "query": "skórzana kurtka motocyklowa na wiosnę",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jackets",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Leather"
+            ]
+          },
+          {
+            "feature": "jacket_style",
+            "operator": "in",
+            "values": [
+              "Biker"
+            ]
+          }
+        ],
+        "residual": [
+          "na wiosnę"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Jackets",
+          "latency_seconds": 0.2108,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Leather"
+              ]
+            },
+            {
+              "feature": "jacket_style",
+              "operator": "in",
+              "values": [
+                "Biker"
+              ]
+            }
+          ],
+          "residual": [
+            "na wiosnę"
+          ],
+          "latency_seconds": 0.3546,
+          "cost_usd": 0.002164
+        }
+      }
+    },
+    {
+      "index": 60,
+      "query": "elegant outfit for a wedding",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": null,
+        "filters": [],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": null,
+          "latency_seconds": 0.3693,
+          "cost_usd": 0.000129
+        }
+      }
+    },
+    {
+      "index": 61,
+      "query": "bcba gifts tshirt vneck",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "V-Neck"
+            ]
+          }
+        ],
+        "residual": [
+          "bcba gifts"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2441,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            }
+          ],
+          "residual": [
+            "bcba gifts"
+          ],
+          "latency_seconds": 0.34,
+          "cost_usd": 0.001575
+        }
+      }
+    },
+    {
+      "index": 62,
+      "query": "beige bomber jacket for work at least $35",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bombers",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Beige"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 35
+          }
+        ],
+        "residual": [
+          "for work"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Bombers",
+          "latency_seconds": 0.218,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Beige"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "gte",
+              "value": 35
+            }
+          ],
+          "residual": [
+            "for work"
+          ],
+          "latency_seconds": 0.3501,
+          "cost_usd": 0.001959
+        }
+      }
+    },
+    {
+      "index": 63,
+      "query": "bodysuit with standard straight straps",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "strap_style",
+            "operator": "in",
+            "values": [
+              "Standard"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2803,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "standard straight straps"
+          ],
+          "latency_seconds": 0.3073,
+          "cost_usd": 0.001585
+        }
+      }
+    },
+    {
+      "index": 64,
+      "query": "30% wool t-shirt for winter layering",
+      "language": "en",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          }
+        ],
+        "residual": [
+          "for winter layering"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2023,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            }
+          ],
+          "residual": [
+            "30%",
+            "for winter layering"
+          ],
+          "latency_seconds": 0.3285,
+          "cost_usd": 0.001581
+        }
+      }
+    },
+    {
+      "index": 65,
+      "query": "plain cardigan between 40 and 80 euros",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cardigans",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Solid"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "gte",
+            "value": 40
+          },
+          {
+            "feature": "price",
+            "operator": "lte",
+            "value": 80
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cardigans",
+          "latency_seconds": 0.2064,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Solid"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "gte",
+              "value": 40
+            },
+            {
+              "feature": "price",
+              "operator": "lte",
+              "value": 80
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.6173,
+          "cost_usd": 0.001765
+        }
+      }
+    },
+    {
+      "index": 66,
+      "query": "30% wool A-line dress",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          },
+          {
+            "feature": "dress_silhouette",
+            "operator": "in",
+            "values": [
+              "A-Line"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2137,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            },
+            {
+              "feature": "dress_silhouette",
+              "operator": "in",
+              "values": [
+                "A-Line"
+              ]
+            }
+          ],
+          "residual": [
+            "30%"
+          ],
+          "latency_seconds": 0.5022,
+          "cost_usd": 0.001951
+        }
+      }
+    },
+    {
+      "index": 67,
+      "query": "męska koszulka z kieszonką, około 80 zł",
+      "language": "pl",
+      "source": "amazon_esci_inspired",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "price",
+            "operator": "around",
+            "value": 80
+          }
+        ],
+        "residual": [
+          "z kieszonką"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2361,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "price",
+              "operator": "around",
+              "value": 80
+            }
+          ],
+          "residual": [
+            "z kieszonką"
+          ],
+          "latency_seconds": 0.5016,
+          "cost_usd": 0.001568
+        }
+      }
+    },
+    {
+      "index": 68,
+      "query": "bawełniany top na ramiączkach bez poliestru",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_none",
+            "values": [
+              "Polyester"
+            ]
+          },
+          {
+            "feature": "strap_style",
+            "operator": "not_in",
+            "values": [
+              "Strapless"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.2498,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_none",
+              "values": [
+                "Polyester"
+              ]
+            },
+            {
+              "feature": "strap_style",
+              "operator": "in",
+              "values": [
+                "Standard"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5041,
+          "cost_usd": 0.001696
+        }
+      }
+    },
+    {
+      "index": 69,
+      "query": "replacement zipper for a jacket",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": null,
+        "filters": [],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": null,
+          "latency_seconds": 0.2163,
+          "cost_usd": 0.000129
+        }
+      }
+    },
+    {
+      "index": 70,
+      "query": "womens cotton tshirts short sleeve",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cotton"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Short Sleeve"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2438,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Short Sleeve"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4486,
+          "cost_usd": 0.001615
+        }
+      }
+    },
+    {
+      "index": 71,
+      "query": "long-sleeve cashmere sweater without a hood",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Knit Sweaters",
+        "filters": [
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Cashmere"
+            ]
+          },
+          {
+            "feature": "hood",
+            "operator": "in",
+            "values": [
+              "Without Hood"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Knit Sweaters",
+          "latency_seconds": 0.2032,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cashmere"
+              ]
+            },
+            {
+              "feature": "hood",
+              "operator": "in",
+              "values": [
+                "Without Hood"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4197,
+          "cost_usd": 0.001698
+        }
+      }
+    },
+    {
+      "index": 72,
+      "query": "fleece-lined trench coat in olive green",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trench Coats",
+        "filters": [
+          {
+            "feature": "insulation",
+            "operator": "in",
+            "values": [
+              "Fleece Lined"
+            ]
+          },
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Green"
+            ]
+          }
+        ],
+        "residual": [
+          "olive green"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Trench Coats",
+          "latency_seconds": 0.2812,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "insulation",
+              "operator": "in",
+              "values": [
+                "Fleece Lined"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Green"
+              ]
+            }
+          ],
+          "residual": [
+            "olive"
+          ],
+          "latency_seconds": 0.634,
+          "cost_usd": 0.002069
+        }
+      }
+    },
+    {
+      "index": 73,
+      "query": "black lace shift long sleeve dress",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "dress_silhouette",
+            "operator": "in",
+            "values": [
+              "Straight"
+            ]
+          },
+          {
+            "feature": "sleeve_length",
+            "operator": "in",
+            "values": [
+              "Long Sleeve"
+            ]
+          }
+        ],
+        "residual": [
+          "lace"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.3084,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "sleeve_length",
+              "operator": "in",
+              "values": [
+                "Long Sleeve"
+              ]
+            },
+            {
+              "feature": "dress_silhouette",
+              "operator": "in",
+              "values": [
+                "Straight"
+              ]
+            }
+          ],
+          "residual": [
+            "lace"
+          ],
+          "latency_seconds": 0.4011,
+          "cost_usd": 0.001972
+        }
+      }
+    },
+    {
+      "index": 74,
+      "query": "jeans with a clean finish and no distressing",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jeans",
+        "filters": [
+          {
+            "feature": "distressing",
+            "operator": "contains_any",
+            "values": [
+              "Clean"
+            ]
+          },
+          {
+            "feature": "distressing",
+            "operator": "contains_none",
+            "values": [
+              "Distressed"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jeans",
+          "latency_seconds": 0.3119,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "distressing",
+              "operator": "equals_set",
+              "values": [
+                "Clean"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5008,
+          "cost_usd": 0.00192
+        }
+      }
+    },
+    {
+      "index": 75,
+      "query": "multicolor sweatpants for a music festival",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Sweatpants & Lounge Pants",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Multicolor"
+            ]
+          }
+        ],
+        "residual": [
+          "for a music festival"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatpants & Lounge Pants",
+          "latency_seconds": 0.2145,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Multicolor"
+              ]
+            }
+          ],
+          "residual": [
+            "for a music festival"
+          ],
+          "latency_seconds": 0.4181,
+          "cost_usd": 0.001854
+        }
+      }
+    },
+    {
+      "index": 76,
+      "query": "yellow tank top for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Tank tops & Camisoles",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Yellow"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Tank tops & Camisoles",
+          "latency_seconds": 0.1954,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Yellow"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4887,
+          "cost_usd": 0.001666
+        }
+      }
+    },
+    {
+      "index": 77,
+      "query": "mauve blouses for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Blouses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Purple"
+            ]
+          }
+        ],
+        "residual": [
+          "mauve"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Blouses",
+          "latency_seconds": 0.2863,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Purple"
+              ]
+            }
+          ],
+          "residual": [
+            "mauve"
+          ],
+          "latency_seconds": 0.3075,
+          "cost_usd": 0.001627
+        }
+      }
+    },
+    {
+      "index": 78,
+      "query": "calvin klein wool coats for women",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Classic Coats",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Calvin Klein"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_any",
+            "values": [
+              "Wool"
+            ]
+          },
+          {
+            "feature": "coat_style",
+            "operator": "in",
+            "values": [
+              "Standard"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Classic Coats",
+          "latency_seconds": 0.2261,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Calvin Klein"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Wool"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4882,
+          "cost_usd": 0.002222
+        }
+      }
+    },
+    {
+      "index": 79,
+      "query": "black lace skirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          }
+        ],
+        "residual": [
+          "lace"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.2084,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            }
+          ],
+          "residual": [
+            "lace"
+          ],
+          "latency_seconds": 0.4535,
+          "cost_usd": 0.001625
+        }
+      }
+    },
+    {
+      "index": 80,
+      "query": "denim pencil skirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [],
+        "residual": [
+          "denim",
+          "pencil"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.2087,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "skirt_silhouette",
+              "operator": "in",
+              "values": [
+                "Fitted"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_any",
+              "values": [
+                "Cotton"
+              ]
+            }
+          ],
+          "residual": [
+            "denim",
+            "pencil"
+          ],
+          "latency_seconds": 0.3516,
+          "cost_usd": 0.001656
+        }
+      }
+    },
+    {
+      "index": 81,
+      "query": "orange sweatpants that packs easily for a weekend trip",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Sweatpants & Lounge Pants",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Orange"
+            ]
+          }
+        ],
+        "residual": [
+          "that packs easily",
+          "for a weekend trip"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Sweatpants & Lounge Pants",
+          "latency_seconds": 0.2938,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Orange"
+              ]
+            }
+          ],
+          "residual": [
+            "packs easily",
+            "for a weekend trip"
+          ],
+          "latency_seconds": 0.3977,
+          "cost_usd": 0.001858
+        }
+      }
+    },
+    {
+      "index": 82,
+      "query": "striped bomber jacket with ribbed cuffs",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Bombers",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Striped"
+            ]
+          }
+        ],
+        "residual": [
+          "with ribbed cuffs"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Bombers",
+          "latency_seconds": 0.3614,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Striped"
+              ]
+            }
+          ],
+          "residual": [
+            "ribbed cuffs"
+          ],
+          "latency_seconds": 0.6105,
+          "cost_usd": 0.00194
+        }
+      }
+    },
+    {
+      "index": 83,
+      "query": "navy polo shirts",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          }
+        ],
+        "residual": [
+          "navy"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.3008,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            }
+          ],
+          "residual": [
+            "navy"
+          ],
+          "latency_seconds": 0.5028,
+          "cost_usd": 0.001371
+        }
+      }
+    },
+    {
+      "index": 84,
+      "query": "slim or regular fit polo, but not oversized",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Polos",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Slim",
+              "Regular"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "not_in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Polos",
+          "latency_seconds": 0.2026,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Slim",
+                "Regular"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "not_in",
+              "values": [
+                "Oversized"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.408,
+          "cost_usd": 0.001393
+        }
+      }
+    },
+    {
+      "index": 85,
+      "query": "red womens dress pants",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Trousers",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Red"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Trousers",
+          "latency_seconds": 0.2078,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Red"
+              ]
+            }
+          ],
+          "residual": [
+            "dress"
+          ],
+          "latency_seconds": 0.3357,
+          "cost_usd": 0.001858
+        }
+      }
+    },
+    {
+      "index": 86,
+      "query": "adidas t shirt men",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "Adidas"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2693,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "brand",
+              "operator": "in",
+              "values": [
+                "Adidas"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.5293,
+          "cost_usd": 0.001588
+        }
+      }
+    },
+    {
+      "index": 87,
+      "query": "african dress for women midi",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Dresses",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          },
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Midi"
+            ]
+          }
+        ],
+        "residual": [
+          "african"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Dresses",
+          "latency_seconds": 0.2101,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            },
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Midi"
+              ]
+            }
+          ],
+          "residual": [
+            "african"
+          ],
+          "latency_seconds": 0.3386,
+          "cost_usd": 0.001946
+        }
+      }
+    },
+    {
+      "index": 88,
+      "query": "vaqueros negros de tiro medio y pierna ancha",
+      "language": "es",
+      "source": "synthetic",
+      "expected": {
+        "category": "Jeans",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "rise",
+            "operator": "in",
+            "values": [
+              "Mid-Rise"
+            ]
+          },
+          {
+            "feature": "leg_shape",
+            "operator": "in",
+            "values": [
+              "Wide-Leg"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Jeans",
+          "latency_seconds": 0.1841,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "rise",
+              "operator": "in",
+              "values": [
+                "Mid-Rise"
+              ]
+            },
+            {
+              "feature": "leg_shape",
+              "operator": "in",
+              "values": [
+                "Wide-Leg"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.7995,
+          "cost_usd": 0.001967
+        }
+      }
+    },
+    {
+      "index": 89,
+      "query": "turkusowa bluzka z kołnierzykiem do pracy",
+      "language": "pl",
+      "source": "synthetic",
+      "expected": {
+        "category": "Blouses",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Blue"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "Collared"
+            ]
+          }
+        ],
+        "residual": [
+          "turkusowa",
+          "do pracy"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Blouses",
+          "latency_seconds": 0.2257,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Blue"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "Collared"
+              ]
+            }
+          ],
+          "residual": [
+            "turkusowa",
+            "do pracy"
+          ],
+          "latency_seconds": 0.4056,
+          "cost_usd": 0.001635
+        }
+      }
+    },
+    {
+      "index": 90,
+      "query": "mesh body suits for women sexy",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Bodysuits",
+        "filters": [
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "mesh",
+          "sexy"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Bodysuits",
+          "latency_seconds": 0.2082,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "mesh",
+            "sexy"
+          ],
+          "latency_seconds": 0.3057,
+          "cost_usd": 0.001618
+        }
+      }
+    },
+    {
+      "index": 91,
+      "query": "cotton and elastane cargo pants without acrylic",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Cargo Pants",
+        "filters": [
+          {
+            "feature": "main_composition",
+            "operator": "contains_all",
+            "values": [
+              "Cotton",
+              "Elastane"
+            ]
+          },
+          {
+            "feature": "main_composition",
+            "operator": "contains_none",
+            "values": [
+              "Acrylic"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cargo Pants",
+          "latency_seconds": 0.2062,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "main_composition",
+              "operator": "contains_all",
+              "values": [
+                "Cotton",
+                "Elastane"
+              ]
+            },
+            {
+              "feature": "main_composition",
+              "operator": "contains_none",
+              "values": [
+                "Acrylic"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4601,
+          "cost_usd": 0.001852
+        }
+      }
+    },
+    {
+      "index": 92,
+      "query": "paperbag trousers for a work conference",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Trousers",
+        "filters": [],
+        "residual": [
+          "paperbag",
+          "for a work conference"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Trousers",
+          "latency_seconds": 0.2919,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [],
+          "residual": [
+            "paperbag",
+            "for a work conference"
+          ],
+          "latency_seconds": 0.7371,
+          "cost_usd": 0.001818
+        }
+      }
+    },
+    {
+      "index": 93,
+      "query": "slim or regular fit sweater, but not oversized",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Knit Sweaters",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Slim",
+              "Regular"
+            ]
+          },
+          {
+            "feature": "fit",
+            "operator": "not_in",
+            "values": [
+              "Oversized"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Knit Sweaters",
+          "latency_seconds": 0.211,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Slim",
+                "Regular"
+              ]
+            },
+            {
+              "feature": "fit",
+              "operator": "not_in",
+              "values": [
+                "Oversized"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4075,
+          "cost_usd": 0.001676
+        }
+      }
+    },
+    {
+      "index": 94,
+      "query": "camouflage gilet with chest pockets",
+      "language": "en",
+      "source": "synthetic",
+      "expected": {
+        "category": "Vests",
+        "filters": [
+          {
+            "feature": "pattern",
+            "operator": "in",
+            "values": [
+              "Camo"
+            ]
+          }
+        ],
+        "residual": [
+          "with chest pockets"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Vests",
+          "latency_seconds": 0.2923,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "pattern",
+              "operator": "in",
+              "values": [
+                "Camo"
+              ]
+            }
+          ],
+          "residual": [
+            "with chest pockets"
+          ],
+          "latency_seconds": 0.4049,
+          "cost_usd": 0.001956
+        }
+      }
+    },
+    {
+      "index": 95,
+      "query": "crop cardigan",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Cardigans",
+        "filters": [
+          {
+            "feature": "length",
+            "operator": "in",
+            "values": [
+              "Cropped"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "Cardigans",
+          "latency_seconds": 0.2192,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "length",
+              "operator": "in",
+              "values": [
+                "Cropped"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.4078,
+          "cost_usd": 0.001727
+        }
+      }
+    },
+    {
+      "index": 96,
+      "query": "32 degrees cool mens v neck t shirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "brand",
+            "operator": "in",
+            "values": [
+              "32 Degrees"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Men"
+            ]
+          },
+          {
+            "feature": "neckline",
+            "operator": "in",
+            "values": [
+              "V-Neck"
+            ]
+          }
+        ],
+        "residual": [
+          "cool"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.3804,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Men"
+              ]
+            },
+            {
+              "feature": "neckline",
+              "operator": "in",
+              "values": [
+                "V-Neck"
+              ]
+            }
+          ],
+          "residual": [
+            "32 degrees cool"
+          ],
+          "latency_seconds": 0.4066,
+          "cost_usd": 0.001598
+        }
+      }
+    },
+    {
+      "index": 97,
+      "query": "magenta ruffle skirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Pink"
+            ]
+          },
+          {
+            "feature": "skirt_type",
+            "operator": "contains_any",
+            "values": [
+              "Ruffled"
+            ]
+          }
+        ],
+        "residual": [
+          "magenta"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.2112,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Pink"
+              ]
+            },
+            {
+              "feature": "skirt_type",
+              "operator": "contains_any",
+              "values": [
+                "Ruffled"
+              ]
+            }
+          ],
+          "residual": [
+            "magenta"
+          ],
+          "latency_seconds": 0.4295,
+          "cost_usd": 0.001651
+        }
+      }
+    },
+    {
+      "index": 98,
+      "query": "tight t shirt",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "T-shirts",
+        "filters": [
+          {
+            "feature": "fit",
+            "operator": "in",
+            "values": [
+              "Slim"
+            ]
+          }
+        ],
+        "residual": []
+      },
+      "stages": {
+        "category": {
+          "category": "T-shirts",
+          "latency_seconds": 0.2905,
+          "cost_usd": 0.000128
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "fit",
+              "operator": "in",
+              "values": [
+                "Slim"
+              ]
+            }
+          ],
+          "residual": [],
+          "latency_seconds": 0.3611,
+          "cost_usd": 0.00155
+        }
+      }
+    },
+    {
+      "index": 99,
+      "query": "black skirts for women size large",
+      "language": "en",
+      "source": "amazon_esci",
+      "expected": {
+        "category": "Skirts",
+        "filters": [
+          {
+            "feature": "colors",
+            "operator": "equals_set",
+            "values": [
+              "Black"
+            ]
+          },
+          {
+            "feature": "gender",
+            "operator": "in",
+            "values": [
+              "Women"
+            ]
+          }
+        ],
+        "residual": [
+          "size large"
+        ]
+      },
+      "stages": {
+        "category": {
+          "category": "Skirts",
+          "latency_seconds": 0.2214,
+          "cost_usd": 0.000129
+        },
+        "full_qwen": {
+          "filters": [
+            {
+              "feature": "colors",
+              "operator": "equals_set",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "feature": "gender",
+              "operator": "in",
+              "values": [
+                "Women"
+              ]
+            }
+          ],
+          "residual": [
+            "size large"
+          ],
+          "latency_seconds": 0.3956,
+          "cost_usd": 0.001648
+        }
+      }
+    }
+  ],
+  "summaries": {
+    "full_qwen": {
+      "num_queries": 100,
+      "category_accuracy_pct": 100.0,
+      "category_correct": 100,
+      "complete_filter_set_accuracy_pct": 92.0,
+      "complete_filter_set_correct": 92,
+      "closed_filter_set_accuracy_pct": 93.0,
+      "closed_filter_set_correct": 93,
+      "aux_filter_set_accuracy_pct": 99.0,
+      "aux_filter_set_correct": 99,
+      "all_clauses": {
+        "tp": 174,
+        "fp_redundant": 5,
+        "fn_missing": 7,
+        "redundant_per_query": 0.05,
+        "missing_per_query": 0.07,
+        "precision_pct": 97.2,
+        "recall_pct": 96.1,
+        "f1_pct": 96.7
+      },
+      "closed_clauses": {
+        "tp": 157,
+        "fp_redundant": 5,
+        "fn_missing": 6,
+        "redundant_per_query": 0.05,
+        "missing_per_query": 0.06,
+        "precision_pct": 96.9,
+        "recall_pct": 96.3,
+        "f1_pct": 96.6
+      },
+      "aux_clauses": {
+        "tp": 17,
+        "fp_redundant": 0,
+        "fn_missing": 1,
+        "redundant_per_query": 0.0,
+        "missing_per_query": 0.01,
+        "precision_pct": 100.0,
+        "recall_pct": 94.4,
+        "f1_pct": 97.1
+      },
+      "residual_exact_order_pct": 87.0,
+      "residual_set_accuracy_pct": 88.0,
+      "residual_set_correct": 88,
+      "empty_residual_accuracy_pct": 90.2,
+      "residual_concepts": {
+        "tp": 54,
+        "fp_redundant": 12,
+        "fn_missing": 6,
+        "redundant_per_query": 0.12,
+        "missing_per_query": 0.06,
+        "precision_pct": 81.8,
+        "recall_pct": 90.0,
+        "f1_pct": 85.7
+      },
+      "full_query_exact_pct": 83.0,
+      "full_query_exact": 83,
+      "total_cost_usd": 0.18578,
+      "avg_cost_per_query_usd": 0.001858,
+      "latency": {
+        "total_all_queries": {
+          "count": 100,
+          "mean": 0.7235,
+          "min": 0.2163,
+          "p50": 0.7016,
+          "p80": 0.8324,
+          "p90": 0.9071,
+          "p95": 0.9838,
+          "max": 1.6621,
+          "under_0_7s": 50,
+          "under_0_7s_pct": 50.0,
+          "under_1_0s": 96,
+          "under_1_0s_pct": 96.0
+        },
+        "total_supported_queries": {
+          "count": 98,
+          "mean": 0.7323,
+          "min": 0.5087,
+          "p50": 0.7067,
+          "p80": 0.8331,
+          "p90": 0.9089,
+          "p95": 0.9843,
+          "max": 1.6621,
+          "under_0_7s": 48,
+          "under_0_7s_pct": 49.0,
+          "under_1_0s": 94,
+          "under_1_0s_pct": 95.9
+        },
+        "step1_jev_category": {
+          "count": 100,
+          "mean": 0.2523,
+          "min": 0.1841,
+          "p50": 0.2416,
+          "p80": 0.292,
+          "p90": 0.3088,
+          "p95": 0.321,
+          "max": 0.41,
+          "under_0_7s": 100,
+          "under_0_7s_pct": 100.0,
+          "under_1_0s": 100,
+          "under_1_0s_pct": 100.0
+        },
+        "step2_1_jev_features": {
+          "count": 0,
+          "mean": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p80": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "under_0_7s": 0,
+          "under_0_7s_pct": 0.0,
+          "under_1_0s": 0,
+          "under_1_0s_pct": 0.0
+        },
+        "step2_llm": {
+          "count": 98,
+          "mean": 0.4809,
+          "min": 0.2727,
+          "p50": 0.4582,
+          "p80": 0.5593,
+          "p90": 0.6189,
+          "p95": 0.7058,
+          "max": 1.3668,
+          "under_0_7s": 92,
+          "under_0_7s_pct": 93.9,
+          "under_1_0s": 96,
+          "under_1_0s_pct": 98.0
+        }
+      }
+    }
+  }
+}

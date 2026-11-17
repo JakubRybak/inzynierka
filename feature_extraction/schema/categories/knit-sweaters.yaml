@@ -1,0 +1,43 @@
+section: Sweaters
+category: Knit Sweaters
+features:
+  gender:
+    use: gender
+  colors:
+    use: colors
+  main_composition:
+    use: main_composition
+  pattern:
+    use: pattern
+  sleeve_length:
+    type: single_choice
+    values:
+    - Sleeveless
+    - Short Sleeve
+    - Three-Quarter Sleeve
+    - Long Sleeve
+  fit:
+    type: single_choice
+    values:
+    - Slim
+    - Regular
+    - Oversized
+  length:
+    type: single_choice
+    values:
+    - Cropped
+    - Regular
+    - Longline
+  hood:
+    type: single_choice
+    values:
+    - With Hood
+    - Without Hood
+  neckline:
+    type: single_choice
+    values:
+    - Crewneck
+    - V-Neck
+    - High Neck
+    - Collared
+    - Other

@@ -1,0 +1,33 @@
+{
+  "category": "Skirts",
+  "features": {
+    "skirt_silhouette": {
+      "instruction": "Return one value for the overall skirt outline from the waist through the hips to the hem. Assess silhouette independently of decorative construction: pleats, tiers, ruffles or wrap panels do not by themselves establish A-Line or Fitted.",
+      "values": {
+        "Fitted": "The skirt closely follows the hips and upper legs, with a bodycon or similarly close outline.",
+        "Straight": "A predominantly straight or column-like outline from the hips toward the hem; it need not be tight.",
+        "A-Line": "The skirt noticeably widens from the waist or hips toward the hem, forming an A-shaped or flared outline.",
+        "Other": "A silhouette not adequately described above, such as pronounced cocoon, balloon, mermaid or irregular draped construction."
+      }
+    },
+    "skirt_type": {
+      "instruction": "Return a nonempty list of distinct types. Multiple types are allowed when the target genuinely combines them. Other must appear alone. Determine construction independently of silhouette and length. A belt or side slit alone does not make a Wrap skirt, and an uneven drape from styling alone does not establish an Asymmetric design.",
+      "values": {
+        "Pleated": "A skirt with deliberately formed fabric folds, including accordion, knife, box or sunray pleats. Ordinary gathering, wrinkles or fabric creases alone do not establish pleated construction.",
+        "Wrap": "A skirt with overlapping wrap-front panels, including secured or fixed wrap-style construction. A belt or side slit alone does not establish a wrap.",
+        "Asymmetric": "A skirt with deliberately asymmetric construction or an uneven hemline, including high-low or handkerchief hems.",
+        "Tiered": "A skirt constructed with distinct stacked horizontal fabric tiers. A decorative band or a single ruffle alone does not establish multiple tiers.",
+        "Ruffled": "A skirt with deliberate ruffles, frills or flounces as decorative construction, including ruffled hems or trim. Pleats alone do not establish ruffles.",
+        "Other": "A skirt not matching any of the offered specific types; must appear alone."
+      }
+    },
+    "rise": {
+      "instruction": "Return one value for the intended position of the skirt waistband on the body. Compare the waistband with the natural waist and hips using the description and visible views. Do not infer rise from skirt length, a tucked top, or a belt alone. Do not default to Mid-Rise merely because the description does not mention rise.",
+      "values": {
+        "High-Rise": "The waistband is intended to sit at or above the natural waist.",
+        "Mid-Rise": "The waistband is intended to sit between the natural waist and the upper hips.",
+        "Low-Rise": "The waistband is intended to sit low on the hips, clearly below a mid-rise position."
+      }
+    }
+  }
+}

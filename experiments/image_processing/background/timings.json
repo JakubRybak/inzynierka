@@ -1,0 +1,625 @@
+{
+  "unit": "ms",
+  "scope": "Mask generation including preprocessing and resizing",
+  "birefnet_device": "mps",
+  "sample_size": 100,
+  "summary": {
+    "grabcut": {
+      "mean": 219.23437494056998,
+      "median": 198.68233350280207,
+      "total": 21923.437494056998
+    },
+    "u2net_lite": {
+      "mean": 92.22027498908574,
+      "median": 90.90450049552601,
+      "total": 9222.027498908574
+    },
+    "birefnet_lite_matting": {
+      "mean": 521.6034191392828,
+      "median": 510.7302504911786,
+      "total": 52160.34191392828
+    }
+  },
+  "per_product": [
+    {
+      "product_id": "1301073",
+      "grabcut": 404.2335840058513,
+      "u2net_lite": 105.51395901711658,
+      "birefnet_lite_matting": 961.1325839941856
+    },
+    {
+      "product_id": "1659033",
+      "grabcut": 194.59816699963994,
+      "u2net_lite": 90.79645801102743,
+      "birefnet_lite_matting": 528.3452500007115
+    },
+    {
+      "product_id": "2635598",
+      "grabcut": 194.38233398250304,
+      "u2net_lite": 90.37904100841843,
+      "birefnet_lite_matting": 553.7880419869907
+    },
+    {
+      "product_id": "133703",
+      "grabcut": 199.13379100034945,
+      "u2net_lite": 90.30804099165834,
+      "birefnet_lite_matting": 521.682165999664
+    },
+    {
+      "product_id": "2436078",
+      "grabcut": 195.07637500646524,
+      "u2net_lite": 90.72579198982567,
+      "birefnet_lite_matting": 518.7891249952372
+    },
+    {
+      "product_id": "1818883",
+      "grabcut": 212.55833300529048,
+      "u2net_lite": 96.04241701890714,
+      "birefnet_lite_matting": 542.5163750187494
+    },
+    {
+      "product_id": "2025923",
+      "grabcut": 219.95204099221155,
+      "u2net_lite": 94.1366659826599,
+      "birefnet_lite_matting": 549.0975420107134
+    },
+    {
+      "product_id": "1260213",
+      "grabcut": 193.99529200745746,
+      "u2net_lite": 90.69366697804071,
+      "birefnet_lite_matting": 524.4088329782244
+    },
+    {
+      "product_id": "112103",
+      "grabcut": 211.0183750046417,
+      "u2net_lite": 153.05649998481385,
+      "birefnet_lite_matting": 563.2997500069905
+    },
+    {
+      "product_id": "1388843",
+      "grabcut": 195.89362500119023,
+      "u2net_lite": 99.56504101864994,
+      "birefnet_lite_matting": 580.0882499897853
+    },
+    {
+      "product_id": "1721783",
+      "grabcut": 194.25791699904948,
+      "u2net_lite": 106.71795901726,
+      "birefnet_lite_matting": 539.9958750058431
+    },
+    {
+      "product_id": "2568728",
+      "grabcut": 194.40191600006074,
+      "u2net_lite": 91.46091699949466,
+      "birefnet_lite_matting": 514.3097919935826
+    },
+    {
+      "product_id": "1239603",
+      "grabcut": 504.57874999847263,
+      "u2net_lite": 99.91091597476043,
+      "birefnet_lite_matting": 558.5011249931995
+    },
+    {
+      "product_id": "110436",
+      "grabcut": 221.8009170028381,
+      "u2net_lite": 93.26779100229032,
+      "birefnet_lite_matting": 513.0344580102246
+    },
+    {
+      "product_id": "301603",
+      "grabcut": 201.0524159995839,
+      "u2net_lite": 93.44587501254864,
+      "birefnet_lite_matting": 510.63783300924115
+    },
+    {
+      "product_id": "1335233",
+      "grabcut": 200.571833003778,
+      "u2net_lite": 91.34629101026803,
+      "birefnet_lite_matting": 504.84320797841065
+    },
+    {
+      "product_id": "1396433",
+      "grabcut": 195.91437498456798,
+      "u2net_lite": 92.45762502541766,
+      "birefnet_lite_matting": 511.42912497743964
+    },
+    {
+      "product_id": "2460208",
+      "grabcut": 197.16629199683666,
+      "u2net_lite": 96.47083299933001,
+      "birefnet_lite_matting": 506.35458299075253
+    },
+    {
+      "product_id": "1728023",
+      "grabcut": 193.8709999958519,
+      "u2net_lite": 91.99608300696127,
+      "birefnet_lite_matting": 519.0540839976165
+    },
+    {
+      "product_id": "1897283",
+      "grabcut": 207.46179099660367,
+      "u2net_lite": 90.35600000061095,
+      "birefnet_lite_matting": 507.16120898141526
+    },
+    {
+      "product_id": "1960743",
+      "grabcut": 202.47391602606513,
+      "u2net_lite": 91.16866701515391,
+      "birefnet_lite_matting": 505.98762498702854
+    },
+    {
+      "product_id": "1683833",
+      "grabcut": 192.45375000173226,
+      "u2net_lite": 91.01520798867568,
+      "birefnet_lite_matting": 526.0230000130832
+    },
+    {
+      "product_id": "1301803",
+      "grabcut": 205.97970800008625,
+      "u2net_lite": 90.74937499826774,
+      "birefnet_lite_matting": 508.9805420138873
+    },
+    {
+      "product_id": "90941",
+      "grabcut": 196.81866699829698,
+      "u2net_lite": 91.83354099513963,
+      "birefnet_lite_matting": 510.6190840015188
+    },
+    {
+      "product_id": "1185353",
+      "grabcut": 275.9792080032639,
+      "u2net_lite": 91.3829579949379,
+      "birefnet_lite_matting": 562.1313329902478
+    },
+    {
+      "product_id": "2436618",
+      "grabcut": 235.86670801159926,
+      "u2net_lite": 90.65883400035091,
+      "birefnet_lite_matting": 515.2302499918733
+    },
+    {
+      "product_id": "110437",
+      "grabcut": 195.89362500119023,
+      "u2net_lite": 93.71374998590909,
+      "birefnet_lite_matting": 512.8010420012288
+    },
+    {
+      "product_id": "1412783",
+      "grabcut": 419.86433300189674,
+      "u2net_lite": 88.95591599866748,
+      "birefnet_lite_matting": 529.9786659888923
+    },
+    {
+      "product_id": "500703",
+      "grabcut": 216.27458301372826,
+      "u2net_lite": 90.44674999313429,
+      "birefnet_lite_matting": 506.49133400293067
+    },
+    {
+      "product_id": "2630518",
+      "grabcut": 200.31054198625498,
+      "u2net_lite": 90.92295900336467,
+      "birefnet_lite_matting": 504.8573329986539
+    },
+    {
+      "product_id": "1301753",
+      "grabcut": 190.85029198322445,
+      "u2net_lite": 91.23162500327453,
+      "birefnet_lite_matting": 509.9053330195602
+    },
+    {
+      "product_id": "1693923",
+      "grabcut": 193.56433302164078,
+      "u2net_lite": 90.5228340125177,
+      "birefnet_lite_matting": 507.8290840028785
+    },
+    {
+      "product_id": "2647618",
+      "grabcut": 195.6293330003973,
+      "u2net_lite": 92.9530420107767,
+      "birefnet_lite_matting": 519.5285420049913
+    },
+    {
+      "product_id": "185803",
+      "grabcut": 198.28700000653043,
+      "u2net_lite": 92.73983398452401,
+      "birefnet_lite_matting": 528.8341660052538
+    },
+    {
+      "product_id": "1874293",
+      "grabcut": 218.34699998726137,
+      "u2net_lite": 88.67204198031686,
+      "birefnet_lite_matting": 505.72529100463726
+    },
+    {
+      "product_id": "1603243",
+      "grabcut": 202.63637500465848,
+      "u2net_lite": 90.16791600151919,
+      "birefnet_lite_matting": 509.02604099246673
+    },
+    {
+      "product_id": "2081217",
+      "grabcut": 294.92837499128655,
+      "u2net_lite": 90.34437499940395,
+      "birefnet_lite_matting": 523.2178750156891
+    },
+    {
+      "product_id": "2135277",
+      "grabcut": 186.66445798589848,
+      "u2net_lite": 90.12999999686144,
+      "birefnet_lite_matting": 513.6191669735126
+    },
+    {
+      "product_id": "2202827",
+      "grabcut": 204.03591598733328,
+      "u2net_lite": 92.7021249954123,
+      "birefnet_lite_matting": 507.5067500001751
+    },
+    {
+      "product_id": "2494198",
+      "grabcut": 201.3693329936359,
+      "u2net_lite": 90.7206250121817,
+      "birefnet_lite_matting": 510.35504101309925
+    },
+    {
+      "product_id": "2286137",
+      "grabcut": 189.04154101619497,
+      "u2net_lite": 90.86683398345485,
+      "birefnet_lite_matting": 507.2438330098521
+    },
+    {
+      "product_id": "1435783",
+      "grabcut": 192.21170799573883,
+      "u2net_lite": 90.16683301888406,
+      "birefnet_lite_matting": 516.9320830027573
+    },
+    {
+      "product_id": "269903",
+      "grabcut": 193.7328340136446,
+      "u2net_lite": 90.26024999911897,
+      "birefnet_lite_matting": 508.43191699823365
+    },
+    {
+      "product_id": "2159657",
+      "grabcut": 202.68470799783245,
+      "u2net_lite": 90.78204099205323,
+      "birefnet_lite_matting": 535.6183749972843
+    },
+    {
+      "product_id": "1312893",
+      "grabcut": 202.85850000800565,
+      "u2net_lite": 90.94975001062267,
+      "birefnet_lite_matting": 511.8220420263242
+    },
+    {
+      "product_id": "107307",
+      "grabcut": 201.95133399101906,
+      "u2net_lite": 91.12895801081322,
+      "birefnet_lite_matting": 508.689415990375
+    },
+    {
+      "product_id": "2224707",
+      "grabcut": 186.00095898727886,
+      "u2net_lite": 89.97850000741892,
+      "birefnet_lite_matting": 507.8375830198638
+    },
+    {
+      "product_id": "2472538",
+      "grabcut": 195.29829098610207,
+      "u2net_lite": 92.21116697881371,
+      "birefnet_lite_matting": 509.494416997768
+    },
+    {
+      "product_id": "100502",
+      "grabcut": 196.14404201274738,
+      "u2net_lite": 90.4631250014063,
+      "birefnet_lite_matting": 536.9244169851299
+    },
+    {
+      "product_id": "1645143",
+      "grabcut": 202.4664579948876,
+      "u2net_lite": 89.79170900420286,
+      "birefnet_lite_matting": 510.0734999869019
+    },
+    {
+      "product_id": "2182017",
+      "grabcut": 193.12599999830127,
+      "u2net_lite": 91.76729200407863,
+      "birefnet_lite_matting": 510.73554198956117
+    },
+    {
+      "product_id": "1639403",
+      "grabcut": 194.1123750002589,
+      "u2net_lite": 91.57291598967277,
+      "birefnet_lite_matting": 511.8285840144381
+    },
+    {
+      "product_id": "1143023",
+      "grabcut": 314.6795420034323,
+      "u2net_lite": 90.54475001175888,
+      "birefnet_lite_matting": 512.1710000094026
+    },
+    {
+      "product_id": "1259273",
+      "grabcut": 192.6041250117123,
+      "u2net_lite": 89.18745798291638,
+      "birefnet_lite_matting": 505.1354160241317
+    },
+    {
+      "product_id": "2249667",
+      "grabcut": 194.0221250115428,
+      "u2net_lite": 90.13879098347388,
+      "birefnet_lite_matting": 523.1328750087414
+    },
+    {
+      "product_id": "1261273",
+      "grabcut": 191.0254169779364,
+      "u2net_lite": 91.67004199116491,
+      "birefnet_lite_matting": 507.59025002480485
+    },
+    {
+      "product_id": "2429248",
+      "grabcut": 226.33254100219347,
+      "u2net_lite": 91.21016701101325,
+      "birefnet_lite_matting": 556.9853750057518
+    },
+    {
+      "product_id": "1608363",
+      "grabcut": 234.731374977855,
+      "u2net_lite": 90.80254202126525,
+      "birefnet_lite_matting": 504.90420797723345
+    },
+    {
+      "product_id": "892103",
+      "grabcut": 203.28145800158381,
+      "u2net_lite": 91.02916598203592,
+      "birefnet_lite_matting": 526.0033750091679
+    },
+    {
+      "product_id": "2216287",
+      "grabcut": 193.66537500172853,
+      "u2net_lite": 90.7239579828456,
+      "birefnet_lite_matting": 506.3374169985764
+    },
+    {
+      "product_id": "2228967",
+      "grabcut": 193.98716700379737,
+      "u2net_lite": 89.87816699664108,
+      "birefnet_lite_matting": 535.1919159875251
+    },
+    {
+      "product_id": "1879663",
+      "grabcut": 232.53104099421762,
+      "u2net_lite": 91.17062500445172,
+      "birefnet_lite_matting": 513.876209006412
+    },
+    {
+      "product_id": "1653423",
+      "grabcut": 193.61270900117233,
+      "u2net_lite": 89.76179201272316,
+      "birefnet_lite_matting": 506.1727910069749
+    },
+    {
+      "product_id": "1662193",
+      "grabcut": 195.78616702347063,
+      "u2net_lite": 91.82583299116232,
+      "birefnet_lite_matting": 510.9023329860065
+    },
+    {
+      "product_id": "2013923",
+      "grabcut": 228.36916698724963,
+      "u2net_lite": 89.81245799805038,
+      "birefnet_lite_matting": 504.78304098942317
+    },
+    {
+      "product_id": "1050303",
+      "grabcut": 205.99662500899285,
+      "u2net_lite": 90.60870899702422,
+      "birefnet_lite_matting": 510.724958992796
+    },
+    {
+      "product_id": "89751",
+      "grabcut": 214.62641601101495,
+      "u2net_lite": 90.88604198768735,
+      "birefnet_lite_matting": 532.8080829931423
+    },
+    {
+      "product_id": "94029",
+      "grabcut": 193.94812500104308,
+      "u2net_lite": 90.17029200913385,
+      "birefnet_lite_matting": 507.26887499331497
+    },
+    {
+      "product_id": "2180827",
+      "grabcut": 191.15958298789337,
+      "u2net_lite": 91.55791698140092,
+      "birefnet_lite_matting": 520.0310000218451
+    },
+    {
+      "product_id": "1518263",
+      "grabcut": 192.2199999971781,
+      "u2net_lite": 89.97620799345896,
+      "birefnet_lite_matting": 508.1122909905389
+    },
+    {
+      "product_id": "100620",
+      "grabcut": 385.136541997781,
+      "u2net_lite": 90.80283300136216,
+      "birefnet_lite_matting": 509.92241699714214
+    },
+    {
+      "product_id": "111138",
+      "grabcut": 203.57179100392386,
+      "u2net_lite": 92.09487499902025,
+      "birefnet_lite_matting": 514.1674999904353
+    },
+    {
+      "product_id": "1842793",
+      "grabcut": 197.7872080169618,
+      "u2net_lite": 91.27649999572895,
+      "birefnet_lite_matting": 511.47925000987016
+    },
+    {
+      "product_id": "2145017",
+      "grabcut": 192.98145797802135,
+      "u2net_lite": 89.21291699516587,
+      "birefnet_lite_matting": 522.6138330181129
+    },
+    {
+      "product_id": "116607",
+      "grabcut": 196.9230420072563,
+      "u2net_lite": 88.99645900237374,
+      "birefnet_lite_matting": 503.5132499760948
+    },
+    {
+      "product_id": "2100787",
+      "grabcut": 195.3450000146404,
+      "u2net_lite": 90.95124999294057,
+      "birefnet_lite_matting": 503.1824999896344
+    },
+    {
+      "product_id": "109178",
+      "grabcut": 219.98204200644977,
+      "u2net_lite": 91.28291701199487,
+      "birefnet_lite_matting": 502.71908298600465
+    },
+    {
+      "product_id": "2503198",
+      "grabcut": 238.55000000912696,
+      "u2net_lite": 89.05670899548568,
+      "birefnet_lite_matting": 522.8673340170644
+    },
+    {
+      "product_id": "2462488",
+      "grabcut": 197.77608301956207,
+      "u2net_lite": 91.68470901204273,
+      "birefnet_lite_matting": 502.05562499468215
+    },
+    {
+      "product_id": "2250987",
+      "grabcut": 202.22241699229926,
+      "u2net_lite": 90.25612499681301,
+      "birefnet_lite_matting": 511.76174997817725
+    },
+    {
+      "product_id": "1560264",
+      "grabcut": 204.8049579898361,
+      "u2net_lite": 92.68883298500441,
+      "birefnet_lite_matting": 516.4427919953596
+    },
+    {
+      "product_id": "1396443",
+      "grabcut": 731.2613750109449,
+      "u2net_lite": 90.70658299606293,
+      "birefnet_lite_matting": 536.2327499897219
+    },
+    {
+      "product_id": "1435453",
+      "grabcut": 191.68866699328646,
+      "u2net_lite": 90.54920799098909,
+      "birefnet_lite_matting": 505.7742499921005
+    },
+    {
+      "product_id": "1685203",
+      "grabcut": 204.98112501809373,
+      "u2net_lite": 90.37033299682662,
+      "birefnet_lite_matting": 506.7637080210261
+    },
+    {
+      "product_id": "1647003",
+      "grabcut": 191.01599999703467,
+      "u2net_lite": 89.53133301110938,
+      "birefnet_lite_matting": 541.789915994741
+    },
+    {
+      "product_id": "856103",
+      "grabcut": 270.7901249814313,
+      "u2net_lite": 90.54762500454672,
+      "birefnet_lite_matting": 506.6347089887131
+    },
+    {
+      "product_id": "2319187",
+      "grabcut": 188.18279198603705,
+      "u2net_lite": 90.82958300132304,
+      "birefnet_lite_matting": 507.0804159913678
+    },
+    {
+      "product_id": "921503",
+      "grabcut": 205.36699998774566,
+      "u2net_lite": 93.64287499920465,
+      "birefnet_lite_matting": 538.5626250063069
+    },
+    {
+      "product_id": "1203453",
+      "grabcut": 201.36925001861528,
+      "u2net_lite": 90.45950000290759,
+      "birefnet_lite_matting": 510.37266600178555
+    },
+    {
+      "product_id": "111517",
+      "grabcut": 206.81270901695825,
+      "u2net_lite": 89.94891698239371,
+      "birefnet_lite_matting": 509.78049999685027
+    },
+    {
+      "product_id": "1797593",
+      "grabcut": 196.22199999867007,
+      "u2net_lite": 92.44029197725467,
+      "birefnet_lite_matting": 504.0517919987906
+    },
+    {
+      "product_id": "2375327",
+      "grabcut": 200.31062499037944,
+      "u2net_lite": 92.22308298922144,
+      "birefnet_lite_matting": 501.30925001576543
+    },
+    {
+      "product_id": "101035",
+      "grabcut": 194.21499999589287,
+      "u2net_lite": 92.17833299771883,
+      "birefnet_lite_matting": 503.5587080055848
+    },
+    {
+      "product_id": "1439323",
+      "grabcut": 199.0776669990737,
+      "u2net_lite": 92.0215000223834,
+      "birefnet_lite_matting": 503.00816699746065
+    },
+    {
+      "product_id": "1960623",
+      "grabcut": 230.05466599715874,
+      "u2net_lite": 90.5357500014361,
+      "birefnet_lite_matting": 509.37674997840077
+    },
+    {
+      "product_id": "2231717",
+      "grabcut": 193.6689580033999,
+      "u2net_lite": 92.33645800850354,
+      "birefnet_lite_matting": 511.6846250020899
+    },
+    {
+      "product_id": "1295303",
+      "grabcut": 192.50966599793173,
+      "u2net_lite": 91.30420899600722,
+      "birefnet_lite_matting": 506.16650001029484
+    },
+    {
+      "product_id": "2578668",
+      "grabcut": 189.71341600990854,
+      "u2net_lite": 90.42487500119023,
+      "birefnet_lite_matting": 505.7936249941122
+    },
+    {
+      "product_id": "2189427",
+      "grabcut": 195.84287502220832,
+      "u2net_lite": 91.01708300295286,
+      "birefnet_lite_matting": 507.52908299909905
+    },
+    {
+      "product_id": "1218853",
+      "grabcut": 202.9187500011176,
+      "u2net_lite": 92.08129197941162,
+      "birefnet_lite_matting": 509.2667090066243
+    }
+  ]
+}
