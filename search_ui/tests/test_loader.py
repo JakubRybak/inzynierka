@@ -2,12 +2,15 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 import pandas as pd
 
 sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parents[1] / "core")]
 import common  # noqa: E402
+import numpy as np
+from server import load_feature_embeddings
 
 RECORDS = [
     dict(product_id="101", section="Dresses", category="Dresses", status="ready", exclusion_reasons=[],
@@ -44,6 +47,24 @@ class LoadFeatures(unittest.TestCase):
     def test_unknown_format(self):
         with self.assertRaises(ValueError):
             common.load_features([self.d / "f.xlsx"])
+
+    def test_existing_index_excludes_products_and_aligns_embeddings(self):
+        records = [
+            dict(product_id="342903", category="Blouses", features="{}", images="[]"),
+            dict(product_id="101", category="Dresses", features="{}", images="[]"),
+        ]
+        pd.DataFrame(records).to_parquet(self.d / common.INDEX)
+        (self.d / common.META).write_text(json.dumps({"products": 2, "categories": {"Blouses": 1, "Dresses": 1}}))
+        np.savez(self.d / common.FEATURE_VECTORS, ids=["342903", "101"], vectors=[[1., 0.], [0., 1.]])
+        products, meta = common.load_index(self.d)
+        self.assertEqual([p["product_id"] for p in products], ["101"])
+        self.assertEqual(meta["products"], 1)
+        self.assertEqual(meta["categories"], {"Dresses": 1})
+        np.testing.assert_array_equal(load_feature_embeddings(products, self.d), [[0., 1.]])
+
+    def test_exclusions_accept_numeric_product_ids(self):
+        products = pd.DataFrame({"product_id": [342903, 101]})
+        self.assertEqual(common.exclude_products(products)["product_id"].tolist(), [101])
 
 
 if __name__ == "__main__":

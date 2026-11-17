@@ -452,6 +452,7 @@ def pick_examples(pool, parser, products, vocabulary, n=EXAMPLES_SHOWN):
 def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAMPLES, page=PAGE):
     image_dir = Path(image_dir).resolve()
     pilot_dirs = tuple(dict.fromkeys((image_dir / common.PILOT.name, common.PILOT)))
+    excluded_ids = common.excluded_product_ids()
 
     class Handler(BaseHTTPRequestHandler):
         def send(self, code, body, content_type="application/json; charset=utf-8"):
@@ -494,6 +495,8 @@ def build_server(engine, image_dir, port=8000, ranking="combined", examples=EXAM
                     rel = u.path[len("/images/"):]
                     match = IMAGE_PATH.fullmatch(rel)
                     if match:
+                        if match["product"] in excluded_ids:
+                            return self.send(404, {"error": dict(stage="product", message="no such product")})
                         photo = Path(match["product"]) / match["stem"]
                         for pilot in pilot_dirs:
                             enhanced = pilot / "images_enhanced" / photo.with_suffix(".webp")
@@ -558,10 +561,11 @@ def load_feature_embeddings(products, folder):
     if not path.exists():
         return None
     stored = np.load(path)
-    if stored["ids"].tolist() != [p["product_id"] for p in products]:
+    positions = {str(product): i for i, product in enumerate(stored["ids"])}
+    if any(p["product_id"] not in positions for p in products):
         print("Feature embeddings do not match the index; rerun prepare.py")
         return None
-    return stored["vectors"]
+    return stored["vectors"][[positions[p["product_id"]] for p in products]]
 
 
 def main():
