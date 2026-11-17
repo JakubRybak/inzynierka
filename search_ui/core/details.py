@@ -33,7 +33,7 @@ class Details:
     def __init__(self, products, frame, names_, vectors):
         index = {p["product_id"]: i for i, p in enumerate(products)}
         self.names = list(names_)
-        column = {n: j for j, n in enumerate(self.names)}
+        self.column = column = {n: j for j, n in enumerate(self.names)}
         self.W = np.zeros((len(products), len(self.names)), np.float32)
         self.listed = {}
         for r in frame.sort_values(["product_id", "rank"]).itertuples():
@@ -58,6 +58,11 @@ class Details:
         weights = 0.5 + 0.5 * np.clip((closeness[chosen] - NEIGHBOUR) / (1 - NEIGHBOUR), 0, 1)
         return dict(names=[self.names[j] for j in chosen], columns=chosen.tolist(),
                     weights=[round(float(w), 3) for w in weights], similarity=round(float(sims[b]), 3))
+
+    def target_of_name(self, name):
+        """The target of a text that is a detail name, or None for any other text."""
+        j = self.column.get(name)
+        return None if j is None else self.target(self.E[j])
 
     def score(self, target, cand):
         """Each candidate's best detail among the target names: its extent times the weight of the name, 0 without

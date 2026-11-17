@@ -100,7 +100,9 @@ and Spanish versions of the most frequent ones. Phrases found only in benchmark 
 
 At search time a residual phrase takes the labels of the first match:
 1. the same phrase in the bank;
-2. its nearest bank phrase, when the cosine is at least 0.86;
+2. its nearest bank phrase, when the cosine is at least 0.86. The neighbour gives the kind and the concepts; a
+   shade still looks for its own colour name and takes only the neighbour's lightness when none is close, and a
+   detail phrase whose own text reaches no detail name takes the neighbour's ("z haftami" → "z haftem" → embroidery);
 3. the most similar colour name, when the cosine is at least 0.80 (see Colours);
 4. detail names, when the cosine is at least 0.80 (see Details);
 5. the concept with the most similar name, when the cosine is at least 0.80.

@@ -8,9 +8,12 @@ same model as the products (Gemini Embedding 2):
 A lightness word right before a colour in the query ("light" in "light pink dress", which a parser may split
 from the colour) is read as a shade, whatever the bank says about it alone ("light" there means lightweight). With the
 product colours (colours.py), a shade phrase gets a target colour: its bank hex, a colour name of the dictionary, or
-for a phrase the bank does not know, the nearest colour name when the similarity reaches colours.MATCH. With the
-product details (details.py), a detail phrase, an "other" phrase or a phrase the bank does not know gets the detail
-names it asks for ("z koronką" -> lace, lace trim), matched without its negation ("without pockets" -> pockets).
+for a phrase the bank does not know, the nearest colour name when the similarity reaches colours.MATCH; a phrase
+labelled by a bank neighbour takes the nearest colour name, or else only the neighbour's lightness. With the product
+details (details.py), a detail phrase, an "other" phrase or a phrase the bank does not know gets the detail names it
+asks for ("z koronką" -> lace, lace trim), matched without its negation ("without pockets" -> pockets); a phrase
+labelled by a bank neighbour whose own text reaches no name takes the neighbour's ("z haftami" -> "z haftem" ->
+embroidery).
 A phrase is negated when the bank says so; a phrase the bank does not know is negated when it starts with a
 negation word followed by at most NEGATED_WORDS words (longer ones, such as "not in this lifetime tour", are
 usually slogans), and the rest of it is routed as a phrase of its own ("bez koronki" -> "koronki" -> lace).
@@ -212,6 +215,13 @@ class BankRanker:
             return dict(name=row["phrase"], lightness=row["lightness"], family=None, similarity=None)
         return None
 
+    @staticmethod
+    def bank_lightness(row):
+        """Only the lightness of a bank shade phrase, when it has one."""
+        if row.get("lightness") in ("light", "dark"):
+            return dict(name=row["phrase"], lightness=row["lightness"], family=None, similarity=None)
+        return None
+
     def colour_target(self, text, vectors):
         """Target colour of a shade text: a bank shade, a dictionary name, or the nearest dictionary name."""
         if self.colours is None:
@@ -247,9 +257,10 @@ class BankRanker:
             similarity = round(float(sims[j]), 3)
             row, match = (self.rows[j], "nearest") if sims[j] >= NEAREST else (None, "none")
         if row is not None and row["kind"] == "shade" and colours is not None:
-            # a neighbour tells that the phrase is a shade, not which one ("ciemnozielona" is nearest to "ciemnoszary")
-            colour = (self.colour_target(self.english(text), vectors) if match == "nearest" else None) \
-                or self.bank_colour(row)
+            # a neighbour tells that the phrase is a shade and its lightness, not its colour ("jasnoczerwona" is
+            # nearest to "jasnoniebieski")
+            colour = self.bank_colour(row) if match == "exact" else \
+                self.colour_target(self.english(text), vectors) or self.bank_lightness(row)
         if row is None and colours is not None:
             colour = self.colour_target(self.english(text), vectors)
             if colour:
@@ -257,6 +268,9 @@ class BankRanker:
         detail = None
         if colour is None and details is not None and (row is None or row["kind"] in DETAIL_KINDS):
             detail = details.target((vectors or {}).get(common.query_text(self.detail_text(text))))
+            if detail is None and match == "nearest":
+                # a neighbour of the bank names the detail ("z haftami" -> "z haftem" -> embroidery)
+                detail = details.target_of_name(bare_phrase(row["english"]))
             if row is None and detail:
                 match, similarity = "detail name", detail["similarity"]
         scored = self.scored.get(category, set())

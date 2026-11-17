@@ -64,6 +64,7 @@ class BankDetails(unittest.TestCase):
 
         def embed(text):
             return own.get(text.removeprefix(details.common.query_text("")), e[9])
+        self.e, self.own, self.embed = e, own, embed
         rows = [dict(phrase="for a wedding", kind="occasion", negated=False, english="for a wedding",
                      concepts=["wedding_guest"])]
         self.r, ps = ranker(Path(self.tmp.name), embed, rows)
@@ -84,6 +85,21 @@ class BankDetails(unittest.TestCase):
         terms, routes = self.r.adjustments(["bez kieszenie"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["negated"], routes[0]["term"]), (True, "negation"))
         self.assertEqual(int(np.argmax(terms["negation"][0])), 2)
+
+    def test_a_neighbour_names_the_detail_when_the_phrase_finds_none(self):
+        e = self.e
+        rows = [dict(phrase="z koronką", kind="detail", negated=False, english="lace", concepts=[]),
+                dict(phrase="koronki", kind="detail", negated=False, english="lace", concepts=[])]
+        r, _ = ranker(Path(self.tmp.name), self.embed, rows)
+        r.matrix, r.details = np.stack([e[5], e[6]]), self.r.details
+        # inflected forms: 0.9 to their bank phrase, unrelated to every detail name
+        self.own |= {"z koronkami": 0.9 * e[5] + np.sqrt(0.19) * e[7], "koronek": 0.9 * e[6] + np.sqrt(0.19) * e[7]}
+        terms, routes = r.adjustments(["z koronkami", "bez koronek"], self.dresses, "Dresses")
+        self.assertEqual([x["match"] for x in routes], ["nearest", "nearest"])
+        self.assertEqual((routes[1]["bare"], routes[1]["neighbour"], routes[1]["negated"]), ("koronek", "koronki", True))
+        self.assertEqual(routes[0]["detail"]["names"], ["lace", "lace trim"])
+        self.assertEqual([x["term"] for x in routes], ["detail", "negation"])
+        self.assertEqual(int(np.argmax(terms["negation"][0])), 0)
 
     def test_no_detail_for_an_unrelated_phrase(self):
         _, routes = self.r.rank(["na wesele"], self.dresses, "Dresses")

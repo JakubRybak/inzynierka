@@ -95,6 +95,12 @@ class BankColours(unittest.TestCase):
         self.assertEqual(routes[0]["colour"]["hex"], "#FFB6C1")
         self.assertEqual(int(np.argmax(score)), 0)
 
+    def test_a_neighbour_gives_a_shade_only_its_lightness(self):
+        r = self.r.route("jasnoczerwona", "Dresses", self.r.matrix[0], vectors={})
+        self.assertEqual((r["match"], r["neighbour"], r["kind"]), ("nearest", "light pink", "shade"))
+        self.assertEqual(r["colour"]["lightness"], "light")
+        self.assertNotIn("hex", r["colour"])
+
     def test_unknown_colour_name_and_negation(self):
         score, routes = self.r.rank(["burgundy"], self.dresses, "Dresses")
         self.assertEqual((routes[0]["match"], routes[0]["kind"]), ("colour name", "shade"))
