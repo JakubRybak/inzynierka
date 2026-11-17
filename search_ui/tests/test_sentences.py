@@ -108,6 +108,12 @@ class Ranking(unittest.TestCase):
         self.assertEqual([t[0] for t in terms], ["sentence"])
         self.assertEqual(int(np.argmax(terms[0][2])), 0)
 
+    def test_a_known_phrase_is_matched_with_its_english_version(self):
+        terms, routes = self.ranker.sentence_terms(["z koronką"], self.dresses, "Dresses")
+        self.assertEqual(routes[0]["sentence_text"], "with lace")
+        self.assertIn(common.query_text("with lace"), self.embedder.texts)
+        self.assertEqual(int(np.argmax(terms[0][2])), 0)  # d1, in black lace
+
     def test_a_negated_phrase_counts_with_a_minus_and_without_its_negation(self):
         terms, routes = self.ranker.sentence_terms(["without lace"], self.dresses, "Dresses")
         self.assertTrue(routes[0]["negated"])

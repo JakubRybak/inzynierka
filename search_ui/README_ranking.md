@@ -23,7 +23,7 @@ The page offers these rankings:
 | `combined` | mean of the z-scores of `text` and `image` |
 | `text` | cosine of the query and the description |
 | `image` | cosine of the query and the main image |
-| `sentences` | the query and its phrases compared with single sentences of the description, with fitted weights |
+| `sentences` | the query and its phrases compared with single sentences of the description (a phrase the bank knows by its English version), with fitted weights |
 | `hybrid_jev` | Jev 1.14 regrades the first 30 of `hybrid` |
 | `hybrid_jev_vision`, `sentences_jev_vision` (slow) | Jev 1.14 regrades the first 30 of `hybrid` or `sentences` from their text and main photo |
 

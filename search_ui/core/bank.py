@@ -345,8 +345,9 @@ class BankRanker:
     def prefetch(self, query, lean=False):
         """Starts, before the parser returns the residual, the embeddings its phrases will probably need: every span
         of one to SPAN_WORDS words of the query (the shortest first, at most PREFETCH; a span without its negation is
-        a shorter span) and, for a span the bank knows as a detail, its English version. lean: only the spans the
-        bank does not know, whose own embedding is stored with the bank (the sentence ranking). -> {text: future}."""
+        a shorter span) and, for a span the bank knows as a detail, its English version. lean (the sentence ranking):
+        the spans the bank does not know and the English versions of the others that have no stored embedding.
+        -> {text: future}."""
         words = [w.strip(".,;:!?()\"") for w in normalize_phrase(query).split()]
         words = [w for w in words if w]
         texts = []
@@ -358,6 +359,8 @@ class BankRanker:
                 row = self.exact.get(span)
                 if row is None:
                     texts.append(common.query_text(span))
+                elif lean and self.stored_vector(self.sentence_text(span)) is None:
+                    texts.append(common.query_text(self.sentence_text(span)))
                 elif not lean and self.details is not None and row["kind"] in DETAIL_KINDS:
                     texts.append(common.query_text(self.detail_text(span)))
         texts = list(dict.fromkeys(texts))[:PREFETCH]
@@ -441,17 +444,20 @@ class BankRanker:
         """Terms of the sentence ranking, one or two for every phrase that is not skipped: "concept", the z-scores of
         the concept scores of an occasion, style or season phrase (or of a concept matched by name), and "sentence",
         how well the candidate's best sentence matches the phrase (sentences.py). A negated phrase gets both with a
-        minus. A phrase of the bank uses its stored embedding, so only phrases the bank does not know are embedded.
-        -> ([(term, phrase, column)], routes)."""
+        minus. The sentences are matched with the English version of a phrase the bank knows (sentence_text). A
+        stored embedding is used when there is one (a bank phrase or a detail name), so mostly only phrases the bank
+        does not know are embedded. -> ([(term, phrase, column)], routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
         texts = set()
         for phrase in residual:
             text = normalize_phrase(phrase)
-            texts |= {common.query_text(t) for t in (text, bare_phrase(text)) if t not in self.stored}
+            texts |= {common.query_text(t) for t in (text, bare_phrase(text), self.sentence_text(text))
+                      if self.stored_vector(t) is None}
         vectors = self.fetch(texts, {}, prefetched, stats)
 
         def vector(text):
-            return self.matrix[self.stored[text]] if text in self.stored else vectors[common.query_text(text)]
+            stored = self.stored_vector(text)
+            return stored if stored is not None else vectors[common.query_text(text)]
 
         terms, routes = [], []
         for phrase in residual:
@@ -467,9 +473,30 @@ class BankRanker:
                 terms.append(("concept", phrase, sign * zscore(scores)))
                 r["term"] = "concept"
             if self.sentences is not None:
-                terms.append(("sentence", phrase, sign * self.sentences.phrase(vector(bare_phrase(text)), cand)))
+                r["sentence_text"] = self.sentence_text(text)
+                terms.append(("sentence", phrase, sign * self.sentences.phrase(vector(r["sentence_text"]), cand)))
                 r["sentence"] = True
         return terms, routes
+
+    def sentence_text(self, text):
+        """The text a phrase is compared with the sentences of the products, without its negation: the bank's English
+        version of a phrase the bank knows ("haftu" -> embroidery, "na wesele" -> for a wedding), otherwise the phrase
+        itself. The descriptions are English, and a Polish word matches them much more weakly than its English
+        version."""
+        if text not in self.exact and negated_text(text):
+            text = bare_phrase(text)
+        row = self.exact.get(text)
+        if row is None:
+            return text
+        return bare_phrase(row["english"]) if row["negated"] else row["english"]
+
+    def stored_vector(self, text):
+        """The stored query-format embedding of a bank phrase or a detail name, or None."""
+        if text in self.stored:
+            return self.matrix[self.stored[text]]
+        if self.details is not None and text in self.details.column:
+            return self.details.E[self.details.column[text]]
+        return None
 
     @staticmethod
     def base_query(query, routes):
