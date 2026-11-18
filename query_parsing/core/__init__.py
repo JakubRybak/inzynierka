@@ -1,1 +1,0 @@
-"""Catalog and prompt construction."""
