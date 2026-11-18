@@ -15,13 +15,18 @@ two that are not the default are marked with "?". The Jev rankings need `OPENROU
 From the repository root:
 
 ```sh
-python search_ui/prepare.py     # builds the index of the pilot in search_ui/data/ (git-ignored)
+git lfs pull                    # the embeddings of the products and of the index
 python search_ui/server.py      # opens http://127.0.0.1:8000
 ```
 
-Run `prepare.py` again after the features, concept scores, phrase bank, colours or details change. It embeds only what it has not
-embedded before, so a rerun with nothing new makes no paid calls. The first run also embeds the name and every
-description sentence of the products for the `sentences` ranking: about 31,000 calls and $0.06 for the pilot.
+The index of the pilot, `search_ui/data/`, is in git, so the server starts without `prepare.py`. Its embeddings are
+Git LFS files, and its paths are relative to the repository. The Jev photos in `data/jev_photos_384/` are in git
+too; the server makes any missing one from the 1024 px photo.
+
+Run `python search_ui/prepare.py` after the features, excluded products, concept scores, phrase bank, colours or
+details change, and commit `search_ui/data/` with the change. It embeds only what it has not embedded before, so a
+rerun with nothing new makes no paid calls. A run from scratch also embeds the name and every description sentence
+of the products for the `sentences` ranking: about 31,000 calls and $0.06 for the pilot.
 
 **Requirements**
 
@@ -39,7 +44,7 @@ description sentence of the products for the `sentences` ranking: about 31,000 c
   - `--parser mock` matches query words against index values;
   - `--parser benchmark_parser:parse` answers the dev queries of the benchmark with their reviewed parses and sends
     any other query to the query parser.
-- The product embeddings are Git LFS files. Run `git lfs pull` if they are still pointers.
+- The embeddings of the products and of the index are Git LFS files. Run `git lfs pull` if they are still pointers.
 
 ## How a query is answered
 
@@ -112,7 +117,7 @@ The rankings use the embeddings of the 1024 px front photos
 | `static/` | the page (`index.html`, read on every request, so edits show after a reload) and its example queries (`example_queries.yaml`) |
 | `offline/`, `ranking_data/` | the scripts and data of the ranking ([README_ranking.md](README_ranking.md)) |
 | `tests/` | unit tests, which make no API calls, and `check_examples.py`, a check of the example queries against the index |
-| `data/` | the index built by `prepare.py` and the call logs of the offline scripts (git-ignored) |
+| `data/` | the index built by `prepare.py`, in git, and the call logs of the offline scripts, git-ignored |
 
 | `core/` module | Role |
 | --- | --- |
@@ -190,10 +195,11 @@ The mock parser knows only the English values of the index, so `check_examples.p
 
 - **A connection error at startup**, for example `Failed to resolve 'oauth2.googleapis.com'`. The server still starts;
   the parser and embeddings work once the network is back.
-- **An error reading `embeddings/*.parquet`.** The files are still Git LFS pointers; run `git lfs pull`.
+- **An error reading `embeddings/*.parquet` or `data/*.npz`.** The files are still Git LFS pointers; run
+  `git lfs pull`.
 - **`No embeddings for N indexed products`.** The features file contains products outside the embedded set.
 - **`No phrase bank`.** The server stops: `scikit-learn` is missing, or `data/bank_embeddings.npz` is missing or out
-  of date, for example after pulling a new phrase bank; run `prepare.py`.
+  of date, for example after a phrase bank change committed without the index; run `prepare.py`.
 - **`Missing OPENROUTER_API_KEY` or `Jev HTTP 401`.** `.env` at the repository root is missing a key, or a key spans
   several lines.
 - **`No readable product photos for Jev vision`.** Check that `dataset` in `search_ui/data/meta.json` points to

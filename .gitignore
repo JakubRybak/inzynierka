@@ -37,6 +37,10 @@ products_new/data/processed/
 # Generated extraction artifacts, request logs and embedding caches
 /feature_extraction/artifacts/
 
-# Search UI index
-/search_ui/data/
+# Search UI: the index of prepare.py is in git (embeddings in Git LFS), the call logs of the offline scripts are not
+/search_ui/data/*
+!/search_ui/data/*.npz
+!/search_ui/data/*.parquet
+!/search_ui/data/meta.json
+!/search_ui/data/jev_photos_384/
 /experiments/ranking/data/

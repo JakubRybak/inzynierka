@@ -164,7 +164,7 @@ To change the concepts:
 1. Edit `concepts.yaml`.
 2. Score the new pairs: `python search_ui/offline/score_batch.py --bucket <bucket> --execute`.
 3. Relabel the bank: `python search_ui/offline/phrase_bank.py --execute`.
-4. Rebuild the index: `python search_ui/prepare.py`.
+4. Rebuild the index: `python search_ui/prepare.py`, and commit `search_ui/data/` with the change.
 
 `prepare.py` writes the sentence embeddings of `sentences` to `data/sentence_embeddings.npz` (about $0.06).
 
