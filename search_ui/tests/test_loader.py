@@ -62,6 +62,18 @@ class LoadFeatures(unittest.TestCase):
         self.assertEqual(meta["categories"], {"Dresses": 1})
         np.testing.assert_array_equal(load_feature_embeddings(products, self.d), [[0., 1.]])
 
+    def test_index_paths_are_kept_relative_to_the_repository(self):
+        self.assertEqual(common.repo_relative(common.DATASET), "data/processed/fashiongen")
+        self.assertEqual(common.repo_relative(self.d), str(self.d.resolve()))
+        pd.DataFrame([dict(product_id="101", category="Dresses", features="{}", images="[]")]).to_parquet(
+            self.d / common.INDEX)
+        (self.d / common.META).write_text(json.dumps(dict(dataset="data/processed/fashiongen", embeddings="/elsewhere",
+                                                          concepts=dict(yaml="search_ui/ranking_data/concepts.yaml"))))
+        _, meta = common.load_index(self.d)
+        self.assertEqual(meta["dataset"], str(common.DATASET))
+        self.assertEqual(meta["embeddings"], "/elsewhere")
+        self.assertEqual(meta["concepts"]["yaml"], str(common.SEARCH_UI / "ranking_data/concepts.yaml"))
+
     def test_exclusions_accept_numeric_product_ids(self):
         products = pd.DataFrame({"product_id": [342903, 101]})
         self.assertEqual(common.exclude_products(products)["product_id"].tolist(), [101])

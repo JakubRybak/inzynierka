@@ -91,8 +91,8 @@ def main():
                                                   lambda name: embedder(common.query_text(name)))
         rows[["id", "name", "embedding"]].to_parquet(concepts.NAMES, index=False)
         categories = sorted(c for c, ids in scored.items() if len(ids) == len(concept_list))
-        concept_info = dict(yaml=str(concepts.CONCEPTS_YAML.resolve()), yaml_sha256=concepts.file_hash(concepts.CONCEPTS_YAML),
-                            scores=str(args.concept_scores.resolve()),
+        concept_info = dict(yaml=common.repo_relative(concepts.CONCEPTS_YAML), yaml_sha256=concepts.file_hash(concepts.CONCEPTS_YAML),
+                            scores=common.repo_relative(args.concept_scores),
                             scores_sha256=concepts.file_hash(args.concept_scores), count=len(rows),
                             categories=categories, scored=scored, partial=partial)
         print(f"Concepts: {len(rows)}, all scored in {', '.join(categories) or 'no category'}"
@@ -105,8 +105,8 @@ def main():
         (args.output / concepts.FILE).unlink()
     d.assign(features=d["features"].map(lambda f: json.dumps(f, ensure_ascii=False, sort_keys=True)),
              images=d["images"].map(json.dumps)).to_parquet(args.output / common.INDEX, index=False)
-    meta = dict(created=datetime.now().isoformat(timespec="seconds"), features=[str(p.resolve()) for p in args.features],
-                dataset=str(dataset), embeddings=str(args.embeddings.resolve()), model=manifest["model"],
+    meta = dict(created=datetime.now().isoformat(timespec="seconds"), features=[common.repo_relative(p) for p in args.features],
+                dataset=common.repo_relative(dataset), embeddings=common.repo_relative(args.embeddings), model=manifest["model"],
                 dim=manifest["output_dimensionality"], products=len(d), limit=args.limit,
                 categories=d["category"].value_counts().to_dict(), concepts=concept_info)
     (args.output / common.META).write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")

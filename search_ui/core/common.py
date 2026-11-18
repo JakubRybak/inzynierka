@@ -24,6 +24,12 @@ JSON_COLUMNS = ["features", "feature_metadata", "exclusion_reasons"]
 EXCLUDED_PRODUCTS = SEARCH_UI / "ranking_data" / "excluded_products.csv"
 
 
+def repo_relative(path):
+    """The path relative to the repository when it is inside it, so that meta.json in git names no local folder."""
+    path = Path(path).resolve()
+    return str(path.relative_to(REPO)) if path.is_relative_to(REPO) else str(path)
+
+
 def excluded_product_ids():
     return set(pd.read_csv(EXCLUDED_PRODUCTS, dtype=str)["product_id"])
 
@@ -134,6 +140,10 @@ def load_index(folder=DATA):
     for k in ("features", "images"):
         d[k] = d[k].map(json.loads)
     meta = json.loads((folder / META).read_text(encoding="utf-8"))
+    for info, key in ((meta, "dataset"), (meta, "embeddings"), (meta.get("concepts"), "yaml"),
+                      (meta.get("concepts"), "scores")):
+        if info and key in info:
+            info[key] = str(REPO / info[key])
     meta["products"] = len(d)
     meta["categories"] = d["category"].value_counts().to_dict()
     return d.to_dict("records"), meta
