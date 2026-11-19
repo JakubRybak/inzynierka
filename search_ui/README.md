@@ -84,6 +84,10 @@ available; other views use their original PNGs. For enhanced photos with a match
 The rankings use the embeddings of the 1024 px front photos
 (`--original-images` for the original ones; see [README_ranking.md](README_ranking.md)).
 
+- **Clean and Dev**, the switch in the top left corner. Clean shows the results as a shopper sees them: a search bar
+  that stays at the top, then the photo and name of every result, five in a row; clicking a product shows its photos,
+  brand, price and description. Dev is the page described below. Both views show the same search, with the ranking chosen in Dev, and the
+  page opens in Clean.
 - **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
   category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
 - **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
@@ -104,7 +108,7 @@ The rankings use the embeddings of the 1024 px front photos
 - **Results**: every candidate, with image, name, brand, price, the features that matched and a bar of its score
   parts. Clicking a product shows all its images, its description, its features, its score parts and the details
   and colours Gemini gave it.
-- A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly.
+- A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly, in Clean; `&view=dev` opens it in Dev.
 
 ## Files
 
