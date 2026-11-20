@@ -62,7 +62,6 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .tl .skip { grid-column:2/-1; color:var(--mut); }
 .tl .sum { border-top:1px solid var(--line); padding-top:6px; font-weight:700; }
 .tlx { margin-top:8px; color:var(--mut); font-size:11px; line-height:1.5; }
-.key { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:3px; }
 .c-parse { background:var(--c-parse); } .c-step1 { background:#a78bfa; } .c-filter { background:var(--c-filter); }
 .c-rank { background:var(--c-rank); } .c-emb { background:var(--p-emb); } .c-jev { background:#ea580c; }
 #filters { display:none; position:sticky; top:0; height:100vh; overflow:auto; border-left:1px solid var(--line); background:var(--card); padding:14px 16px; font-size:12px; }
@@ -107,6 +106,8 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .desc { margin:12px 0 0; font-size:13px; line-height:1.5; }
 .p .t { padding:7px 9px 9px; font-size:12px; }
 .p .t > b { font-size:13px; }
+.p .sc { position:absolute; z-index:1; top:6px; right:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; }
+.p .sc.jv { background:#c2410c; }
 .p .nr { position:absolute; z-index:1; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
@@ -404,22 +405,19 @@ function drawTimings() {
   const s1 = pi.step1_s == null ? null : pi.step1_s * 1000, s2 = pi.step2_s ? pi.step2_s * 1000 : null;
   let h = manual ? `<span>Parsing</span><span class="skip">skipped – filters set by hand</span>`
     : row("Parsing", t.parsing_ms, s1 !== null && s2 ? [[0, s1, "c-step1"], [s1, p - s1, "c-parse"]] : [[0, p, "c-parse"]],
-          "the LLM parser: step 1 finds the category, step 2 the filters and the residual phrases");
+          s1 !== null ? `step 1, category: ${fmtMs(s1)}` + (s2 ? ` · step 2, filters and residual: ${fmtMs(s2)}` : "") : "");
   h += row("Query embedding", t.query_embedding_ms, [[0, t.query_embedding_ms, "c-emb"]], "runs while the parser parses") +
     row("Filtering", t.filtering_ms, [[p, f, "c-filter"]], "the filters on the whole index") +
     row("Ranking", first, [[p + f, first, "c-rank"]], [t.embedding_wait_ms !== undefined ? `waited ${fmtMs(t.embedding_wait_ms)} for the query embedding` : "",
         t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : ""].filter(Boolean).join(" · ")) +
     (jev ? row("Jev rerank", jev, [[p + f + first, jev, "c-jev"]], "Jev regrades the first results") : "") +
     `<span class="sum">Total</span><span class="sum"></span><span class="v sum">${fmtMs(total)}</span>`;
-  const notes = [];
-  if (!manual && s1 !== null)
-    notes.push(`Parser: <i class="key c-step1"></i>category ${fmtMs(s1)}` + (s2 ? ` · <i class="key c-parse"></i>filters ${fmtMs(s2)}` : " · no second step") +
-               (pi.cost_usd ? ` · $${pi.cost_usd.toFixed(5)}` : ""));
-  if (t.phrase_embeddings_early || t.phrase_embeddings_late)
-    notes.push(`Phrase embeddings: ${t.phrase_embeddings_early || 0} ready before the parse, ${t.phrase_embeddings_late || 0} after it`);
-  if (r && r.status === "applied")
-    notes.push(`Jev: ${num(r.count)} products${r.vision ? `, ${num(r.images)} photos` : ""}${r.cost_usd == null ? "" : ` · $${r.cost_usd.toFixed(5)}`}`);
-  $("timings").innerHTML = `<h3>Time</h3><div class="tl">${h}</div>` + (notes.length ? `<div class="tlx">${notes.join("<br>")}</div>` : "");
+  const costs = [!manual && pi.cost_usd ? ["parser", pi.cost_usd] : null,
+                 r && r.status === "applied" && r.cost_usd != null ? ["Jev", r.cost_usd] : null].filter(Boolean);
+  const usd = v => "$" + v.toFixed(4);
+  const cost = !costs.length ? "" : `<div class="tlx" title="Billed by OpenRouter: the parser's step 1 and Jev; the parser's step 2: tokens × list price. The query embedding (about $0.00001) is not counted.">` +
+    `Cost <b>${usd(costs.reduce((a, [, v]) => a + v, 0))}</b>` + (costs.length > 1 ? ` = ${costs.map(([k, v]) => `${k} ${usd(v)}`).join(" + ")}` : ` (${costs[0][0]})`) + `</div>`;
+  $("timings").innerHTML = `<h3>Time</h3><div class="tl">${h}</div>` + cost;
 }
 
 // colour of a condition: category outlined, included green, excluded red
@@ -506,7 +504,7 @@ function scoreBar(p) {
 
 // how the query was read: its category, its filters, its residual phrases and the base of the whole-query similarity
 function drawReading() {
-  const pi = D.parser_info || {}, manual = D.parsed && D.parsed.source === "manual";
+  const manual = D.parsed && D.parsed.source === "manual";
   $("reading").hidden = !D.parsed;
   $("score").innerHTML = partsPanel(); $("score").hidden = !$("score").innerHTML;
   if (!D.parsed) return;
@@ -518,14 +516,11 @@ function drawReading() {
   if (D.tree) h += `<span class="k">Filters</span><span>${rest.length ? treeLines({op: "and", args: rest}) : none("none")}</span>`;
   if (D.parsed.category) h += `<span class="k">Phrases</span><span>${phrases || none("none – ranked by the whole query")}</span>`;
   if (D.base_query) h += `<span class="k">Base</span><span>“${esc(D.base_query)}” <span class="how">the whole query without its negated phrases</span></span>`;
-  $("reading").innerHTML = `<h3>Query reading<span>${esc(manual ? "filters set by hand" : pi.source ? `parse from ${pi.source}` : D.parser || "")}</span></h3><div class="kv">${h}</div>`;
+  $("reading").innerHTML = `<h3>Query reading${manual ? "<span>filters set by hand</span>" : ""}</h3><div class="kv">${h}</div>`;
 }
 
 function drawNotes() {
   let h = "";
-  const r = D.rerank;
-  if (r && r.status === "applied")
-    h += `<div class="meta" title="expected grade (0–3) + ${r.blend} × standardized first-stage score">The first ${num(r.count)} results are in the order of Jev${r.vision ? ", from their text and photo" : ""}; the others keep the ${esc(rankingName(r.base_ranking))} order.</div>`;
   if (D.error) h += `<div class="errorbox"><b>Error – stage: ${esc(D.error.stage)}</b><br>${esc(D.error.message)}</div>`;
   (D.warnings || []).forEach(w => h += `<div class="warn">⚠ ${esc(w)}</div>`);
   $("notes").innerHTML = h;
@@ -558,7 +553,11 @@ function card(p, i) {
   const chips = [p.rerank ? `<span class="chip jv" title="expected Jev grade, 0–3${from}">Jev ${p.rerank.grade.toFixed(2)}</span>` : "",
     ...p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`),
     ...(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`)].join("");
-  d.innerHTML = `<span class="nr">${i + 1}</span>` +
+  // the score the result is ordered by: after Jev, its grade plus the weighted first-stage z-score
+  const jev = p.rerank && D.rerank, final = p.rerank ? p.rerank.score : p.score;
+  const how = jev ? `final score = Jev grade ${p.rerank.grade.toFixed(2)} + ${jev.blend} × first-stage z-score ${((p.rerank.score - p.rerank.grade) / jev.blend).toFixed(2)}`
+    : D.rerank && D.rerank.status === "applied" ? "first-stage score; Jev regraded only the results above" : "score: the sum of the parts in the bar";
+  d.innerHTML = `<span class="nr">${i + 1}</span><span class="sc${jev ? " jv" : ""}" title="${esc(how)}">${final.toFixed(2)}</span>` +
     `<div class="photo-frame">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : ""}</div>` +
     `<div class="t"><b>${esc(p.name)}</b><div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>` +
     (chips ? `<div class="chips">${chips}</div>` : "") + scoreBar(p) + `</div>`;

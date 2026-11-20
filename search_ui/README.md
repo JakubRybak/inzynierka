@@ -93,11 +93,12 @@ The rankings use the embeddings of the 1024 px front photos
   `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
 - **Query reading**, under the examples: the category, the filters (included values green, excluded red), every
   residual phrase with how the phrase bank read it and what the ranking uses of it, the whole query without its
-  negated phrases when it has some, and where the parse came from.
+  negated phrases when it has some.
 - **Score**: in `hybrid` and `sentences`, the formula and how much each part of the score moves the ranking (see
   [README_ranking.md](README_ranking.md)).
 - **Time**: the stages on one time axis: parsing with its two steps, the query embedding, which runs while the
-  parser parses, filtering, ranking, Jev and the total, then the cost of the parser and of Jev.
+  parser parses, filtering, ranking, Jev and the total, then the cost of the search: the parser's first step and Jev
+  as billed by OpenRouter, its second step from its tokens and list price.
 - **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
   - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
     values. Colors can require exactly the selected set or exactly one of the selected colors.
@@ -105,8 +106,9 @@ The rankings use the embeddings of the 1024 px front photos
   - Every change searches again with these filters, without the parser. *Reset to parser* restores the parsed
     filters.
   - The *Residual* field takes one phrase per line.
-- **Results**: every candidate, with image, name, brand, price, its Jev grade, the concept scores and details the
-  query asked for, and a bar of its score parts. Clicking a product shows all its images, its description, its
+- **Results**: every candidate, with image, name, brand, price, the score it is ordered by (after Jev, in orange: the
+  Jev grade plus the weighted first-stage z-score), its Jev grade, the concept scores and details the query asked for,
+  and a bar of its score parts. Clicking a product shows all its images, its description, its
   features, its score parts and the details and colours Gemini gave it.
 - A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly, in Clean; `&view=dev` opens it in Dev.
 
