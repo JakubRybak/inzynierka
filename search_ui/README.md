@@ -84,10 +84,11 @@ available; other views use their original PNGs. For enhanced photos with a match
 The rankings use the embeddings of the 1024 px front photos
 (`--original-images` for the original ones; see [README_ranking.md](README_ranking.md)).
 
-- **Clean and Dev**, the switch in the top left corner. Clean shows the results as a shopper sees them: a search bar
-  that stays at the top, then the photo and name of every result, five in a row; clicking a product shows its photos,
-  brand, price and description. Dev is the page described below. Both views show the same search, with the ranking
-  chosen in Dev, and the page opens in Clean.
+- **Clean, Parsed and Dev**, the switch in the top left corner. Clean shows the results as a shopper sees them: a
+  search bar that stays at the top, then the photo and name of every result, five in a row; clicking a product shows
+  its photos, brand, price and description. Parsed adds, under the search bar and staying at the top with it, the
+  category, the filters and the residual phrases the parser found. Dev is the page described below. All three show the same search, with the
+  ranking chosen in Dev, and the page opens in Clean.
 - **Search bar, ranking and examples.** Type a query, in English or Polish, or pick a category and one of its example
   queries from the list. The ranking list names the three rankings (see [README_ranking.md](README_ranking.md)). With
   `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
@@ -110,7 +111,7 @@ The rankings use the embeddings of the 1024 px front photos
   Jev grade plus the weighted first-stage z-score), its Jev grade, the concept scores and details the query asked for,
   and a bar of its score parts. Clicking a product shows all its images, its description, its
   features, its score parts and the details and colours Gemini gave it.
-- A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly, in Clean; `&view=dev` opens it in Dev.
+- A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly, in Clean; `&view=parsed` or `&view=dev` opens it in another view.
 
 ## Files
 

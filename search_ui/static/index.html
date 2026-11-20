@@ -136,7 +136,7 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .viewswitch { position:fixed; top:20px; left:16px; z-index:5; display:flex; padding:2px; border:1px solid var(--line); border-radius:999px; background:var(--card); }
 .viewswitch button { border:0; border-radius:999px; padding:4px 12px; font-size:12px; background:transparent; color:var(--mut); }
 .viewswitch button.on { background:var(--fg); color:var(--bg); }
-body.view-clean .app, body.view-dev .clean { display:none; }
+body:not(.view-dev) .app, body.view-dev .clean { display:none; }
 /* in dev, a strip at the top of the side panel keeps its content from scrolling under the switch */
 body.view-dev .side { padding-top:0; }
 body.view-dev .side::before { content:""; position:sticky; top:0; z-index:3; flex:0 0 48px; margin:0 -16px; background:var(--bg); }
@@ -149,15 +149,25 @@ body.view-dev .side::before { content:""; position:sticky; top:0; z-index:3; fle
 .cp { cursor:pointer; min-width:0; background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
 .cp:hover { border-color:#a8a29e; }
 .cp .name { padding:8px 10px 10px; text-align:center; font-size:14px; font-weight:600; line-height:1.3; letter-spacing:-.005em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+/* Parsed: what the parser understood, one row of chips that stays under the search bar */
+.cread { position:sticky; top:66px; z-index:4; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px 22px;
+  width:fit-content; max-width:min(1100px, 100%); margin:-6px auto 14px; padding:7px 18px; background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 2px 10px rgba(0,0,0,.10); }
+.cread:empty, body:not(.view-parsed) .cread { display:none; }
+.cread > div { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.cread h4 { margin:0; font-size:10.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--mut); }
+.cread .vs { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:13px; }
+.cread .cond { margin:0; font-size:13px; }
+.cread .rp { background:var(--k-con-bg); color:var(--k-con); border-radius:5px; padding:1px 8px; }
 .cnote { grid-column:1/-1; color:var(--mut); text-align:center; padding:40px 0; }
 @media (max-width: 920px) { .cbar { margin-top:44px; } }
 @media (max-width: 1000px) { .cgrid { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .cgrid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
 </style></head><body>
 <div id="panel"><div class="box" id="box"></div></div>
-<div class="viewswitch" id="viewswitch"><button type="button" data-view="clean">Clean</button><button type="button" data-view="dev">Dev</button></div>
+<div class="viewswitch" id="viewswitch"><button type="button" data-view="clean">Clean</button><button type="button" data-view="parsed">Parsed</button><button type="button" data-view="dev">Dev</button></div>
 <div class="clean">
   <form class="cbar" id="cf"><input id="cq" type="search" placeholder="Search" autocomplete="off" enterkeyhint="search"></form>
+  <div class="cread" id="cread"></div>
   <div class="cgrid" id="cgrid"></div>
 </div>
 <div class="app" id="app">
@@ -197,9 +207,10 @@ const defaultMode = feature => feature === "colors" ? "exact" : "any";
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
 let INFO = null, D = null, PARSED = null, seq = 0, SCALE = 1;
-// clean: the search bar and the results as a shopper sees them; dev: what the pipeline did. Both show the same search.
+// clean: the search bar and the results as a shopper sees them; parsed: the same with the category, filters and
+// residual the parser found; dev: what the pipeline did. All show the same search.
 const START = new URLSearchParams(location.search);
-let VIEW = START.get("view") === "dev" ? "dev" : "clean";
+let VIEW = ["parsed", "dev"].includes(START.get("view")) ? START.get("view") : "clean";
 const PRICE_OPS = {lt: "<", lte: "≤", gt: ">", gte: "≥", eq: "="};
 let PANEL = {category: null, sel: {}, mode: {}, prices: [], residual: []}, brandQuery = "", applyTimer = null;
 
@@ -228,7 +239,8 @@ $("viewswitch").querySelectorAll("button").forEach(b => b.onclick = () => setVie
 setView(VIEW);
 
 function setView(v) {
-  if (v === "dev") $("q").value = $("cq").value; else $("cq").value = $("q").value.trim();
+  if (v === "dev" && VIEW !== "dev") $("q").value = $("cq").value;
+  if (v !== "dev" && VIEW === "dev") $("cq").value = $("q").value.trim();
   VIEW = v; document.body.className = `view-${v}`;
   $("viewswitch").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.view === v));
   updateUrl(); $(v === "dev" ? "q" : "cq").focus();
@@ -240,7 +252,7 @@ function updateUrl() {
   const u = new URLSearchParams(), q = $("q").value.trim();
   if (q) u.set("q", q);
   if ($("ranking").value !== INFO.ranking) u.set("ranking", $("ranking").value);
-  if (VIEW === "dev") u.set("view", "dev");
+  if (VIEW !== "clean") u.set("view", VIEW);
   history.replaceState(null, "", u.toString() ? `?${u}` : location.pathname);
 }
 $("q").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); search(); } };
@@ -360,6 +372,7 @@ async function search(manual = null) {
   $("cq").value = q; updateUrl();
   $("timings").classList.add("busy");
   $("status").innerHTML = $("banner").innerHTML = $("notes").innerHTML = "";
+  $("cread").innerHTML = "";
   $("grid").innerHTML = $("cgrid").innerHTML = `<div class="loading"><div class="spinner"></div></div>`;
   let url = `/api/search?q=${encodeURIComponent(q)}&${opts}`;
   if (manual) url += `&filters=${encodeURIComponent(JSON.stringify(manual))}`;
@@ -376,7 +389,20 @@ async function search(manual = null) {
   drawTimings(); drawPanel(); drawReading(); drawNotes(); drawResults(); drawClean();
 }
 
+// what the parser understood, for the Parsed view: the category, every filter and the residual phrases
+function drawParsed() {
+  if (!D.parsed) { $("cread").innerHTML = ""; return; }
+  const args = !D.tree ? [] : D.tree.op === "and" ? D.tree.args : [D.tree];
+  const filters = args.filter(a => a.feature !== "category").map(a => `<span class="cond">${treeHtml(a, false, false)}</span>`);
+  const none = t => `<span class="meta">${t}</span>`;
+  $("cread").innerHTML =
+    `<div><h4>Category</h4><div class="vs">${D.parsed.category ? `<span class="leaf k-cat">${esc(D.parsed.category)}</span>` : none("none – outside the catalog")}</div></div>` +
+    `<div><h4>Filters</h4><div class="vs">${filters.join("") || none("none")}</div></div>` +
+    `<div><h4>Residual</h4><div class="vs">${D.parsed.residual.map(x => `<span class="rp">${esc(x)}</span>`).join("") || none("none")}</div></div>`;
+}
+
 function drawClean() {
+  drawParsed();
   const g = $("cgrid"), note = t => `<div class="cnote">${esc(t)}</div>`;
   if (D.error) { g.innerHTML = note(`Something went wrong: ${D.error.message}`); return; }
   if (D.match === "out_of_catalog") { g.innerHTML = note(D.message); return; }
