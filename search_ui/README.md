@@ -85,9 +85,9 @@ The rankings use the embeddings of the 1024 px front photos
 (`--original-images` for the original ones; see [README_ranking.md](README_ranking.md)).
 
 - **Clean and Dev**, the switch in the top left corner. Clean shows the results as a shopper sees them: a search bar
-  that stays at the top, then the photo and name of every result, five in a row, its position in a corner cut off by
-  a diagonal line; clicking a product shows its photos, brand, price and description. Dev is the page described
-  below. Both views show the same search, with the ranking chosen in Dev, and the page opens in Clean.
+  that stays at the top, then the photo and name of every result, five in a row; clicking a product shows its photos,
+  brand, price and description. Dev is the page described below. Both views show the same search, with the ranking
+  chosen in Dev, and the page opens in Clean.
 - **Search bar, ranking and examples.** Type a query, in English or Polish, or pick a category and one of its example
   queries from the list. The ranking list names the three rankings (see [README_ranking.md](README_ranking.md)). With
   `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
