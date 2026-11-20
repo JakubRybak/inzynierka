@@ -58,7 +58,7 @@ def asks_colour(filters, routes):
         or any(r["kind"] == "shade" and not r["skipped"] for r in routes)
 PAGE = common.SEARCH_UI / "static/index.html"
 EXAMPLES = common.SEARCH_UI / "static/example_queries.yaml"
-EXAMPLES_SHOWN = 5
+EXAMPLES_SHOWN = 10
 IMAGE_PATH = re.compile(r"images/(?:train|validation)/(?P<product>[A-Za-z0-9_-]+)/(?P<stem>[A-Za-z0-9_-]+)\.png")
 
 

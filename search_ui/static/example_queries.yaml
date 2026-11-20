@@ -1,96 +1,260 @@
 # Example queries shown in the page when the parser has none of its own (the benchmark parser shows its dev queries
-# instead). One group per category. The queries mix filters (colour, material, fit, price, OR, exclusion), Polish,
-# and phrases that only the ranking sees: occasions and styles (concepts), shades and negations (phrase bank).
+# instead). One group per category. The queries mix filters (colour, material, fit, gender, brand, price, OR,
+# exclusion), Polish, and phrases that only the ranking sees: occasions and styles (concepts), details, shades and
+# negations (phrase bank).
 
 Blouses:
   - white silk blouse for the office
   - romantic blouse with puff sleeves
   - bluzka z koronką
+  - sheer black blouse for a night out
+  - blouse with a bow at the neck
+  - floral blouse for summer
+  - elegant satin blouse under 400 dollars
+  - See by Chloe blouse
+  - blue striped cotton blouse, oversized
+  - blouse not white, without ruffles
+  - luźna bluzka w paski
 Bodysuits:
   - black long sleeve bodysuit
   - sexy lace bodysuit for a night out
   - bodysuit not black
+  - white ribbed bodysuit with a scoop neck
+  - open back bodysuit for a party
+  - minimalist beige bodysuit
+  - Maison Margiela bodysuit
+  - V-neck bodysuit under 300 dollars
+  - bodysuit for layering under a blazer
+  - cielisty body z długim rękawem
 Bombers:
   - black bomber jacket for men
   - satin bomber in a light colour
   - vintage bomber jacket
+  - olive green nylon bomber
+  - padded bomber for winter
+  - embroidered satin bomber for women
+  - bomber with a hood
+  - Saint Laurent bomber under 2000 dollars
+  - streetwear bomber with a logo patch
+  - leather bomber jacket
+  - granatowa bomberka bez kaptura
 Cardigans:
   - cozy chunky knit cardigan
   - cropped cardigan with buttons
   - kremowy kardigan z wełny
+  - grey cashmere cardigan for men
+  - long oversized cardigan for layering
+  - fuzzy pink cardigan
+  - Thom Browne striped cardigan
+  - V-neck cardigan for the office
+  - cable knit cardigan, not black
+  - cardigan for autumn under 500 dollars
 Cargo Pants:
   - black cargo pants for men
   - baggy streetwear cargo pants
   - beige cotton cargo pants
+  - camo cargo pants
+  - khaki cargo pants with a drawstring waist
+  - slim tapered cargo pants
+  - cargo pants with zippered cuffs
+  - Rick Owens cargo pants
+  - cargo pants under 400 dollars
+  - zielone spodnie bojówki
 Classic Coats:
   - long wool coat for winter
   - camel coat under 300 dollars
   - elegant double breasted coat
+  - black cashmere coat for men
+  - belted wool coat for women
+  - warm parka with a hood
+  - oversized grey coat, minimalist
+  - navy coat for the office
+  - plaid coat
+  - coat without a hood, not black
+  - beżowy płaszcz z wełny
 Dresses:
   - dress for a funeral, midi or long with sleeves
   - light pink dress with lace
   - czarna sukienka na wesele
   - maxi dress not black
   - flowy summer dress for the beach
+  - red cocktail dress
+  - sweater dress for winter
+  - white cotton shirt dress
+  - satin slip dress with spaghetti straps
+  - striped mini dress under 300 dollars
+  - modest long dress with long sleeves
+  - Acne Studios dress
+  - sukienka bez rękawów w kwiaty
 Hoodies & Zipups:
   - grey hoodie with a zip
   - oversized black hoodie for men
   - cozy hoodie for lounging at home
+  - Off-White hoodie with a logo print
+  - half-zip sweatshirt without a hood
+  - cropped hoodie for women
+  - fleece zip-up for the gym
+  - hoodie with a graphic print, streetwear
+  - hoodie not black under 300 dollars
+  - bluza z kapturem bez nadruku
 Jackets:
   - jacket for rainy weather
   - black leather jacket, edgy
   - lightweight denim jacket for spring
+  - biker jacket for women
+  - down jacket for winter
+  - windbreaker with a hood
+  - navy quilted jacket
+  - Moncler jacket under 1500 dollars
+  - light blue faded denim jacket
+  - utility jacket with lots of pockets
+  - brązowa kurtka skórzana
 Jeans:
   - black slim jeans
   - light wash high waisted jeans
   - jeansy bez dziur
+  - ripped skinny jeans for men
+  - flared jeans for women
+  - dark blue straight jeans
+  - white jeans for summer
+  - Levi's jeans under 200 dollars
+  - relaxed wide leg jeans
+  - Nudie Jeans slim jeans
+  - jeans not blue
 Knit Sweaters:
   - ugly christmas sweater
   - cozy oversized wool sweater
   - cashmere sweater not grey
+  - black turtleneck sweater
+  - striped sweater, preppy
+  - cable knit sweater in cream
+  - V-neck sweater for the office for men
+  - cropped sweater for women
+  - open knit summer sweater
+  - sweater without wool
+  - kaszmirowy sweter z golfem
 Polos:
   - navy polo shirt for men
   - preppy striped polo
   - cotton polo for the office
+  - long sleeve polo for women
+  - polo with a tiger embroidery
+  - white pique polo under 150 dollars
+  - slim fit black polo
+  - Thom Browne polo
+  - sporty polo for playing tennis
+  - polo without a logo
+  - zielona koszulka polo
 Shirts:
   - white linen shirt for summer
   - black shirt for a formal event
   - flannel check shirt
+  - denim shirt for men
+  - short sleeve camp collar shirt with a print
+  - silk shirt for women
+  - striped shirt for the office
+  - oversized shirt with a stand collar
+  - shirt not white under 300 dollars
+  - błękitna koszula do pracy
 Shorts:
   - denim shorts for a music festival
   - running shorts for the gym
   - beige linen shorts
+  - black tailored shorts for women
+  - sweat shorts with a drawstring
+  - distressed high waisted denim shorts
+  - shorts with cargo pockets
+  - knee length shorts under 200 dollars
+  - krótkie spodenki w paski
 Skirts:
   - pleated midi skirt
   - black leather mini skirt, goth
   - boho maxi skirt
   - floral midi skirt
+  - denim mini skirt
+  - wrap skirt with a slit
+  - fitted pencil skirt for the office
+  - asymmetric skirt, minimalist
+  - red skirt for a party
+  - skirt not black under 400 dollars
+  - wełniana spódnica midi
 Sweatpants & Lounge Pants:
   - grey sweatpants without pockets
   - wide leg lounge pants
   - dresy bawełniane czarne
+  - joggers with zippered cuffs
+  - sweatpants with side stripes
+  - fleece sweatpants for winter
+  - slim black track pants for the gym
+  - comfortable pants for working from home
+  - Y-3 sweatpants
+  - sweatpants not black under 300 dollars
 Sweatshirts:
   - crewneck sweatshirt with a print
   - vintage college sweatshirt
   - dark green sweatshirt
+  - Kenzo tiger sweatshirt
+  - oversized sweatshirt for women
+  - plain sweatshirt without a logo
+  - grey fleece sweatshirt for men
+  - sweatshirt with text embroidery
+  - streetwear sweatshirt under 250 dollars
+  - bluza bez kaptura z nadrukiem
 T-shirts:
   - black oversized cotton t-shirt for men
   - t-shirt with a skull print
   - biała koszulka z długim rękawem
   - long sleeve t-shirt without polyester
+  - plain white t-shirt, minimalist
+  - rock band t-shirt for a concert
+  - striped t-shirt for women
+  - grey V-neck t-shirt
+  - cropped t-shirt for summer
+  - t-shirt under 100 dollars
+  - Comme des Garcons Play t-shirt
+  - koszulka z logo na piersi
 Tank tops & Camisoles:
   - black and white striped tank top
   - silk camisole over 100 euros
   - ribbed tank top for hot weather
+  - satin camisole with lace trim
+  - racerback tank top for the gym
+  - white tank top for men
+  - one-shoulder top for a party
+  - sheer mesh tank top, edgy
+  - tank top not white
+  - jedwabny top na cienkich ramiączkach
 Trench Coats:
   - beige trench coat
   - classic double breasted trench coat for rain
   - black trench coat for women
+  - Burberry trench coat
+  - belted trench coat with epaulettes
+  - short trench coat for men
+  - long navy trench coat
+  - trench coat under 1000 dollars
+  - oversized trench coat, minimalist
+  - trencz w kolorze khaki
 Trousers:
   - black trousers for the office
   - wide leg linen trousers
   - spodnie w kratę
+  - pleated wool trousers for men
+  - high waisted trousers for women
+  - cropped trousers for summer
+  - beige cotton chinos
+  - trousers with a drawstring waistband
+  - striped trousers, not black
+  - elegant trousers for a wedding
+  - Acne Studios trousers under 500 dollars
 Vests:
   - puffer vest for layering
   - knit sweater vest, preppy
   - black vest for a wedding
+  - quilted vest for men
+  - down vest for winter
+  - shearling vest
+  - double breasted tailored waistcoat
+  - utility vest with pockets
+  - vest not black
+  - kamizelka puchowa bez kaptura
