@@ -86,13 +86,18 @@ The rankings use the embeddings of the 1024 px front photos
 
 - **Clean and Dev**, the switch in the top left corner. Clean shows the results as a shopper sees them: a search bar
   that stays at the top, then the photo and name of every result, five in a row; clicking a product shows its photos,
-  brand, price and description. Dev is the page described below. Both views show the same search, with the ranking chosen in Dev, and the
-  page opens in Clean.
-- **Search bar and examples.** Type a query, in English or Polish, or click an example. Examples are grouped by
-  category. With `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
-- **Parser reading**, under the search bar. It lists the category, the included values (green), the excluded values
-  (red), the residual phrases and where the parse came from. With `hybrid` or `sentences` it also
-  shows how every phrase was read.
+  brand, price and description. Dev is the page described below. Both views show the same search, with the ranking
+  chosen in Dev, and the page opens in Clean.
+- **Search bar, ranking and examples.** Type a query, in English or Polish, or pick a category and one of its example
+  queries from the list. The ranking list names the three rankings (see [README_ranking.md](README_ranking.md)). With
+  `--parser benchmark_parser:parse`, the examples are dev queries of the benchmark that find products.
+- **Query reading**, under the examples: the category, the filters (included values green, excluded red), every
+  residual phrase with how the phrase bank read it and what the ranking uses of it, the whole query without its
+  negated phrases when it has some, and where the parse came from.
+- **Score**: in `hybrid` and `sentences`, the formula and how much each part of the score moves the ranking (see
+  [README_ranking.md](README_ranking.md)).
+- **Time**: the stages on one time axis: parsing with its two steps, the query embedding, which runs while the
+  parser parses, filtering, ranking, Jev and the total, then the cost of the parser and of Jev.
 - **Filters**, a panel on the right. It lists every feature and value of the category, with product counts.
   - Clicking a value cycles include → exclude → off. Multi-valued features can require any, all, or only the chosen
     values. Colors can require exactly the selected set or exactly one of the selected colors.
@@ -100,14 +105,9 @@ The rankings use the embeddings of the 1024 px front photos
   - Every change searches again with these filters, without the parser. *Reset to parser* restores the parsed
     filters.
   - The *Residual* field takes one phrase per line.
-- **Ranking**: the order of the results (see [README_ranking.md](README_ranking.md)).
-- **Stage timings**: parsing, with both parser steps, the query embedding (which runs while the parser parses),
-  filtering, ranking and the total, which also stands next to the number of results.
-- **Score**: in `hybrid` and `sentences`, how much each part of the score moves the ranking (see
-  [README_ranking.md](README_ranking.md)).
-- **Results**: every candidate, with image, name, brand, price, the features that matched and a bar of its score
-  parts. Clicking a product shows all its images, its description, its features, its score parts and the details
-  and colours Gemini gave it.
+- **Results**: every candidate, with image, name, brand, price, its Jev grade, the concept scores and details the
+  query asked for, and a bar of its score parts. Clicking a product shows all its images, its description, its
+  features, its score parts and the details and colours Gemini gave it.
 - A link such as `/?q=black+midi+dress&ranking=hybrid` opens a search directly, in Clean; `&view=dev` opens it in Dev.
 
 ## Files
@@ -193,7 +193,8 @@ python search_ui/tests/check_examples.py                                  # exam
 python search_ui/tests/check_examples.py --parser benchmark_parser:parse  # the benchmark examples, no LLM calls
 ```
 
-The mock parser knows only the English values of the index, so `check_examples.py` flags the Polish examples.
+The mock parser knows only the English values of the index, so `check_examples.py` flags the Polish examples and
+those that need the LLM parser, such as "beige cotton chinos" or "long oversized cardigan".
 
 ## Troubleshooting
 

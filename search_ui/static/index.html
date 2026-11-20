@@ -26,14 +26,13 @@ body { margin:0; font:14px/1.45 -apple-system, system-ui, sans-serif; background
 select, button { font:inherit; padding:7px 11px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
 button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); padding:8px 16px; }
 .meta { color:var(--mut); font-size:12px; }
-.groups, .examples { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-.groups button { padding:2px 9px; font-size:12px; border-radius:12px; }
-.groups button.on { border-color:var(--acc); color:var(--acc); font-weight:600; }
-.examples button { padding:3px 8px; font-size:12px; color:var(--mut); }
-.examples button:hover { color:var(--fg); border-color:var(--acc); }
-.options { margin-top:8px; }
-.options select { padding:3px 6px; font-size:12px; }
-.parsedtop { margin-top:10px; }
+.options { display:grid; grid-template-columns:62px minmax(0, 1fr); gap:6px 8px; align-items:center; }
+.options select { width:100%; padding:5px 8px; font-size:13px; }
+.lbl { color:var(--mut); font-size:12px; }
+.cats { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:4px; }
+.cats button { height:30px; padding:2px 4px; font-size:11.5px; line-height:1.1; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+.cats button:hover { border-color:var(--acc); }
+.cats button.on { border-color:var(--acc); background:var(--acc); color:var(--bg); font-weight:600; }
 .cond { margin:4px 0; display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:13px; }
 .leaf { background:var(--soft); border:1px solid var(--line); border-radius:5px; padding:1px 7px; }
 .leaf b { font-weight:600; }
@@ -46,20 +45,26 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .lines > .op { text-align:right; white-space:nowrap; }
 .lines > .cond { margin:0; }
 .paren { color:var(--mut); }
-.timings { border:1px solid var(--line); border-radius:8px; background:var(--card); padding:10px 12px; font-size:12px; }
-.timings.busy { opacity:.55; }
-#filters h2 { font-size:12px; margin:0 0 6px; color:var(--mut); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
-.st { display:grid; grid-template-columns:1fr auto; column-gap:8px; margin:5px 0; }
-.st .ms { font-variant-numeric:tabular-nums; font-weight:600; }
-.st .bar { grid-column:1/-1; height:6px; background:var(--soft); border-radius:3px; overflow:hidden; margin-top:2px; }
-.st .bar i { display:block; height:100%; border-radius:3px; }
-.st .extra { grid-column:1/-1; color:var(--mut); }
-.st.sub { margin:2px 0 2px 12px; font-size:11px; color:var(--mut); }
-.st.sub .ms { font-weight:500; }
-.st.sub .bar { height:4px; }
-.st.total { border-top:1px solid var(--line); padding-top:6px; margin-top:8px; }
-.st.skip { color:var(--mut); }
-.c-parse { background:var(--c-parse); } .c-filter { background:var(--c-filter); } .c-rank { background:var(--c-rank); }
+.sec { border:1px solid var(--line); border-radius:8px; background:var(--card); padding:10px 12px; font-size:12px; }
+.sec.busy { opacity:.55; }
+.sec h3 { display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin:0 0 8px; font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--mut); }
+.sec h3 span { text-transform:none; letter-spacing:0; font-weight:500; }
+.kv { display:grid; grid-template-columns:58px minmax(0, 1fr); gap:7px 8px; align-items:baseline; font-size:13px; }
+.kv > .k { color:var(--mut); font-size:12px; }
+.ph { margin:0 0 6px; line-height:1.4; }
+.ph:last-child { margin-bottom:0; }
+.ph .said { font-weight:600; }
+.how { color:var(--mut); font-size:11px; }
+.tl { display:grid; grid-template-columns:104px minmax(0, 1fr) 58px; gap:7px 8px; align-items:center; }
+.tl .track { position:relative; height:10px; background:var(--soft); border-radius:3px; }
+.tl .track i { position:absolute; top:0; bottom:0; min-width:2px; border-radius:3px; }
+.tl .v { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; }
+.tl .skip { grid-column:2/-1; color:var(--mut); }
+.tl .sum { border-top:1px solid var(--line); padding-top:6px; font-weight:700; }
+.tlx { margin-top:8px; color:var(--mut); font-size:11px; line-height:1.5; }
+.key { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:3px; }
+.c-parse { background:var(--c-parse); } .c-step1 { background:#a78bfa; } .c-filter { background:var(--c-filter); }
+.c-rank { background:var(--c-rank); } .c-emb { background:var(--p-emb); } .c-jev { background:#ea580c; }
 #filters { display:none; position:sticky; top:0; height:100vh; overflow:auto; border-left:1px solid var(--line); background:var(--card); padding:14px 16px; font-size:12px; }
 .app.fopen #filters { display:block; }
 #filters .fclose { float:right; padding:0 8px; font-size:16px; line-height:20px; }
@@ -105,17 +110,12 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .p .nr { position:absolute; z-index:1; top:6px; left:6px; background:rgba(0,0,0,.65); color:#fff; border-radius:4px; padding:1px 6px; font-size:12px; font-weight:600; }
 .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:6px; }
 .chip { font-size:11px; border-radius:4px; padding:0 5px; background:var(--okbg); color:var(--ok); font-weight:600; }
-.residual { margin:6px 0 0; font-size:13px; }
-.residual .res { font-weight:600; }
-.residual b { color:var(--k-con); font-weight:600; }
-.residual.phrase { margin-top:2px; padding-left:12px; }
 .chip.cc { background:var(--k-con-bg); color:var(--k-con); }
 #panel h3 { font-size:13px; margin:16px 0 0; }
 .empty { color:var(--mut); padding:40px 0; text-align:center; }
 .loading { grid-column:1/-1; display:flex; justify-content:center; padding:80px 0; }
 .spinner { width:36px; height:36px; border:3px solid var(--line); border-top-color:var(--acc); border-radius:50%; animation:spin .8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
-.parts { margin-top:10px; border:1px solid var(--line); border-radius:8px; background:var(--card); padding:8px 10px; font-size:12px; }
 .parts .pr { display:grid; grid-template-columns:minmax(0, 1fr) 46px; gap:2px 8px; align-items:center; margin:3px 0; }
 .parts .pr .lab { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .parts .pr .v { text-align:right; font-variant-numeric:tabular-nums; color:var(--mut); }
@@ -127,6 +127,7 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .sbar i { position:absolute; top:0; bottom:0; }
 .sbar .zero { position:absolute; top:0; bottom:0; left:50%; width:1px; background:var(--mut); }
 .chip.dt { background:#ccfbf1; color:#0f766e; }
+.chip.jv { background:#ffedd5; color:#c2410c; }
 .swatch { display:inline-block; width:14px; height:14px; border:1px solid #999; vertical-align:middle; margin-right:4px; border-radius:3px; }
 .dlist { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
 .dlist .chip { font-weight:500; }
@@ -135,7 +136,9 @@ button.go { background:var(--acc); color:var(--bg); border-color:var(--acc); pad
 .viewswitch button { border:0; border-radius:999px; padding:4px 12px; font-size:12px; background:transparent; color:var(--mut); }
 .viewswitch button.on { background:var(--fg); color:var(--bg); }
 body.view-clean .app, body.view-dev .clean { display:none; }
-body.view-dev .side { padding-top:60px; }
+/* in dev, a strip at the top of the side panel keeps its content from scrolling under the switch */
+body.view-dev .side { padding-top:0; }
+body.view-dev .side::before { content:""; position:sticky; top:0; z-index:3; flex:0 0 48px; margin:0 -16px; background:var(--bg); }
 .clean { padding:12px 12px 40px; }
 /* the search bar stays at the top while the results scroll, like the switch */
 .cbar { position:sticky; top:12px; z-index:4; display:flex; justify-content:center; margin:0 0 14px; pointer-events:none; }
@@ -158,17 +161,16 @@ body.view-dev .side { padding-top:60px; }
 </div>
 <div class="app" id="app">
   <aside class="side">
-    <div>
-      <form class="row" id="f">
-        <textarea id="q" rows="2" placeholder="e.g. black midi dress" autocomplete="off"></textarea>
-        <button class="go" type="submit">Search</button>
-      </form>
-      <div class="groups" id="groups"><span class="meta">Examples:</span></div>
-      <div class="examples" id="examples"></div>
-      <div class="row options meta">Ranking: <select id="ranking"></select></div>
-      <div id="parsedTop" class="parsedtop"></div>
-    </div>
-    <div class="timings" id="timings"><div class="meta">Type a query or click an example.</div></div>
+    <form class="row" id="f">
+      <textarea id="q" rows="2" placeholder="e.g. black midi dress" autocomplete="off"></textarea>
+      <button class="go" type="submit">Search</button>
+    </form>
+    <div class="options"><span class="lbl">Ranking</span><select id="ranking"></select></div>
+    <div class="cats" id="cats"></div>
+    <div class="options"><span class="lbl">Example</span><select id="examples"></select></div>
+    <div class="sec" id="reading" hidden></div>
+    <div class="sec parts" id="score" hidden></div>
+    <div class="sec" id="timings"><div class="meta">Type a query or pick an example.</div></div>
   </aside>
   <main class="results">
     <div class="resbar"><div id="status"></div><button type="button" id="ftoggle">Filters</button></div>
@@ -182,10 +184,10 @@ body.view-dev .side { padding-top:60px; }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num = n => Number(n).toLocaleString("en-US");
-const fmtMs = v => v === undefined || v === null ? "–" : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
-const RANKING_NAMES = {hybrid: "? hybrid (description + image + features, + concepts, colour, details, − negations)",
-                       hybrid_jev_vision: "hybrid + Jev vision (Jev regrades the top 30 from text + photos · ~+0.7 s)",
-                       sentences_jev_vision: "? sentences + Jev vision (best sentences of the description · top 30 regraded · ~+0.7 s)"};
+const fmtMs = v => v === undefined || v === null ? "–" : v >= 1000 ? (v / 1000).toFixed(2) + " s"
+  : (v < 10 ? v.toFixed(1) : num(Math.round(v))) + " ms";
+const RANKING_NAMES = {hybrid: "Hybrid", hybrid_jev_vision: "Hybrid + Jev vision", sentences_jev_vision: "Sentences + Jev vision"};
+const rankingName = r => RANKING_NAMES[r] || r;
 const MODES = {any: "any of", all: "all of", exact: "only"};
 const COLOR_MODES = {exact: "only these colors", exactAny: "only one of these colors"};
 const INCLUDE = {in: "any", contains_any: "any", contains_all: "all", equals_set: "exact", equals_any_set: "exactAny"};
@@ -193,7 +195,7 @@ const MULTI_OPERATORS = {any: "contains_any", all: "contains_all", exact: "equal
 const defaultMode = feature => feature === "colors" ? "exact" : "any";
 const EXCLUDE = new Set(["not_in", "contains_none"]);
 const noCache = {cache: "no-store"};
-let INFO = null, D = null, PARSED = null, PARSER_VIEW = null, seq = 0, SCALE = 1;
+let INFO = null, D = null, PARSED = null, seq = 0, SCALE = 1;
 // clean: the search bar and the results as a shopper sees them; dev: what the pipeline did. Both show the same search.
 const START = new URLSearchParams(location.search);
 let VIEW = START.get("view") === "dev" ? "dev" : "clean";
@@ -202,22 +204,23 @@ let PANEL = {category: null, sel: {}, mode: {}, prices: [], residual: []}, brand
 
 fetch("/api/info", noCache).then(r => r.json()).then(d => {
   INFO = d;
-  d.rankings.forEach(r => { const o = document.createElement("option"); o.value = r; o.textContent = RANKING_NAMES[r] || r; $("ranking").appendChild(o); });
+  d.rankings.forEach(r => { const o = document.createElement("option"); o.value = r; o.textContent = rankingName(r); $("ranking").appendChild(o); });
   $("ranking").value = d.ranking;
   const groups = Object.keys(d.examples);
-  groups.forEach(g => { const b = document.createElement("button"); b.type = "button"; b.textContent = g; b.dataset.g = g;
-    b.onclick = () => showGroup(g); $("groups").appendChild(b); });
+  groups.forEach(g => { const b = document.createElement("button"); b.type = "button"; b.textContent = b.title = g; b.dataset.g = g;
+    b.onclick = () => showGroup(g); $("cats").appendChild(b); });
   if (groups.length) showGroup(groups[0]);
   drawPanel();
   if (d.rankings.includes(START.get("ranking"))) $("ranking").value = START.get("ranking");
   if (START.get("q")) { $("q").value = START.get("q"); search(); }
 });
 function showGroup(g) {
-  [...$("groups").querySelectorAll("button")].forEach(b => b.classList.toggle("on", b.dataset.g === g));
-  $("examples").innerHTML = "";
-  INFO.examples[g].forEach(q => { const b = document.createElement("button"); b.type = "button"; b.textContent = q;
-    b.onclick = () => { $("q").value = q; search(); }; $("examples").appendChild(b); });
+  [...$("cats").querySelectorAll("button")].forEach(b => b.classList.toggle("on", b.dataset.g === g));
+  const qs = INFO.examples[g];
+  $("examples").innerHTML = `<option value="" disabled selected>${esc(g)}: ${qs.length} ${qs.length === 1 ? "query" : "queries"}</option>` +
+    qs.map(q => `<option>${esc(q)}</option>`).join("");
 }
+$("examples").onchange = e => { $("q").value = e.target.value; search(); };
 $("f").onsubmit = e => { e.preventDefault(); search(); };
 $("cf").onsubmit = e => { e.preventDefault(); $("q").value = $("cq").value; search(); };
 $("viewswitch").querySelectorAll("button").forEach(b => b.onclick = () => setView(b.dataset.view));
@@ -367,12 +370,9 @@ async function search(manual = null) {
   }
   if (mine !== seq) return;
   D = d;
-  if (d.parsed && d.parsed.source === "parser") {
-    PARSED = d.parsed; panelFromParsed(d.parsed);
-    PARSER_VIEW = {tree: d.tree};
-  }
+  if (d.parsed && d.parsed.source === "parser") { PARSED = d.parsed; panelFromParsed(d.parsed); }
   $("timings").classList.remove("busy");
-  drawTimings(); drawPanel(); drawParserTop(); drawNotes(); drawResults(); drawClean();
+  drawTimings(); drawPanel(); drawReading(); drawNotes(); drawResults(); drawClean();
 }
 
 function drawClean() {
@@ -390,36 +390,36 @@ function drawClean() {
   });
 }
 
+// the stages on one time axis: the query embedding runs while the parser parses, Jev comes after the first stage
 function drawTimings() {
-  const t = D.timings || {}, total = t.total_ms || 0, pi = D.parser_info || {};
-  const pct = v => total ? Math.max(0, Math.min(100, 100 * v / total)) : 0;
-  const row = (name, v, color, {extra = "", sub = false, start = 0} = {}) => {
-    const cls = `st${sub ? " sub" : ""}`;
-    if (v === undefined || v === null)
-      return `<div class="${cls} skip"><span>${name}</span><span>–</span>${extra ? `<div class="extra">${extra}</div>` : ""}</div>`;
-    return `<div class="${cls}"><span>${name}</span><span class="ms">${fmtMs(v)}</span>` +
-      `<div class="bar"><i class="${color}" style="margin-left:${pct(start)}%;width:${Math.max(.5, pct(v))}%"></i></div>` +
-      `${extra ? `<div class="extra">${extra}</div>` : ""}</div>`;
-  };
+  const t = D.timings || {}, total = t.total_ms || 0, pi = D.parser_info || {}, r = D.rerank;
   const manual = D.parsed && D.parsed.source === "manual";
-  const p = t.parsing_ms || 0, f = t.filtering_ms || 0;
-  let html = row("Parsing", t.parsing_ms, "c-parse", {extra: manual ? "skipped – filters set by hand" : ""});
-  if (!manual && pi.step1_s !== undefined && pi.step1_s !== null) {
-    const s1 = pi.step1_s * 1000;
-    html += row("step 1 · category", s1, "c-parse", {sub: true}) +
-      (pi.step2_s ? row("step 2 · features", pi.step2_s * 1000, "c-parse", {sub: true, start: s1})
-                  : row("step 2 · features", null, "c-parse", {sub: true, extra: "skipped, no category"}));
-  }
-  if (t.query_embedding_ms !== undefined)
-    html += row("Query embedding", t.query_embedding_ms, "c-rank", {extra: "runs while the parser parses"});
-  html += row("Filtering", t.filtering_ms, "c-filter", {start: p}) +
-    row("Ranking", t.ranking_ms, "c-rank", {start: p + f,
-        extra: [t.embedding_wait_ms !== undefined ? `waited for the query embedding ${fmtMs(t.embedding_wait_ms)}` : "",
-                t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : "",
-                t.rerank_ms !== undefined ? `Jev reranking ${fmtMs(t.rerank_ms)}` : "",
-                t.phrase_embeddings_early || t.phrase_embeddings_late ? `phrase embeddings: ${t.phrase_embeddings_early || 0} ready from before, ${t.phrase_embeddings_late || 0} after parsing` : ""].filter(Boolean).join(" · ")}) +
-    `<div class="st total"><span><b>Total</b></span><span class="ms">${fmtMs(t.total_ms)}</span></div>`;
-  $("timings").innerHTML = html;
+  const pct = v => total ? Math.max(0, Math.min(100, 100 * v / total)) : 0;
+  const row = (name, v, segs, title = "") => v === undefined || v === null ? "" :
+    `<span title="${esc(title)}">${name}</span><div class="track">` +
+    segs.map(([start, len, cls]) => `<i class="${cls}" style="left:${pct(start)}%;width:${pct(len)}%"></i>`).join("") +
+    `</div><span class="v">${fmtMs(v)}</span>`;
+  const p = manual ? 0 : t.parsing_ms || 0, f = t.filtering_ms || 0, jev = t.rerank_ms || 0;
+  const first = t.ranking_ms === undefined ? undefined : t.ranking_ms - jev;
+  const s1 = pi.step1_s == null ? null : pi.step1_s * 1000, s2 = pi.step2_s ? pi.step2_s * 1000 : null;
+  let h = manual ? `<span>Parsing</span><span class="skip">skipped – filters set by hand</span>`
+    : row("Parsing", t.parsing_ms, s1 !== null && s2 ? [[0, s1, "c-step1"], [s1, p - s1, "c-parse"]] : [[0, p, "c-parse"]],
+          "the LLM parser: step 1 finds the category, step 2 the filters and the residual phrases");
+  h += row("Query embedding", t.query_embedding_ms, [[0, t.query_embedding_ms, "c-emb"]], "runs while the parser parses") +
+    row("Filtering", t.filtering_ms, [[p, f, "c-filter"]], "the filters on the whole index") +
+    row("Ranking", first, [[p + f, first, "c-rank"]], [t.embedding_wait_ms !== undefined ? `waited ${fmtMs(t.embedding_wait_ms)} for the query embedding` : "",
+        t.bank_ms !== undefined ? `phrase bank ${fmtMs(t.bank_ms)}` : ""].filter(Boolean).join(" · ")) +
+    (jev ? row("Jev rerank", jev, [[p + f + first, jev, "c-jev"]], "Jev regrades the first results") : "") +
+    `<span class="sum">Total</span><span class="sum"></span><span class="v sum">${fmtMs(total)}</span>`;
+  const notes = [];
+  if (!manual && s1 !== null)
+    notes.push(`Parser: <i class="key c-step1"></i>category ${fmtMs(s1)}` + (s2 ? ` · <i class="key c-parse"></i>filters ${fmtMs(s2)}` : " · no second step") +
+               (pi.cost_usd ? ` · $${pi.cost_usd.toFixed(5)}` : ""));
+  if (t.phrase_embeddings_early || t.phrase_embeddings_late)
+    notes.push(`Phrase embeddings: ${t.phrase_embeddings_early || 0} ready before the parse, ${t.phrase_embeddings_late || 0} after it`);
+  if (r && r.status === "applied")
+    notes.push(`Jev: ${num(r.count)} products${r.vision ? `, ${num(r.images)} photos` : ""}${r.cost_usd == null ? "" : ` · $${r.cost_usd.toFixed(5)}`}`);
+  $("timings").innerHTML = `<h3>Time</h3><div class="tl">${h}</div>` + (notes.length ? `<div class="tlx">${notes.join("<br>")}</div>` : "");
 }
 
 // colour of a condition: category outlined, included green, excluded red
@@ -451,41 +451,26 @@ function treeLines(c) {
   }).join("") + `</div>`;
 }
 
-function residualLine() {
-  if (!D || !D.parsed || !D.parsed.category) return "";
-  const r = D.parsed.residual;
-  return `<div class="residual"><span class="meta">Residual:</span> ` + (r.length
-    ? r.map(x => `<span class="res">${esc(x)}</span>`).join(`<span class="meta"> · </span>`) : `<span class="meta">–</span>`) + `</div>`;
-}
-
-// how the phrase bank read every residual phrase: its kind, how it was matched and what the ranking uses of it
-function bankLine() {
-  const b = D && D.bank;
-  if (!b) return "";
-  const colour = D.image_weight > 1 ? `<div class="residual"><span class="meta">Colour in the query: the image counts ${D.image_weight}× in the base and for shade phrases.</span></div>` : "";
-  if (!b.length) return colour + `<div class="residual"><span class="meta">Phrase bank:</span> no residual – ranked by the whole query</div>`;
-  const base = D.base_query ? `<div class="residual"><span class="meta">Whole query compared without its negations:</span> ${esc(D.base_query)}</div>` : "";
-  return colour + base + `<div class="residual"><span class="meta">Phrase bank:</span></div>` + b.map(r => {
-    const how = r.match === "exact" ? "known phrase"
-      : r.match === "nearest" ? `nearest: “${esc(r.neighbour)}” ${r.similarity.toFixed(2)}`
-      : r.match === "concept" ? `concept name ${r.similarity.toFixed(2)}`
-      : r.match === "colour" ? "modifies the colour after it"
-      : r.match === "colour name" ? `colour name ${r.similarity.toFixed(2)}`
-      : r.match === "detail name" ? `detail name ${r.similarity.toFixed(2)}`
-      : `unknown, nearest ${r.similarity === null ? "–" : r.similarity.toFixed(2)}`;
-    const c = r.colour;
-    const used = r.skipped ? `<span class="meta">skipped (size or audience)</span>`
-      : c && c.hex ? `colour <span style="display:inline-block;width:14px;height:14px;background:${esc(c.hex)};border:1px solid #999;vertical-align:middle"></span> <b>${esc(c.name)}</b> ${esc(c.hex)}`
-      : c ? `colour: ${c.lightness === "light" ? "lighter" : "darker"} shades first`
-      : r.detail ? `details <b>${r.detail.names.slice(0, 8).map(esc).join(", ")}</b>${r.detail.names.length > 8 ? ` and ${r.detail.names.length - 8} more` : ""}`
-      : r.sentence ? [r.term === "concept" ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : "",
-                      `its best sentence in the name and description (“${esc(r.sentence_text)}”)`].filter(Boolean).join(" + ")
-      : r.term ? (r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : `text “${esc(r.english)}”`)
-      : `<span class="meta">nothing of its own – the whole query covers it${r.concepts_unavailable.length ? `; no scores here for ${r.concepts_unavailable.map(esc).join(", ")}` : ""}</span>`;
-    const said = r.bare ? `NOT ${esc(r.bare)}</span> <span class="meta">(${esc(r.phrase)})` : `${r.negated ? "NOT " : ""}${esc(r.phrase)}`;
-    return `<div class="residual phrase"><span class="res">${said}</span> → ` +
-      `${esc(r.kind || (r.match === "concept" ? "concept" : "no kind"))} <span class="meta">(${how})</span> · ${used}</div>`;
-  }).join("");
+// one residual phrase as the phrase bank read it: what it is and what the ranking uses of it
+function phraseLine(r) {
+  const how = r.match === "exact" ? "known phrase"
+    : r.match === "nearest" ? `nearest: “${esc(r.neighbour)}” ${r.similarity.toFixed(2)}`
+    : r.match === "concept" ? `concept name ${r.similarity.toFixed(2)}`
+    : r.match === "colour" ? "modifies the colour after it"
+    : r.match === "colour name" ? `colour name ${r.similarity.toFixed(2)}`
+    : r.match === "detail name" ? `detail name ${r.similarity.toFixed(2)}`
+    : `unknown, nearest ${r.similarity === null ? "–" : r.similarity.toFixed(2)}`;
+  const c = r.colour, concepts = r.concepts.length ? `concepts <b>${r.concepts.map(esc).join(", ")}</b>` : "";
+  const used = r.skipped ? `<span class="how">skipped (size or audience)</span>`
+    : c && c.hex ? `colour <span class="swatch" style="background:${esc(c.hex)}"></span><b>${esc(c.name)}</b>`
+    : c ? `${c.lightness === "light" ? "lighter" : "darker"} shades first`
+    : r.detail ? `details <b>${r.detail.names.slice(0, 6).map(esc).join(", ")}</b>${r.detail.names.length > 6 ? ` +${r.detail.names.length - 6}` : ""}`
+    : r.sentence ? [r.term === "concept" ? concepts : "", `best sentence of the description, as “${esc(r.sentence_text)}”`].filter(Boolean).join(" + ")
+    : r.term ? concepts || `text “${esc(r.english)}”`
+    : `<span class="how">covered by the whole query${r.concepts_unavailable.length ? `; no scores here for ${r.concepts_unavailable.map(esc).join(", ")}` : ""}</span>`;
+  const said = r.bare ? `NOT ${esc(r.bare)}</span> <span class="how">(${esc(r.phrase)})</span>` : `${r.negated ? "NOT " : ""}${esc(r.phrase)}</span>`;
+  const kind = r.kind || (r.match === "concept" ? "concept" : "");
+  return `<div class="ph"><span class="said">${said} → ${used}<div class="how">${kind ? `${esc(kind)} · ` : ""}${how}</div></div>`;
 }
 
 function partKind(label) {
@@ -498,11 +483,11 @@ function partsPanel() {
   const sp = D && D.score_parts;
   if (!sp || !sp.length) return "";
   const max = Math.max(...sp.map(x => x.spread)) || 1, w = D.weights;
-  const formula = D.formula || (w ? `similarity of the whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "similarity of the whole query");
+  const formula = D.formula || (w ? `whole query (description, image, features) + ${w.concept} × concepts + ${w.colour} × colour + ${w.detail} × details − ${w.negation} × negations` : "whole query");
   const title = D.rerank && D.rerank.status === "applied" ? "First-stage score" : "Score";
-  return `<div class="parts"><div><b>${title}</b> <span class="meta">= ${esc(formula)}. Bars: how much each part moves the ranking (spread over the ${num(D.counts.candidates)} candidates).</span></div>` +
+  return `<h3>${title}<span>spread over ${num(D.counts.candidates)} candidates</span></h3><div class="how">= ${esc(formula)}</div>` +
     sp.map(x => `<div class="pr"><span class="lab" title="${esc(x.label)}">${esc(x.label)}</span><span class="v">±${x.spread.toFixed(2)}</span>` +
-      `<div class="bar"><i class="${partKind(x.label)}" style="width:${Math.max(2, 100 * x.spread / max)}%"></i></div></div>`).join("") + `</div>`;
+      `<div class="bar"><i class="${partKind(x.label)}" style="width:${Math.max(2, 100 * x.spread / max)}%"></i></div></div>`).join("");
 }
 
 // the parts of one product's score, right of the middle line when they raise it, left when they lower it
@@ -519,25 +504,29 @@ function scoreBar(p) {
   return `<div class="sbar" title="${esc(e.map(([l, v]) => `${l}: ${v >= 0 ? "+" : ""}${v.toFixed(2)}`).join("\n"))}">${h}<span class="zero"></span></div>`;
 }
 
-function sourceLine() {
-  const s = D && D.parser_info && D.parser_info.source;
-  return s && s !== "manual" ? `<div class="residual"><span class="meta">Parse from:</span> ${esc(s)}</div>` : "";
-}
-
-function drawParserTop() {
-  $("parsedTop").innerHTML = (PARSER_VIEW && PARSER_VIEW.tree ? treeLines(PARSER_VIEW.tree) : "") + residualLine() + sourceLine() + bankLine() + partsPanel();
+// how the query was read: its category, its filters, its residual phrases and the base of the whole-query similarity
+function drawReading() {
+  const pi = D.parser_info || {}, manual = D.parsed && D.parsed.source === "manual";
+  $("reading").hidden = !D.parsed;
+  $("score").innerHTML = partsPanel(); $("score").hidden = !$("score").innerHTML;
+  if (!D.parsed) return;
+  const args = !D.tree ? [] : D.tree.op === "and" ? D.tree.args : [D.tree];
+  const rest = args.filter(a => a.feature !== "category");
+  const none = t => `<span class="meta">${t}</span>`;
+  const phrases = D.bank ? D.bank.map(phraseLine).join("") : D.parsed.residual.map(x => `<div class="ph"><span class="said">${esc(x)}</span></div>`).join("");
+  let h = `<span class="k">Category</span><span>${D.parsed.category ? `<span class="leaf k-cat">${esc(D.parsed.category)}</span>` : none("none – outside the catalog")}</span>`;
+  if (D.tree) h += `<span class="k">Filters</span><span>${rest.length ? treeLines({op: "and", args: rest}) : none("none")}</span>`;
+  if (D.parsed.category) h += `<span class="k">Phrases</span><span>${phrases || none("none – ranked by the whole query")}</span>`;
+  if (D.base_query) h += `<span class="k">Base</span><span>“${esc(D.base_query)}” <span class="how">the whole query without its negated phrases</span></span>`;
+  $("reading").innerHTML = `<h3>Query reading<span>${esc(manual ? "filters set by hand" : pi.source ? `parse from ${pi.source}` : D.parser || "")}</span></h3><div class="kv">${h}</div>`;
 }
 
 function drawNotes() {
   let h = "";
-  if (D.rerank && D.rerank.status === "applied") {
-    const r = D.rerank, cost = r.cost_usd == null ? "" : ` · $${r.cost_usd.toFixed(6)}`;
-    h += `<div class="meta">Jev${r.vision ? ` vision (${num(r.images)} photos)` : ""} reordered the first ${num(r.count)} results · ${fmtMs(D.timings.rerank_ms)}${cost}. ` +
-      `Score: expected grade (0–3) + ${r.blend} × standardized first-stage score. The remaining results keep their ${esc(r.base_ranking)} order.</div>`;
-  }
+  const r = D.rerank;
+  if (r && r.status === "applied")
+    h += `<div class="meta" title="expected grade (0–3) + ${r.blend} × standardized first-stage score">The first ${num(r.count)} results are in the order of Jev${r.vision ? ", from their text and photo" : ""}; the others keep the ${esc(rankingName(r.base_ranking))} order.</div>`;
   if (D.error) h += `<div class="errorbox"><b>Error – stage: ${esc(D.error.stage)}</b><br>${esc(D.error.message)}</div>`;
-  if (D.parsed && D.parsed.source === "manual" && "tree" in D)
-    h += `<div class="meta">Filters applied by hand:</div>${treeLines(D.tree)}`;
   (D.warnings || []).forEach(w => h += `<div class="warn">⚠ ${esc(w)}</div>`);
   $("notes").innerHTML = h;
 }
@@ -547,14 +536,14 @@ function drawResults() {
   if (D.error || !D.results) { $("status").innerHTML = ""; return; }
   if (D.match === "out_of_catalog") {
     $("status").innerHTML = `<b>0 results</b>`;
-    const supported = INFO && INFO.parser_categories;
-    $("banner").innerHTML = `<div class="banner"><b>${esc(D.message)}</b><br>` +
-      (supported ? `For queries it has not seen, the parser supports ${supported.map(esc).join(", ")}. For another category pick it in Filters.<br>` : "") +
-      `The catalog has: ` + Object.keys(INFO ? INFO.categories : {}).map(esc).join(", ") + `.</div>`;
+    const catalog = Object.keys(INFO ? INFO.categories : {}), supported = INFO && INFO.parser_categories;
+    const other = supported ? catalog.filter(c => !supported.includes(c)) : [];
+    $("banner").innerHTML = `<div class="banner"><b>${esc(D.message)}</b><br>The catalog has: ${catalog.map(esc).join(", ")}.` +
+      (other.length ? ` For queries it has not seen, the parser does not return ${other.map(esc).join(", ")}; pick it in Filters.` : "") + `</div>`;
     return;
   }
   const n = D.counts.candidates;
-  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b> <span class="meta">· ${fmtMs(D.timings.total_ms)} in total</span>`;
+  $("status").innerHTML = `<b>${num(n)} ${n === 1 ? "result" : "results"}</b>`;
   if (!n) { $("grid").innerHTML = `<div class="empty">No products meet all the conditions.</div>`; return; }
   const g = $("grid");
   // the longest side of any product's bar fills half of the bar
@@ -564,17 +553,15 @@ function drawResults() {
 }
 
 function card(p, i) {
-  const hit = p.matched.filter(f => f in p.features);
   const d = document.createElement("div"); d.className = "p";
+  const from = !p.rerank || p.rerank.image_used === undefined ? "" : p.rerank.image_used ? ", from the text and photo" : ", from the text only";
+  const chips = [p.rerank ? `<span class="chip jv" title="expected Jev grade, 0–3${from}">Jev ${p.rerank.grade.toFixed(2)}</span>` : "",
+    ...p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`),
+    ...(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`)].join("");
   d.innerHTML = `<span class="nr">${i + 1}</span>` +
     `<div class="photo-frame">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="">` : ""}</div>` +
-    `<div class="t"><b>${esc(p.name)}</b>
-      <div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>
-      ${p.rerank ? `<div class="meta">Jev grade: ${p.rerank.grade.toFixed(2)}/3 · rerank score: ${p.rerank.score.toFixed(2)}${p.rerank.image_used === undefined ? "" : p.rerank.image_used ? " · text + photo" : " · text only"}</div>` : ""}
-      ${hit.length || p.concepts.length || (p.details || []).length ? `<div class="chips">${hit.map(k => `<span class="chip" title="${esc(k)}">${esc(k)}: ${esc(p.features[k])}</span>`).join("")}` +
-        `${p.concepts.map(c => `<span class="chip cc">${esc(c.name)} ${c.score}/10</span>`).join("")}` +
-        `${(p.details || []).map(x => `<span class="chip dt">${esc(x.name)} · ${esc(x.extent)}</span>`).join("")}</div>` : ""}
-      ${scoreBar(p)}</div>`;
+    `<div class="t"><b>${esc(p.name)}</b><div class="meta">${esc(p.brand)}${p.price ? " · " + esc(p.price) : ""}</div>` +
+    (chips ? `<div class="chips">${chips}</div>` : "") + scoreBar(p) + `</div>`;
   d.onclick = () => details(p);
   return d;
 }
