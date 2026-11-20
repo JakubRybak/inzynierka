@@ -358,10 +358,11 @@ class SearchEngine:
         return out
 
     def concept_columns(self, out):
-        """Concept columns the ranking used, shown with every result."""
+        """Concept columns the ranking used, shown with every result. A phrase can carry concepts it does not use: a
+        shade takes those of its nearest bank phrase ("navy" -> "navy formal") but only its colour counts."""
         if not self.concepts:
             return None
-        used = dict.fromkeys(c for r in out.get("bank") or [] if not r["skipped"] for c in r["concepts"])
+        used = dict.fromkeys(c for r in out.get("bank") or [] if r.get("concepts_used") for c in r["concepts"])
         return [self.concepts.ids.index(c) for c in used if c in self.concepts.ids] or None
 
     def product(self, pid):

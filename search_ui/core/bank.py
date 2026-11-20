@@ -372,7 +372,8 @@ class BankRanker:
         "concept" for an occasion, style or season phrase with concepts (or a concept matched by name), "negation"
         for a negated phrase (its concept scores, details or colour, or its text signals) to be subtracted, "colour"
         for a shade with a target colour, "detail" for a phrase with detail names. Other phrases add nothing. Every
-        route gets "term": the term it went to, or None. -> (terms, routes)."""
+        route gets "term": the term it went to, or None, and "concepts_used" when its concept scores went into it.
+        -> (terms, routes)."""
         residual = [p for p in residual if normalize_phrase(p)]
         vectors = self.embed(residual, query, prefetched=prefetched, stats=stats)
         routes = [self.route(p, category, vectors.get(common.query_text(normalize_phrase(p))), query, vectors)
@@ -388,7 +389,7 @@ class BankRanker:
                 r["term"] = "negation" if r["negated"] else "colour" if colour is not None else "detail"
                 column = zscore(colour if colour is not None else detail)
             elif conceptual:
-                r["term"] = "negation" if r["negated"] else "concept"
+                r["term"], r["concepts_used"] = "negation" if r["negated"] else "concept", True
                 column = zscore(self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1))
             elif r["negated"]:
                 r["term"] = "negation"
@@ -429,7 +430,7 @@ class BankRanker:
             if r["concepts"] and (r["kind"] in ABSTRACT or r["match"] == "concept"):
                 scores = self.concepts[cand][:, [self.concept_column[c] for c in r["concepts"]]].mean(axis=1)
                 terms.append(("concept", phrase, sign * zscore(scores)))
-                r["term"] = "concept"
+                r["term"], r["concepts_used"] = "concept", True
             if self.sentences is not None:
                 r["sentence_text"] = self.sentence_text(text)
                 terms.append(("sentence", phrase, sign * self.sentences.phrase(vector(r["sentence_text"]), cand)))

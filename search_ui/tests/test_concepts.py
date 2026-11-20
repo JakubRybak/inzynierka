@@ -68,6 +68,14 @@ class Scores(unittest.TestCase):
         self.assertEqual(e.product("d4")["concepts"][0], dict(name="gym", score=8))
         self.assertEqual(e.product("t1")["concepts"], [])
 
+    def test_results_show_only_the_concepts_the_ranking_used(self):
+        e = engine()
+        self.addCleanup(e.pool.shutdown)
+        shade = dict(skipped=False, concepts=["wedding_guest"])
+        occasion = dict(skipped=False, concepts=["gym"], concepts_used=True)
+        self.assertEqual(e.concept_columns(dict(bank=[shade, occasion])), [e.concepts.ids.index("gym")])
+        self.assertIsNone(e.concept_columns(dict(bank=[shade])))
+
 
 if __name__ == "__main__":
     unittest.main()

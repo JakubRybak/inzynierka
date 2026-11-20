@@ -100,7 +100,7 @@ class Ranking(unittest.TestCase):
         self.assertEqual([t[0] for t in terms], ["concept", "sentence"])
         self.assertEqual(int(np.argmax(terms[0][2])), 1)  # d2 has the highest wedding score
         self.assertEqual(int(np.argmax(terms[1][2])), 2)  # d3 says "for a wedding"
-        self.assertTrue(routes[0]["sentence"])
+        self.assertTrue(routes[0]["sentence"] and routes[0]["concepts_used"])
 
     def test_an_unknown_phrase_is_embedded_and_matched_with_sentences(self):
         terms, routes = self.ranker.sentence_terms(["lace"], self.dresses, "Dresses")

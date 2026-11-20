@@ -82,8 +82,8 @@ class Bank(unittest.TestCase):
 
     def test_bank_occasion_uses_its_concept_scores(self):
         terms, routes = self.ranker.adjustments(["For a  wedding"], self.dresses, "Dresses")
-        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["term"]),
-                         ("exact", ["wedding_guest"], "concept"))
+        self.assertEqual((routes[0]["match"], routes[0]["concepts"], routes[0]["term"], routes[0]["concepts_used"]),
+                         ("exact", ["wedding_guest"], "concept", True))
         self.assertEqual(int(np.argmax(terms["concept"][0])), 1)  # d2 has the highest wedding score
 
     def test_occasion_without_scores_adds_nothing(self):
