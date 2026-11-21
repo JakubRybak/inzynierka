@@ -55,8 +55,8 @@ class Colours(unittest.TestCase):
         vectors = [0.9 * e[10 if i < 3 else 11] + np.sqrt(1 - 0.81) * e[i] for i in range(len(names))]
         c = colours.Colours(self.ps, pd.DataFrame(columns=["product_id", "rank", "name", "family", "hex", "share"]),
                             names, np.stack(vectors))
-        self.assertEqual(c.target("light coloured", e[10])["lightness"], "light")
-        self.assertNotIn("hex", c.target("light coloured", e[10]))
+        self.assertEqual(c.target("light toned", e[10])["lightness"], "light")
+        self.assertNotIn("hex", c.target("light toned", e[10]))
         self.assertEqual(c.target("dark greyish", e[11])["hex"], "#4A4A4A")
 
     def test_a_phrase_near_a_general_entry_gets_only_lightness(self):
@@ -69,8 +69,12 @@ class Colours(unittest.TestCase):
         def phrase(to_name, to_general):
             x = (to_general - 0.8 * to_name) / 0.6
             return to_name * e[0] + x * e[2] + np.sqrt(1 - to_name ** 2 - x ** 2) * e[9]
-        self.assertEqual(c.target("light coloured", phrase(0.90, 0.88))["lightness"], "light")
+        self.assertEqual(c.target("in a light colour", phrase(0.90, 0.88))["lightness"], "light")
         self.assertEqual(c.target("light beigeish", phrase(0.90, 0.85))["name"], "light beige")
+        # the forms of "light coloured" are general entries themselves, however near "light beige"
+        for text, lightness in (("light coloured", "light"), ("light-colored", "light"), ("dark-coloured", "dark")):
+            self.assertEqual(c.target(text, phrase(0.95, 0.80)), dict(name=f"{lightness} shades", lightness=lightness,
+                                                                      family=None, similarity=1.0))
 
     def test_target_exact_and_nearest(self):
         self.assertEqual(self.c.target("burgundy")["hex"], "#6B222A")

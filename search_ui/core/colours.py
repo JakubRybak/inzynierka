@@ -6,9 +6,10 @@ dictionary (exactly, or the nearest one by embedding when the similarity reaches
 or only a lighter or darker direction. A phrase that asks only for lightness ("light coloured", "dark") is about as
 close to many colour names of different hues ("light grey", "light pink", "light blue"): when the names within
 HUE_MARGIN of the nearest one spread over the hue circle (HUE_SPREAD) and are not just greys, it gets the direction
-of their mean lightness instead of one of them. Two general entries do the same for phrases nearer to them than to
-any colour name, within GENERIC_TOLERANCE ("light coloured", "w jasnym kolorze", "dark coloured"). A candidate
-scores by how close its colours are to the target in CIELAB, weighted by their share.
+of their mean lightness instead of one of them. General entries do the same for phrases nearer to them than to any
+colour name, within GENERIC_TOLERANCE ("w jasnym kolorze"); the forms of "light coloured" and "dark coloured" are
+entries of their own and match exactly. A candidate scores by how close its colours are to the target in CIELAB,
+weighted by their share.
 """
 import numpy as np
 import pandas as pd
@@ -23,9 +24,12 @@ SIGMA = 20.0  # CIELAB distance at which a colour still counts as about 60% the 
 # chosen on the phrase bank: "dark", "jasny", "pastel" and "neon" spread at least this much, 1 of its 71 shades with
 # a hue too ("pastel blue"), besides greys
 HUE_MARGIN, HUE_SPREAD, MIN_CHROMA = 0.02, 0.25, 10.0
-GENERIC = {"light colour": "light", "dark colour": "dark"}
+# "light colour" and "dark colour" first: the tests give vectors for these two only
+GENERIC = {"light colour": "light", "dark colour": "dark"} | {
+    f"{shade}{sep}{word}": shade for shade in ("light", "dark") for sep in (" ", "-") for word in ("coloured", "colored")}
 # chosen on test phrases and the phrase bank: "light coloured" is 0.88 to "light colour" and 0.90 to "light beige";
-# with 0.03 no bank shade with a hue goes to a general entry
+# with 0.03 no bank shade with a hue goes to a general entry. Its forms went to "light beige" all the same when they
+# were not entries of their own.
 GENERIC_TOLERANCE = 0.03
 SLOTS = 3
 
@@ -80,6 +84,8 @@ class Colours:
         """The colour of a dictionary name, exactly or the nearest one; None when nothing reaches MATCH."""
         if text in self.hex:
             return dict(name=text, hex=self.hex[text], family=self.families[text], similarity=1.0)
+        if text in GENERIC:
+            return dict(name=f"{GENERIC[text]} shades", lightness=GENERIC[text], family=None, similarity=1.0)
         if vector is None:
             return None
         sims = self.E @ vector

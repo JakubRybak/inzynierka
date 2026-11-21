@@ -63,7 +63,9 @@ A shade phrase gets a target colour:
   hues, so when the names within 0.02 of the most similar one spread over the hue circle, and are not just greys, it
   takes only the direction of their mean lightness: lighter or darker shades first. Two general entries, "light
   colour" and "dark colour", do the same for a phrase that is at most 0.03 less similar to one of them than to the
-  nearest colour name ("light coloured", "w jasnym kolorze", "dark coloured").
+  nearest colour name ("w jasnym kolorze"). The forms of "light coloured" and "dark coloured", with a space or a
+  hyphen and in both spellings, are general entries of their own and match exactly, since they can be nearer to
+  "light beige" than that.
 
 A candidate scores by how close its colours are to the target in CIELAB, weighted by their share: a burgundy dress
 beats a black one with a burgundy belt.
